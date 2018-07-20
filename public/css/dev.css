@@ -1,0 +1,68 @@
+a {
+    color: mediumseagreen;
+}
+
+a:hover {
+    color: seagreen;
+}
+
+.btn-primary {
+    background-color: mediumseagreen;
+    border-color: mediumseagreen;
+}
+
+.btn-primary:hover {
+    background-color: seagreen;
+    border-color: seagreen;
+}
+
+.btn-primary:active {
+    background-color: seagreen!important;
+}
+
+.btn-primary:focus {
+    border-color: palegreen!important;
+    box-shadow: 0 0 0 0.2rem palegreen!important;
+}
+
+.btn-primary:disabled {
+    background-color: lightgreen!important;
+    border-color: lightgreen!important;
+    color: darkslategrey!important;
+}
+
+.bg-primary {
+    background-color: mediumseagreen!important;
+}
+
+.current-image {
+    height: 200px;
+    position: relative;
+    width: 200px;
+}
+
+.previous-image {
+    position: relative;
+}
+
+.btn-change-image {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 0;
+    border-style: none;
+    bottom: 0;
+    color: white;
+    position: absolute;
+    right: 0;
+}
+
+.btn-delete-image {
+    border-radius: 0;
+    position: absolute;
+    right: 15px;
+}
+
+.fixed-bottom.btn-container {
+    left: unset;
+    right: 0;
+    width: fit-content;
+}

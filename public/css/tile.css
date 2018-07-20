@@ -1,0 +1,24 @@
+.tile {
+    height: 200%;
+    width: 100%;
+}
+
+.tile:hover {
+    cursor: pointer;
+    background-color: steelblue!important;
+}
+
+.tile-light .tile-body a  {
+    color: white!important;
+    text-decoration: none;
+}
+
+.tile-content {
+    padding: 5px;
+}
+
+.tile-body {
+    align-content: center;
+    padding: 5px;
+    text-align: center;
+}
