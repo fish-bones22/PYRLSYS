@@ -10,22 +10,20 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 
 
-class UserService implements IUserService {
+class UserService extends EntityService implements IUserService {
 
     public function getAllUsers() {
 
         $users = User::all();
         $userEntities = array();
         foreach ($users as $user) {
-            $userEntities[] = $this->mapToEntity($user);
+            $userEntities[] = $this->mapToEntity($user, new UserEntity());
         }
         return $userEntities;
     }
 
-    private function mapToEntity($model) {
-
-        $entity = new UserEntity();
-        $entity->id = $model->id;
+    protected function mapToEntity($model, $entity) {
+        $entity = parent::mapToEntity($model, $entity);
         $entity->fullName = $model->fullName;
         $entity->username = $model->username;
         $entity->password = $model->password;
@@ -45,7 +43,7 @@ class UserService implements IUserService {
     public function getUserById($id) {
 
         $user = User::find($id);
-        $entity = $this->mapToEntity($user);
+        $entity = $this->mapToEntity($user, new UserEntity());
         return $entity;
 
     }

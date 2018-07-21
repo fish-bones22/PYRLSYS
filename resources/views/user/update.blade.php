@@ -15,6 +15,10 @@ Update User
             @csrf
             @method('post')
             <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" class="form-control" name="full_name" value="{{ $user->fullName }}" />
+            </div>
+            <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" class="form-control" name="username" value="{{ $user->username }}" />
             </div>

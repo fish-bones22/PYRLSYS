@@ -35,5 +35,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\IUserRoleService',
             'App\Services\UserRoleService'
         );
+        $this->app->bind(
+            'App\Contracts\IDepartmentService',
+            'App\Services\DepartmentService'
+        );
     }
 }

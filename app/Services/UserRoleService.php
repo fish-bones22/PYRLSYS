@@ -6,7 +6,7 @@ use App\Contracts\IUserRoleService;
 use App\Entities\UserRoleEntity;
 use App\Models\UserRole;
 
-class UserRoleService implements IUserRoleService {
+class UserRoleService extends EntityService implements IUserRoleService {
 
     public function getAllRoles() {
 
@@ -14,16 +14,15 @@ class UserRoleService implements IUserRoleService {
         $rolesEntity = array();
 
         foreach ($roles as $role) {
-            $rolesEntity[] = $this->mapToEntity($role);
+            $rolesEntity[] = $this->mapToEntity($role, new UserRoleEntity());
         }
 
         return $rolesEntity;
 
     }
 
-    private function mapToEntity($model)  {
-        $entity = new UserRoleEntity();
-        $entity->id = $model->id;
+    protected function mapToEntity($model, $entity)  {
+        $entity = parent::mapToEntity($model, $entity);
         $entity->description = $model->description;
         $entity->roleName = $model->roleName;
         $entity->roleKey = $model->roleKey;

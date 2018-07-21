@@ -1,8 +1,8 @@
-a {
+a, .btn-link {
     color: mediumseagreen;
 }
 
-a:hover {
+a:hover .btn-link {
     color: seagreen;
 }
 

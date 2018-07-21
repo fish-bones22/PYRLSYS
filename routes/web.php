@@ -25,6 +25,10 @@ Route::get('login', 'UserController@login');
 Route::post('login', 'UserController@login');
 Route::get('logout', 'UserController@logout');
 
+
+Route::resource('department', 'DepartmentController');
+Route::get('department/getdetails/{id}', 'DepartmentController@getDetails');
+
 // Route::resource('employee', 'EmployeeController');
 Route::get('employee', 'EmployeeController@index');
 Route::get('employee/new', 'EmployeeController@show');

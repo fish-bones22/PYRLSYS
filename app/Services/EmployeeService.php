@@ -14,7 +14,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $employees = Employee::all();
         $employeeEntities = array();
         foreach ($employees as $emp) {
-            $employeeEntities[] = $this->mapToEntity($emp);
+            $employeeEntities[] = $this->mapToEntity($emp, new EmployeeEntity());
         }
 
         return $employeeEntities;
@@ -24,23 +24,23 @@ class EmployeeService extends EntityService implements IEmployeeService {
     public function getEmployeeById($id) {
         $emp = Employee::find($id);
 
-        return $this->mapToEntity($emp);
+        return $this->mapToEntity($emp, new EmployeeEntity());
     }
 
 
-    private function mapToEntity(Employee $employee) {
+    protected function mapToEntity($model, $entity) {
 
-        $entity = new EmployeeEntity();
-        $entity->id = $employee->id;
-        $entity->fullName = $employee->fullName();
-        $entity->firstName = $employee->firstName;
-        $entity->middleName = $employee->middleName;
-        $entity->lastName = $employee->lastName;
-        $entity->employeeId = $employee->employeeId;
+        $entity = parent::mapToEntity($model, $entity);
+
+        $entity->fullName = $model->fullName();
+        $entity->firstName = $model->firstName;
+        $entity->middleName = $model->middleName;
+        $entity->lastName = $model->lastName;
+        $entity->employeeId = $model->employeeId;
 
         // Pictures
         $entity->pictures = array();
-        foreach ($employee->pictures as $pic) {
+        foreach ($model->pictures as $pic) {
             $entry = [
                 'location' => $pic->location,
                 'filename' => $pic->filename,
@@ -56,7 +56,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         // Details
         $entity->otherContacts = array();
         $entity->details = array();
-        foreach ($employee->details as $detail) {
+        foreach ($model->details as $detail) {
 
             $entry = [
                 'id' => $detail->id,

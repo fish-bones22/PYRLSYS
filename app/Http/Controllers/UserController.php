@@ -80,6 +80,7 @@ class UserController extends Controller {
             return view('user.register').withErrors('Passwords do not match');
 
         $user = new UserEntity();
+        $user->fullName = $req['username'];
         $user->username = $req['username'];
         $user->password = $req['password'];
         $user->admin = isset($req['admin']);
@@ -117,6 +118,7 @@ class UserController extends Controller {
 
         $user = $this->userService->getUserById($id);
         $currentUsername = $user->username; // Store current username for verification purposes
+        $user->fullName = $req['full_name'];
         $user->username = $req['username'];
         $user->admin = isset($req['admin']);
         $user->password = null;
