@@ -1,7 +1,8 @@
-<form action="{{ action('DepartmentController@update', 0) }}" method="POST">
+<form action="{{ action('CategoryController@update', 0) }}" method="POST">
     @csrf
     @method('put')
     <input type="hidden" id="idEdit" name="id" />
+    <input type="hidden" name="key" value="{{ $key }}" />
     <div class="form-group">
         <label for="nameEdit">Department Name:</label>
         <input type="text" id="nameEdit" class="form-control display-toggle" name="name" style="display:none" required  />

@@ -1,6 +1,7 @@
-<form action="{{ action('DepartmentController@store') }}" method="POST">
+<form action="{{ action('CategoryController@store') }}" method="POST">
     @csrf
     @method('post')
+    <input type="hidden" name="key" value="{{ $key }}" />
     <div class="form-group">
         <label for="nameAdd">Department Name:</label>
         <input type="text" id="nameAdd" class="form-control" name="name" required   />

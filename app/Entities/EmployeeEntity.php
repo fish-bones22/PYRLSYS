@@ -10,9 +10,14 @@ class EmployeeEntity extends Entity {
     public $middleName;
     public $lastName;
     public $employeeId;
+    public $sex;
+
     public $currentPicture;
     public $pictures;
+
     public $details;
+    public $employmentDetails;
+
     public $contactNumber;
     public $email;
     public $otherContacts;

@@ -26,8 +26,12 @@ Route::post('login', 'UserController@login');
 Route::get('logout', 'UserController@logout');
 
 
-Route::resource('department', 'DepartmentController');
-Route::get('department/getdetails/{id}', 'DepartmentController@getDetails');
+Route::resource('category', 'CategoryController');
+Route::get('/{key}', 'CategoryController@index');
+Route::get('manage/{category}', 'CategoryController@manage');
+Route::get('category/getdetails/{id}', 'CategoryController@getDetails');
+Route::get('categories', 'CategoryController@categories');
+Route::post('categories', 'CategoryController@setCategory');
 
 // Route::resource('employee', 'EmployeeController');
 Route::get('employee', 'EmployeeController@index');

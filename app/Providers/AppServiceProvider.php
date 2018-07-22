@@ -39,5 +39,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\IDepartmentService',
             'App\Services\DepartmentService'
         );
+        $this->app->bind(
+            'App\Contracts\ICategoryService',
+            'App\Services\CategoryService'
+        );
     }
 }

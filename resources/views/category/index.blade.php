@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-Departments
+{{ $categories[0]->displayName }}
 @stop
 
 @section('content')
@@ -10,16 +10,17 @@ Departments
     {{ session('success') }}
     {{ session('error') }}
 </div>
-<button class="btn btn-link" type="button" data-toggle="modal" data-target="#addModal">New Department</button>
+<button class="btn btn-link" type="button" data-toggle="modal" data-target="#addModal">New {{ $categories[0]->displayName }}</button>
 <table class="table table-responsive">
-    @foreach($departments as $department)
+    @foreach($categories as $category)
     <tr>
-        <td>{{ $department->name }}</td>
-        <td><button type="button" class="btn btn-link" data-toggle="modal" data-target="#editModal" data-id="{{ $department->id }}" onclick="getDetails(this)">Edit</button></td>
+        <td>{{ $category->value }}</td>
+        <td><button type="button" class="btn btn-link" data-toggle="modal" data-target="#editModal" data-id="{{ $category->id }}" onclick="getDetails(this)">Edit</button></td>
         <td>
-            <form action="{{ route('department.destroy', $department->id) }}" method="POST">
+            <form action="{{ route('category.destroy', $category->id) }}" method="POST">
                 @csrf
                 @method('delete')
+                <input type="hidden" name="key" value="{{ $category->key }}" />
                 <input type="submit" class="btn btn-link" value="Delete" />
             </form>
         </td>
@@ -35,7 +36,7 @@ Departments
                 <button class="close" type="button" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                @include('department.add')
+                @include('category.add', ['key' => $categories[0]->key])
             </div>
         </div>
     </div>
@@ -49,7 +50,7 @@ Departments
                 <button class="close" type="button" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                @include('department.edit')
+                @include('category.edit', ['key' => $categories[0]->key])
             </div>
         </div>
     </div>
@@ -58,5 +59,5 @@ Departments
 @stop
 
 @section('script')
-<script src="{{ asset('js/department.js') }}"></script>
+<script src="{{ asset('js/categories.js') }}"></script>
 @stop
