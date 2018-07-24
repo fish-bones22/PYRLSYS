@@ -6,15 +6,17 @@
 
 @section('content')
 
+@if (session('error') != null)
 <div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+@if (session('success') != null)
 <div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
 
 <div class="mb-3">
     <div class="row align-items-end">
         <div class="col-sm-9">
             <div class="display-4">{{ $employee->fullName != '' ? $employee->fullName : 'New Employee' }}</div>
-            {{-- <div class="lead align-bottom">{{ $employee->employeeId != '' ? 'Employee ID: '.$employee->employeeId : '' }}</div>
-            <div class="lead align-bottom"></div> --}}
         </div>
         <div class="col-sm-3">
             <div class="current-image float-md-right mx-auto">
@@ -35,15 +37,14 @@
 <form id="employeeForm" action="{{ action('EmployeeController@update', $employee->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('post')
-    <input type="hidden" value="{{ $employee->id }}" />
-    <input type="hidden" value="{{ $employee->employeeId }}" />
+    <input type="hidden" name="id" value="{{ $employee->id }}" />
 
     <div class="form-group"><h5>Personal Information</h5></div>
     <div class="row">
         <div class="col-md-3 form-paper">
             <div class="form-group">
                 <label for="employeeId" class="form-paper-label">ID:</label>
-                <input id="employeeId" name="employeeId" type="text" class="form-control" value="{{ $employee->employeeId }}"/>
+                <input id="employeeId" name="employee_id" type="text" class="form-control" value="{{ $employee->employeeId }}"/>
             </div>
         </div>
         <div class="col-md-9 border-left form-paper">
@@ -52,19 +53,19 @@
                 <div class="col-md-4">
                     <div class="form-group display-block-inline">
                         <label for="lastname" class="form-paper-label">Last name:</label>
-                        <input id="lastname" name="lastName" type="text" class="form-control" value="{{ $employee->lastName }}"/>
+                        <input id="lastname" name="last_name" type="text" class="form-control" value="{{ $employee->lastName }}"/>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group display-block-inline">
                         <label for="firstname" class="form-paper-label">First name:</label>
-                        <input id="firstname" name="firstName" type="text" class="form-control" value="{{ $employee->firstName }}"/>
+                        <input id="firstname" name="first_name" type="text" class="form-control" value="{{ $employee->firstName }}"/>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group display-block-inline">
                         <label for="middlename" class="form-paper-label">Middle name:</label>
-                        <input id="middlename" name="middleName" type="text" class="form-control" value="{{ $employee->middleName }}"/>
+                        <input id="middlename" name="middle_name" type="text" class="form-control" value="{{ $employee->middleName }}"/>
                     </div>
                 </div>
             </div>
@@ -85,7 +86,7 @@
         <div class="col-md-2 col-6 form-paper">
             <div class="form-group">
                 <label for="civilStatus" class="form-paper-label">Civil Status:</label>
-                <select id="civilStatus" name="employmentDetails['civilStatus']" class="form-control" value="{{ $employee->details['civil_status']['value'] }}">
+                <select id="civilStatus" name="civil_status" class="form-control" value="{{ key_exists('civilstatus', $employee->details) ? $employee->details['civilstatus']['value'] : '' }}">
                     <option value="single">Single</option>
                     <option value="married">Married</option>
                     <option value="widow">Widow</option>
@@ -98,20 +99,20 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="spouseLastname" class="form-paper-label">Last name:</label>
-                        <input id="lastname" name="spouse_lastName" type="text" class="form-control" value="{{ $employee->details['spouseLastName']['value'] }}"/>
+                        <label for="spouseLastName" class="form-paper-label">Last name:</label>
+                        <input id="spouseLastName" name="spouse_last_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['lastName']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="spouseFirstname" class="form-paper-label">First name:</label>
-                        <input id="firstname" name="spouse_firstName" type="text" class="form-control" value="{{ $employee->details['spouseFirstName']['value'] }}"/>
+                        <label for="spouseFirstName" class="form-paper-label">First name:</label>
+                        <input id="spouseFirstName" name="spouse_first_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['firstName']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="spouseMiddlename" class="form-paper-label">Middle name:</label>
-                        <input id="spouseMiddlename" name="spouse_lastName" type="text" class="form-control" value="{{ $employee->details['spouseMiddleName']['value'] }}"/>
+                        <label for="spouseMiddleName" class="form-paper-label">Middle name:</label>
+                        <input id="spouseMiddleName" name="spouse_middle_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['middleName']['value'] : '' }}" />
                     </div>
                 </div>
             </div>
@@ -124,20 +125,20 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="spouseLastname" class="form-paper-label">Last name:</label>
-                        <input id="lastname" name="spouse_lastName" type="text" class="form-control" value="{{ $employee->details['spouseLastName'] }}"/>
+                        <label for="dependentLastName[0]" class="form-paper-label">Last name:</label>
+                        <input id="dependentLastName[0]" name="dependent_last_name[0]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][0]['lastname']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="spouseFirstname" class="form-paper-label">First name:</label>
-                        <input id="firstname" name="spouse_firstName" type="text" class="form-control" value="{{ $employee->details['spouseFirstName'] }}"/>
+                        <label for="dependentFirstName[0]" class="form-paper-label">First name:</label>
+                        <input id="dependentFirstName[0]" name="dependent_first_name[0]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][0]['firstname']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="spouseMiddlename" class="form-paper-label">Middle name:</label>
-                        <input id="spouseMiddlename" name="spouse_lastName" type="text" class="form-control" value="{{ $employee->details['spouseMiddleName'] }}"/>
+                        <label for="dependentMiddleName[0]" class="form-paper-label">Middle name:</label>
+                        <input id="dependentMiddleName[0]" name="dependent_middle_name[0]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][0]['middlename']['value'] : '' }}" />
                     </div>
                 </div>
             </div>
@@ -145,7 +146,7 @@
         <div class="col-md-4 form-paper">
             <div class="form-group">
                 <label for="dependentRelationship[0]" class="form-paper-label">Relationship:</label>
-                <input id="dependentRelationship[0]" name="dependent_relationship[0]" class="form-control" value="{{$employee->details['dependent']['detail'] }}" />
+                <input id="dependentRelationship[0]" name="dependent_relationship[0]" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][0]['relationship']['value'] : '' }}" />
             </div>
         </div>
     </div>
@@ -157,26 +158,34 @@
     <div class="row">
         <div class="col-md-2 col-5 form-paper">
             <div class="form-group">
-                <label for="timecard" class="form-paper-label">Time Card #</label>
-                <input type="text" name="time" class="form-control" />
+                <label for="timeCard" class="form-paper-label">Time Card #</label>
+                <input id="timeCard" type="text" name="time_card" class="form-control" value="{{ key_exists('timecard', $employee->details) ? $employee->details['timecard']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md-3 col-7 form-paper">
             <div class="form-group">
                 <label for="department" class="form-paper-label">Department/Project</label>
-                <input id="department" type="text" name="time" class="form-control" />
+                <select id="department" type="text" name="department" class="form-control" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department']['value'] : '' }}" />
+                    @foreach($categories['department'] as $category)
+                    <option value="{{ $category->id }}">{{ $category->value }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
         <div class="col-md-4 col-7 form-paper">
             <div class="form-group">
                 <label for="position" class="form-paper-label">Position</label>
-                <input id="position" type="text" name="time" class="form-control" />
+                <input id="position" type="text" name="position" class="form-control" value="{{ key_exists('position', $employee->details) ? $employee->details['position']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md-3 col-5 form-paper">
             <div class="form-group">
                 <label for="employmentType" class="form-paper-label">Employment Type</label>
-                <input id="employmentType" type="text" name="time" class="form-control" />
+                <select id="employmentType" type="text" name="employment_type" class="form-control" value="{{ key_exists('employmenttype', $employee->employmentDetails) ? $employee->employmentDetails['employmenttype']['value'] : '' }}" />
+                    @foreach($categories['employmenttype'] as $category)
+                    <option value="{{ $category->id }}">{{ $category->value }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </div>
@@ -185,21 +194,22 @@
         <div class="col-md-2 col-4 form-paper">
             <div class="form-group">
                 <label for="dateHired" class="form-paper-label">Date Hired</label>
-                <input id="dateHired" type="date" name="time" class="form-control" />
+                <input id="dateHired" type="date" name="date_hired" class="form-control" value="{{ key_exists('datehired', $employee->details) ? $employee->details['datehired']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md-2 col-4 form-paper">
             <div class="form-group">
                 <label for="dateEnded" class="form-paper-label">Until</label>
-                <input id="dateEnded" type="date" name="time" class="form-control" />
+                <input id="dateEnded" type="date" name="date_end" class="form-control" value="{{ key_exists('dateend', $employee->details) ? $employee->details['dateend']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md-3 col-4 form-paper">
             <div class="form-group">
                 <label for="status" class="form-paper-label">Status</label>
-                <select id="status" name="status" class="form-control">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                <select id="status" name="contract_status" class="form-control" value="{{ key_exists('contract_status', $employee->employmentDetails) ? $employee->employmentDetails['contract_status']['value'] : '' }}" />
+                    @foreach($categories['contract_status'] as $category)
+                    <option value="{{ $category->id }}">{{ $category->value }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -208,25 +218,25 @@
             <div class="form-group">
                 <div class="form-check-inline">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" checked />
+                        <input class="form-check-input" type="checkbox" name="tin" {{ key_exists('tin', $employee->deductibles) ? 'checked' : '' }} />
                         TIN
                     </label>
                 </div>
                 <div class="form-check-inline">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" />
+                        <input class="form-check-input" type="checkbox" name="sss" {{ key_exists('sss', $employee->deductibles) ? 'checked' : '' }} />
                         SSS
                     </label>
                 </div>
                 <div class="form-check-inline">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" />
+                        <input class="form-check-input" type="checkbox" name="philhealth" {{ key_exists('philhealth', $employee->deductibles) ? 'checked' : '' }} />
                         PhilHealth
                     </label>
                 </div>
                 <div class="form-check-inline">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" />
+                        <input class="form-check-input" type="checkbox" name="pagibig" {{ key_exists('pagibig', $employee->deductibles) ? 'checked' : '' }} />
                         PAGIBIG
                     </label>
                 </div>
@@ -238,25 +248,25 @@
         <div class="col-md form-paper">
             <div class="form-group">
                 <label for="tin" class="form-paper-label">TIN</label>
-                <input id="tin" type="text" class="form-control" />
+                <input id="tin" type="text" class="form-control" name="tinnumber" value="{{ key_exists('tin', $employee->deductibles) ? $employee->deductibles['tin']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md form-paper">
             <div class="form-group">
                 <label for="ssn" class="form-paper-label">SS #</label>
-                <input id="ssn" type="text" class="form-control" />
+                <input id="ssn" type="text" class="form-control" name="ssnumber" value="{{ key_exists('sss', $employee->deductibles) ? $employee->deductibles['sss']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md form-paper">
             <div class="form-group">
-                <label for="ssn" class="form-paper-label">PhilHealth</label>
-                <input id="ssn" type="text" class="form-control" />
+                <label for="philhealth" class="form-paper-label">PhilHealth</label>
+                <input id="philhealth" type="text" class="form-control" name="philhealthnumber" value="{{ key_exists('philhealth', $employee->deductibles) ? $employee->deductibles['philhealth']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md form-paper">
             <div class="form-group">
-                <label for="ssn" class="form-paper-label">PAGIBIG</label>
-                <input id="ssn" type="text" class="form-control" />
+                <label for="pagibig" class="form-paper-label">PAGIBIG</label>
+                <input id="pagibig" type="text" class="form-control" name="pagibignumber" value="{{ key_exists('pagibig', $employee->deductibles) ? $employee->deductibles['pagibig']['value'] : '' }}" />
             </div>
         </div>
     </div>
@@ -265,33 +275,33 @@
         <div class="col-md-2 form-paper">
             <div class="form-group">
                 <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
-                <select id="typeOfPayment" class="form-control">
-                    <option value="monthly">Monthly</option>
-                    <option value="semimonthly">Semi-monthly</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="fixed">Fixed</option>
+                <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ key_exists('paymenttype', $employee->employmentDetails) ? $employee->employmentDetails['paymenttype']['value'] : '' }}" />
+                    @foreach($categories['paymenttype'] as $category)
+                    <option value="{{ $category->id }}">{{ $category->value }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
         <div class="col-md-2 form-paper">
             <div class="form-group">
                 <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
-                <select id="modeOfPayment" class="form-control">
-                    <option value="atm">ATM</option>
-                    <option value="cash">Cash</option>
+                <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{ key_exists('paymentmode', $employee->employmentDetails) ? $employee->employmentDetails['paymentmode']['value'] : '' }}" />
+                    @foreach($categories['paymentmode'] as $category)
+                    <option value="{{ $category->id }}">{{ $category->value }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
         <div class="col-md-4 form-paper">
             <div class="form-group">
                 <label for="ratePerHour" class="form-paper-label">Hourly rate</label>
-                <input id="ratePerHour" type="number" step="0.05" class="form-control" />
+                <input id="ratePerHour" type="number" name="rate" step="0.05" class="form-control" value="{{ key_exists('rate', $employee->details) ? $employee->details['rate']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md-4 form-paper">
             <div class="form-group">
                 <label for="allowance" class="form-paper-label">Allowance</label>
-                <input id="allowance" type="number" step="0.05" class="form-control" />
+                <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{ key_exists('allowance', $employee->details) ? $employee->details['allowance']['value'] : '' }}" />
             </div>
         </div>
     </div>
@@ -299,13 +309,13 @@
         <div class="col-md-2 form-paper">
             <div class="form-group">
                 <label for="memo" class="form-paper-label">Number of Memo</label>
-                <input id="memo" type="number" class="form-control" />
+                <input id="memo" type="number" name="number_of_memo" class="form-control"  value="{{ key_exists('numberofmemo', $employee->details) ? $employee->details['numberofmemo']['value'] : '' }}" />
             </div>
         </div>
         <div class="col-md-10 form-paper">
             <div class="form-group">
                 <label for="remarks" class="form-paper-label">Remarks</label>
-                <input id="memo" type="text" class="form-control" />
+                <input id="remarks" type="text" name="remarks" class="form-control" value="{{ key_exists('remarks', $employee->details ) ? $employee->details['remarks']['value'] : '' }}" />
             </div>
         </div>
     </div>

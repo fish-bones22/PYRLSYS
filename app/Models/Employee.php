@@ -22,6 +22,14 @@ class Employee extends Model
         return $this->hasMany('App\Models\EmployeeDetail');
     }
 
+    public function employmentDetails() {
+        return $this->hasMany('App\Models\EmploymentDetail');
+    }
+
+    public function deductibles() {
+        return $this->hasMany('App\Models\EmployeeDeductible');
+    }
+
 
     public function fullName() {
         $middleInitial = $this->middleName != '' ? substr($this->middleName, 0, 1).'.' : '';

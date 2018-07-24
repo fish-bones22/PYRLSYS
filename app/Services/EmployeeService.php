@@ -54,8 +54,8 @@ class EmployeeService extends EntityService implements IEmployeeService {
         }
 
         // Details
-        $entity->otherContacts = array();
-        $entity->details = array();
+        //$entity->otherContacts = array();
+        //$entity->details = array();
         foreach ($model->details as $detail) {
 
             $entry = [
@@ -65,29 +65,35 @@ class EmployeeService extends EntityService implements IEmployeeService {
                 'value' => $detail->value,
                 'detail' => $detail->detail
             ];
-
-            if ($detail->key == 'contact') {
-                // Primary contact
-                if ($detail->detail == 'primary')
-                    $entity->contactNumber = $detail->value;
-                // other contact details
-                else
-                    $entity->otherContacts[] = $entry;
-            }
-            // primary email
-            else if ($detail->key == 'email') {
-                $entity->email = $detail->value;
-            }
-            // other details
-            else {
-                $entity->details[] = $entry;
-            }
+            $entity->details[$detail->key] = $entry;
+            // if ($detail->key == 'contact') {
+            //     // Primary contact
+            //     if ($detail->detail == 'primary')
+            //         $entity->contactNumber = $detail->value;
+            //     // other contact details
+            //     else
+            //         $entity->otherContacts[] = $entry;
+            // }
+            // // primary email
+            // else if ($detail->key == 'email') {
+            //     $entity->email = $detail->value;
+            // }
+            // // other details
+            // else {
+            //     $entity->details[] = $entry;
+            // }
         }
+
+
+        //$entity->deductibles = array();
+        foreach($model->deductibles as $deductible) {
+            $entity->employeeDeductibles[$deductible->key] = $deductible;
+        }
+
 
         return $entity;
 
     }
-
 
 
     public function addEmployee(EmployeeEntity $entity) {
@@ -97,34 +103,35 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $employee->firstName = $entity->firstName;
         $employee->middleName = $entity->middleName;
         $employee->lastName = $entity->lastName;
+        $employee->sex = $entity->sex;
         $employee->save();
         // Get Id
         $id = Employee::orderBy('created_at', 'desc')->first()->id;
 
         // primary contact number
-        if ($entity->contactNumber != null) {
-            $contact = new EmployeeDetail();
-            $contact->key = 'contact';
-            $contact->detail = 'primary';
-            $contact->displayName = 'Contact Number';
-            $contact->value = $entity->contactNumber;
-            $contact->employee_id = $id;
-            $contact->save();
-        }
+        // if ($entity->contactNumber != null) {
+        //     $contact = new EmployeeDetail();
+        //     $contact->key = 'contact';
+        //     $contact->detail = 'primary';
+        //     $contact->displayName = 'Contact Number';
+        //     $contact->value = $entity->contactNumber;
+        //     $contact->employee_id = $id;
+        //     $contact->save();
+        // }
 
-        // primary email
-        if ($entity->email != null) {
-            $email = new EmployeeDetail();
-            $email->key = 'email';
-            $email->detail = 'primary';
-            $email->displayName = 'Email Address';
-            $email->value = $entity->email;
-            $email->employee_id = $id;
-            $email->save();
-        }
+        // // primary email
+        // if ($entity->email != null) {
+        //     $email = new EmployeeDetail();
+        //     $email->key = 'email';
+        //     $email->detail = 'primary';
+        //     $email->displayName = 'Email Address';
+        //     $email->value = $entity->email;
+        //     $email->employee_id = $id;
+        //     $email->save();
+        // }
 
         // other details
-        $this->saveDetails($id, $entity->details);
+        $this->saveDetails($id, '', $entity->details);
 
         return $id;
     }
@@ -137,6 +144,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $employee->firstName = $entity->firstName != null ? $entity->firstName : $employee->firstName;
         $employee->middleName = $entity->middleName;
         $employee->lastName = $entity->lastName != null ? $entity->lastName : $employee->lastName;
+        $employee->sex = $entity->sex != null ? $entity->sex : $employee->sex;
         $employee->save();
 
         // primary contact number
@@ -154,26 +162,34 @@ class EmployeeService extends EntityService implements IEmployeeService {
         }
 
         // other details
-        $this->saveDetails($id, $entity->details);
+        $this->saveDetails($id, '', $entity->details);
     }
 
-    private function saveDetails($id, $detailsArray) {
+
+    private function saveDetails($id, $key, $detailsArray) {
 
         if (sizeof($detailsArray) != 0) {
+
             foreach($detailsArray as $detail) {
 
-                $det;
-                if ($detail['id'] == 0)
-                    $det = new EmployeeDetail();
-                else
-                    $det = EmployeeDetail::where('id', $detail['id'])->first();
-
-                $det->key = $detail['key'];
-                $det->detail = $detail['detail'];
-                $det->displayName = $detail['displayName'];
-                $det->value = $detail['value'];
-                $det->employee_id = $id;
-                $det->save();
+                if (is_array($detail)) {
+                    $subkey = key($detailsArray);
+                    $this->saveDetails($id, $subkey, $detail);
+                } else {
+                    $det;
+                    if (!key_exists('id', $detailsArray) || $detailsArray['id'] == 0) {
+                        $det = new EmployeeDetail();
+                    } else {
+                        $det = EmployeeDetail::where('id', $detailsArray['id'])->first();
+                    }
+                    $det->key = $detailsArray['key'];
+                    $det->grouping = key_exists('grouping', $detailsArray) ? $detailsArray['grouping'] : null;
+                    $det->detail = key_exists('detail', $detailsArray) ? $detailsArray['detail'] : null;
+                    $det->displayName = $detailsArray['displayName'];
+                    $det->value = $detailsArray['value'];
+                    $det->employee_id = $id;
+                    $det->save();
+                }
             }
         }
 
@@ -185,6 +201,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $emp->delete();
     }
 
+
     public function removeEmployeeImage($id, $location, $filename) {
 
         $currentPic = EmployeePicture::where('employee_id', $id)->where('location', $location)->where('filename', $filename)->first();
@@ -193,6 +210,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         }
 
     }
+
 
     public function addEmployeeImage($id, $location, $filename) {
 
@@ -207,6 +225,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $employeePic->save();
     }
 
+
     public function setEmployeeImage($id, $location, $filename) {
 
         $this->unsetCurrentEmployeeImage($id);
@@ -218,6 +237,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         }
 
     }
+
 
     public function unsetCurrentEmployeeImage ($id) {
 

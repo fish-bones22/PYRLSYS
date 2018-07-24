@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Intervention\Image\ImageManagerStatic as Image;
 
+use App\Contracts\ICategoryService;
 use App\Contracts\IEmployeeService;
 use App\Models\Employee;
 use App\Models\EmployeePicture;
@@ -15,33 +16,54 @@ use App\Entities\EmployeeEntity;
 class EmployeeController extends Controller
 {
     protected $employeeService;
+    protected $categoryService;
 
-    public function __construct(IEmployeeService $employeeService) {
+    public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService) {
 
         $this->employeeService = $employeeService;
+        $this->categoryService = $categoryService;
 
     }
 
     public function index() {
 
         $employees = $this->employeeService->getAllEmployees();
+
         return view('employee.index', compact('employees'));
 
     }
 
 
     public function new() {
+
         return redirect()->action('EmployeeController@show', 0);
     }
 
     public function show($id = 0) {
 
+        $categories = array();
+
+        $this->categoryService->setKey('department');
+        $categories['department'] = $this->categoryService->getCategories('department');
+
+        $this->categoryService->setKey('employmenttype');
+        $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
+
+        $this->categoryService->setKey('contractstatus');
+        $categories['contract_status'] = $this->categoryService->getCategories('contractstatus');
+
+        $this->categoryService->setKey('paymenttype');
+        $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
+
+        $this->categoryService->setKey('paymentmode');
+        $categories['paymentmode'] = $this->categoryService->getCategories('paymentmode');
+
         if ($id == 0) {
-            return view('employee.show', ['employee' => new EmployeeEntity()]);
+            return view('employee.show', ['employee' => new EmployeeEntity(), 'categories' => $categories]);
         }
 
         $employee= $this->employeeService->getEmployeeById($id);
-        return view('employee.show', compact('employee'));
+        return view('employee.show', ['employee' => $employee, 'categories' => $categories]);
 
     }
 
@@ -52,28 +74,34 @@ class EmployeeController extends Controller
 
         $employee = new EmployeeEntity;
         $employee->id = $id;
-        $employee->firstName = $req['firstName'];
-        $employee->lastName = $req['lastName'];
-        $employee->middleName = $req['middleName'];
-        $employee->employeeId = $req['employeeId'];
-        $employee->contactNumber = $req['contact_number'];
-        $employee->email = $req['email'];
+        $employee->firstName = $req['first_name'];
+        $employee->lastName = $req['last_name'];
+        $employee->middleName = $req['middle_name'];
+        $employee->employeeId = $req['employee_id'];
+        $employee->sex = $req['sex'];
 
-        if (isset($req['other_contacts']) && sizeof($req['other_contacts']) != 0) {
-            $employee->details = array();
-            $det = $req['other_contacts'];
-            foreach ($req['other_contacts'] as $detail) {
-                if ($detail['value'] == null)
-                    continue;
-                $employee->details[] = [
-                    'id' => $detail['id'],
-                    'key' => $detail['key'],
-                    'value' => $detail['value'],
-                    'detail' => $detail['detail'],
-                    'displayName' => $detail['displayName']
-                ];
-            }
-        }
+        $employee->details = $this->detailsToEntity($req);
+        $employee->employmentDetails = $this->employmentDetailsToEntity($req);
+        $employee->deductibles = $this->deductiblesToEntity($req);
+
+        // $employee->contactNumber = $req['contact_number'];
+        // $employee->email = $req['email'];
+
+        // if (isset($req['other_contacts']) && sizeof($req['other_contacts']) != 0) {
+        //     $employee->details = array();
+        //     $det = $req['other_contacts'];
+        //     foreach ($req['other_contacts'] as $detail) {
+        //         if ($detail['value'] == null)
+        //             continue;
+        //         $employee->details[] = [
+        //             'id' => $detail['id'],
+        //             'key' => $detail['key'],
+        //             'value' => $detail['value'],
+        //             'detail' => $detail['detail'],
+        //             'displayName' => $detail['displayName']
+        //         ];
+        //     }
+        // }
 
         if ($id != 0) {
             $this->employeeService->updateEmployee($employee);
@@ -188,5 +216,177 @@ class EmployeeController extends Controller
         $image->resize($newWidth, $newHeight)->crop($size, $size);
         return $image;
 
+    }
+
+
+    private function detailsToEntity($details) {
+
+        $entity = array();
+
+        // Civil status
+        $entity['civilstatus'] = [
+            'key' => 'civilstatus',
+            'value' => $details['civil_status'],
+            'displayName' => 'Civil Status'
+        ];
+
+        // Spouse
+        $entity['spouse'] = array();
+        for ($i = 0; $i < sizeof($details['spouse_last_name']); $i++) {
+
+            $entity['spouse'][] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => 0,
+                    'value' => $details['spouse_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => 0,
+                    'value' => $details['spouse_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => 0,
+                    'value' => $details['spouse_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ]
+            ];
+        }
+
+        // Dependent
+        $entity['dependent'] = array();
+        for($i = 0; $i < sizeof($details['dependent_last_name']); $i++) {
+            $entity['dependent'][] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => $i,
+                    'value' => $details['dependent_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => $i,
+                    'value' => $details['dependent_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => $i,
+                    'value' => $details['dependent_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ],
+                'relationship' => [
+                    'key' => 'relationship',
+                    'grouping' => $i,
+                    'value' => $details['dependent_relationship'][$i],
+                    'displayName' => 'Relationship'
+                ]
+            ];
+        }
+
+        // Time card
+        $entity['timecard'] = [
+            'key' => 'timecard',
+            'value' => $details['time_card'],
+            'displayName' => 'Time Card'
+        ];
+
+        // Position
+        $entity['position'] = [
+            'key' => 'position',
+            'value' => $details['position'],
+            'displayName' => 'Position'
+        ];
+
+        // Date hired
+        $entity['datehired'] = [
+            'key' => 'datehired',
+            'value' => $details['date_hired'],
+            'displayName' => 'Date Hired'
+        ];
+
+        // Date End
+        $entity['dateend'] = [
+            'key' => 'dateend',
+            'value' => $details['date_end'],
+            'displayName' => 'Date End'
+        ];
+
+        // Date hired
+        $entity['rate'] = [
+            'key' => 'rate',
+            'value' => $details['rate'],
+            'displayName' => 'Hourly Rate'
+        ];
+
+        // Allowance
+        $entity['allowance'] = [
+            'key' => 'allowance',
+            'value' => $details['allowance'],
+            'displayName' => 'Allowance'
+        ];
+
+        // Number of Memo
+        $entity['numberofmemo'] = [
+            'key' => 'numberofmemo',
+            'value' => $details['number_of_memo'],
+            'displayName' => 'Number of Memo'
+        ];
+
+        // Remarks
+        $entity['remarks'] = [
+            'key' => 'remarks',
+            'value' => $details['remarks'],
+            'displayName' => 'Remarks'
+        ];
+
+        return $entity;
+    }
+
+    private function employmentDetailsToEntity($details) {
+
+        $entity = array();
+        $entity['department'] = $details['department'];
+        $entity['employmenttype'] = $details['employment_type'];
+        $entity['contractstatus'] = $details['contract_status'];
+        $entity['paymenttype'] = $details['payment_type'];
+        $entity['paymentmode'] = $details['payment_mode'];
+
+        return $entity;
+    }
+
+    private function deductiblesToEntity($details) {
+
+        $entity = array();
+
+        if (isset($details['tin'])) {
+            $entity['tin'] = $details['tinnumber'];
+        }
+
+        if (isset($details['sss'])) {
+            $entity['sss'] = $details['ssnumber'];
+        }
+
+        if (isset($details['philhealth'])) {
+            $entity['philhealth'] = $details['philhealthnumber'];
+        }
+
+        if (isset($details['pagibig'])) {
+            $entity['pagibig'] = $details['pagibignumber'];
+        }
+
+        return $entity;
+    }
+
+    private function entityToDetails($entityArray) {
+        $entity = array();
+        foreach ($entityArray as $arr) {
+            $entity[$arr['key']] = $arr;
+        }
+
+        return $entity;
     }
 }

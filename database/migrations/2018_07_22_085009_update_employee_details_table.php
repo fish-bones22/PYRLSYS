@@ -15,7 +15,7 @@ class UpdateEmployeeDetailsTable extends Migration
     {
         //
         Schema::table('employee_details', function(Blueprint $table) {
-            $table->string('group');
+            $table->string('group')->nullable();
         });
     }
 
