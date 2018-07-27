@@ -18,8 +18,9 @@ class CreateEmployeeDetailsTable extends Migration
             $table->timestamps();
             $table->string('key');
             $table->string('value');
-            $table->string('detail');
+            $table->string('detail')->nullable();
             $table->string('displayName');
+            $table->string('grouping')->nullable();
             $table->unsignedInteger('employee_id');
 
             $table->foreign('employee_id')

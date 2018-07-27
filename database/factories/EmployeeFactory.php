@@ -13,11 +13,12 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(\App\Employee::class, function (Faker $faker) {
+$factory->define(\App\Models\Employee::class, function (Faker $faker) {
     return [
         'firstName' => $faker->firstName,
         'middleName' => $faker->lastName,
         'lastName' => $faker->lastName,
+        'sex' => 'm',
         'employeeId' => str_random(5)
     ];
 });

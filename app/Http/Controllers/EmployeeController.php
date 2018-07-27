@@ -50,7 +50,7 @@ class EmployeeController extends Controller
         $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
 
         $this->categoryService->setKey('contractstatus');
-        $categories['contract_status'] = $this->categoryService->getCategories('contractstatus');
+        $categories['contractstatus'] = $this->categoryService->getCategories('contractstatus');
 
         $this->categoryService->setKey('paymenttype');
         $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
@@ -81,34 +81,24 @@ class EmployeeController extends Controller
         $employee->sex = $req['sex'];
 
         $employee->details = $this->detailsToEntity($req);
+
         $employee->employmentDetails = $this->employmentDetailsToEntity($req);
+
         $employee->deductibles = $this->deductiblesToEntity($req);
 
-        // $employee->contactNumber = $req['contact_number'];
-        // $employee->email = $req['email'];
-
-        // if (isset($req['other_contacts']) && sizeof($req['other_contacts']) != 0) {
-        //     $employee->details = array();
-        //     $det = $req['other_contacts'];
-        //     foreach ($req['other_contacts'] as $detail) {
-        //         if ($detail['value'] == null)
-        //             continue;
-        //         $employee->details[] = [
-        //             'id' => $detail['id'],
-        //             'key' => $detail['key'],
-        //             'value' => $detail['value'],
-        //             'detail' => $detail['detail'],
-        //             'displayName' => $detail['displayName']
-        //         ];
-        //     }
-        // }
-
         if ($id != 0) {
-            $this->employeeService->updateEmployee($employee);
+            $result = $this->employeeService->updateEmployee($employee);
+            if (!$result['result']) {
+                return redirect()->action('EmployeeController@show', $id)->with('error', $result['message']);
+            }
         }
         else {
 
-            $id = $this->employeeService->addEmployee($employee);
+            $result = $this->employeeService->addEmployee($employee);
+            if (!$result['result']) {
+                return redirect()->action('EmployeeController@show', $id)->with('error', $result['message']);
+            }
+            $id = $result['result'];
             // If an image is selected
             if ($request->file('new_image_file')) {
 
@@ -129,7 +119,11 @@ class EmployeeController extends Controller
 
     public function destroy($id) {
 
-        $this->employeeService->removeEmployee($id);
+        $result = $this->employeeService->removeEmployee($id);
+
+        if (!$result['result'])
+            return redirect()->action('EmployeeController@index')->with('error', $result['message']);
+
         return redirect()->action('EmployeeController@index')->with('success', '');
 
     }

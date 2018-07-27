@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(\App\EmployeeDetail::class, function (Faker $faker) {
+$factory->define(\App\Models\EmployeeDetail::class, function (Faker $faker) {
     return [
         'key' => $faker->word,
         'value' => $faker->word,

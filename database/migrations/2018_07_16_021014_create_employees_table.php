@@ -18,8 +18,9 @@ class CreateEmployeesTable extends Migration
             $table->timestamps();
             $table->string('employeeId', 50)->unique();
             $table->string('firstName');
-            $table->string('middleName');
+            $table->string('middleName')->nullable();
             $table->string('lastName');
+            $table->string('sex', 1);
         });
     }
 

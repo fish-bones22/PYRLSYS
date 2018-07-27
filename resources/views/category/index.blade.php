@@ -1,7 +1,11 @@
 @extends('layout.master')
 
 @section('title')
-{{ $categories[0]->displayName }}
+<?php
+    $displayName =  is_array($categories) && sizeof($categories) != 0 ? $categories[0]->displayName : 'Category';
+    $key =  is_array($categories) && sizeof($categories) != 0 ? $categories[0]->key : '';
+?>
+{{ $displayName }}
 @stop
 
 @section('content')
@@ -10,7 +14,7 @@
     {{ session('success') }}
     {{ session('error') }}
 </div>
-<button class="btn btn-link" type="button" data-toggle="modal" data-target="#addModal">New {{ $categories[0]->displayName }}</button>
+<button class="btn btn-link" type="button" data-toggle="modal" data-target="#addModal">New {{ $displayName }}</button>
 <table class="table table-responsive">
     @foreach($categories as $category)
     <tr>
@@ -36,7 +40,7 @@
                 <button class="close" type="button" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                @include('category.add', ['key' => $categories[0]->key])
+                @include('category.add', ['key' => $key])
             </div>
         </div>
     </div>
@@ -50,7 +54,7 @@
                 <button class="close" type="button" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                @include('category.edit', ['key' => $categories[0]->key])
+                @include('category.edit', ['key' => $key])
             </div>
         </div>
     </div>
