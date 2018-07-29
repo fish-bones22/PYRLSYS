@@ -131,6 +131,9 @@
     }
 
     ?>
+
+    <input type="hidden" id="currentIndex" value="{{ $limit }}" />
+
     {{-- Use the $limit variable for looping --}}
     @for ($i = 0; $i < $limit; $i++)
 
@@ -176,7 +179,7 @@
 
     @endfor
 
-    <div class="form-group"><button class="btn btn-link" type="button">Add Dependent</button></div>
+    <div class="form-group" id="addDependentContainer"><button class="btn btn-link" type="button" onclick="addDependent()">Add Dependent</button></div>
 
 
     <div class="form-group"><h5>Employment Information</h5></div>
@@ -476,4 +479,5 @@
 @section('script')
 <script src="{{ asset('js/imageSelection.js') }}"></script>
 <script src="{{ asset('js/contactDetailManager.js') }}"></script>
+<script src="{{ asset('js/employeePage.js') }}"></script>
 @stop
