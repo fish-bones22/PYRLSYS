@@ -78,6 +78,9 @@ function addDependent() {
     var deleteBtn = $("<button>")
     .addClass("btn close text-muted")
     .attr("type", "button")
+    .attr("onclick", "deleteDependent(this)")
+    .attr("tabindex", -1)
+    .data("index", ind)
     .text("×");
 
     container.find(".relationship").append(deleteBtn);
@@ -85,4 +88,47 @@ function addDependent() {
     container.find(".relationship").append(inputR);
 
     $("#currentIndex").val(++ind);
+}
+
+function deleteDependent(self) {
+
+    var ind = $(self).data("index")*1;
+    var currentInd = $("#currentIndex").val();
+    var thisRow = $(self).closest(".row");
+
+    if (currentInd == 1) {
+
+        thisRow.find("input[type='text']").each(function() {
+            $(this).val('');
+        });
+
+        return;
+    }
+
+    // Iterate index above selected index
+    for (var i = ind + 1; i <= currentInd; i++) {
+        console.log(i);
+        // Iterate through each label inside a dependent row
+        decrementIndexOfElementAttr('label', 'for', "["+i+"]");
+         // Iterate through each input inside a dependent row
+        decrementIndexOfElementAttr('input', 'id', "["+i+"]");
+        decrementIndexOfElementAttr('input', 'name', "["+i+"]");
+    }
+
+    thisRow.remove();
+    $("#currentIndex").val(--currentInd);
+}
+
+function decrementIndexOfElementAttr(element, attribute, index) {
+
+    $(".dependent-"+index).find(element).each(function() {
+        var elm =  $(this);
+        // If input attr id has index, change index lower
+        if (elm.attr(attribute).indexOf("[" + index + "]") > -1) {
+            var currAttr = elm.attr(attribute);
+            var newAttr = currAttr.replace("[" + index + "]", "[" + (index-1) + "]");
+            elm.attr(attribute, newAttr);
+        }
+    });
+
 }

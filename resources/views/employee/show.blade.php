@@ -137,7 +137,7 @@
     {{-- Use the $limit variable for looping --}}
     @for ($i = 0; $i < $limit; $i++)
 
-    <div class="row">
+    <div class="row dependent-{{$i}}">
 
         <div class="col-md-8 form-paper border-left">
 
@@ -170,8 +170,9 @@
 
         <div class="col-md-4 form-paper">
             <div class="form-group">
+                <button type="button" class="close text-muted" data-index="{{$i}}" onclick="deleteDependent(this)" tabindex="-1">&times;</button>
                 <label for="dependentRelationship[{{$i}}]" class="form-paper-label">Relationship:</label>
-                <input id="dependentRelationship[{{$i}}]" name="dependent_relationship[{{$i}}]" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}" />
+                <input id="dependentRelationship[{{$i}}]" name="dependent_relationship[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}" />
             </div>
         </div>
 
