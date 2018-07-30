@@ -80,7 +80,7 @@ function addDependent() {
     .attr("type", "button")
     .attr("onclick", "deleteDependent(this)")
     .attr("tabindex", -1)
-    .data("index", ind)
+    .attr("data-index", ind)
     .text("×");
 
     container.find(".relationship").append(deleteBtn);
@@ -109,10 +109,11 @@ function deleteDependent(self) {
     for (var i = ind + 1; i <= currentInd; i++) {
         console.log(i);
         // Iterate through each label inside a dependent row
-        decrementIndexOfElementAttr('label', 'for', "["+i+"]");
+        decrementIndexOfElementAttr('label', 'for', i);
          // Iterate through each input inside a dependent row
-        decrementIndexOfElementAttr('input', 'id', "["+i+"]");
-        decrementIndexOfElementAttr('input', 'name', "["+i+"]");
+        decrementIndexOfElementAttr('input', 'id', i);
+        decrementIndexOfElementAttr('input', 'name', i);
+        decrementIndexOfRow('dependent', i);
     }
 
     thisRow.remove();
@@ -130,5 +131,19 @@ function decrementIndexOfElementAttr(element, attribute, index) {
             elm.attr(attribute, newAttr);
         }
     });
+
+}
+
+function decrementIndexOfRow(rowName, index) {
+
+    var className = rowName + "-" + index;
+    var newClassName = rowName + "-" + (index-1);
+    // Change remove btn index
+    var rmBtn = $("." + className).find("button.close");
+    rmBtn.attr("data-index", index-1);
+    // Change row index
+    var depRow = $("."+className);
+    depRow.removeClass(className);
+    depRow.addClass(newClassName);
 
 }

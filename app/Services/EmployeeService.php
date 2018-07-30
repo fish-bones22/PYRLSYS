@@ -86,6 +86,10 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $id = Employee::orderBy('created_at', 'desc')->first()->id;
 
         // other details
+        $oldDetails = EmployeeDetail::where('employee_id', $id);
+        if ($oldDetails != null)
+            $oldDetails->delete();
+
         $res = $this->saveDetails($id, '', $entity->details);
 
         if (!$res['result'])
@@ -125,6 +129,10 @@ class EmployeeService extends EntityService implements IEmployeeService {
         }
 
         // other details
+        $oldDetails = EmployeeDetail::where('employee_id', $id);
+        if ($oldDetails != null)
+            $oldDetails->delete();
+
         $res = $this->saveDetails($id, '', $entity->details);
 
         if (!$res['result'])
@@ -157,11 +165,6 @@ class EmployeeService extends EntityService implements IEmployeeService {
                 $this->saveDetails($id, $key.($key != '' ? '.' : '').$subkey, $detail);
 
             } else {
-
-                $oldDetails = EmployeeDetail::where('employee_id', $id)->where('key', $key);
-
-                if ($oldDetails != null)
-                    $oldDetails->delete();
 
                 $det = new EmployeeDetail();
                 $det->key = $key;
