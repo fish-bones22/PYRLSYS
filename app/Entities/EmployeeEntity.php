@@ -8,6 +8,7 @@ class EmployeeEntity extends Entity {
     public $fullName;
     public $firstName;
     public $middleName;
+    public $maidenName;
     public $lastName;
     public $employeeId;
     public $sex;
