@@ -66,6 +66,8 @@ class CategoryService extends EntityService implements ICategoryService {
         $entity->key = $model->key;
         $entity->value = $model->value;
         $entity->detail = $model->detail;
+        $entity->subvalue1 = $model->subvalue1;
+        $entity->subvalue2 = $model->subvalue2;
 
         $details = $model->details;
         $entity->displayName = $details->displayName;
@@ -80,6 +82,8 @@ class CategoryService extends EntityService implements ICategoryService {
         $categoryModel->key = $category->key;
         $categoryModel->value = $category->value;
         $categoryModel->detail = $category->detail;
+        $categoryModel->subvalue1 = $category->subvalue1;
+        $categoryModel->subvalue2 = $category->subvalue2;
         $categoryModel->save();
     }
 
@@ -89,6 +93,8 @@ class CategoryService extends EntityService implements ICategoryService {
         $categoryModel->key = $category->key;
         $categoryModel->value = $category->value;
         $categoryModel->detail = $category->detail;
+        $categoryModel->subvalue1 = $category->subvalue1;
+        $categoryModel->subvalue2 = $category->subvalue2;
         $categoryModel->save();
     }
 

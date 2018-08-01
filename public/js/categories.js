@@ -9,7 +9,7 @@
 function getDetails(self) {
 
     var id = $(self).data("id");
-    var url = "category/getdetails/" + id;
+    var url = "/category/getdetails/" + id;
     $("#idEdit").val(id);
     $.ajax({
         url: url,
@@ -32,12 +32,17 @@ function mapDetails(data) {
     else {
         $("#descriptionDisplay").text(data.description);
     }
+    $("#subValue1Edit").attr("value", data.subvalue1);
+    $("#subValue1Display").text(data.subvalue1);
+    $("#subValue2Edit").attr("value", data.subvalue2);
+    $("#subValue2Display").text(data.subvalue2);
 }
 
 
 function toggleEdit() {
     $(".display-toggle").toggle();
-    $(".btn-toggle").toggle();
+    $(".view-toggle").show();
+    $(".edit-toggle").hide();
 }
 
 function resetViewModal() {
@@ -46,7 +51,13 @@ function resetViewModal() {
     $("#nameDisplay").text("Retrieving information...");
     $("#descriptionEdit").text("");
     $("#descriptionDisplay").text("Retrieving information...");
+    $("#subValue1Edit").attr("value", "");
+    $("#subValue1Display").text("Retrieving information...");
+    $("#subValue2Edit").attr("value", "");
+    $("#subValue2Display").text("Retrieving information...");
+
     $(".display-toggle").not("div").hide();
     $("div.display-toggle").show();
-    $(".btn-toggle").toggle();
+    $(".view-toggle").hide();
+    $(".edit-toggle").show();
 }

@@ -4,7 +4,7 @@
     <input type="hidden" id="idEdit" name="id" />
     <input type="hidden" name="key" value="{{ $key }}" />
     <div class="form-group">
-        <label for="nameEdit">Department Name:</label>
+        <label for="nameEdit">Name:</label>
         <input type="text" id="nameEdit" class="form-control display-toggle" name="name" style="display:none" required  />
         <div id="nameDisplay" class="form-control display-toggle">Retrieving information...</div>
     </div>
@@ -14,13 +14,29 @@
         <div id="descriptionDisplay" class="display-toggle">Retrieving information...</div>
     </div>
 
+@if ($key == 'department')
+
+    <div class="form-group">
+        <label for="subValue1Edit">Time In:</label>
+        <input id="subValue1Edit" class="form-control description  display-toggle" type="time" name="subvalue1" style="display:none" />
+        <div id="subValue1Display" class="display-toggle">Retrieving information...</div>
+    </div>
+
+    <div class="form-group">
+        <label for="subValue2Edit">Time Out:</label>
+        <input id="subValue2Edit" class="form-control description  display-toggle" type="time" name="subvalue2" style="display:none" />
+        <div id="subValue2Display" class="display-toggle">Retrieving information...</div>
+    </div>
+
+@endif
+
     <div class="form-group">
         <div class="float-right">
             <div class="btn-group">
                 <button class="btn btn-light" data-dismiss="modal">Back to List</button>
-                <button type="reset" class="btn btn-secondary btn-toggle" onclick="toggleEdit()">Edit</button>
-                <button type="reset" class="btn btn-secondary btn-toggle" style="display:none">Reset</button>
-                <input type="submit" class="btn btn-primary btn-toggle" value="Save" style="display:none"/>
+                <button type="reset" class="btn btn-secondary edit-toggle" onclick="toggleEdit()">Edit</button>
+                <button type="reset" class="btn btn-secondary view-toggle" style="display:none">Reset</button>
+                <input type="submit" class="btn btn-primary view-toggle" value="Save" style="display:none"/>
             </div>
         </div>
     </div>

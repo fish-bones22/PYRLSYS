@@ -67,6 +67,8 @@ class CategoryController extends Controller
         $category->key = $req['key'];
         $category->value = $req['name'];
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
+        $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
+        $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
         $this->categoryService->addCategory($category);
 
         return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully added');
@@ -106,6 +108,8 @@ class CategoryController extends Controller
         $category->key = $req['key'];
         $category->value = $req['name'];
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
+        $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
+        $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
         $this->categoryService->updateCategory($category);
 
         return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully updated');
@@ -125,7 +129,9 @@ class CategoryController extends Controller
         $category = $this->categoryService->getCategoryById($id);
         return response()->json([
             'name' => $category->value,
-            'description' => $category->detail
+            'description' => $category->detail,
+            'subvalue1' => $category->subvalue1,
+            'subvalue2' => $category->subvalue2
         ]);
     }
 }

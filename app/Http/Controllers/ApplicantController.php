@@ -35,8 +35,8 @@ class ApplicantController extends Controller
 
 
     public function new() {
-
-        return redirect()->action('ApplicantController@show', 0);
+        $applicant = new EmployeeEntity();
+        return view('applicant.new', compact('applicant'));
     }
 
     public function show($id = 0) {
