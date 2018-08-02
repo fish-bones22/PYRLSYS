@@ -107,7 +107,6 @@ function deleteDependent(self) {
 
     // Iterate index above selected index
     for (var i = ind + 1; i <= currentInd; i++) {
-        console.log(i);
         // Iterate through each label inside a dependent row
         decrementIndexOfElementAttr('label', 'for', i);
          // Iterate through each input inside a dependent row

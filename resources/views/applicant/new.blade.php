@@ -202,11 +202,12 @@ Application For Employment
                 </div>
             </div>
 
+            <input type="hidden" id="education-index" value="1" />
             <div class="row"><div class="col-12 form-paper section-title">Educational Attainment</div></div>
             <div class="row education-0">
                 <div class="col-12 form-paper">
                     <div class="form-group">
-                        <button type="button" class="close text-muted" data-index="0" onclick="deleteDependent(this)" tabindex="-1">&times;</button>
+                        <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'education')" tabindex="-1">&times;</button>
                         <label for="level[0]" class="form-paper-label">Level:</label>
                         {{-- <input id="level[0]" name="level[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['level']['value'] : '' }}" /> --}}
                         <select id="level[0]" name="level[0]" class="form-control">
@@ -218,13 +219,13 @@ Application For Employment
                         </select>
                     </div>
                 </div>
-                <div class="col-12 form-paper">
+                <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="nameOfSchool[0]" class="form-paper-label">Name of School:</label>
                         <input id="nameOfSchool[0]" name="name_of_school[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['nameOfSchool']['value'] : '' }}" />
                     </div>
                 </div>
-                <div class="col-12 form-paper">
+                <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="course[0]" class="form-paper-label">Course:</label>
                         <input id="course[0]" name="course[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['course']['value'] : '' }}" />
@@ -243,11 +244,12 @@ Application For Employment
                     </div>
                 </div>
             </div>
-            <div class="row" id="addEducationContainer">
-                <div class="col-12 form-paper"><button class="btn btn-link" type="button" onclick="addEducation()">Add Education</button></div>
+            <div class="row addContainer" id="addEducationContainer" >
+                <div class="col-12 form-paper"><button class="btn btn-link" type="button" onclick="createNewRow(this, 'education')">Add Education</button></div>
             </div>
 
 
+            <input type="hidden" id="examination-index" value="1" />
             <div class="row examination-0">
                 <div class="col-12 form-paper section-title">Examinations</div>
                 <div class="col-7 form-paper">
@@ -258,6 +260,7 @@ Application For Employment
                 </div>
                 <div class="col-5 form-paper">
                     <div class="form-group">
+                        <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'examination')" tabindex="-1">&times;</button>
                         <label for="dateOfExam[0]" class="form-paper-label">Date of Examination:</label>
                         <input id="dateOfExam[0]" name="date_of_exam[0]" type="date" class="form-control" value="{{ key_exists('examination', $applicant->details) ? $applicant->details['examination'][0]['date']['value'] : '' }}" />
                     </div>
@@ -275,13 +278,15 @@ Application For Employment
                     </div>
                 </div>
             </div>
-            <div class="row" id="addExaminationContainer">
-                <div class="col-12 form-paper"><button class="btn btn-link" type="button" onclick="addExamination()">Add Examination</button></div>
+            <div class="row addContainer" id="addExaminationContainer">
+                <div class="col-12 form-paper"><button class="btn btn-link" type="button" onclick="createNewRow(this, 'examination')">Add Examination</button></div>
             </div>
 
-
-            <div class="row employement-record-0">
+            <input type="hidden" id="employment-record-index" value="1" />
+            <div class="row">
                 <div class="col-12 form-paper section-title">Employment History</div>
+            </div>
+            <div class="row employment-record-0">
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="employmentRecordDateFrom[0]" class="form-paper-label">From:</label>
@@ -290,6 +295,7 @@ Application For Employment
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
+                        <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'employment-record')" tabindex="-1">&times;</button>
                         <label for="employmentRecordDateTo[0]" class="form-paper-label">To:</label>
                         <input id="employmentRecordDateTo[0]" name="employment_record_date_to[0]" type="date" class="form-control" value="{{ key_exists('employmentRecord', $applicant->details) ? $applicant->details['employmentRecord'][0]['to']['value'] : '' }}" />
                     </div>
@@ -325,10 +331,11 @@ Application For Employment
                     </div>
                 </div>
             </div>
-            <div class="row" id="addEmploymentRecordContainer">
-                <div class="col-12 form-paper"><button class="btn btn-link" type="button" onclick="addEmploymentRecord()">Add Employment Record</button></div>
+            <div class="row addContainer" id="addEmploymentRecordContainer">
+                <div class="col-12 form-paper"><button class="btn btn-link" type="button" onclick="createNewRow(this, 'employment-record')">Add Employment Record</button></div>
             </div>
 
+            <input type="hidden" id="training-index" value="1" />
             <div class="row training-0">
                 <div class="col-12 form-paper section-title">Trainings and Seminars</div>
                 <div class="col-6 form-paper">
@@ -339,6 +346,7 @@ Application For Employment
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
+                        <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'training')" tabindex="-1">&times;</button>
                         <label for="traingingDateTo[0]" class="form-paper-label">To:</label>
                         <input id="traingingDateTo[0]" name="training_date_to[0]" type="date" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['to']['value'] : '' }}" />
                     </div>
@@ -368,9 +376,9 @@ Application For Employment
                     </div>
                 </div>
             </div>
-            <div class="row" id="addTrainingContainer">
+            <div class="row addContainer" id="addTrainingContainer">
                 <div class="col-12 form-paper">
-                    <button class="btn btn-link" type="button" onclick="addTraining()">Add Training</button>
+                    <button class="btn btn-link" type="button" onclick="createNewRow(this, 'training')">Add Training</button>
                 </div>
             </div>
 
@@ -504,11 +512,13 @@ Application For Employment
                 </div>
             </div>
 
+            <input type="hidden" id="child-index" value="1" />
             <div class="row">
                 <div class="col-12 form-paper section-label">Children</div>
             </div>
             <div class="row child-0">
                 <div class="col-12 form-paper">
+                    <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'child')" tabindex="-1">&times;</button>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -558,18 +568,21 @@ Application For Employment
                     </div>
                 </div>
             </div>
-            <div class="row" id="addChildContainer">
+            <div class="row addContainer" id="addChildContainer">
                 <div class="col-12 form-paper">
-                    <button class="btn btn-link" type="button" onclick="addChild()">Add Child</button>
+                    <button class="btn btn-link" type="button" onclick="createNewRow(this, 'child')">Add Child</button>
                 </div>
             </div>
 
+
+            <input type="hidden" id="sibling-index" value="1" />
             <div class="row">
                 <div class="col-12 form-paper section-label">Siblings</div>
             </div>
 
             <div class="row sibling-0">
                 <div class="col-12 form-paper">
+                    <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'sibling')" tabindex="-1">&times;</button>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -621,7 +634,7 @@ Application For Employment
             </div>
             <div class="row" id="addSiblingContainer">
                 <div class="col-12 form-paper">
-                    <button class="btn btn-link" type="button" onclick="addSibling()">Add Sibling</button>
+                    <button class="btn btn-link" type="button" onclick="createNewRow(this, 'sibling')">Add Sibling</button>
                 </div>
             </div>
 
@@ -1094,6 +1107,5 @@ Application For Employment
 
 @section('script')
 <script src="{{ asset('js/imageSelection.js') }}"></script>
-<script src="{{ asset('js/contactDetailManager.js') }}"></script>
-<script src="{{ asset('js/applicantPage.js') }}"></script>
+<script src="{{ asset('js/applicationFormPage.js') }}"></script>
 @stop
