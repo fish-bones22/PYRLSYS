@@ -196,9 +196,70 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
     }
 
+    // public function getDetails($detailsModel) {
+
+    //     $detail = array();
+    //     $prevKey = '';
+    //     foreach ($detailsModel as $model) {
+
+    //         // If Key is compound
+    //         if (strpos($model->key, '.') !== false) {
+
+    //             $keys = explode('.', $model->key);
+
+    //             if ($prevKey != $keys[0]) {
+    //                 $temp = array();
+    //                 $inner = array();
+    //             }
+
+    //             $inner[$keys[sizeof($keys)-1]] = [
+    //                 'key' => $keys[sizeof($keys)-1],
+    //                 'value' => $model->value,
+    //                 'detail' => $model->detail,
+    //                 'displayName' => $model->displayName,
+    //                 'grouping' => $model->grouping
+    //             ];
+
+    //             $temp;
+    //             $lastKey;
+    //             for ($i = sizeof($keys)-1; $i >= 1; $i--) {
+    //                 $temp = array();
+    //                 $temp[$keys[$i]] = $inner;
+    //                 $inner = $temp[$keys[$i]];
+    //                 $lastKey = $keys[$i];
+    //             }
+
+    //             if (!key_exists($keys[0], $detail)) {
+    //                 $detail[$keys[0]] = array();
+    //             }
+
+    //             if (sizeof($temp) > 0)
+    //                 $detail[$keys[0]][$lastKey] = $temp[$lastKey];
+
+
+    //             $prevKey = $keys[0];
+
+    //         }
+    //         else {
+    //             $detail[$model->key] = [
+    //                 'key' => $model->key,
+    //                 'value' => $model->value,
+    //                 'detail' => $model->detail,
+    //                 'displayName' => $model->displayName,
+    //                 'grouping' => $model->grouping
+    //             ];
+    //         }
+
+    //     }
+
+    //     return $detail;
+
+    // }
+
     public function getDetails($detailsModel) {
 
         $detail = array();
+        $prevKey = '';
         foreach ($detailsModel as $model) {
 
             // If Key is compound
@@ -206,7 +267,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
                 $keys = explode('.', $model->key);
 
-                $inner[$keys[sizeof($keys)-1]] = [
+                $inner = [
                     'key' => $keys[sizeof($keys)-1],
                     'value' => $model->value,
                     'detail' => $model->detail,
@@ -214,21 +275,25 @@ class EmployeeService extends EntityService implements IEmployeeService {
                     'grouping' => $model->grouping
                 ];
 
-                $temp;
-                $lastKey;
-                for ($i = sizeof($keys)-1; $i >= 1; $i--) {
-                    $temp = array();
-                    $temp[$keys[$i]] = $inner;
-                    $inner = $temp[$keys[$i]];
-                    $lastKey = $keys[$i];
+                $tempArr = array();
+                $detArr = $detail;
+                for ($i = sizeof($keys) - 1; $i >= 0; $i--) {
+
+                    // if (!key_exists($keys[$i], $tempArr)) {
+                    //     $tempArr[$keys[$i]]
+                    // }
+                    $tempArr = array();
+                    $tempArr[$keys[$i]] = $inner;
+                    $inner = $tempArr;
+
                 }
 
-                if (!key_exists($keys[0], $detail)) {
+                if (!key_exists($keys[0], $detail))
                     $detail[$keys[0]] = array();
-                }
+                $detail[$keys[0]] = array_replace_recursive($tempArr[$keys[0]], $detail[$keys[0]]);
 
-                if (sizeof($temp) > 0)
-                    $detail[$keys[0]][$lastKey] = $temp[$lastKey];
+                //$det = $this->fillDetailArray($detail, $tempArr);
+                $detail = $detail;
 
             }
             else {
@@ -244,6 +309,33 @@ class EmployeeService extends EntityService implements IEmployeeService {
         }
 
         return $detail;
+
+    }
+
+
+    private function fillDetailArray($detailArray, $tempArray) {
+
+        foreach ($tempArray as $key => $value) {
+
+            if (is_array($value)) {
+
+                if (!key_exists($key, $detailArray)) {
+                    $detailArray[$key] = array();
+                }
+
+                $detailArray[$key] = $this->fillDetailArray($detailArray[$key], $value);
+
+            }
+            else {
+
+                if (!key_exists($key, $detailArray)) {
+                    $detailArray[$key] = array();
+                }
+                $detailArray[$key] = $tempArray[$key];
+            }
+        }
+
+        return $detailArray;
 
     }
 

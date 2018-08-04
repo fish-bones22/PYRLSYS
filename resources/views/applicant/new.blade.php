@@ -31,13 +31,13 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="position" class="form-paper-label">Position Applied for:</label>
-                        <input id="position" class="form-control" name="position" />
+                        <input id="position" class="form-control" name="position" value="{{ key_exists('position', $applicant->details) ? $applicant->details['position']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="expectedsalary" class="form-paper-label">Expected salary:</label>
-                        <input id="expectedsalary" class="form-control" name="expected_salary" />
+                        <input id="expectedsalary" type="number" step="0.05" class="form-control" name="expected_salary" value="{{ key_exists('expectedsalary', $applicant->details) ? $applicant->details['expectedsalary']['value'] : '' }}" />
                     </div>
                 </div>
             </div>
@@ -179,19 +179,19 @@ Application For Employment
                 <div class="col-8 form-paper">
                     <div class="form-group">
                         <label for="permanentAddress" class="form-paper-label">Permanent Address:</label>
-                        <input id="permanentAddress" name="permanent_address" class="form-control" value="{{ key_exists('presentaddresscontact', $applicant->details) ? $applicant->details['presentaddresscontact']['value'] : '' }}" />
+                        <input id="permanentAddress" name="permanent_address" class="form-control" value="{{ key_exists('permanentaddress', $applicant->details) ? $applicant->details['permanentaddress']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="permanentAddressContact" class="form-paper-label">Tel/Mobile No.:</label>
-                        <input id="permanentAddressContact" name="permanent_address_contact" class="form-control" value="{{ key_exists('presentaddresscontact', $applicant->details) ? $applicant->details['presentaddresscontact']['value'] : '' }}" />
+                        <input id="permanentAddressContact" name="permanent_address_contact" class="form-control" value="{{ key_exists('permanentaddresscontact', $applicant->details) ? $applicant->details['permanentaddresscontact']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-8 form-paper">
                     <div class="form-group">
                         <label for="emailAddress" class="form-paper-label">Email Address:</label>
-                        <input type="email" id="emailAddress" name="email_address" class="form-control" value="{{ key_exists('presentaddresscontact', $applicant->details) ? $applicant->details['presentaddresscontact']['value'] : '' }}" />
+                        <input type="email" id="emailAddress" name="email_address" class="form-control" value="{{ key_exists('emailaddress', $applicant->details) ? $applicant->details['emailaddress']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-4 form-paper">
@@ -222,7 +222,7 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="nameOfSchool[0]" class="form-paper-label">Name of School:</label>
-                        <input id="nameOfSchool[0]" name="name_of_school[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['nameOfSchool']['value'] : '' }}" />
+                        <input id="nameOfSchool[0]" name="name_of_school[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['nameofschool']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-6 form-paper">
@@ -234,13 +234,13 @@ Application For Employment
                 <div class="col-5 form-paper border-bottom">
                     <div class="form-group">
                         <label for="yearGraduated[0]" class="form-paper-label">Year Graduated:</label>
-                        <input id="yearGraduated[0]" name="year_graduated[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['yearGraduated']['value'] : '' }}" />
+                        <input id="yearGraduated[0]" name="year_graduated[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['yeargraduated']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-7 form-paper border-bottom">
                     <div class="form-group">
                         <label for="recognition[0]" class="form-paper-label">Honors/Awards:</label>
-                        <input id="recognition[0]" name="recognition[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) ? $applicant->details['education'][0]['recognition']['value'] : '' }}" />
+                        <input id="recognition[0]" name="recognition[0]" type="text" class="form-control" value="{{ key_exists('education', $applicant->details) && key_exists('recognition', $applicant->details['education']) ? $applicant->details['education'][0]['recognition']['value'] : '' }}" />
                     </div>
                 </div>
             </div>
@@ -255,20 +255,20 @@ Application For Employment
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label for="titleOfExam[0]" class="form-paper-label">Title of Examination:</label>
-                        <input id="titleOfExam[0]" name="title_of_exam[0]" class="form-control" />
+                        <input id="titleOfExam[0]" name="title_of_exam[0]" class="form-control" value="{{ key_exists('examination', $applicant->details) ? $applicant->details['examination'][0]['titleofexam']['value'] : '' }}"/>
                     </div>
                 </div>
                 <div class="col-5 form-paper">
                     <div class="form-group">
                         <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'examination')" tabindex="-1">&times;</button>
                         <label for="dateOfExam[0]" class="form-paper-label">Date of Examination:</label>
-                        <input id="dateOfExam[0]" name="date_of_exam[0]" type="date" class="form-control" value="{{ key_exists('examination', $applicant->details) ? $applicant->details['examination'][0]['date']['value'] : '' }}" />
+                        <input id="dateOfExam[0]" name="date_of_exam[0]" type="date" class="form-control" value="{{ key_exists('examination', $applicant->details) ? $applicant->details['examination'][0]['dateofexam']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-7 form-paper border-bottom">
                     <div class="form-group">
                         <label for="placeOfExam[0]" class="form-paper-label">Place of Examination:</label>
-                        <input id="placeOfExam[0]" name="place_of_exam[0]" type="text" class="form-control" value="{{ key_exists('examination', $applicant->details) ? $applicant->details['examination'][0]['place']['value'] : '' }}" />
+                        <input id="placeOfExam[0]" name="place_of_exam[0]" type="text" class="form-control" value="{{ key_exists('examination', $applicant->details) ? $applicant->details['examination'][0]['placeofexam']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-5 form-paper border-bottom">
@@ -297,13 +297,13 @@ Application For Employment
                     <div class="form-group">
                         <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'employment-record')" tabindex="-1">&times;</button>
                         <label for="employmentRecordDateTo[0]" class="form-paper-label">To:</label>
-                        <input id="employmentRecordDateTo[0]" name="employment_record_date_to[0]" type="date" class="form-control" value="{{ key_exists('employmentRecord', $applicant->details) ? $applicant->details['employmentRecord'][0]['to']['value'] : '' }}" />
+                        <input id="employmentRecordDateTo[0]" name="employment_record_date_to[0]" type="date" class="form-control" value="{{ key_exists('employmentrecord', $applicant->details) ? $applicant->details['employmentrecord'][0]['dateto']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label for="employmentRecordPosition[0]" class="form-paper-label">Position:</label>
-                        <input id="employmentRecordPosition[0]" name="employment_record_position[0]" type="text" class="form-control" value="{{ key_exists('employmentRecord', $applicant->details) ? $applicant->details['employmentRecord'][0]['position']['value'] : '' }}" />
+                        <input id="employmentRecordPosition[0]" name="employment_record_position[0]" type="text" class="form-control" value="{{ key_exists('employmentrecord', $applicant->details) ? $applicant->details['employmentrecord'][0]['position']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-5 form-paper">
@@ -341,14 +341,14 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="traingingDateFrom[0]" class="form-paper-label">From:</label>
-                        <input id="traingingDateFrom[0]" type="date" name="training_date_from[0]" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['from']['value'] : '' }}" />
+                        <input id="traingingDateFrom[0]" type="date" name="training_date_from[0]" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['datefrom']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <button type="button" class="close text-muted" data-index="0" onclick="deleteRow(this, 'training')" tabindex="-1">&times;</button>
                         <label for="traingingDateTo[0]" class="form-paper-label">To:</label>
-                        <input id="traingingDateTo[0]" name="training_date_to[0]" type="date" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['to']['value'] : '' }}" />
+                        <input id="traingingDateTo[0]" name="training_date_to[0]" type="date" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['dateto']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-12 form-paper">
@@ -366,7 +366,7 @@ Application For Employment
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="trainingNumberOfHours[0]" class="form-paper-label">Hours:</label>
-                        <input id="trainingNumberOfHours[0]" name="employment_record_employer[0]" type="number" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['hours']['value'] : '' }}" />
+                        <input id="trainingNumberOfHours[0]" name="training_hours[0]" type="number" class="form-control" value="{{ key_exists('training', $applicant->details) ? $applicant->details['training'][0]['hours']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-12 form-paper border-bottom">
@@ -425,13 +425,13 @@ Application For Employment
                 <div class="col-5 form-paper">
                     <div class="form-group">
                         <label for="dateOfMarriage" class="form-paper-label">Date of Marriage:</label>
-                        <input id="dateOfMarriage" name="date_of_marriage[0]" type="date" class="form-control" value="{{ key_exists('spouse', $applicant->details) ? $applicant->details['spouse'][0]['dateOfMarriage']['value'] : '' }}" />
+                        <input id="dateOfMarriage" name="date_of_marriage[0]" type="date" class="form-control" value="{{ key_exists('spouse', $applicant->details) ? $applicant->details['spouse'][0]['dateofmarriage']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label for="placeOfMarriage" class="form-paper-label">Place of Marriage:</label>
-                        <input id="placeOfMarriage" name="place_of_marriage[0]" type="text" class="form-control" value="{{ key_exists('spouse', $applicant->details) ? $applicant->details['spouse'][0]['placeOfMarriage']['value'] : '' }}" />
+                        <input id="placeOfMarriage" name="place_of_marriage[0]" type="text" class="form-control" value="{{ key_exists('spouse', $applicant->details) ? $applicant->details['spouse'][0]['placeofmarriage']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-5 form-paper">
@@ -632,7 +632,7 @@ Application For Employment
                     </div>
                 </div>
             </div>
-            <div class="row" id="addSiblingContainer">
+            <div class="row addContainer" id="addSiblingContainer">
                 <div class="col-12 form-paper">
                     <button class="btn btn-link" type="button" onclick="createNewRow(this, 'sibling')">Add Sibling</button>
                 </div>
@@ -645,14 +645,14 @@ Application For Employment
             <div class="row reference-{{ $i }}">
                 <div class="col-12 form-paper">
                     <div class="form-group">
-                        <label for="referenceLastName[{{ $i }}]" class="form-paper-label">Name:</label>
-                        <input id="referenceLastName[{{ $i }}]" class="form-control" name="reference_last_name[{{ $i }}]" type="text" value="{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['lastname']['value'] : '' }}" />
+                        <label for="referenceName[{{ $i }}]" class="form-paper-label">Name:</label>
+                        <input id="referenceName[{{ $i }}]" class="form-control" name="reference_name[{{ $i }}]" type="text" value="{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['name']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-4 col-6 form-paper">
                     <div class="form-group">
                         <label for="referenceOccupation[{{ $i }}]" class="form-paper-label">Occupation:</label>
-                        <input id="referenceOccupation[{{ $i }}]" class="form-control" name="reference_occupation[{{ $i }}]" type="text" value="{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['sex']['value'] : '' }}" />
+                        <input id="referenceOccupation[{{ $i }}]" class="form-control" name="reference_occupation[{{ $i }}]" type="text" value="{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['occupation']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-4 col-6 form-paper">
@@ -675,6 +675,7 @@ Application For Employment
                 </div>
             </div>
 
+            <input type="hidden" name="additional_info_index" id="additional-info-index" value="5" />
             <div class="row">
                 <div class="col-12 form-paper section-title">
                     Additional Information
@@ -1044,7 +1045,7 @@ Application For Employment
 
                 {{-- If update, present a different form for file input --}}
                 @if ($applicant->id != 0)
-                <form id="imageForm" action="{{ action('applicantController@updateImage', $applicant->id) }}" method="POST" enctype="multipart/form-data">
+                {{-- <form id="imageForm" action="{{ action('applicantController@updateImage', $applicant->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="selectedFilename" name="selected_filename" />
                     <input type="hidden" id="selectedLocation" name="selected_location" />
@@ -1054,7 +1055,7 @@ Application For Employment
                     <div class="d-inline-sm-block float-sm-right">
                         <input type="reset" class="btn btn-light btn-sm" value="Reset" />
                     </div>
-                </form>
+                </form> --}}
                 @endif
 
                 <hr />

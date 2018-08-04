@@ -10,8 +10,10 @@ function createNewRow(self, rowName) {
     protoRow = makeIndexFromObject(protoRow, 'input', 'name', 0, currentIndex);
     protoRow = makeIndexFromObject(protoRow, 'label', 'for', 0, currentIndex);
     protoRow.find("button.close").attr("data-index", currentIndex);
+    protoRow.find("input, select").each(function() {
+        $(this).val('');
+    });
     protoRow.removeClass(rowName + "-0").addClass(rowName + "-" + currentIndex);
-
     $(self).closest(".addContainer").before(protoRow);
 
     $("#" + rowName + "-index").val(++currentIndex);

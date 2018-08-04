@@ -35,28 +35,15 @@ class ApplicantController extends Controller
 
 
     public function new() {
+
         $applicant = new EmployeeEntity();
+        $applicant = $this->employeeService->getEmployeeById(15);
         return view('applicant.new', compact('applicant'));
     }
 
     public function show($id = 0) {
 
         $categories = array();
-
-        $this->categoryService->setKey('department');
-        $categories['department'] = $this->categoryService->getCategories('department');
-
-        $this->categoryService->setKey('employmenttype');
-        $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
-
-        $this->categoryService->setKey('contractstatus');
-        $categories['contractstatus'] = $this->categoryService->getCategories('contractstatus');
-
-        $this->categoryService->setKey('paymenttype');
-        $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
-
-        $this->categoryService->setKey('paymentmode');
-        $categories['paymentmode'] = $this->categoryService->getCategories('paymentmode');
 
         if ($id == 0) {
             return view('employee.show', ['employee' => new EmployeeEntity(), 'categories' => $categories]);
@@ -77,13 +64,11 @@ class ApplicantController extends Controller
         $applicant->firstName = $req['first_name'];
         $applicant->lastName = $req['last_name'];
         $applicant->middleName = $req['middle_name'];
-        $applicant->employeeId = '';
+        $applicant->employeeId = null;
         $applicant->sex = $req['sex'];
 
         $applicant->details = $this->detailsToEntity($req);
-
-        $applicant->employmentDetails = $this->employmentDetailsToEntity($req);
-
+        // $applicant->employmentDetails = $this->employmentDetailsToEntity($req);
         $applicant->deductibles = $this->deductiblesToEntity($req);
 
         if ($id != 0) {
@@ -113,7 +98,7 @@ class ApplicantController extends Controller
         }
 
 
-        return redirect()->action('ApplicantController@show', $id)->with('success', '');
+        return redirect()->action('ApplicantController@new', $id)->with('success', '');
 
     }
 
@@ -217,77 +202,6 @@ class ApplicantController extends Controller
 
         $entity = array();
 
-        // Civil status
-        $entity['civilstatus'] = [
-            'key' => 'civilstatus',
-            'value' => $details['civil_status'],
-            'displayName' => 'Civil Status'
-        ];
-
-        // Spouse
-        $entity['spouse'] = array();
-        for ($i = 0; $i < sizeof($details['spouse_last_name']); $i++) {
-
-            $entity['spouse'][] = [
-                'lastname' => [
-                    'key' => 'lastname',
-                    'grouping' => 0,
-                    'value' => $details['spouse_last_name'][$i],
-                    'displayName' => 'Last Name'
-                ],
-                'firstname' => [
-                    'key' => 'firstname',
-                    'grouping' => 0,
-                    'value' => $details['spouse_first_name'][$i],
-                    'displayName' => 'First Name'
-                ],
-                'middlename' => [
-                    'key' => 'middlename',
-                    'grouping' => 0,
-                    'value' => $details['spouse_middle_name'][$i],
-                    'displayName' => 'Middle Name'
-                ]
-            ];
-        }
-
-        // Dependent
-        $entity['dependent'] = array();
-        for($i = 0; $i < sizeof($details['dependent_last_name']); $i++) {
-            $entity['dependent'][] = [
-                'lastname' => [
-                    'key' => 'lastname',
-                    'grouping' => $i,
-                    'value' => $details['dependent_last_name'][$i],
-                    'displayName' => 'Last Name'
-                ],
-                'firstname' => [
-                    'key' => 'firstname',
-                    'grouping' => $i,
-                    'value' => $details['dependent_first_name'][$i],
-                    'displayName' => 'First Name'
-                ],
-                'middlename' => [
-                    'key' => 'middlename',
-                    'grouping' => $i,
-                    'value' => $details['dependent_middle_name'][$i],
-                    'displayName' => 'Middle Name'
-                ],
-                'relationship' => [
-                    'key' => 'relationship',
-                    'grouping' => $i,
-                    'value' => $details['dependent_relationship'][$i],
-                    'displayName' => 'Relationship'
-                ]
-            ];
-        }
-
-        // Time card
-        $entity['timecard'] = [
-            'key' => 'timecard',
-            'value' => $details['time_card'],
-            'displayName' => 'Time Card'
-        ];
-
         // Position
         $entity['position'] = [
             'key' => 'position',
@@ -295,46 +209,607 @@ class ApplicantController extends Controller
             'displayName' => 'Position'
         ];
 
-        // Date hired
-        $entity['datehired'] = [
-            'key' => 'datehired',
-            'value' => $details['date_hired'],
-            'displayName' => 'Date Hired'
+        // Expected Salary
+        $entity['expectedsalary'] = [
+            'key' => 'expectedsalary',
+            'value' => $details['expected_salary'],
+            'displayName' => 'Expected Salary'
         ];
 
-        // Date End
-        $entity['dateend'] = [
-            'key' => 'dateend',
-            'value' => $details['date_end'],
-            'displayName' => 'Date End'
+        // Civil status
+        $entity['civilstatus'] = [
+            'key' => 'civilstatus',
+            'value' => $details['civil_status'],
+            'displayName' => 'Civil Status'
         ];
 
-        // Date hired
-        $entity['rate'] = [
-            'key' => 'rate',
-            'value' => $details['rate'],
-            'displayName' => 'Hourly Rate'
+        // Respondent to
+        $entity['respondentto'] = [
+            'key' => 'respondentto',
+            'value' => $details['respondent_to'],
+            'displayName' => 'Respondent to'
         ];
 
-        // Allowance
-        $entity['allowance'] = [
-            'key' => 'allowance',
-            'value' => $details['allowance'],
-            'displayName' => 'Allowance'
+        // Respondent to Others
+        if (isset($details['respondent_to_others']) && $details['respondent_to_others'] != '') {
+            $entity['respondenttoothers'] = [
+                'key' => 'respondenttoothers',
+                'value' => $details['respondent_to_others'],
+                'displayName' => 'Others'
+            ];
+        }
+
+        if (isset($details['referral_name']) && $details['referral_name'] != '') {
+            $entity['referralname'] = [
+                'key' => 'referralname',
+                'value' => $details['referral_name'],
+                'displayName' => 'Referral Name'
+            ];
+        }
+
+        if (isset($details['referral_position']) && $details['referral_position'] != '') {
+            $entity['referralposition'] = [
+                'key' => 'referralposition',
+                'value' => $details['referral_position'],
+                'displayName' => 'Referral Position'
+            ];
+        }
+
+        // Date of birth
+        $entity['dateofbirth'] = [
+            'key' => 'dateofbirth',
+            'value' => $details['date_of_birth'],
+            'displayName' => 'Date of Birth'
         ];
 
-        // Number of Memo
-        $entity['numberofmemo'] = [
-            'key' => 'numberofmemo',
-            'value' => $details['number_of_memo'],
-            'displayName' => 'Number of Memo'
+        // Age
+        $entity['age'] = [
+            'key' => 'age',
+            'value' => $details['age'],
+            'displayName' => 'Age'
         ];
 
-        // Remarks
-        $entity['remarks'] = [
-            'key' => 'remarks',
-            'value' => $details['remarks'],
-            'displayName' => 'Remarks'
+        // Place of Birth
+        $entity['placeofbirth'] = [
+            'key' => 'placeofbirth',
+            'value' => $details['place_of_birth'],
+            'displayName' => 'Place of Birth'
+        ];
+
+        // Citizenship
+        $entity['citizenship'] = [
+            'key' => 'citizenship',
+            'value' => $details['citizenship'],
+            'displayName' => 'Citizenship'
+        ];
+
+        // Religion
+        $entity['religion'] = [
+            'key' => 'religion',
+            'value' => $details['religion'],
+            'displayName' => 'Religion'
+        ];
+
+        // Present Address
+        $entity['presentaddress'] = [
+            'key' => 'presentaddress',
+            'value' => $details['present_address'],
+            'displayName' => 'Present Address'
+        ];
+
+        // Present Address Contact
+        if (isset($details['present_address_contact']) && $details['present_address_contact'] != '') {
+            $entity['presentaddresscontact'] = [
+                'key' => 'presentaddresscontact',
+                'value' => $details['present_address_contact'],
+                'displayName' => 'Present Address Contact'
+            ];
+        }
+
+        // Permanent Address
+        $entity['permanentaddress'] = [
+            'key' => 'permanentaddress',
+            'value' => $details['permanent_address'],
+            'displayName' => 'Permanent Address'
+        ];
+
+        // Permanent Address Contact
+        if (isset($details['permanent_address_contact']) && $details['permanent_address_contact'] != '')
+            $entity['permanentaddresscontact'] = [
+                'key' => 'permanentaddresscontact',
+                'value' => $details['permanent_address_contact'],
+                'displayName' => 'Permanent Address Contact'
+            ];
+
+        // Email Address
+        if (isset($details['email_address']) && $details['email_address'] != '')
+            $entity['emailaddress'] = [
+                'key' => 'emailaddress',
+                'value' => $details['email_address'],
+                'displayName' => 'Email Address'
+            ];
+
+        // Contact Number
+        $entity['contactnumber'] = [
+            'key' => 'contactnumber',
+            'value' => $details['contact_number'],
+            'displayName' => 'Contact Number'
+        ];
+
+        // Educational Attainment
+        $entity['education'] = array();
+        for ($i = 0; $i < sizeof($details['level']); $i++) {
+
+            $entity['education'][] = [
+                'level' => [
+                    'key' => 'level',
+                    'grouping' => $i,
+                    'value' => $details['level'][$i],
+                    'displayName' => 'Level'
+                ],
+                'nameofschool' => [
+                    'key' => 'nameofschool',
+                    'grouping' => $i,
+                    'value' => $details['name_of_school'][$i],
+                    'displayName' => 'Name of School'
+                ],
+                'course' => [
+                    'key' => 'course',
+                    'grouping' => $i,
+                    'value' => $details['course'][$i],
+                    'displayName' => 'Course'
+                ],
+                'yeargraduated' => [
+                    'key' => 'yeargraduated',
+                    'grouping' => $i,
+                    'value' => $details['year_graduated'][$i] != '' ? $details['year_graduated'][$i] : null,
+                    'displayName' => 'Year Graduated'
+                ],
+                'recognition' => [
+                    'key' => 'recognition',
+                    'grouping' => $i,
+                    'value' => $details['recognition'][$i] != '' ? $details['recognition'][$i] : null,
+                    'displayName' => 'Honors/Awards'
+                ]
+            ];
+        }
+
+        // Examinations
+        $entity['examination'] = array();
+        for ($i = 0; $i < sizeof($details['title_of_exam']); $i++) {
+
+            if (sizeof($details['title_of_exam']) <= 1 && $details['title_of_exam'] == '')
+                break;
+
+            $entity['examination'][] = [
+                'titleofexam' => [
+                    'key' => 'titleofexam',
+                    'grouping' => $i,
+                    'value' => $details['title_of_exam'][$i],
+                    'displayName' => 'Title of Exam'
+                ],
+                'dateofexam' => [
+                    'key' => 'dateofexam',
+                    'grouping' => $i,
+                    'value' => $details['date_of_exam'][$i],
+                    'displayName' => 'Date of Exam'
+                ],
+                'placeofexam' => [
+                    'key' => 'placeofexam',
+                    'grouping' => $i,
+                    'value' => $details['place_of_exam'][$i],
+                    'displayName' => 'Place of Exam'
+                ],
+                'rating' => [
+                    'key' => 'rating',
+                    'grouping' => $i,
+                    'value' => $details['rating'][$i],
+                    'displayName' => 'Rating'
+                ]
+            ];
+        }
+
+        // Employment record
+        $entity['employmentrecord'] = array();
+        for ($i = 0; $i < sizeof($details['employment_record_date_from']); $i++) {
+
+            if (sizeof($details['employment_record_date_from']) <= 1 && $details['employment_record_date_from'] == '')
+                break;
+
+            $entity['employmentrecord'][] = [
+                'datefrom' => [
+                    'key' => 'datefrom',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_date_from'][$i],
+                    'displayName' => 'From'
+                ],
+                'dateto' => [
+                    'key' => 'dateto',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_date_to'][$i],
+                    'displayName' => 'To'
+                ],
+                'position' => [
+                    'key' => 'position',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_position'][$i],
+                    'displayName' => 'Position'
+                ],
+                'status' => [
+                    'key' => 'status',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_status'][$i],
+                    'displayName' => 'Status'
+                ],
+                'employer' => [
+                    'key' => 'employer',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_employer'][$i],
+                    'displayName' => 'Employer/Location'
+                ],
+                'salary' => [
+                    'key' => 'salary',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_salary'][$i],
+                    'displayName' => 'Gross Monthly Salary'
+                ],
+                'reasonforleaving' => [
+                    'key' => 'reasonforleaving',
+                    'grouping' => $i,
+                    'value' => $details['employment_record_reason_for_leaving'][$i],
+                    'displayName' => 'Reason for Leaving'
+                ]
+            ];
+        }
+
+        // Training
+        $entity['training'] = array();
+        for ($i = 0; $i < sizeof($details['training_date_from']); $i++) {
+
+            if (sizeof($details['training_date_from']) <= 1 && $details['training_date_from'] == '')
+                break;
+
+            $entity['training'][] = [
+                'datefrom' => [
+                    'key' => 'datefrom',
+                    'grouping' => $i,
+                    'value' => $details['training_date_from'][$i],
+                    'displayName' => 'From'
+                ],
+                'dateto' => [
+                    'key' => 'dateto',
+                    'grouping' => $i,
+                    'value' => $details['training_date_to'][$i],
+                    'displayName' => 'To'
+                ],
+                'title' => [
+                    'key' => 'title',
+                    'grouping' => $i,
+                    'value' => $details['training_title'][$i],
+                    'displayName' => 'Title'
+                ],
+                'venue' => [
+                    'key' => 'venue',
+                    'grouping' => $i,
+                    'value' => $details['training_venue'][$i],
+                    'displayName' => 'Venue'
+                ],
+                'hours' => [
+                    'key' => 'hours',
+                    'grouping' => $i,
+                    'value' => $details['training_hours'][$i],
+                    'displayName' => 'Number of Hours'
+                ],
+                'organizer' => [
+                    'key' => 'organizer',
+                    'grouping' => $i,
+                    'value' => $details['training_organizer'][$i],
+                    'displayName' => 'Organizer/Sponsor'
+                ]
+            ];
+        }
+
+        // Spouse
+        $entity['spouse'] = array();
+        for ($i = 0; $i < sizeof($details['spouse_last_name']); $i++) {
+
+            if (sizeof($details['spouse_last_name']) <= 1 && $details['spouse_last_name'] == '')
+                break;
+
+            $entity['spouse'][] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => $i,
+                    'value' => $details['spouse_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => $i,
+                    'value' => $details['spouse_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => $i,
+                    'value' => $details['spouse_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ],
+                'age' => [
+                    'key' => 'age',
+                    'grouping' => $i,
+                    'value' => $details['spouse_age'][$i],
+                    'displayName' => 'Age'
+                ],
+                'address' => [
+                    'key' => 'address',
+                    'grouping' => $i,
+                    'value' => $details['spouse_address'][$i],
+                    'displayName' => 'Address'
+                ],
+                'dateofmarriage' => [
+                    'key' => 'dateofmarriage',
+                    'grouping' => $i,
+                    'value' => $details['date_of_marriage'][$i],
+                    'displayName' => 'Date of Marriage'
+                ],
+                'placeofmarriage' => [
+                    'key' => 'placeofmarriage',
+                    'grouping' => $i,
+                    'value' => $details['place_of_marriage'][$i],
+                    'displayName' => 'Place of Marriage'
+                ],
+                'occupation' => [
+                    'key' => 'occupation',
+                    'grouping' => $i,
+                    'value' => $details['occupation_of_spouse'][$i],
+                    'displayName' => 'Occupation'
+                ],
+                'employer' => [
+                    'key' => 'employer',
+                    'grouping' => $i,
+                    'value' => $details['employer_of_spouse'][$i],
+                    'displayName' => 'Employer'
+                ]
+            ];
+        }
+
+        // Mother
+        if ($details['mother_last_name'] != '') {
+            $entity['mother'] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => null,
+                    'value' => $details['mother_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => null,
+                    'value' => $details['mother_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => null,
+                    'value' => $details['mother_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ],
+                'age' => [
+                    'key' => 'age',
+                    'grouping' => null,
+                    'value' => $details['mother_age'][$i],
+                    'displayName' => 'Age'
+                ]
+            ];
+        }
+
+        // Father
+        if ($details['father_last_name'] != '') {
+            $entity['father'] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => null,
+                    'value' => $details['father_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => null,
+                    'value' => $details['father_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => null,
+                    'value' => $details['father_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ],
+                'age' => [
+                    'key' => 'age',
+                    'grouping' => null,
+                    'value' => $details['father_age'][$i],
+                    'displayName' => 'Age'
+                ]
+            ];
+        }
+
+        // Children
+        $entity['child'] = array();
+        for ($i = 0; $i < sizeof($details['child_last_name']); $i++) {
+
+            if (sizeof($details['child_last_name']) <= 1 && $details['child_last_name'] == '')
+                break;
+
+            $entity['child'][] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => $i,
+                    'value' => $details['child_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => $i,
+                    'value' => $details['child_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => $i,
+                    'value' => $details['child_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ],
+                'sex' => [
+                    'key' => 'sex',
+                    'grouping' => $i,
+                    'value' => $details['child_sex'][$i],
+                    'displayName' => 'Sex'
+                ],
+                'age' => [
+                    'key' => 'age',
+                    'grouping' => $i,
+                    'value' => $details['child_age'][$i],
+                    'displayName' => 'Age'
+                ],
+                'address' => [
+                    'key' => 'address',
+                    'grouping' => $i,
+                    'value' => $details['child_address'][$i],
+                    'displayName' => 'Address'
+                ],
+                'occupation' => [
+                    'key' => 'occupation',
+                    'grouping' => $i,
+                    'value' => $details['child_occupation'][$i],
+                    'displayName' => 'Occupation/Employer'
+                ]
+            ];
+        }
+
+        // Sibling
+        $entity['sibling'] = array();
+        for ($i = 0; $i < sizeof($details['sibling_last_name']); $i++) {
+
+            if (sizeof($details['sibling_last_name']) <= 1 && $details['sibling_last_name'] == '')
+                break;
+
+            $entity['sibling'][] = [
+                'lastname' => [
+                    'key' => 'lastname',
+                    'grouping' => $i,
+                    'value' => $details['sibling_last_name'][$i],
+                    'displayName' => 'Last Name'
+                ],
+                'firstname' => [
+                    'key' => 'firstname',
+                    'grouping' => $i,
+                    'value' => $details['sibling_first_name'][$i],
+                    'displayName' => 'First Name'
+                ],
+                'middlename' => [
+                    'key' => 'middlename',
+                    'grouping' => $i,
+                    'value' => $details['sibling_middle_name'][$i],
+                    'displayName' => 'Middle Name'
+                ],
+                'sex' => [
+                    'key' => 'sex',
+                    'grouping' => $i,
+                    'value' => $details['sibling_sex'][$i],
+                    'displayName' => 'Sex'
+                ],
+                'age' => [
+                    'key' => 'age',
+                    'grouping' => $i,
+                    'value' => $details['sibling_age'][$i],
+                    'displayName' => 'Age'
+                ],
+                'address' => [
+                    'key' => 'address',
+                    'grouping' => $i,
+                    'value' => $details['sibling_address'][$i],
+                    'displayName' => 'Address'
+                ],
+                'occupation' => [
+                    'key' => 'occupation',
+                    'grouping' => $i,
+                    'value' => $details['sibling_occupation'][$i],
+                    'displayName' => 'Occupation/Employer'
+                ]
+            ];
+        }
+
+        // References
+        $entity['reference'] = array();
+        for ($i = 0; $i < sizeof($details['reference_name']); $i++) {
+
+            $entity['reference'][] = [
+                'name' => [
+                    'key' => 'name',
+                    'grouping' => $i,
+                    'value' => $details['reference_name'][$i],
+                    'displayName' => 'Name'
+                ],
+                'occupation' => [
+                    'key' => 'firstname',
+                    'grouping' => $i,
+                    'value' => $details['reference_occupation'][$i],
+                    'displayName' => 'Occupation'
+                ],
+                'address' => [
+                    'key' => 'address',
+                    'grouping' => $i,
+                    'value' => $details['reference_address'][$i],
+                    'displayName' => 'Address'
+                ],
+                'contact' => [
+                    'key' => 'contact',
+                    'grouping' => $i,
+                    'value' => $details['reference_contact'][$i],
+                    'displayName' => 'Contact'
+                ]
+            ];
+        }
+
+        // Additional Information
+        $entity['additionalinfo'] = [
+            [
+                'key' => 0,
+                'grouping' => null,
+                'value' => isset($details['additional_information'][0]) ? 'yes' : 'no',
+                'displayName' => 'Have you ever been found guilty or been penalized for any offense or violation involving moral turpitude or carrying the penalty of disqualification to hold public office?'
+            ],
+            [
+                'key' => 1,
+                'grouping' => null,
+                'value' => isset($details['additional_information'][1]) ? 'yes' : 'no',
+                'displayName' => 'Have you been suspended, discharged, or forced to resign from any of your previous positions? If yes, provide details.'
+            ],
+            [
+                'key' => 2,
+                'grouping' => null,
+                'value' => isset($details['additional_information'][2]) ? 'yes' : 'no',
+                'displayName' => 'Are you willing to accept project employment?'
+            ],
+            [
+                'key' => 3,
+                'grouping' => null,
+                'value' => isset($details['additional_information'][3]) ? 'yes' : 'no',
+                'displayName' => 'Have you taken the CJI pre-employment test? If yes, please provide details.'
+            ],
+            [
+                'key' => 4,
+                'grouping' => null,
+                'value' => isset($details['additional_information'][4]) ? 'yes' : 'no',
+                'displayName' => 'Do you have disablity or health condition that would affect your ability to work?'
+            ]
+        ];
+
+        $entity['applicant'] = [
+            'key' => 'applicant',
+            'value' => '1',
+            'displayName' => 'Applicant'
         ];
 
         return $entity;
@@ -356,19 +831,19 @@ class ApplicantController extends Controller
 
         $entity = array();
 
-        if (isset($details['tin'])) {
+        if (isset($details['tinnumber']) && $details['tinnumber'] != '') {
             $entity['tin'] = $details['tinnumber'];
         }
 
-        if (isset($details['sss'])) {
+        if (isset($details['ssnumber']) && $details['ssnumber'] != '') {
             $entity['sss'] = $details['ssnumber'];
         }
 
-        if (isset($details['philhealth'])) {
+        if (isset($details['philhealthnumber']) && $details['philhealthnumber'] != '') {
             $entity['philhealth'] = $details['philhealthnumber'];
         }
 
-        if (isset($details['pagibig'])) {
+        if (isset($details['pagibignumber']) && $details['pagibignumber'] != '') {
             $entity['pagibig'] = $details['pagibignumber'];
         }
 
