@@ -37,20 +37,13 @@ class ApplicantController extends Controller
     public function new() {
 
         $applicant = new EmployeeEntity();
-        $applicant = $this->employeeService->getEmployeeById(15);
         return view('applicant.new', compact('applicant'));
     }
 
     public function show($id = 0) {
 
-        $categories = array();
-
-        if ($id == 0) {
-            return view('employee.show', ['employee' => new EmployeeEntity(), 'categories' => $categories]);
-        }
-
-        $employee= $this->employeeService->getEmployeeById($id);
-        return view('employee.show', ['employee' => $employee, 'categories' => $categories]);
+        $applicant= $this->employeeService->getEmployeeById($id);
+        return view('applicant.show', ['applicant' => $applicant]);
 
     }
 
@@ -778,30 +771,35 @@ class ApplicantController extends Controller
                 'key' => 0,
                 'grouping' => null,
                 'value' => isset($details['additional_information'][0]) ? 'yes' : 'no',
+                'detail' => isset($details['additional_information_detail'][0]) && $details['additional_information_detail'][0] != '' ? $details['additional_information_detail'][0] : null,
                 'displayName' => 'Have you ever been found guilty or been penalized for any offense or violation involving moral turpitude or carrying the penalty of disqualification to hold public office?'
             ],
             [
                 'key' => 1,
                 'grouping' => null,
                 'value' => isset($details['additional_information'][1]) ? 'yes' : 'no',
+                'detail' => isset($details['additional_information_detail'][1]) && $details['additional_information_detail'][1] != '' ? $details['additional_information_detail'][1] : null,
                 'displayName' => 'Have you been suspended, discharged, or forced to resign from any of your previous positions? If yes, provide details.'
             ],
             [
                 'key' => 2,
                 'grouping' => null,
                 'value' => isset($details['additional_information'][2]) ? 'yes' : 'no',
+                'detail' => isset($details['additional_information_detail'][2]) && $details['additional_information_detail'][2] != '' ? $details['additional_information_detail'][2] : null,
                 'displayName' => 'Are you willing to accept project employment?'
             ],
             [
                 'key' => 3,
                 'grouping' => null,
                 'value' => isset($details['additional_information'][3]) ? 'yes' : 'no',
+                'detail' => isset($details['additional_information_detail'][3]) && $details['additional_information_detail'][3] != '' ? $details['additional_information_detail'][3] : null,
                 'displayName' => 'Have you taken the CJI pre-employment test? If yes, please provide details.'
             ],
             [
                 'key' => 4,
                 'grouping' => null,
                 'value' => isset($details['additional_information'][4]) ? 'yes' : 'no',
+                'detail' => isset($details['additional_information_detail'][4]) && $details['additional_information_detail'][4] != '' ? $details['additional_information_detail'][4] : null,
                 'displayName' => 'Do you have disablity or health condition that would affect your ability to work?'
             ]
         ];

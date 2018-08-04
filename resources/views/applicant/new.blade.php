@@ -57,10 +57,10 @@ Application For Employment
                     <div class="form-group">
                         <label for="civilStatus" class="form-paper-label">Civil Status:</label>
                         <select id="civilStatus" name="civil_status" class="form-control"   >
-                            <option value="single" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'single' ? 'selected' : ''}} >Single</option>
-                            <option value="married" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'married' ? 'selected' : ''}} >Married</option>
-                            <option value="widow" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'widow' ? 'selected' : ''}} >Widow</option>
-                            <option value="separated"  {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'separated' ? 'selected' : ''}} >Legally Separated</option>
+                            <option value="Single" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'single' ? 'selected' : ''}} >Single</option>
+                            <option value="Married" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'married' ? 'selected' : ''}} >Married</option>
+                            <option value="Widow" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'widow' ? 'selected' : ''}} >Widow</option>
+                            <option value="Separated"  {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'separated' ? 'selected' : ''}} >Legally Separated</option>
                         </select>
                     </div>
                 </div>
@@ -690,6 +690,7 @@ Application For Employment
                         <div class="col-11">
                             <div class="form-group">
                                 <label for="additionalInformation[0]" class="">Have you ever been found guilty or been penalized for any offense or violation involving moral turpitude or carrying the penalty of disqualification to hold public office?</label>
+                                <input type="hidden" name="additional_information_detail[1]" class="form-control form-control-sm" />
                             </div>
                         </div>
                     </div>
@@ -702,6 +703,7 @@ Application For Employment
                         <div class="col-11">
                             <div class="form-group">
                                 <label for="additionalInformation[1]" class="">Have you been suspended, discharged, or forced to resign from any of your previous positions? If yes, provide details.</label>
+                                <input type="text" name="additional_information_detail[1]" class="form-control form-control-sm" />
                             </div>
                         </div>
                     </div>
@@ -714,6 +716,7 @@ Application For Employment
                         <div class="col-11">
                             <div class="form-group">
                                 <label for="additionalInformation[2]" class="">Are you willing to accept project employment?</label>
+                                <input type="hidden" name="additional_information_detail[2]" class="form-control form-control-sm" />
                             </div>
                         </div>
                     </div>
@@ -726,6 +729,7 @@ Application For Employment
                         <div class="col-11">
                             <div class="form-group">
                                 <label for="additionalInformation[3]" class="">Have you taken the CJI pre-employment test? If yes, please provide details.</label>
+                                <input type="text" name="additional_information_detail[3]" class="form-control form-control-sm" />
                             </div>
                         </div>
                     </div>
@@ -738,6 +742,7 @@ Application For Employment
                         <div class="col-11">
                             <div class="form-group">
                                 <label for="additionalInformation[4]" class="">Do you have disablity or health condition that would affect your ability to work?</label>
+                                <input type="hidden" name="additional_information_detail[4]" class="form-control form-control-sm" />
                             </div>
                         </div>
                     </div>
@@ -1069,7 +1074,7 @@ Application For Employment
                         @endif
 
                         <div class="col-sm-3 col-6 previous-image" data-location="{{ $pic['location'] }}" data-filename={{  $pic['filename'] }}>
-                            <form action="{{ action('applicantController@deleteImage', $applicant->id) }}" method="POST" >
+                            {{-- <form action="{{ action('ApplicantController@DeleteImage', $applicant->id) }}" method="POST" >
                                 @csrf
                                 <input type="hidden" name="location" value="{{ $pic['location'] }}" />
                                 <input type="hidden" name="filename" value="{{ $pic['filename'] }}" />
@@ -1081,7 +1086,7 @@ Application For Employment
                                     </div>
                                 <button type="button" class="btn btn-light btn-delete-image" data-toggle="dropdown"><i class="fa fa-trash fa-lg"></i></button>
 
-                            </form>
+                            </form> --}}
                             <img src="{{ asset('storage/'.$pic['location'].$pic['filename']) }}" class="img-fluid" onclick="selectImage(this)" />
                         </div>
 

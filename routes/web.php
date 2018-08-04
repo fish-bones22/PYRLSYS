@@ -45,3 +45,4 @@ Route::post('employee/deleteImage/{id}', 'EmployeeController@deleteImage');
 Route::get('application-form', 'ApplicantController@new');
 Route::post('application-form/{id}', 'ApplicantController@update');
 Route::post('applicant', 'ApplicantController@index');
+Route::get('applicant/{id}', 'ApplicantController@show');
