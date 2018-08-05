@@ -13,9 +13,17 @@ use App\Entities\EmployeeEntity;
 class EmployeeService extends EntityService implements IEmployeeService {
 
     public function getAllEmployees() {
+
         $employees = Employee::all();
         $employeeEntities = array();
+
         foreach ($employees as $emp) {
+
+            $detail = $emp->details;
+
+            if ($detail->where('key', 'applicant')->first() != null)
+                continue;
+
             $employeeEntities[] = $this->mapToEntity($emp, new EmployeeEntity());
         }
 
@@ -23,10 +31,38 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
+    public function getAllApplicants() {
+
+        $applicants = Employee::whereNull('employeeId')->get();
+        $applicantEntities = array();
+
+        foreach ($applicants as $app) {
+            $applicantEntities[] = $this->mapToEntity($app, new EmployeeEntity());
+        }
+
+        return $applicantEntities;
+    }
+
+
     public function getEmployeeById($id) {
         $emp = Employee::find($id);
+        $details = $emp->details;
+
+        if (key_exists('applicant', $details))
+            return null;
 
         return $this->mapToEntity($emp, new EmployeeEntity());
+    }
+
+
+    public function getApplicantById($id) {
+        $app = Employee::find($id);
+        $details = $app->details;
+
+        if (!key_exists('applicant', $details))
+            return null;
+
+        return $this->mapToEntity($app, new EmployeeEntity());
     }
 
 
@@ -62,6 +98,22 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $entity->deductibles = $this->getDeductibles($model->deductibles);
         return $entity;
 
+    }
+
+
+    public function checkApplicant($firstName, $middleName, $lastName, $position) {
+
+        $entity = Employee::where('firstName', $firstName)->where('middleName', $middleName)->where('lastName', $lastName)->whereNull('employeeId')->first();
+
+        if ($entity == null)
+            return false;
+
+        $details = $entity->details;
+
+        if (key_exists('position', $details) && $details['position'] == $position)
+            return false;
+
+        return true;
     }
 
 
@@ -146,6 +198,45 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $res = $this->saveDeductibles($id, $entity->deductibles);
 
         return $res;
+    }
+
+
+    public function updateDetail($id, $key, $value) {
+
+        $detail = EmployeeDetail::where('key', $key)->where('employee_id', $id)->first();
+
+        if ($detail == null)
+            return [
+                'result' => false,
+                'message' => 'No details found'
+            ];
+
+        $detail->value = $value;
+        $detail->save();
+
+        return [
+            'result' => true
+        ];
+
+    }
+
+
+    public function removeDetail($id, $key) {
+
+        $detail = EmployeeDetail::where('key', $key)->where('employee_id', $id)->first();
+
+        if ($detail == null)
+            return [
+                'result' => false,
+                'message' => 'No details found'
+            ];
+
+        $detail->delete();
+
+        return [
+            'result' => true
+        ];
+
     }
 
 

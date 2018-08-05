@@ -31,13 +31,13 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="position" class="form-paper-label">Position Applied for:</label>
-                        <input id="position" class="form-control" name="position" value="{{ key_exists('position', $applicant->details) ? $applicant->details['position']['value'] : '' }}" />
+                        <input id="position" class="form-control" name="position" value="{{ old('position') }}" />
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="expectedsalary" class="form-paper-label">Expected salary:</label>
-                        <input id="expectedsalary" type="number" step="0.05" class="form-control" name="expected_salary" value="{{ key_exists('expectedsalary', $applicant->details) ? $applicant->details['expectedsalary']['value'] : '' }}" />
+                        <input id="expectedsalary" type="number" step="0.05" class="form-control" name="expected_salary" value="{{ old('expected_salary') }}" />
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="sex" class="form-paper-label">Sex:</label>
-                        <select id="sex" name="sex" class="form-control" value="{{ $applicant->sex }}">
+                        <select id="sex" name="sex" class="form-control" value="{{ $applicant->sex }}" onchange="changeMiddleToMaiden()">
                             <option value="m" {{ $applicant->sex == 'm' ? 'selected' : '' }}>Male</option>
                             <option value="f" {{ $applicant->sex == 'f' ? 'selected' : '' }}>Female</option>
                         </select>
@@ -56,7 +56,7 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="civilStatus" class="form-paper-label">Civil Status:</label>
-                        <select id="civilStatus" name="civil_status" class="form-control"   >
+                        <select id="civilStatus" name="civil_status" class="form-control" onchange="changeMiddleToMaiden()" >
                             <option value="Single" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'single' ? 'selected' : ''}} >Single</option>
                             <option value="Married" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'married' ? 'selected' : ''}} >Married</option>
                             <option value="Widow" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'widow' ? 'selected' : ''}} >Widow</option>
@@ -80,16 +80,16 @@ Application For Employment
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <label for="middlename" class="form-paper-label">Middle name:</label>
+                                <label id="middleNameLabel" for="middlename" class="form-paper-label">Middle name (Maiden if married):</label>
                                 <input id="middlename" name="middle_name" type="text" class="form-control" value="{{ $applicant->middleName }}"/>
                             </div>
                         </div>
-                        <div class="col-12">
+                        {{-- <div class="col-12">
                             <div class="form-group">
                                 <label for="maidenName" class="form-paper-label">Maiden Name (if married):</label>
                                 <input id="maidenName" name="maiden_name" type="text" class="form-control" value="{{ $applicant->maidenName }}"/>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

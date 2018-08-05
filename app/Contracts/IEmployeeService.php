@@ -6,8 +6,15 @@ use App\Entities\EmployeeEntity;
 
 interface IEmployeeService {
 
+    public function getAllApplicants();
+    public function getApplicantById($id);
+    public function checkApplicant($firstName, $middleName, $lastName, $position);
+
     public function getAllEmployees();
     public function getEmployeeById($id);
+
+    public function updateDetail($id, $key, $value);
+    public function removeDetail($id, $key);
     public function addEmployee(EmployeeEntity $employee);
     public function updateEmployee(EmployeeEntity $employee);
     public function removeEmployee($id);

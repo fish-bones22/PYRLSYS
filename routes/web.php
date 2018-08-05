@@ -34,7 +34,7 @@ Route::get('categories', 'CategoryController@categories');
 Route::post('categories', 'CategoryController@setCategory');
 
 // Route::resource('employee', 'EmployeeController');
-Route::get('employee', 'EmployeeController@index');
+Route::get('employees', 'EmployeeController@index');
 Route::get('employee/new', 'EmployeeController@show');
 Route::get('employee/{id}', 'EmployeeController@show');
 Route::post('employee/{id}', 'EmployeeController@update');
@@ -42,7 +42,10 @@ Route::get('employee/delete/{id}', 'EmployeeController@destroy');
 Route::post('employee/updateImage/{id}', 'EmployeeController@updateImage');
 Route::post('employee/deleteImage/{id}', 'EmployeeController@deleteImage');
 
+Route::get('applicants', 'ApplicantController@index');
 Route::get('application-form', 'ApplicantController@new');
 Route::post('application-form/{id}', 'ApplicantController@update');
-Route::post('applicant', 'ApplicantController@index');
 Route::get('applicant/{id}', 'ApplicantController@show');
+Route::get('applicant-process/{id}', 'ApplicantController@process');
+Route::get('applicant-hire/{id}', 'ApplicantController@hire');
+Route::delete('applicant/{id}', 'ApplicantController@destroy')->name('applicant.destroy');

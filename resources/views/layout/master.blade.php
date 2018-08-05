@@ -18,8 +18,12 @@
         </button>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ action('EmployeeController@index') }}">Human Resource</a>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" id="humanResourceDropdown" data-toggle="dropdown">Human Resource</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ action('EmployeeController@index') }}">Employees</a>
+                        <a class="dropdown-item" href="{{ action('ApplicantController@index') }}">Applicants</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ action('UserController@index') }}">App Users</a>

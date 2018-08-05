@@ -63,19 +63,19 @@
                             {{ $applicant->details['respondentto']['value'] }}
                         </div>
                         @if (key_exists('respondenttoothers', $applicant->details))
-                        <div class="col form-paper">
-                            <div class="form-paper-display">
-                                {{ $applicant->details['respondenttoothers'] }}
+                        <div class="col">
+                            <div class="form-paper-subdisplay">
+                                {{ $applicant->details['respondenttoothers']['value'] }}
                             </div>
                         </div>
                         @endif
                         @if (key_exists('referralname', $applicant->details) && key_exists('referralposition', $applicant->details))
                         <div class="col form-paper">
                             <div class="form-paper-display">
-                                {{ $applicant->details['referralname'] }}
+                                {{ $applicant->details['referralname']['value'] }}
                             </div>
                             <div class="form-paper-subdisplay">
-                                {{ $applicant->details['referralposition'] }}
+                                {{ $applicant->details['referralposition']['value'] }}
                             </div>
                         </div>
                         @endif
@@ -89,30 +89,30 @@
             <div class="row">
                 <div class="col-12 form-paper">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col">
                             <div class="form-group">
                                 <label for="lastname" class="form-paper-label">Last name:</label>
                                 <div class="form-paper-display"> {{ $applicant->lastName }}</div>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col">
                             <div class="form-group">
                                 <label for="firstname" class="form-paper-label">First name:</label>
                                 <div class="form-paper-display"> {{ $applicant->firstName }}</div>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col">
                             <div class="form-group">
                                 <label for="middlename" class="form-paper-label">Middle name:</label>
                                 <div class="form-paper-display"> {{ $applicant->middleName }}</div>
                             </div>
                         </div>
-                        <div class="col-3">
+                        {{-- <div class="col-3">
                             <div class="form-group">
                                 <label for="maidenName" class="form-paper-label">Maiden Name (if married):</label>
                                 <div class="form-paper-display">{{ $applicant->middleName }}</div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="col-6 form-paper">
@@ -242,7 +242,7 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Educational Attainment</div>
+                    <div class="form-paper-subdisplay">No Educational Attainment</div>
                 </div>
             </div>
             @endif
@@ -286,7 +286,7 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Examinations Taken</div>
+                    <div class="form-paper-subdisplay">No Examinations Taken</div>
                 </div>
             </div>
             @endif
@@ -347,7 +347,7 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Employment History</div>
+                    <div class="form-paper-subdisplay">No Employment History</div>
                 </div>
             </div>
             @endif
@@ -403,7 +403,7 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Trainings or Seminars Taken</div>
+                    <div class="form-paper-subdisplay">No Trainings or Seminars Taken</div>
                 </div>
             </div>
             @endif
@@ -413,11 +413,13 @@
                 <div class="col-12 form-paper section-title">Family Background</div>
             </div>
 
+
+            @if (key_exists('spouse', $applicant->details))
+
             <div class="row">
                 <div class="col-12 form-paper section-label">Spouse (Maiden) Name</div>
             </div>
 
-            @if (key_exists('spouse', $applicant->details))
             @for ($i = 0; $i < sizeof($applicant->details['spouse']); $i++)
 
             <div class="row">
@@ -465,12 +467,12 @@
                 </div>
             </div>
             @endfor
-            @else
+            {{-- @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Spouse</div>
+                    <div class="form-paper-subdisplay">No Spouse</div>
                 </div>
-            </div>
+            </div> --}}
             @endif
 
 
@@ -496,7 +498,7 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Information about Mother</div>
+                    <div class="form-paper-subdisplay">No Information about Mother</div>
                 </div>
             </div>
             @endif
@@ -524,17 +526,18 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Information about Father</div>
+                    <div class="form-paper-subdisplay">No Information about Father</div>
                 </div>
             </div>
             @endif
 
 
+            @if (key_exists('child', $applicant->details))
+
             <div class="row">
                 <div class="col-12 form-paper section-label">Children</div>
             </div>
 
-            @if (key_exists('child', $applicant->details))
             @for ($i = 0; $i < sizeof($applicant->details['child']); $i++)
 
             <div class="row">
@@ -571,62 +574,64 @@
             </div>
 
             @endfor
-            @else
+            {{-- @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Children</div>
+                    <div class="form-paper-subdisplay">No Children</div>
                 </div>
-            </div>
+            </div> --}}
             @endif
 
+
+
+            @if (key_exists('sibling', $applicant->details))
 
             <div class="row">
                 <div class="col-12 form-paper section-label">Siblings</div>
             </div>
 
-            @if (key_exists('sibling', $applicant->details))
             @for ($i = 0; $i < sizeof($applicant->details['sibling']); $i++)
 
             <div class="row">
-                <div class="col-12 form-paper">
+                <div class="col-8 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Name:</label>
                         <div class="form-paper-display">{{ key_exists('sibling', $applicant->details) ? $applicant->details['sibling'][$i]['lastname']['value'].', '. $applicant->details['sibling'][$i]['firstname']['value'].' '. $applicant->details['sibling'][$i]['middlename']['value'] : '' }}</div>
                     </div>
                 </div>
-                <div class="col-6 form-paper">
+                <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Sex:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['sibling'][$i]['sex']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('sex', $applicant->details['sibling'][$i]) ? $applicant->details['sibling'][$i]['sex']['value'] : '' }}</div>
                     </div>
                 </div>
-                <div class="col-6 form-paper">
+                <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Age:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['sibling'][$i]['age']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('age', $applicant->details['sibling'][$i]) ? $applicant->details['sibling'][$i]['age']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Address:</label>
-                        <div class="form-paper-display">{{ key_exists('sibling', $applicant->details) ? $applicant->details['sibling'][$i]['address']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('address', $applicant->details['sibling'][$i]) ? $applicant->details['sibling'][$i]['address']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Occupation/Employer:</label>
-                        <div class="form-paper-display">{{ key_exists('sibling', $applicant->details) ? $applicant->details['sibling'][$i]['occupation']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('occupation', $applicant->details['sibling'][$i]) ? $applicant->details['sibling'][$i]['occupation']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
 
             @endfor
-            @else
+            {{-- @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No Siblings</div>
+                    <div class="form-paper-subdisplay">No Siblings</div>
                 </div>
-            </div>
+            </div> --}}
             @endif
 
 
@@ -667,7 +672,7 @@
             @else
             <div class="row">
                 <div class="col-12 form-paper">
-                    <div class="form-paper-label">No References</div>
+                    <div class="form-paper-subdisplay">No References</div>
                 </div>
             </div>
             @endif
@@ -692,7 +697,9 @@
                             <div class="form-group">
                                 <label class="">{{ $applicant->details['additionalinfo'][$i]['displayName'] }}</label>
                                 @if ($applicant->details['additionalinfo'][$i]['detail'] != null)
-                                <label class="form-paper-subdisplay">{{ $applicant->details['additionalinfo'][$i]['detail'] }}</label>
+                                <div>
+                                    <label class="form-paper-subdisplay">{{ $applicant->details['additionalinfo'][$i]['detail'] }}</label>
+                                </div>
                                 @endif
                             </div>
                         </div>
@@ -741,8 +748,8 @@
                 <div class="float-right">
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('ApplicantController@index') }}">Back to List</a>
-                        <button type="reset" class="btn btn-secondary">Reset</button>
-                        <input type="submit" class="btn btn-primary" value="Print"/>
+                        <input type="submit" class="btn btn-secondary" value="Print"/>
+                        <a href="{{ action('ApplicantController@process', $applicant->id) }}" class="btn btn-primary" value="Process">Process</a>
                     </div>
                 </div>
             </div>

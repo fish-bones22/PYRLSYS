@@ -27,7 +27,7 @@ class ApplicantController extends Controller
 
     public function index() {
 
-        $applicants = $this->employeeService->getAllEmployees();
+        $applicants = $this->employeeService->getAllApplicants();
 
         return view('applicant.index', compact('applicants'));
 
@@ -43,7 +43,37 @@ class ApplicantController extends Controller
     public function show($id = 0) {
 
         $applicant= $this->employeeService->getEmployeeById($id);
-        return view('applicant.show', ['applicant' => $applicant]);
+        return view('applicant.show', compact('applicant'));
+
+    }
+
+
+    public function process($id) {
+
+        $result = $this->employeeService->updateDetail($id, 'applicationstatus', 'Processing');
+
+        $applicant= $this->employeeService->getEmployeeById($id);
+
+        if (!$result['result'])
+            return redirect()->action('ApplicantController@index')->with('error', 'Failed to update application status');
+
+        return redirect()->action('ApplicantController@index')->with('success', 'Successfuly updated application status');
+
+    }
+
+
+    public function hire($id) {
+
+        $result = $this->employeeService->updateDetail($id, 'applicationstatus', 'Hired');
+        $result = $this->employeeService->removeDetail($id, 'applicant');
+
+        $applicant= $this->employeeService->getEmployeeById($id);
+
+        if (!$result['result'])
+            return redirect()->action('ApplicantController@index')->with('error', 'Failed to update application status');
+
+
+        return redirect()->action('ApplicantController@index')->with('success', 'Successfuly updated application status');
 
     }
 
@@ -67,14 +97,23 @@ class ApplicantController extends Controller
         if ($id != 0) {
             $result = $this->employeeService->updateEmployee($employee);
             if (!$result['result']) {
-                return redirect()->action('ApplicantController@show', $id)->with('error', $result['message']);
+                $request->flash();
+                return redirect()->action('ApplicantController@new')->with('error', $result['message']);
             }
         }
         else {
 
+            $result = $this->employeeService->checkApplicant($req['first_name'], $req['middle_name'], $req['last_name'], $req['position']);
+
+            if ($result) {
+                $request->flash();
+                return redirect()->back()->withInput($request->all())->with('error', 'Name already submitted an application');
+            }
+
             $result = $this->employeeService->addEmployee($applicant);
             if (!$result['result']) {
-                return redirect()->action('ApplicantController@show', $id)->with('error', $result['message']);
+                $request->flash();
+                return redirect()->action('ApplicantController@new')->with('error', $result['message']);
             }
             $id = $result['result'];
             // If an image is selected
@@ -91,7 +130,7 @@ class ApplicantController extends Controller
         }
 
 
-        return redirect()->action('ApplicantController@new', $id)->with('success', '');
+        return redirect()->action('ApplicantController@new')->with('success', '');
 
     }
 
@@ -333,6 +372,9 @@ class ApplicantController extends Controller
         $entity['education'] = array();
         for ($i = 0; $i < sizeof($details['level']); $i++) {
 
+            if (sizeof($details['level']) <= 1 && $details['level'][$i] == '')
+                break;
+
             $entity['education'][] = [
                 'level' => [
                     'key' => 'level',
@@ -371,7 +413,7 @@ class ApplicantController extends Controller
         $entity['examination'] = array();
         for ($i = 0; $i < sizeof($details['title_of_exam']); $i++) {
 
-            if (sizeof($details['title_of_exam']) <= 1 && $details['title_of_exam'] == '')
+            if (sizeof($details['title_of_exam']) <= 1 && $details['title_of_exam'][$i] == '')
                 break;
 
             $entity['examination'][] = [
@@ -406,7 +448,7 @@ class ApplicantController extends Controller
         $entity['employmentrecord'] = array();
         for ($i = 0; $i < sizeof($details['employment_record_date_from']); $i++) {
 
-            if (sizeof($details['employment_record_date_from']) <= 1 && $details['employment_record_date_from'] == '')
+            if (sizeof($details['employment_record_date_from']) <= 1 && $details['employment_record_date_from'][$i] == '')
                 break;
 
             $entity['employmentrecord'][] = [
@@ -459,7 +501,7 @@ class ApplicantController extends Controller
         $entity['training'] = array();
         for ($i = 0; $i < sizeof($details['training_date_from']); $i++) {
 
-            if (sizeof($details['training_date_from']) <= 1 && $details['training_date_from'] == '')
+            if (sizeof($details['training_date_from']) <= 1 && $details['training_date_from'][$i] == '')
                 break;
 
             $entity['training'][] = [
@@ -506,7 +548,7 @@ class ApplicantController extends Controller
         $entity['spouse'] = array();
         for ($i = 0; $i < sizeof($details['spouse_last_name']); $i++) {
 
-            if (sizeof($details['spouse_last_name']) <= 1 && $details['spouse_last_name'] == '')
+            if (sizeof($details['spouse_last_name']) <= 1 && $details['spouse_last_name'][$i] == null)
                 break;
 
             $entity['spouse'][] = [
@@ -573,25 +615,25 @@ class ApplicantController extends Controller
                 'lastname' => [
                     'key' => 'lastname',
                     'grouping' => null,
-                    'value' => $details['mother_last_name'][$i],
+                    'value' => $details['mother_last_name'],
                     'displayName' => 'Last Name'
                 ],
                 'firstname' => [
                     'key' => 'firstname',
                     'grouping' => null,
-                    'value' => $details['mother_first_name'][$i],
+                    'value' => $details['mother_first_name'],
                     'displayName' => 'First Name'
                 ],
                 'middlename' => [
                     'key' => 'middlename',
                     'grouping' => null,
-                    'value' => $details['mother_middle_name'][$i],
+                    'value' => $details['mother_middle_name'],
                     'displayName' => 'Middle Name'
                 ],
                 'age' => [
                     'key' => 'age',
                     'grouping' => null,
-                    'value' => $details['mother_age'][$i],
+                    'value' => $details['mother_age'],
                     'displayName' => 'Age'
                 ]
             ];
@@ -603,25 +645,25 @@ class ApplicantController extends Controller
                 'lastname' => [
                     'key' => 'lastname',
                     'grouping' => null,
-                    'value' => $details['father_last_name'][$i],
+                    'value' => $details['father_last_name'],
                     'displayName' => 'Last Name'
                 ],
                 'firstname' => [
                     'key' => 'firstname',
                     'grouping' => null,
-                    'value' => $details['father_first_name'][$i],
+                    'value' => $details['father_first_name'],
                     'displayName' => 'First Name'
                 ],
                 'middlename' => [
                     'key' => 'middlename',
                     'grouping' => null,
-                    'value' => $details['father_middle_name'][$i],
+                    'value' => $details['father_middle_name'],
                     'displayName' => 'Middle Name'
                 ],
                 'age' => [
                     'key' => 'age',
                     'grouping' => null,
-                    'value' => $details['father_age'][$i],
+                    'value' => $details['father_age'],
                     'displayName' => 'Age'
                 ]
             ];
@@ -631,7 +673,7 @@ class ApplicantController extends Controller
         $entity['child'] = array();
         for ($i = 0; $i < sizeof($details['child_last_name']); $i++) {
 
-            if (sizeof($details['child_last_name']) <= 1 && $details['child_last_name'] == '')
+            if (sizeof($details['child_last_name']) <= 1 && $details['child_last_name'][$i] == null)
                 break;
 
             $entity['child'][] = [
@@ -684,7 +726,7 @@ class ApplicantController extends Controller
         $entity['sibling'] = array();
         for ($i = 0; $i < sizeof($details['sibling_last_name']); $i++) {
 
-            if (sizeof($details['sibling_last_name']) <= 1 && $details['sibling_last_name'] == '')
+            if (sizeof($details['sibling_last_name']) <= 1 && $details['sibling_last_name'][$i] == '')
                 break;
 
             $entity['sibling'][] = [
@@ -808,6 +850,12 @@ class ApplicantController extends Controller
             'key' => 'applicant',
             'value' => '1',
             'displayName' => 'Applicant'
+        ];
+
+        $entity['applicationstatus'] = [
+            'key' => 'applicationstatus',
+            'value' => 'Pending',
+            'displayName' => 'Application Status'
         ];
 
         return $entity;
