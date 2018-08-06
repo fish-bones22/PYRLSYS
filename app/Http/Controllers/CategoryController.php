@@ -134,4 +134,14 @@ class CategoryController extends Controller
             'subvalue2' => $category->subvalue2
         ]);
     }
+
+
+    public function getSubvalues($id) {
+
+        $category = $this->categoryService->getCategoryById($id);
+        return response()->json([
+            'subvalue1' => $category->subvalue1,
+            'subvalue2' => $category->subvalue2
+        ]);
+    }
 }

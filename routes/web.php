@@ -30,6 +30,7 @@ Route::resource('category', 'CategoryController');
 Route::get('/manage/{key}', 'CategoryController@index');
 Route::get('manage/{category}', 'CategoryController@manage');
 Route::get('category/getdetails/{id}', 'CategoryController@getDetails');
+Route::get('category/getsubvalues/{id}', 'CategoryController@getSubvalues');
 Route::get('categories', 'CategoryController@categories');
 Route::post('categories', 'CategoryController@setCategory');
 
@@ -49,3 +50,5 @@ Route::get('applicant/{id}', 'ApplicantController@show');
 Route::get('applicant-process/{id}', 'ApplicantController@process');
 Route::get('applicant-hire/{id}', 'ApplicantController@hire');
 Route::delete('applicant/{id}', 'ApplicantController@destroy')->name('applicant.destroy');
+
+Route::get('manhour/input/{id}', 'ManhourController@input');

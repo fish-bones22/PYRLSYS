@@ -6,6 +6,11 @@
  */
 
 require('./bootstrap');
+// require('jszip');
+// require('pdfmake');
+require('datatables.net-bs4');
+require('datatables.net-buttons-bs4');
+window.moment = require('moment');
 
 //window.Vue = require('vue');
 

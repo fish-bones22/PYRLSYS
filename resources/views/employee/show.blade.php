@@ -39,16 +39,20 @@
     @method('post')
     <input type="hidden" name="id" value="{{ $employee->id }}" />
 
-    <div class="form-group"><h5>Personal Information</h5></div>
+    <div class="row">
+        <div class="col form-paper section-title">Personal Information</div>
+    </div>
     <div class="row">
         <div class="col-md-3 form-paper">
             <div class="form-group">
                 <label for="employeeId" class="form-paper-label">ID:</label>
-                <input id="employeeId" name="employee_id" type="text" class="form-control" value="{{ $employee->employeeId }}"/>
+                <input id="employeeId" name="employee_id" type="text" class="form-control" value="{{ $employee->employeeId }}" required/>
             </div>
         </div>
         <div class="col-md-9 border-left form-paper">
-            <div class="form-paper-section-label">Name</div>
+            <div class="row">
+                <div class="col-12 section-label">Name</div>
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group display-block-inline">
@@ -95,7 +99,9 @@
             </div>
         </div>
         <div class="col-md-8 form-paper border-left">
-            <div class="form-paper-section-label">Spouse (Maiden) Name</div>
+            <div class="row">
+                <div class="col-12 section-label">Spouse (Maiden) Name</div>
+            </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -137,14 +143,12 @@
     {{-- Use the $limit variable for looping --}}
     @for ($i = 0; $i < $limit; $i++)
 
+    <div class="row">
+        <div class="col-12 form-paper section-label">Dependent</div>
+    </div>
     <div class="row dependent-{{$i}}">
 
         <div class="col-md-8 form-paper border-left">
-
-            @if ($i == 0)
-            {{-- Show section label and Pluralize --}}
-            <div class="form-paper-section-label">Dependent{{ $limit > 1 ? 's' : '' }}</div>
-            @endif
 
             <div class="row">
                 <div class="col-md-4">
@@ -183,19 +187,22 @@
     <div class="form-group" id="addDependentContainer"><button class="btn btn-link" type="button" onclick="addDependent()">Add Dependent</button></div>
 
 
-    <div class="form-group"><h5>Employment Information</h5></div>
+    <div class="row">
+        <div class="col form-paper section-title">Employment Information</div>
+    </div>
 
     <div class="row">
         <div class="col-md-2 col-5 form-paper">
             <div class="form-group">
                 <label for="timeCard" class="form-paper-label">Time Card #</label>
-                <input id="timeCard" type="text" name="time_card" class="form-control" value="{{ key_exists('timecard', $employee->details) ? $employee->details['timecard']['value'] : '' }}" />
+                <input id="timeCard" type="text" name="time_card" class="form-control" value="{{ key_exists('timecard', $employee->details) ? $employee->details['timecard']['value'] : '' }}" required />
             </div>
         </div>
         <div class="col-md-3 col-7 form-paper">
             <div class="form-group">
                 <label for="department" class="form-paper-label">Department/Project</label>
-                <select id="department" type="text" name="department" class="form-control" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department'] : '' }}" />
+                <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department'] : '' }}" />
+                    <option value="0"></option>
                     @foreach($categories['department'] as $category)
                     <option value="{{ $category->id }}" {{ key_exists('department', $employee->employmentDetails) && $employee->employmentDetails['department'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                     @endforeach
@@ -325,13 +332,27 @@
         <div class="col-md-4 form-paper">
             <div class="form-group">
                 <label for="ratePerHour" class="form-paper-label">Hourly rate</label>
-                <input id="ratePerHour" type="number" name="rate" step="0.05" class="form-control" value="{{ key_exists('rate', $employee->details) ? $employee->details['rate']['value'] : '' }}" />
+                <input id="ratePerHour" type="number" name="rate" step="0.05" class="form-control" value="{{ key_exists('rate', $employee->details) ? $employee->details['rate']['value'] : '' }}" required />
             </div>
         </div>
-        <div class="col-md-4 form-paper">
+        <div class="col-sm-4 form-paper">
             <div class="form-group">
                 <label for="allowance" class="form-paper-label">Allowance</label>
                 <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{ key_exists('allowance', $employee->details) ? $employee->details['allowance']['value'] : '' }}" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 form-paper">
+            <div class="form-group">
+                <label for="timeIn" class="form-paper-label">Time In</label>
+                <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{ key_exists('timein', $employee->details) ? $employee->details['timein']['value'] : '' }}" required />
+            </div>
+        </div>
+        <div class="col-md-6 form-paper">
+            <div class="form-group">
+                <label for="timeOut" class="form-paper-label">Time Out</label>
+                <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ key_exists('timeout', $employee->details) ? $employee->details['timeout']['value'] : '' }}" required />
             </div>
         </div>
     </div>
