@@ -201,10 +201,10 @@
         <div class="col-md-3 col-7 form-paper">
             <div class="form-group">
                 <label for="department" class="form-paper-label">Department/Project</label>
-                <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department'] : '' }}" />
+                <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department']['value'] : '' }}" />
                     <option value="0"></option>
                     @foreach($categories['department'] as $category)
-                    <option value="{{ $category->id }}" {{ key_exists('department', $employee->employmentDetails) && $employee->employmentDetails['department'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                    <option value="{{ $category->id }}" {{ key_exists('department', $employee->employmentDetails) && $employee->employmentDetails['department']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                     @endforeach
                 </select>
             </div>
@@ -220,7 +220,7 @@
                 <label for="employmentType" class="form-paper-label">Employment Type</label>
                 <select id="employmentType" type="text" name="employment_type" class="form-control" value="{{ key_exists('employmenttype', $employee->employmentDetails) ? $employee->employmentDetails['employmenttype']['value'] : '' }}" />
                     @foreach($categories['employmenttype'] as $category)
-                    <option value="{{ $category->id }}" {{ key_exists('employmenttype', $employee->employmentDetails) && $employee->employmentDetails['employmenttype'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                    <option value="{{ $category->id }}" {{ key_exists('employmenttype', $employee->employmentDetails) && $employee->employmentDetails['employmenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                     @endforeach
                 </select>
             </div>
@@ -245,7 +245,7 @@
                 <label for="status" class="form-paper-label">Status</label>
                 <select id="status" name="contract_status" class="form-control" value="{{ key_exists('contractstatus', $employee->employmentDetails) ? $employee->employmentDetails['contractstatus']['value'] : '' }}" />
                     @foreach($categories['contractstatus'] as $category)
-                    <option value="{{ $category->id }}" {{ key_exists('contractstatus', $employee->employmentDetails) && $employee->employmentDetails['contractstatus'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                    <option value="{{ $category->id }}" {{ key_exists('contractstatus', $employee->employmentDetails) && $employee->employmentDetails['contractstatus']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                     @endforeach
                 </select>
             </div>
@@ -314,7 +314,7 @@
                 <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
                 <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ key_exists('paymenttype', $employee->employmentDetails) ? $employee->employmentDetails['paymenttype']['value'] : '' }}" />
                     @foreach($categories['paymenttype'] as $category)
-                    <option value="{{ $category->id }}" {{ key_exists('paymenttype', $employee->employmentDetails) && $employee->employmentDetails['paymenttype'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                    <option value="{{ $category->id }}" {{ key_exists('paymenttype', $employee->employmentDetails) && $employee->employmentDetails['paymenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                     @endforeach
                 </select>
             </div>
@@ -324,7 +324,7 @@
                 <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
                 <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{ key_exists('paymentmode', $employee->employmentDetails) ? $employee->employmentDetails['paymentmode']['value'] : '' }}" />
                     @foreach($categories['paymentmode'] as $category)
-                    <option value="{{ $category->id }}" {{ key_exists('paymentmode', $employee->employmentDetails) && $employee->employmentDetails['paymentmode'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                    <option value="{{ $category->id }}" {{ key_exists('paymentmode', $employee->employmentDetails) && $employee->employmentDetails['paymentmode']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                     @endforeach
                 </select>
             </div>

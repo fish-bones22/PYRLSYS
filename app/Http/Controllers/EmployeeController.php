@@ -43,19 +43,10 @@ class EmployeeController extends Controller
 
         $categories = array();
 
-        $this->categoryService->setKey('department');
         $categories['department'] = $this->categoryService->getCategories('department');
-
-        $this->categoryService->setKey('employmenttype');
         $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
-
-        $this->categoryService->setKey('contractstatus');
         $categories['contractstatus'] = $this->categoryService->getCategories('contractstatus');
-
-        $this->categoryService->setKey('paymenttype');
         $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
-
-        $this->categoryService->setKey('paymentmode');
         $categories['paymentmode'] = $this->categoryService->getCategories('paymentmode');
 
         if ($id == 0) {
@@ -63,6 +54,11 @@ class EmployeeController extends Controller
         }
 
         $employee= $this->employeeService->getEmployeeById($id);
+
+        if ($employee == null)
+            return redirect()->action('EmployeeController@index');
+
+
         return view('employee.show', ['employee' => $employee, 'categories' => $categories]);
 
     }
@@ -321,6 +317,20 @@ class EmployeeController extends Controller
             'key' => 'allowance',
             'value' => $details['allowance'],
             'displayName' => 'Allowance'
+        ];
+
+        // Time In
+        $entity['timein'] = [
+            'key' => 'timein',
+            'value' => $details['time_in'],
+            'displayName' => 'Time In'
+        ];
+
+        // Time Out
+        $entity['timeout'] = [
+            'key' => 'timeout',
+            'value' => $details['time_out'],
+            'displayName' => 'Time Out'
         ];
 
         // Number of Memo

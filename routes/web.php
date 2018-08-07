@@ -51,4 +51,9 @@ Route::get('applicant-process/{id}', 'ApplicantController@process');
 Route::get('applicant-hire/{id}', 'ApplicantController@hire');
 Route::delete('applicant/{id}', 'ApplicantController@destroy')->name('applicant.destroy');
 
+Route::get('manhour/input', 'ManhourController@input');
 Route::get('manhour/input/{id}', 'ManhourController@input');
+Route::get('manhour/getNext/{id}', 'ManhourController@getNext');
+Route::post('manhour/record/{id}', 'ManhourController@record');
+Route::get('manhour', 'ManhourController@index');
+Route::get('manhour/getrecord/{id}/{date}', 'ManhourController@getRecord');

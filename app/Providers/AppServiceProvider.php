@@ -43,5 +43,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\ICategoryService',
             'App\Services\CategoryService'
         );
+        $this->app->bind(
+            'App\Contracts\IManhourService',
+            'App\Services\ManhourService'
+        );
     }
 }

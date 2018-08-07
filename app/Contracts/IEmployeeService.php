@@ -10,7 +10,7 @@ interface IEmployeeService {
     public function getApplicantById($id);
     public function checkApplicant($firstName, $middleName, $lastName, $position);
 
-    public function getAllEmployees();
+    public function getAllEmployees($order = null);
     public function getEmployeeById($id);
 
     public function updateDetail($id, $key, $value);

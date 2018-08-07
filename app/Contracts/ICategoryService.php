@@ -7,9 +7,8 @@ use App\Entities\CategoryEntity;
 interface ICategoryService {
 
     public function hasKey($key);
-    public function setKey($key);
     public function getAllCategories();
-    public function getCategories();
+    public function getCategories($key);
     public function getCategoryById($id);
     public function addCategory(CategoryEntity $category);
     public function updateCategory(CategoryEntity $category);

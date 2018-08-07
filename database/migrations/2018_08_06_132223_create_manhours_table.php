@@ -18,7 +18,7 @@ class CreateManhoursTable extends Migration
             $table->timestamps();
             $table->unsignedInteger('employee_id')->nullable();
             $table->unsignedInteger('department')->nullable();
-            $table->unsignedInteger('outliers')->nullable();
+            $table->unsignedInteger('outlier')->nullable();
             $table->string('employeeName');
             $table->string('timeCard');
             $table->date('recordDate');

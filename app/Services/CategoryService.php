@@ -9,8 +9,6 @@ use App\Models\CategoryDetail;
 
 class CategoryService extends EntityService implements ICategoryService {
 
-    private $key;
-
     public function hasKey($key) {
         if (CategoryDetail::where('key', $key)->first() != null)
             return true;
@@ -19,10 +17,6 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function setKey($key) {
-        $this->key = $key;
-    }
-
     public function getAllCategories() {
         $categories = CategoryDetail::all();
         $categoryEntities = array();
@@ -30,7 +24,7 @@ class CategoryService extends EntityService implements ICategoryService {
         foreach ($categories as $category) {
             $categoryEntities[] = [
                 'displayName' => $category->displayName,
-                'key' => $this->key,
+                'key' => $category->key,
                 'description' => $category->description
             ];
         }
@@ -39,8 +33,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function getCategories() {
-        $key = $this->key;
+    public function getCategories($key) {
+
         $categories = Category::all()->where('key', $key);
         //$categories = Category::where('key', $key);
         $categoryEntities = array();

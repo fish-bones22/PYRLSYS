@@ -12,10 +12,15 @@ use App\Entities\EmployeeEntity;
 
 class EmployeeService extends EntityService implements IEmployeeService {
 
-    public function getAllEmployees() {
+    public function getAllEmployees($order = null) {
 
-        $employees = Employee::all();
+        if ($order)
+            $employees = Employee::orderBy($order, 'asc')->get();
+        else
+            $employees = Employee::all();
+
         $employeeEntities = array();
+
 
         foreach ($employees as $emp) {
 
@@ -45,7 +50,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
 
     public function getEmployeeById($id) {
+
         $emp = Employee::find($id);
+
+        if ($emp == null)
+            return null;
+
         $details = $emp->details;
 
         if (key_exists('applicant', $details))
@@ -56,7 +66,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
 
     public function getApplicantById($id) {
+
         $app = Employee::find($id);
+
+        if ($app == null)
+            return null;
+
         $details = $app->details;
 
         if (!key_exists('applicant', $details))
@@ -287,65 +302,6 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
     }
 
-    // public function getDetails($detailsModel) {
-
-    //     $detail = array();
-    //     $prevKey = '';
-    //     foreach ($detailsModel as $model) {
-
-    //         // If Key is compound
-    //         if (strpos($model->key, '.') !== false) {
-
-    //             $keys = explode('.', $model->key);
-
-    //             if ($prevKey != $keys[0]) {
-    //                 $temp = array();
-    //                 $inner = array();
-    //             }
-
-    //             $inner[$keys[sizeof($keys)-1]] = [
-    //                 'key' => $keys[sizeof($keys)-1],
-    //                 'value' => $model->value,
-    //                 'detail' => $model->detail,
-    //                 'displayName' => $model->displayName,
-    //                 'grouping' => $model->grouping
-    //             ];
-
-    //             $temp;
-    //             $lastKey;
-    //             for ($i = sizeof($keys)-1; $i >= 1; $i--) {
-    //                 $temp = array();
-    //                 $temp[$keys[$i]] = $inner;
-    //                 $inner = $temp[$keys[$i]];
-    //                 $lastKey = $keys[$i];
-    //             }
-
-    //             if (!key_exists($keys[0], $detail)) {
-    //                 $detail[$keys[0]] = array();
-    //             }
-
-    //             if (sizeof($temp) > 0)
-    //                 $detail[$keys[0]][$lastKey] = $temp[$lastKey];
-
-
-    //             $prevKey = $keys[0];
-
-    //         }
-    //         else {
-    //             $detail[$model->key] = [
-    //                 'key' => $model->key,
-    //                 'value' => $model->value,
-    //                 'detail' => $model->detail,
-    //                 'displayName' => $model->displayName,
-    //                 'grouping' => $model->grouping
-    //             ];
-    //         }
-
-    //     }
-
-    //     return $detail;
-
-    // }
 
     public function getDetails($detailsModel) {
 
@@ -467,7 +423,10 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $detail = array();
         foreach ($detailsModel as $detailModel) {
             $cat = $detailModel->category;
-            $detail[$cat->key] = $detailModel->category_id;
+            $detail[$cat->key] = [
+                'value' => $detailModel->category_id,
+                'displayName' => $detailModel->category->value
+            ];
         }
 
         return $detail;

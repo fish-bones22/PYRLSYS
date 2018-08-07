@@ -46,8 +46,7 @@ class CategoryController extends Controller
 
 
     public function index($key) {
-        $this->categoryService->setKey($key);
-        $categories = $this->categoryService->getCategories();
+        $categories = $this->categoryService->getCategories($key);
         return view('category.index', compact('categories'));
     }
 
@@ -89,7 +88,6 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
-        //
         $category = $this->departmentService->getCategoryById($id);
         return view('category.edit', compact('category'));
     }

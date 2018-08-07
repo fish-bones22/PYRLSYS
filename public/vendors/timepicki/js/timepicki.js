@@ -13,11 +13,18 @@
                     // limit hours between 1 and 12 - inculsive.
                     tim = Math.min(Math.max(parseInt(tim), 1), 12);
 
-                    if (meri === 'PM')
-                        tim = tim + 12;
+                    if (meri === 'PM') {
+                        if (tim == 12)
+                            tim = 12;
+                        else
+                            tim = tim + 12;
+                    }
+
+                    if (meri === 'AM' && tim === 12)
+                        tim = 0;
 
                     if (tim === 24)
-                        tim = "00";
+                        tim = 0;
 
 			        if (tim < 10)
                         tim = "0" + tim;
