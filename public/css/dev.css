@@ -31,6 +31,44 @@ a:hover .btn-link {
     color: darkslategrey!important;
 }
 
+
+.btn-secondary {
+    background-color: lightgray;
+    border-color: lightgray;
+    color: black;
+}
+
+.btn-secondary:hover {
+    background-color: gray;
+    border-color: gray;
+    color: black;
+}
+
+.btn-secondary:active {
+    background-color: gray!important;
+}
+
+.btn-secondary:focus {
+    border-color: lightgray!important;
+    box-shadow: 0 0 0 0.2rem lightgray!important;
+}
+
+.btn-secondary:disabled {
+    background-color: gray!important;
+    border-color: gray!important;
+    color: darkgray!important;
+}
+
+.btn-light {
+    background-color: whitesmoke!important;
+    border-color: lightgray!important;
+}
+
+.btn-light:hover {
+    background-color: gainsboro!important;
+    border-color: gainsboro!important;
+}
+
 .bg-primary {
     background-color: mediumseagreen!important;
 }

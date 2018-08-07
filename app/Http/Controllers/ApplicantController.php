@@ -43,6 +43,10 @@ class ApplicantController extends Controller
     public function show($id = 0) {
 
         $applicant= $this->employeeService->getEmployeeById($id);
+
+        if ($applicant == null)
+            return redirect()->action('ApplicantController@index');
+
         return view('applicant.show', compact('applicant'));
 
     }

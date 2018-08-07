@@ -19,6 +19,9 @@
         </button>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ action('UserController@index') }}">Administrator</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" id="humanResourceDropdown" data-toggle="dropdown">Human Resource</a>
                     <div class="dropdown-menu">
@@ -26,8 +29,12 @@
                         <a class="dropdown-item" href="{{ action('ApplicantController@index') }}">Applicants</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ action('UserController@index') }}">App Users</a>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" id="manhourDropdown" data-toggle="dropdown">Manhour</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ action('ManhourController@index') }}">Masterlist</a>
+                        <a class="dropdown-item" href="{{ action('ManhourController@input', '') }}">Input Records</a>
+                    </div>
                 </li>
             </ul>
             <div class="ml-auto">

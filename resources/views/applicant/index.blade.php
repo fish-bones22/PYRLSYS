@@ -13,16 +13,32 @@ Applicants
 <div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
 @endif
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
 
-        <div class="btn-group mb-2">
-            <button class="btn btn-secondary" type="button" onclick="searchStatus('')">All</button>
-            <button class="btn btn-secondary" type="button" onclick="searchStatus('Pending')">Pending</button>
-            <button class="btn btn-secondary" type="button" onclick="searchStatus('Processing')">Processing</button>
-            <button class="btn btn-secondary" type="button" onclick="searchStatus('Hired')">Hired</button>
+<div class="row">
+    <div class="col-md-5 offset-md-2 form-paper">
+        <div class="form-group">
+            <div class="text-centered">
+                <div class="btn-group mt-2 mb-2">
+                    <button class="btn btn-light" type="button" onclick="searchStatus('')">All</button>
+                    <button class="btn btn-light" type="button" onclick="searchStatus('Pending')">Pending</button>
+                    <button class="btn btn-light" type="button" onclick="searchStatus('Processing')">Processing</button>
+                    <button class="btn btn-light" type="button" onclick="searchStatus('Hired')">Hired</button>
+                </div>
+            </div>
         </div>
-        <table class="table table-sm table-responsive-sm" id="dataTable">
+    </div>
+    <div class="col-md-3 form-paper">
+        <div class="form-group">
+            <label for="searchBox" class="form-paper-label">Search</label>
+            <div class="input-group">
+                <input id="searchBox" type="search" class="form-control form-control-sm" />
+                <button type="button" class="btn btn-secondary btn-sm">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 offset-md-2 form-paper" >
+
+        <table class="table table-sm table-responsive-sm mt-4" id="dataTable">
             <thead>
                 <tr>
                     <th>Name</th>

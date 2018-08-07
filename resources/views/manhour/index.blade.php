@@ -7,9 +7,20 @@ Manhour
 @section('content')
 
 <div class="row">
-    <div class="col-md-6 offset-md-3">
+    <div class="col-md-3 offset-md-3 form-paper">
         <a href="{{ action('ManhourController@input', '') }}" class="btn btn-link">Input Record</a>
-        <table class="table table-sm">
+    </div>
+    <div class="col-md-3 form-paper">
+        <div class="form-group">
+            <label for="searchBox" class="form-paper-label">Search</label>
+            <div class="input-group">
+                <input id="searchBox" type="search" class="form-control form-control-sm" />
+                <button type="button" class="btn btn-secondary btn-sm">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 offset-md-3 form-paper">
+        <table class="table">
             <thead>
                 <tr>
                     <th>Id</th>
