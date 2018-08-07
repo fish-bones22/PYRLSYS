@@ -6,6 +6,8 @@ $(document).ready(function() {
         selectDate(calendar, date);
     })
 
+    $(".timepicker").timepicki({ on_change: setHour });
+
 });
 
 function selectDate(calendar, date) {
@@ -30,15 +32,20 @@ function setHour() {
 
     $("#hour").val('');
 
-    var timeIn = moment(timeInSt, "HH:mm");
-    var timeOut = moment(timeOutSt, "HH:mm");
+    var timeIn = moment(timeInSt, "hh:mm tt");
+    var timeOut = moment(timeOutSt, "hh:mm tt");
 
     var hours = timeOut - timeIn;
 
-    if (hours < 0)
-        return;
+    // if (hours < 0)
+    //     return;
 
-    hours = hours/3600000;
+    hours = Math.abs(hours/3600000);
+    hours = Math.round(hours * 100) / 100;
 
     $("#hour").val(hours);
+}
+
+function resetOutliers() {
+    $('input[type=\'radio\']').prop('checked', false);
 }
