@@ -47,5 +47,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\IManhourService',
             'App\Services\ManhourService'
         );
+        $this->app->bind(
+            'App\Contracts\IOtRequestService',
+            'App\Services\OtRequestService'
+        );
     }
 }

@@ -64,6 +64,10 @@
     box-shadow: 0 0 0 0 white;
 }
 
+.form-paper .form-control:disabled {
+    background-color: rgb(246, 246, 246);
+}
+
 .form-paper-display {
     font-weight: 600;
     font-size: 1em;

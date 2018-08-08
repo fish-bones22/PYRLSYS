@@ -42,6 +42,7 @@ Route::post('employee/{id}', 'EmployeeController@update');
 Route::get('employee/delete/{id}', 'EmployeeController@destroy');
 Route::post('employee/updateImage/{id}', 'EmployeeController@updateImage');
 Route::post('employee/deleteImage/{id}', 'EmployeeController@deleteImage');
+Route::post('employee/getbasic/{id}', 'EmployeeController@getEmployeeBasicDetails');
 
 Route::get('applicants', 'ApplicantController@index');
 Route::get('application-form', 'ApplicantController@new');
@@ -58,7 +59,10 @@ Route::post('manhour/record/{id}', 'ManhourController@record');
 Route::get('manhour', 'ManhourController@index');
 Route::get('manhour/getrecord/{id}/{date}', 'ManhourController@getRecord');
 
-Route::get('otrequests', 'OtRequestController@index');
-Route::get('otrequest/new', 'OtRequestController@add');
+Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
+Route::get('otrequest/new', 'OtRequestController@new')->name('otrequest.new');
 Route::post('otrequest/new', 'OtRequestController@add');
 Route::post('otrequest/getemployees/{dept}', 'OtRequestController@getEmployees');
+Route::post('otrequest/approve/{id}', 'OtRequestController@approve')->name('otrequest.approve');
+Route::post('otrequest/deny/{id}', 'OtRequestController@deny')->name('otrequest.deny');
+Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@getOtRequestForEmployee');

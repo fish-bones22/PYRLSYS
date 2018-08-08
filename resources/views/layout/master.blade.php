@@ -30,10 +30,11 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" role="button" id="manhourDropdown" data-toggle="dropdown">Manhour</a>
-                    <div class="dropdown-menu">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" data-target="#manhourDropdown">Manhour</a>
+                    <div class="dropdown-menu" id="manhourDropdown">
                         <a class="dropdown-item" href="{{ action('ManhourController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@input', '') }}">Input Records</a>
+                        <a class="dropdown-item" href="{{ action('OtRequestController@index') }}" role="button">OT Requests</a>
                     </div>
                 </li>
             </ul>

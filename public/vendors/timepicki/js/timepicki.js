@@ -116,7 +116,7 @@
 			var ele_next_all_child = ele_next.find("div");
 			var inputs = ele_par.find('input');
 
-			$('.reset_time').on("click", function(event) {
+			$('body').on("click", ".reset_time", function(event) {
 				ele.val("");
 				close_timepicki();
 			});
@@ -272,6 +272,7 @@
 			$(document).on("click", function(event) {
 				if (!$(event.target).is(ele_next) && ele_next.css("display")=="flex" && !$(event.target).is($('.reset_time'))) {
 					if (!$(event.target).is(ele)) {
+                    //if (!$(event.target).attr("type")) {
 						set_value(event, !is_element_in_timepicki($(event.target)));
 					} else {
 						var ele_lef =  0;
@@ -286,7 +287,7 @@
 			});
 
 			// open the modal when the user focuses on the input
-			ele.on('focus', open_timepicki);
+			$(ele).on('focus', open_timepicki);
 
 			// select all text in input when user focuses on it
 			inputs.on('focus', function() {
@@ -369,14 +370,13 @@
                     settings.on_change(ele[0]);
                 }
 
-
-                // if ("createEvent" in document) {
-                //     var evt = document.createEvent("HTMLEvents");
-                //     evt.initEvent("change", false, true);
-                //     ele[0].dispatchEvent(evt);
-                // }
-                // else
-                //     ele[0].fireEvent("onchange");
+                if ("createEvent" in document) {
+                    var evt = document.createEvent("HTMLEvents");
+                    evt.initEvent("change", false, true);
+                    ele[0].dispatchEvent(evt);
+                }
+                else
+                    ele[0].fireEvent("onchange");
 
 
 				if (close) {
@@ -593,3 +593,21 @@
      };
 
 }(jQuery));
+
+
+(function( $ ){
+    $.fn.setTime = function(time) {
+
+        _tim = time.split(':')[0];
+        tim =  _tim*1 > 12 ?  _tim*1 - 12 : _tim;
+        mini = time.split(':')[1];
+        meri = _tim*1 > 11 ? 'PM' : 'AM';
+
+        tim = tim == 0 ? 12 : tim;
+
+        $(this).val(time);
+        $(this).attr("data-timepicki-tim", tim);
+        $(this).attr("data-timepicki-mini", mini);
+        $(this).attr("data-timepicki-meri", meri);
+    };
+ })( jQuery );

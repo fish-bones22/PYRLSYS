@@ -176,6 +176,30 @@ class EmployeeController extends Controller
     }
 
 
+
+    public function getEmployeeBasicDetails($id) {
+
+        if ($id == 0) return null;
+
+        $employee = $this->employeeService->getEmployeeById($id);
+
+        if ($employee == null) return null;
+
+        return response()->json([
+            'id' => $employee->id,
+            'employeeId' => $employee->employeeId,
+            'lastName' => $employee->lastName,
+            'firstName' => $employee->firstName,
+            'middleName' => $employee->middleName,
+            'fullName' => $employee->fullName,
+            'department' => $employee->employmentDetails['department']['displayName'],
+            'departmentValue' => $employee->employmentDetails['department']['value'],
+            'timecard' => $employee->details['timecard']['value'],
+        ]);
+
+    }
+
+
     private function saveImageToStorage($file, $location, $filename) {
         // Resize amd crop image to square
         $resizedImg = Image::make($file);

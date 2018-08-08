@@ -32,6 +32,13 @@ function deleteRow(self, rowName) {
             $(this).val("");
         });
 
+        thisRow.find("div.display, span.display").each(function() {
+            if ($(this).attr("data-default") != undefined)
+                $(this).html("<i class='text-muted small'>" + $(this).data('default') + "</i>");
+            else
+                $(this).text('');
+        })
+
         return;
     }
 
@@ -66,6 +73,27 @@ function makeIndexFromObject(object, element, attribute, oldIndex, newIndex) {
             var currAttr = elm.attr(attribute);
             var newAttr = currAttr.replace("[" + oldIndex + "]", "[" + newIndex + "]");
             elm.attr(attribute, newAttr);
+            // Due to timepicki.js limitations,
+            // this workaround reinitializes time inputs
+            // for timepicki.js
+            if (elm.attr("type") != undefined && elm.attr("type") === "time" && elm.attr("readonly") == undefined) {
+                var name = elm.attr("name");
+                var id = elm.attr("id");
+                var class_ = elm.attr("class");
+                var value = elm.attr("value");
+                var onchange = elm.attr("onchange");
+                var newInp = $("<input>")
+                .attr("name", name)
+                .attr("id", id)
+                .attr("class", class_)
+                .attr("type", "time")
+                .attr("value", value)
+                .attr("onchange", onchange);
+                var timePick = elm.closest("div.time_pick");
+                timePick.before(newInp);
+                timePick.remove();
+                newInp.timepicki();
+            }
         }
     });
 

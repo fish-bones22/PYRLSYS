@@ -133,7 +133,7 @@
     // iterate at least one row even if $details['dependent'] is empty
 
     $limit = 1; // Store the number of dependents or use 1 if there are none.
-    // If there is/are dependent/s use its size instead of the default 1.
+    // If there is/are dependent/s on the array, use its size instead of the default 1.
     if (key_exists('dependent', $employee->details) && is_array($employee->details['dependent']) && sizeof($employee->details['dependent']) > 0) {
         $limit = sizeof($employee->details['dependent']);
     }
@@ -143,12 +143,12 @@
     <input type="hidden" id="dependent-index" value="{{ $limit }}" />
 
     {{-- Use the $limit variable for looping --}}
-    @for ($i = 0; $i < $limit; $i++)
 
     <div class="row">
-        <div class="col-12 form-paper section-label">Dependent</div>
+        <div class="col-12 form-paper section-title">Dependent</div>
         <div class="col-12 form-paper section-divider"></div>
     </div>
+    @for ($i = 0; $i < $limit; $i++)
     <div class="row dependent-{{$i}}">
 
         <div class="col-12">

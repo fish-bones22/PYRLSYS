@@ -84,31 +84,16 @@ function clearDetails() {
 
 function mapDetails(json) {
 
-    setTime($("#timeIn"), json.timeIn);
-    setTime($("#timeOut"), json.timeOut);
+    $("#timeIn").setTime(json.timeIn);
+    $("#timeOut").setTime(json.timeOut);
 
     $("#timeIn").val(json.timeIn);
     $("#timeOut").val(json.timeOut);
     $("[name='outlier'][value='" + json.outlier+ "']").prop('checked', true);
-    console.log(json.authorized);
+
     if (json.authorized)
         $("[name='authorized']").prop('checked', true);
     $("#remarks").text(json.remarks);
     setHour();
-
-}
-
-function setTime(timepickaElement, time) {
-
-    _tim = time.split(':')[0];
-    tim =  _tim*1 > 12 ?  _tim*1 - 12 : _tim;
-    mini = time.split(':')[1];
-    meri = _tim*1 > 11 ? 'PM' : 'AM';
-
-    tim = tim == 0 ? 12 : tim;
-
-    timepickaElement.attr("data-timepicki-tim", tim);
-    timepickaElement.attr("data-timepicki-mini", mini);
-    timepickaElement.attr("data-timepicki-meri", meri);
 
 }
