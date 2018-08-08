@@ -140,7 +140,7 @@
 
     ?>
 
-    <input type="hidden" id="currentIndex" value="{{ $limit }}" />
+    <input type="hidden" id="dependent-index" value="{{ $limit }}" />
 
     {{-- Use the $limit variable for looping --}}
     @for ($i = 0; $i < $limit; $i++)
@@ -151,8 +151,12 @@
     </div>
     <div class="row dependent-{{$i}}">
 
+        <div class="col-12">
+            <div class="form-paper section-delete">
+                <button type="button" class="close text-muted" data-index="{{$i}}" onclick="deleteRow(this, 'dependent')" tabindex="-1">&times;</button>
+            </div>
+        </div>
         <div class="col-md-8 form-paper">
-
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -177,7 +181,6 @@
 
         <div class="col-md-4 form-paper">
             <div class="form-group">
-                <button type="button" class="close text-muted" data-index="{{$i}}" onclick="deleteDependent(this)" tabindex="-1">&times;</button>
                 <label for="dependentRelationship[{{$i}}]" class="form-paper-label">Relationship:</label>
                 <input id="dependentRelationship[{{$i}}]" name="dependent_relationship[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}" />
             </div>
@@ -188,9 +191,9 @@
 
     @endfor
 
-    <div class="row" id="addDependentContainer">
+    <div class="row addContainer">
         <div class="col-12 form-paper">
-            <button class="btn btn-link" type="button" onclick="addDependent()">Add Dependent</button>
+            <button class="btn btn-link" type="button" onclick="createNewRow(this, 'dependent')">Add Dependent</button>
         </div>
         <div class="col-12 form-paper section-divider"></div>
     </div>
@@ -469,6 +472,7 @@
 
 @section('script')
 <script src="{{ asset('js/imageSelection.js') }}"></script>
+<script src="{{ asset('js/dynamicAddAndDelete.js') }}"></script>
 <script src="{{ asset('js/contactDetailManager.js') }}"></script>
 <script src="{{ asset('js/employeePage.js') }}"></script>
 @stop
