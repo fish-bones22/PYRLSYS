@@ -83,3 +83,35 @@
     text-transform: uppercase;
     /* width: 100%; */
 }
+
+.form-paper.spacer {
+    background-color: transparent;
+    height: 3px;
+    outline: 0 solid transparent;
+}
+
+.form-paper.section-divider {
+    height: 0.1px;
+    outline: 0 solid lightgray;
+}
+
+.form-paper.section-delete {
+    background-color: transparent;
+    outline: 0 solid transparent;
+    position: absolute;
+    padding: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.form-paper.section-delete button.close {
+    border-bottom: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    padding: 5px 15px;
+}
+
+.form-paper.section-delete button.close:hover {
+    background-color: silver;
+    color: white;
+    transition: cubic-bezier(0.39, 0.575, 0.565, 1) 0.1s;
+}

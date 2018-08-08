@@ -57,3 +57,8 @@ Route::get('manhour/getNext/{id}', 'ManhourController@getNext');
 Route::post('manhour/record/{id}', 'ManhourController@record');
 Route::get('manhour', 'ManhourController@index');
 Route::get('manhour/getrecord/{id}/{date}', 'ManhourController@getRecord');
+
+Route::get('otrequests', 'OtRequestController@index');
+Route::get('otrequest/new', 'OtRequestController@add');
+Route::post('otrequest/new', 'OtRequestController@add');
+Route::post('otrequest/getemployees/{dept}', 'OtRequestController@getEmployees');

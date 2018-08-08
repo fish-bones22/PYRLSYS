@@ -13,16 +13,16 @@
 <div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
 @endif
 
-<div class="mb-3">
+<div class="">
     <div class="row align-items-end">
         <div class="col-sm-9">
             <div class="display-4">{{ $employee->fullName != '' ? $employee->fullName : 'New Employee' }}</div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3 pb-2">
             <div class="current-image float-md-right mx-auto">
                 {{-- Use image select modal if updating --}}
                 @if ($employee->id != 0)
-                <button type="button" class="btn btn-light btn-change-image" data-toggle="modal" data-target="#selectPictureModal"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-dark btn-change-image" data-toggle="modal" data-target="#selectPictureModal"><i class="fa fa-pencil"></i></button>
                 {{-- Use file input if new employee --}}
                 @else
                 <input form="employeeForm" type="file" class="form-control-file btn-change-image" accept="image/*" name="new_image_file" />
@@ -41,6 +41,7 @@
 
     <div class="row">
         <div class="col form-paper section-title">Personal Information</div>
+        <div class="col-12 form-paper section-divider"></div>
     </div>
     <div class="row">
         <div class="col-md-3 form-paper">
@@ -49,7 +50,7 @@
                 <input id="employeeId" name="employee_id" type="text" class="form-control" value="{{ $employee->employeeId }}" required/>
             </div>
         </div>
-        <div class="col-md-9 border-left form-paper">
+        <div class="col-md-9 form-paper">
             <div class="row">
                 <div class="col-12 section-label">Name</div>
             </div>
@@ -98,7 +99,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-8 form-paper border-left">
+        <div class="col-md-8 form-paper">
             <div class="row">
                 <div class="col-12 section-label">Spouse (Maiden) Name</div>
             </div>
@@ -123,6 +124,7 @@
                 </div>
             </div>
         </div>
+        <div class="col-12 form-paper section-divider"></div>
     </div>
 
     <?php
@@ -145,10 +147,11 @@
 
     <div class="row">
         <div class="col-12 form-paper section-label">Dependent</div>
+        <div class="col-12 form-paper section-divider"></div>
     </div>
     <div class="row dependent-{{$i}}">
 
-        <div class="col-md-8 form-paper border-left">
+        <div class="col-md-8 form-paper">
 
             <div class="row">
                 <div class="col-md-4">
@@ -179,16 +182,23 @@
                 <input id="dependentRelationship[{{$i}}]" name="dependent_relationship[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}" />
             </div>
         </div>
+        <div class="col-12 form-paper section-divider"></div>
 
     </div>
 
     @endfor
 
-    <div class="form-group" id="addDependentContainer"><button class="btn btn-link" type="button" onclick="addDependent()">Add Dependent</button></div>
+    <div class="row" id="addDependentContainer">
+        <div class="col-12 form-paper">
+            <button class="btn btn-link" type="button" onclick="addDependent()">Add Dependent</button>
+        </div>
+        <div class="col-12 form-paper section-divider"></div>
+    </div>
 
 
     <div class="row">
         <div class="col form-paper section-title">Employment Information</div>
+        <div class="col-12 form-paper section-divider"></div>
     </div>
 
     <div class="row">
@@ -370,48 +380,7 @@
             </div>
         </div>
     </div>
-        {{-- <div class="row">
-        {{-- Phone numbers
-        <div class="col-sm-6 form-paper" id="contactNumbersContainer">
 
-            {{-- Primary contact
-            <div class="form-group">
-                <label for="contactNumber">Primary Contact Number:</label>
-                <input id="contactNumber" name="contact_number" type="text" class="form-control" value="{{ $employee->contactNumber }}"/>
-            </div>
-
-            {{-- Other Contact information
-            @if (sizeof($employee->otherContacts) != 0)
-
-                <label for="contactNumber">Other Contact Number{{ sizeof($employee->otherContacts) > 1 ? 's' : '' }}:</label>
-                {{-- Loop multiple contact details
-                @for ($i = 0; $i < sizeof($employee->otherContacts); $i++)
-
-                <div class="form-group">
-                    <input placeholder="Number" name="other_contacts[{{ $i }}][value]" type="text" class="form-control" value="{{ $employee->otherContacts[$i]['value'] }}"/>
-                    <input placeholder="Details" name="other_contacts[{{ $i }}][detail]" type="text" class="form-control form-control-sm" value="{{ $employee->otherContacts[$i]['detail'] }}"/>
-                    <input type="hidden" name="other_contacts[{{ $i }}][id]" value="{{ $employee->otherContacts[$i]['id'] }}"/>
-                    <input type="hidden" name="other_contacts[{{ $i }}][key]" value="{{ $employee->otherContacts[$i]['key'] }}"/>
-                    <input type="hidden" name="other_contacts[{{ $i }}][displayName]" value="{{ $employee->otherContacts[$i]['displayName'] }}"/>
-                </div>
-
-                @endfor
-            @endif
-
-            <div class="form-group" id="addNewContactButton">
-                <input type="hidden" id="contactsSize" value="{{ sizeof($employee->otherContacts) }}" />
-                <button type="button" class="btn btn-link" onclick="addContactDetails()">Add Contact Detail</button>
-            </div>
-        </div>
-
-        {{-- Email addresses
-        <div class="col-sm-6 form-paper">
-            <div class="form-group">
-                <label for="email">Email Address:</label>
-                <input id="email" name="email" type="text" class="form-control" value="{{ $employee->email }}"/>
-            </div>
-        </div>
-    </div> --}}
     <div class="m-4">&nbsp;</div>
     <div class="fixed-bottom btn-container m-4">
         <div class="float-right">

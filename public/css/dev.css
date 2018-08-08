@@ -1,3 +1,7 @@
+body {
+    background-color: rgb(242, 245, 240) !important;
+}
+
 a, .btn-link {
     color: mediumseagreen;
 }
@@ -60,8 +64,8 @@ a:hover .btn-link {
 }
 
 .btn-light {
-    background-color: whitesmoke!important;
-    border-color: lightgray!important;
+    background-color: ghostwhite!important;
+    border-color: whitesmoke!important;
 }
 
 .btn-light:hover {

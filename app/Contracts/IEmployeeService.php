@@ -12,6 +12,7 @@ interface IEmployeeService {
 
     public function getAllEmployees($order = null);
     public function getEmployeeById($id);
+    public function getEmployeesByDepartment($dept);
 
     public function updateDetail($id, $key, $value);
     public function removeDetail($id, $key);

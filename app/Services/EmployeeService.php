@@ -65,6 +65,23 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
+    public function getEmployeesByDepartment($dept) {
+
+        $employees = $this->getAllEmployees('lastName');
+
+        if ($employees == null) return 'Hello';
+
+        foreach ($employees as $key => $emp) {
+
+            if (!key_exists('department', $emp->employmentDetails) || $emp->employmentDetails['department']['value'] == $dept) {
+                unset($employees[$key]);
+            }
+        }
+
+        return $employees;
+    }
+
+
     public function getApplicantById($id) {
 
         $app = Employee::find($id);

@@ -12,7 +12,7 @@
     <title>@yield('title')</title>
 </head>
 <body>
-    <nav class="navbar navbar-dark navbar-expand-md bg-primary">
+    <nav class="navbar navbar-dark fixed-top navbar-expand-md bg-primary">
         <a href="/" class="navbar-brand">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="navbar-toggler-icon"></span>
@@ -42,7 +42,8 @@
             </div>
         </div>
     </nav>
-    <div class="m-2">&nbsp;</div>
+    <div class="m-4">&nbsp;</div>
+    <div class="m-4">&nbsp;</div>
     <div class="container">
         @yield('content')
     </div>
