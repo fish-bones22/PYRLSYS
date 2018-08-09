@@ -8,9 +8,9 @@ function getEmployeesOnDepartment() {
 
     var dept = $("#department").val();
 
+    $(".employee-list").html("");
+    resetEmployees();
     if (dept === '') {
-        $(".employee-list").html("");
-        resetEmployees();
         return;
     }
 
@@ -58,8 +58,9 @@ function mapResults(json) {
 function resetEmployees() {
     var index = $("#employee-index").val();
 
-    $(".employee-0 input, .employee-0 select").val('');
+    $(".employee-0 input, .employee-0 select").not("input[type='radio']").val('');
     $(".employee-0 select").attr("disabled", "disabled");
+    resetEmployeeDetails($('.employee-0 input'));
 
     if (index == 1) {
         return;
@@ -127,7 +128,6 @@ function checkEmployeeOtRequest(self, id) {
         contentType: 'text/plain',
         dataType:"json",
         success: function(result) {
-            console.log(result);
             mapResultsForRecords(self, result);
         },
         error: function() {
@@ -154,6 +154,18 @@ function mapResultsForRecords(self, json) {
     row.find(".start-time").setTime(json.startTime);
     row.find(".end-time").setTime(json.endTime);
     row.find(".reason").val(json.reason);
+    row.find(".ot-type").val(json.otType);
+
+    console.log(json.approval);
+    var textColor = 'text-muted'
+    if (json.approval === 'Approved')
+        textColor = 'text-success';
+    if (json.approval === 'Denied')
+        textColor = 'text-danger';
+    if (json.approval === 'Pending')
+        textColor = 'text-muted';
+    row.find(".status").addClass(textColor).text(json.approval != 'Pending' ? json.approval + ' (Resubmitting will reset approval)' : 'Pending');
+    row.find("input[type='radio'][value='" + json.otType + "']").prop("checked", true);
 
 }
 
@@ -169,6 +181,7 @@ function resetEmployeeDetails(self) {
     row.find(".end-time").val('');
     row.find(".end-time").text('');
     row.find(".reason").text('');
+    row.find(".status").attr('class', 'status').html('');
 
 }
 
@@ -202,4 +215,9 @@ function updateEmployeeRecords() {
         else
             $(this)[0].fireEvent("onchange");
     });
+}
+
+function setRegularOtValue(self) {
+    var value = $(self).closest('.row').find("input[type='radio']:checked").val();
+    $(self).closest(".row").find(".ot-type").val(value);
 }

@@ -13,9 +13,44 @@ OT Requests
 <div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
 @endif
 
+
+<div class="row">
+    <div class="col-md-10 offset-md-1 form-paper section-title">Overtime Requests</div>
+    <div class="col-md-10 offset-md-1 form-paper section-divider"></div>
+</div>
 <div class="row">
     <div class="col-md-10 offset-md-1">
-        <a class="btn btn-link" role="button" href="{{ route('otrequest.new') }}">New OT Request</a>
+        <div class="row">
+            <div class="col-6 form-paper">
+                {{-- <div class="form-group"> --}}
+                    <a class="mt-4 btn btn-sm btn-light btn-block" role="button" href="{{ route('otrequest.new') }}">New OT Request</a>
+                {{-- </div> --}}
+            </div>
+            <div class="col form-paper">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="dapartment" class="form-paper-label">Dapartment</label>
+                            <select class="form-control form-control-sm" id="dapartment" onchange="filterDepartment()">
+                                <option value="0">All</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept->id }}">{{ $dept->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group float-right">
+                            <label for="searchBox" class="form-paper-label">Search</label>
+                            <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="searchEmployee()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10 offset-md-1 form-paper section-divider"></div>
+    <div class="col-md-10 offset-md-1 form-paper">
         <table class="table table-sm" id="otRequestTable">
             <thead>
                 <tr>
@@ -53,12 +88,12 @@ OT Requests
                         <form action="{{ route('otrequest.approve', $req->id) }}" method="POST">
                             @csrf
                             @method('post')
-                            <button type="submit" class="btn btn-link">Approve</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Approve</button>
                         </form>
                         <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
                             @csrf
                             @method('post')
-                            <button type="submit" class="btn btn-link">Deny</button>
+                            <button type="submit" class="btn btn-sm btn-light">Deny</button>
                         </form>
                         </div>
                     </td>

@@ -8,6 +8,33 @@ use App\Models\Manhour;
 
 class ManhourService extends EntityService implements IManhourService {
 
+    public function getAllRecords() {
+        $records = Manhour::all();
+        if ($records == null) return null;
+        $recordsEntity = array();
+        foreach ($records as $record) {
+            $recordsEntity[] = $this->mapToEntity($record, new ManhourEntity());
+        }
+
+        return $recordsEntity;
+    }
+
+
+    public function getAllRecordsByDateRange($datefrom, $dateto) {
+
+        $records = Manhour::whereBetween('recordDate', [$datefrom, $dateto])->get();
+
+        if ($records == null) return null;
+
+        $recordsEntity = array();
+        foreach ($records as $record) {
+            $recordsEntity[] = $this->mapToEntity($record, new ManhourEntity());
+        }
+
+        return $recordsEntity;
+    }
+
+
     public function recordManhour(ManhourEntity $entity) {
 
         $record = Manhour::where('recordDate', $entity->date)->where('employee_id', $entity->employeeId)->first();
@@ -55,7 +82,10 @@ class ManhourService extends EntityService implements IManhourService {
         $entity->employeeId = $model->employee_id;
         $entity->employeeName = $model->employeeName;
         $entity->timeCard = $model->timeCard;
-        $entity->department = $model->department;
+        $entity->department = [
+            'value' => $model->department,
+            'displayName' => $model->departmentDetails->value
+        ];
 
         $entity->authorized = $model->authorized;
         $entity->outlier = $model->outlier;

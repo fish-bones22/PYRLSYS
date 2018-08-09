@@ -1,10 +1,23 @@
+var table;
 (function() {
 
     $("#editModal").on("hidden.bs.modal", function () {
         resetViewModal();
     });
 
+    table = $("#departmentsTable").DataTable({
+        "lengthChange": false,
+        "info": false,
+        "dom": "<t<'float-right'p>>"
+    });
+
 })();
+
+function filterDepartment() {
+    var term = $("#searchBox").val();
+    table.column(0).search(term);
+    table.column(0).draw();
+}
 
 function getDetails(self) {
 
@@ -32,9 +45,18 @@ function mapDetails(data) {
     else {
         $("#descriptionDisplay").text(data.description);
     }
+
     $("#subValue1Edit").attr("value", data.subvalue1);
-    $("#subValue1Display").text(data.subvalue1);
     $("#subValue2Edit").attr("value", data.subvalue2);
+
+    if ($("#key").val() === 'department') {
+        var sub1 = moment(data.subvalue1, 'HH:mm');
+        var sub2 = moment(data.subvalue2, 'HH:mm');
+        data.subvalue1 = sub1.format("hh:mm A");
+        data.subvalue2 = sub2.format("hh:mm A");
+    }
+
+    $("#subValue1Display").text(data.subvalue1);
     $("#subValue2Display").text(data.subvalue2);
 }
 

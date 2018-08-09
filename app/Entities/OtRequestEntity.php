@@ -13,5 +13,6 @@ class OtRequestEntity extends Entity {
     public $endTime;
     public $reason;
     public $approval;
+    public $otType;
 
 }

@@ -6,10 +6,15 @@
  */
 
 require('./bootstrap');
-// require('jszip');
-// require('pdfmake');
+
 require('datatables.net-bs4');
 require('datatables.net-buttons-bs4');
+require('datatables.net-buttons/js/buttons.html5');
+
+window.JSZip = require('jszip/dist/jszip.min.js');
+window.vfs = require('pdfmake/build/vfs_fonts.js');
+window.pdfMake = require('pdfmake/build/pdfmake.min.js');
+
 window.moment = require('moment');
 
 //window.Vue = require('vue');
@@ -32,3 +37,8 @@ $(document).ready(function() {
         $(this).find('[type="submit"]').attr('disabled', 'disabled');
     });
 });
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};

@@ -23,8 +23,9 @@ class OtRequestController extends Controller
 
     public function index() {
 
+        $departments = $this->categoryService->getCategories('department');
         $otRequests = $this->otRequestService->getPendingOtRequests();
-        return view('otrequest.index', ['otRequests' => $otRequests]);
+        return view('otrequest.index', ['otRequests' => $otRequests, 'departments' => $departments]);
 
     }
 
@@ -58,6 +59,11 @@ class OtRequestController extends Controller
             return redirect()->back()->withInputs($req)->with('error', 'No employees selected');
         }
 
+        if (!isset($req['ot_type']) || sizeof($req['ot_type']) <= 0 || $req['ot_type'][0] == '') {
+            $request->flash();
+            return redirect()->back()->withInputs($req)->with('error', 'No OT Type selected');
+        }
+
         $errorMessages = array();
 
         for ($i = 0; $i < sizeof($req['employee_id']); $i++) {
@@ -70,6 +76,7 @@ class OtRequestController extends Controller
             $otRequest->startTime = $req['from'][$i];
             $otRequest->endTime = $req['to'][$i];
             $otRequest->reason = $req['reason'][$i];
+            $otRequest->otType = $req['ot_type'][$i];
 
             $result = $this->otRequestService->addOtRequest($otRequest);
 
@@ -139,11 +146,22 @@ class OtRequestController extends Controller
         if ($request == null)
             return null;
 
+        if ($request->approval === 1) {
+            $approval = 'Approved';
+        }
+        else if ($request->approval === 0) {
+            $approval = 'Denied';
+        }
+        else {
+            $approval = 'Pending';
+        }
         return response()->json([
             'allowedHours' => $request->allowedHours,
             'startTime' => $request->startTime,
             'endTime' => $request->endTime,
-            'reason' => $request->reason
+            'reason' => $request->reason,
+            'otType' => $request->otType,
+            'approval' => $approval
         ]);
     }
 }

@@ -19,8 +19,12 @@
         </button>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ action('UserController@index') }}">Administrator</a>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" id="humanResourceDropdown" data-toggle="dropdown">Administrator</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ action('UserController@index') }}">Users</a>
+                        <a class="dropdown-item" href="{{ action('CategoryController@manage', 'department') }}">Departments</a>
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" id="humanResourceDropdown" data-toggle="dropdown">Human Resource</a>
@@ -32,6 +36,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" data-target="#manhourDropdown">Manhour</a>
                     <div class="dropdown-menu" id="manhourDropdown">
+                        <a class="dropdown-item" href="{{ action('ManhourController@viewNow') }}">Daily Work Hours</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@input', '') }}">Input Records</a>
                         <a class="dropdown-item" href="{{ action('OtRequestController@index') }}" role="button">OT Requests</a>
@@ -50,6 +55,7 @@
     </div>
 
     <script src="{{ asset('js/app.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
     @yield('script')
 </body>
 </html>

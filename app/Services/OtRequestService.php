@@ -36,6 +36,33 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $otReq;
     }
 
+    public function getApprovedOtRequests() {
+
+        $otRequests = OtRequest::where('approval', true)->get();
+        if ($otRequests == null) return null;
+
+        $otReq = array();
+        foreach ($otRequests as $otRequest) {
+            $otReq[] = $this->mapToEntity($otRequest, new OtRequestEntity());
+        }
+
+        return $otReq;
+    }
+
+
+    public function getApprovedOtRequestByDateRange($employeeId, $datefrom, $dateto) {
+
+        $otRequests = OtRequest::where('approval', true)->where('employee_id', $employeeId)->whereBetween('otDate', [$datefrom, $dateto])->get();
+        if ($otRequests == null) return null;
+
+        $otReq = array();
+        foreach ($otRequests as $otRequest) {
+            $otReq[] = $this->mapToEntity($otRequest, new OtRequestEntity());
+        }
+
+        return $otReq;
+    }
+
 
     public function addOtRequest(OtRequestEntity $entity) {
 
@@ -52,6 +79,7 @@ class OtRequestService extends EntityService implements IOtRequestService {
         $otRequest->endTime = $entity->endTime;
         $otRequest->allowedHours = $entity->allowedHours;
         $otRequest->reason = $entity->reason;
+        $otRequest->otType = $entity->otType;
         $otRequest->approval = null;
 
         try {
@@ -127,6 +155,7 @@ class OtRequestService extends EntityService implements IOtRequestService {
         $entity->endTime = $model->endTime;
         $entity->reason = $model->reason != null ? stripslashes($model->reason) : null;
         $entity->approval = $model->approval;
+        $entity->otType = $model->otType;
         $dept = $model->departmentDetails;
         $entity->department = [
             'value' => $model->department,

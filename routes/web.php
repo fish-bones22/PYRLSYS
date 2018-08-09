@@ -58,6 +58,9 @@ Route::get('manhour/getNext/{id}', 'ManhourController@getNext');
 Route::post('manhour/record/{id}', 'ManhourController@record');
 Route::get('manhour', 'ManhourController@index');
 Route::get('manhour/getrecord/{id}/{date}', 'ManhourController@getRecord');
+Route::get('manhour/dailyrecord', 'ManhourController@viewNow');
+Route::post('manhour/dailyrecord', 'ManhourController@filterDate')->name('manhour.filterdate');
+Route::get('manhour/dailyrecord/{datefrom}/{dateto}', 'ManhourController@viewRange')->name('manhour.viewrange');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
 Route::get('otrequest/new', 'OtRequestController@new')->name('otrequest.new');

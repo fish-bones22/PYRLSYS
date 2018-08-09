@@ -8,7 +8,7 @@ class OtRequest extends Model
 {
     protected $fillable = [
         'otDate', 'timeStart', 'timeEnd', 'department', 'employee_id', 'employeeName',
-        'allowedHours', 'reason', 'approval'
+        'allowedHours', 'reason', 'approval', 'otType'
     ];
 
     public function employee() {

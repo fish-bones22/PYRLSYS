@@ -10,8 +10,11 @@ function createNewRow(self, rowName) {
     protoRow = makeIndexFromObject(protoRow, 'input', 'name', 0, currentIndex);
     protoRow = makeIndexFromObject(protoRow, 'label', 'for', 0, currentIndex);
     protoRow.find("button.close").attr("data-index", currentIndex);
-    protoRow.find("input, select").each(function() {
+    protoRow.find("input, select").not("input[type='radio']").each(function() {
         $(this).val('');
+    });
+    protoRow.find("input[type='radio']").each(function() {
+        $(this).prop('checked', false);
     });
     protoRow.removeClass(rowName + "-0").addClass(rowName + "-" + currentIndex);
     $(self).closest(".addContainer").before(protoRow);
@@ -28,8 +31,11 @@ function deleteRow(self, rowName) {
 
     if (currentIndex == 1) {
 
-        thisRow.find("input, select").each(function() {
+        thisRow.find("input, select").not("input[type='radio']").each(function() {
             $(this).val("");
+        });
+        thisRow.find("input[type='radio']").each(function() {
+            $(this).prop('checked', false);
         });
 
         thisRow.find("div.display, span.display").each(function() {

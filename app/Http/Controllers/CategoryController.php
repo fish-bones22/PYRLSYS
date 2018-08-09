@@ -125,6 +125,7 @@ class CategoryController extends Controller
     public function getDetails($id) {
 
         $category = $this->categoryService->getCategoryById($id);
+
         return response()->json([
             'name' => $category->value,
             'description' => $category->detail,
@@ -137,6 +138,7 @@ class CategoryController extends Controller
     public function getSubvalues($id) {
 
         $category = $this->categoryService->getCategoryById($id);
+
         return response()->json([
             'subvalue1' => $category->subvalue1,
             'subvalue2' => $category->subvalue2

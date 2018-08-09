@@ -63,7 +63,7 @@ New OT Request
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
-                        <label for="employee[0]" class="form-paper-label">Employee Name</label>
+                        <label for="employee[0]" class="form-paper-label">Employee Name <i class="status"></i></label>
                         <select id="employee[0]" type="text" name="employee_id[0]" class="form-control employee-list" onchange="getEmployeeDetails(this)" required disabled></select>
                         <input type="hidden" class="name" name="employee_name[0]" />
                         <input type="hidden" class="department" name="employee_department[0]" />
@@ -104,6 +104,36 @@ New OT Request
                     <div class="form-group">
                         <label for="reason[0]" class="form-paper-label">Reason</label>
                         <input id="reason[0]" class="form-control reason" name="reason[0]" type="text" />
+                    </div>
+                </div>
+                <div class="col-12 form-paper">
+                    <div class="row">
+                        <input class="ot-type" type="hidden" id="otType[0]" name="ot_type[0]" />
+                        <div class="col">
+                            <label class="form-paper-label">
+                                <input type="radio" name="ot_type_[0]" value="rot" onchange="setRegularOtValue(this)"> Regular OT
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="form-paper-label">
+                                <input type="radio" name="ot_type_[0]" value="sot" onchange="setRegularOtValue(this)"> Sunday OT
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="form-paper-label">
+                                <input type="radio" name="ot_type_[0]" value="xsot" onchange="setRegularOtValue(this)"> Excess SOT
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="form-paper-label">
+                                <input type="radio" name="ot_type_[0]" value="lhot" onchange="setRegularOtValue(this)"> Legal Holiday OT
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="form-paper-label">
+                                <input type="radio" name="ot_type_[0]" value="xlhot" onchange="setRegularOtValue(this)"> Excess LHOT
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider">&nbsp;</div>
