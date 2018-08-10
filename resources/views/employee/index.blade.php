@@ -7,9 +7,22 @@ Employee
 @section('content')
 
 <div class="row">
-    <div class="col-md-6 offset-md-3">
-        <a href="employee/new">New</a>
-        <table class="table table-sm">
+    <div class="col-md-6 offset-md-3 form-paper section-title">Employees</div>
+    <div class="col-md-6 offset-md-3 form-paper section-divider"></div>
+    <div class="col-md-2 offset-md-3 form-paper">
+        <div class="form-group mt-3">
+            <a role="button" href="employee/new" class="btn btn-sm btn-block btn-light">New Employee</a>
+        </div>
+    </div>
+    <div class="col-md-4 form-paper">
+        <div class="form-group">
+            <label for="searchBox" class="form-paper-label">Search</label>
+            <input id="searchBox" class="form-control form-control-sm" type="search" onkeyup="filterEmployees()" />
+        </div>
+    </div>
+    <div class="col-md-6 offset-md-3 form-paper section-divider"></div>
+    <div class="col-md-6 offset-md-3 form-paper">
+        <table class="table table-sm" id="employeesTable">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -33,3 +46,7 @@ Employee
 </div>
 
 @stop
+@section('script')
+<script src="{{ asset('js/employeesPage.js') }}"></script>
+@stop
+

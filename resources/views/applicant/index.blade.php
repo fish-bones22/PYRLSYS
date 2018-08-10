@@ -15,27 +15,31 @@ Applicants
 
 
 <div class="row">
-    <div class="col-md-5 offset-md-2 form-paper">
+    <div class="col-md-8 offset-md-2 form-paper section-title">Applicants</div>
+    <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
+    <div class="col-md-2 offset-md-2 form-paper">
+        <div class="form-group mt-3">
+            <a href="{{ action('ApplicantController@new') }}" role="button" class="btn btn-sm btn-block btn-light">Application Form</a>
+        </div>
+    </div>
+    <div class="col-md-3 form-paper">
         <div class="form-group">
-            <div class="text-centered">
-                <div class="btn-group mt-2 mb-2">
-                    <button class="btn btn-light" type="button" onclick="searchStatus('')">All</button>
-                    <button class="btn btn-light" type="button" onclick="searchStatus('Pending')">Pending</button>
-                    <button class="btn btn-light" type="button" onclick="searchStatus('Processing')">Processing</button>
-                    <button class="btn btn-light" type="button" onclick="searchStatus('Hired')">Hired</button>
-                </div>
-            </div>
+            <label for="status" class="form-paper-label">Filter Applicant Status</label>
+            <select id="status" class="form-control form-control-sm" onchange="filterStatus()">
+                <option value="">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Hired">Hired</option>
+            </select>
         </div>
     </div>
     <div class="col-md-3 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
-            <div class="input-group">
-                <input id="searchBox" type="search" class="form-control form-control-sm" />
-                <button type="button" class="btn btn-secondary btn-sm">Search</button>
-            </div>
+            <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="searchApplicants()" />
         </div>
     </div>
+    <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
     <div class="col-md-8 offset-md-2 form-paper" >
 
         <table class="table table-sm table-responsive-sm mt-4" id="dataTable">
@@ -89,23 +93,5 @@ Applicants
 
 @stop
 @section('script')
-
-<script>
-
-    var table;
-    $(document).ready(function() {
-        table = $("#dataTable").DataTable({
-            "lengthChange": false,
-            "info": false,
-            "dom": "<t<'float-right'p>>"
-        });
-    });
-
-    function searchStatus(term) {
-        table.column(3).search(term);
-        table.column(3).draw();
-    }
-
-</script>
-
+<script src="{{ asset('js/applicantsPage.js') }}"></script>
 @stop

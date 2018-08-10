@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.secondary')
 
 @section('title')
 Application For Employment
@@ -833,7 +833,7 @@ Application For Employment
             <div class="fixed-bottom btn-container m-4">
                 <div class="float-right">
                     <div class="btn-group">
-                        <a class="btn btn-light" href="{{ action('ApplicantController@index') }}">Back to List</a>
+                        {{-- <a class="btn btn-light" href="{{ action('ApplicantController@index') }}">Back to List</a> --}}
                         <button type="reset" class="btn btn-secondary">Reset</button>
                         <input type="submit" class="btn btn-primary" value="Save"/>
                     </div>

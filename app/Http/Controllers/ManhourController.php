@@ -24,8 +24,9 @@ class ManhourController extends Controller
     }
 
     public function index() {
+        $departments = $this->categoryService->getCategories('department');
         $employees = $this->employeeService->getAllEmployees('lastName');
-        return view("manhour.index", compact('employees'));
+        return view("manhour.index", ['employees' => $employees, 'departments' => $departments ]);
     }
 
 
