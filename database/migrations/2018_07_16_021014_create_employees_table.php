@@ -16,10 +16,11 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('employeeId', 50)->unique();
+            $table->string('employeeId', 50)->nullable()->unique();
             $table->string('firstName');
             $table->string('middleName')->nullable();
             $table->string('lastName');
+            $table->string('nameExtension', 10)->nullable();
             $table->string('sex', 1);
         });
     }

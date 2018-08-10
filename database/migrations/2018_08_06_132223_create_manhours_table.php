@@ -22,9 +22,10 @@ class CreateManhoursTable extends Migration
             $table->string('employeeName');
             $table->string('timeCard');
             $table->date('recordDate');
-            $table->time('timeIn');
-            $table->time('timeOut');
+            $table->time('timeIn')->nullable();
+            $table->time('timeOut')->nullable();
             $table->string('remarks');
+            $table->boolean('authorized')->nullable();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('set null');
             $table->foreign('department')->references('id')->on('categories')->onDelete('set null');

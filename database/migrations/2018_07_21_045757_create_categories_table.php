@@ -19,6 +19,8 @@ class CreateCategoriesTable extends Migration
             $table->string('key', 50);
             $table->string('value');
             $table->string('detail');
+            $table->string('subvalue1')->nullable();
+            $table->string('subvalue2')->nullable();
 
             $table->foreign('key')->references('key')->on('category_details')->onDelete('cascade');
         });
