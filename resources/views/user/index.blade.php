@@ -7,27 +7,46 @@ All Users
 @section('content')
 
 <div class="row">
-    <div class="col-sm-4 offset-sm-4">
-
-        <a href="{{ action('UserController@addUser') }}">New User</a>
-        <table class="table table-sm">
+    <div class="col-sm-4 offset-sm-4 form-paper section-title">Users</div>
+    <div class="col-sm-4 offset-sm-4 form-paper section-divider"></div>
+    <div class="col-sm-2 offset-sm-4 form-paper">
+        <div class="form-group mt-3">
+            <a href="{{ action('UserController@addUser') }}" role="button" class="btn btn-sm btn-block btn-light">Add User</a>
+        </div>
+    </div>
+    <div class="col-sm-2 form-paper">
+        <div class="form-group">
+            <label for="searchBox" class="form-paper-label">Search</label>
+            <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="filterUsers()" />
+        </div>
+    </div>
+    <div class="col-sm-4 offset-sm-4 form-paper section-divider"></div>
+    <div class="col-sm-4 offset-sm-4 form-paper">
+        <table class="table table-sm" id="usersTable">
             <thead>
-                <tr class="form-paper">
+                <tr>
                     <th>Username</th>
-                    <th></th>
-                    <th></th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($users as $user)
-                <tr class="">
-                    <td class="form-paper">{{ $user->username }}</td>
-                    <td class="form-paper"><a href="{{ action('UserController@updateUser', $user->id) }}">Edit</a></td>
-                    <td class="form-paper"><a href="{{ action('UserController@deleteUser', $user->id) }}">Delete</a></td>
+                <tr>
+                    <td>{{ $user->username }}</td>
+                    <td>
+                        <span class="btn-group">
+                            <a role="button" class="btn btn-sm btn-light" href="{{ action('UserController@updateUser', $user->id) }}">Edit</a>
+                            <a role="button" class="btn btn-sm btn-light" href="{{ action('UserController@deleteUser', $user->id) }}">Delete</a>
+                        </span>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
+@stop
+
+@section('script')
+<script src="{{ asset('js/usersPage.js') }}"></script>
 @stop

@@ -48,14 +48,23 @@ class ManhourController extends Controller
             $dateto = date_create($dateto);
 
         $departments = $this->categoryService->getCategories('department');
-        $manhours = $this->manhourService->getAllRecordsByDateRange($datefrom, $dateto);
-        $records = $this->formatForView($manhours);
+        $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
+        //$records = $this->formatForView($manhours);
+        // $records = array();
+        // $interval = DateInterval::createFromDateString('1 day');
+        // $period = new DatePeriod($datefrom, $interval, $dateto);
+
+        // foreach ($period as $dt) {
+        //     $record = $this->manhourService->getSummaryOfRecord($employeeId, $date);
+        //     if ($record == null) continue;
+        //     $records[] = $record;
+        // }
 
         $date['datefrom'] = date_format($datefrom, 'Y-m-d');
         $date['dateto'] = date_format($dateto, 'Y-m-d');
         $date['mode'] = $datefrom != $dateto ? true : false;
 
-        return view('manhour.viewall', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
+        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
 
     public function filterDate(Request $request) {
@@ -161,6 +170,7 @@ class ManhourController extends Controller
 
         return redirect()->action('ManhourController@getNext', $id);
     }
+
 
     public function getRecord($id, $date) {
 

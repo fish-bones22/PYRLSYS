@@ -81,6 +81,7 @@ class EmployeeController extends Controller
         $employee->employmentDetails = $this->employmentDetailsToEntity($req);
 
         $employee->deductibles = $this->deductiblesToEntity($req);
+        $action = 'updated';
 
         if ($id != 0) {
             $result = $this->employeeService->updateEmployee($employee);
@@ -90,6 +91,7 @@ class EmployeeController extends Controller
         }
         else {
 
+            $action = 'added';
             $result = $this->employeeService->addEmployee($employee);
             if (!$result['result']) {
                 return redirect()->action('EmployeeController@show', $id)->with('error', $result['message']);
@@ -109,7 +111,7 @@ class EmployeeController extends Controller
         }
 
 
-        return redirect()->action('EmployeeController@show', $id)->with('success', '');
+        return redirect()->action('EmployeeController@show', $id)->with('success', 'Successfully $action employee. ');
 
     }
 
