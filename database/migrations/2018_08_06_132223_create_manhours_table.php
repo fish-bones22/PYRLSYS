@@ -29,7 +29,7 @@ class CreateManhoursTable extends Migration
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('set null');
             $table->foreign('department')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('outliers')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('outlier')->references('id')->on('categories')->onDelete('set null');
 
         });
     }
