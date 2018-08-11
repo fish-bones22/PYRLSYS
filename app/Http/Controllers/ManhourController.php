@@ -67,6 +67,39 @@ class ManhourController extends Controller
         return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
 
+    public function viewRecord($id) {
+        $month = date_format(now(), 'm');
+        $day = date_format(now(), 'j');
+        $year = date_format(now(), 'Y');
+        $startDay;
+        $endDay;
+        if ($day <= 16) {
+            $startDay = '1';
+            $endDay = 16;
+        }
+        else {
+            $startDay = 17;
+            $endDay = date_format(now(), 't'); // End of month
+        }
+        $datefrom = date_create($year.'-'.$month.'-'.$startDay);
+        $dateto = date_create($year.'-'.$month.'-'.$endDay);
+        $details = array();
+        $details['startday'] = $startDay;
+        $details['endday'] = $endDay;
+        $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
+        foreach ($records as $record) {
+            if ($record->employee_id != $id) {
+                unset($record);
+                continue;
+            }
+            $details['employeeId'] = $record->employeeId;
+            $details['timecard'] = $record->timecard;
+            $details['name'] = $record->employeeName;
+            $details['department'] = $record->departmentName;
+        }
+        return view('manhour.viewindividual', ['records' => $records, 'details' => $details]);
+    }
+
     public function filterDate(Request $request) {
 
         $mode = $request->get('mode');

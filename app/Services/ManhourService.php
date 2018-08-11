@@ -137,7 +137,7 @@ class ManhourService extends EntityService implements IManhourService {
         $records = $this->getAllRecordsByDateRange($datefrom, $dateto);
         $recordsSummary = array();
         foreach ($records as $record) {
-            $recordsSummary[] = $this->formatSummary($record);
+            $recordsSummary[date_format(date_create($record->date), 'j')] = $this->formatSummary($record);
         }
 
         return $recordsSummary;
@@ -147,6 +147,7 @@ class ManhourService extends EntityService implements IManhourService {
 
         $summary = new ManhourSummaryEntity();
         $summary->timecard = $record->timeCard;
+        $summary->employee_id = $record->employeeId;
         $summary->employeeName = $record->employeeName;
         $summary->departmentId = $record->department['value'];
         $summary->departmentName = $record->department['displayName'];
@@ -157,7 +158,7 @@ class ManhourService extends EntityService implements IManhourService {
 
         if ($employee == null)
             return;
-
+        $summary->employeeId = $employee->employeeId;
         $summary->date = date_format($date, 'M d Y');
         $actualHours = 0;
         $otHours = 0;
