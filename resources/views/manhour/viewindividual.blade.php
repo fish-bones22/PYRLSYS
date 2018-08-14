@@ -30,11 +30,11 @@ Employee Record
                             <label class="form-paper-label">Period</label><br />
                             <div class="form-check-inline">
                                 <input id="secondPeriod" type="radio" name="period" value="second" checked />
-                                <label for="secondPeriod" class="form-check-label">Second Period</label>
+                                <label for="secondPeriod" class="form-check-label small">Second (1-16)</label>
                             </div>
                             <div class="form-check-inline">
                                 <input id="firstPeriod" type="radio" name="period" value="first" />
-                                <label for="firstPeriod" class="form-check-label">First Period</label>
+                                <label for="firstPeriod" class="form-check-label small">First (17-EoM)</label>
                             </div>
                         </div>
                     </div>
