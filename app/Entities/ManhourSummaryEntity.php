@@ -23,6 +23,8 @@ class ManhourSummaryEntity extends Entity {
     public $departmentId;
     public $departmentName;
 
+    public $outlier;
+    public $authorized;
     public $remarks;
 
 }

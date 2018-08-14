@@ -6,6 +6,7 @@ use App\Contracts\IManhourService;
 use App\Contracts\IOTRequestService;
 use App\Contracts\IEmployeeService;
 use App\Contracts\ICategoryService;
+use App\Entities\EmployeeEntity;
 use App\Entities\ManhourSummaryEntity;
 use App\Entities\ManhourEntity;
 use App\Models\Manhour;
@@ -102,7 +103,11 @@ class ManhourService extends EntityService implements IManhourService {
         ];
 
         $entity->authorized = $model->authorized;
-        $entity->outlier = $model->outlier;
+        if ($model->outlier != null)
+            $entity->outlier = [
+                'value' => $model->outlier,
+                'displayName' => $model->outlierDetails->value
+            ];
         $entity->remarks = stripslashes($model->remarks);
 
         return $entity;
@@ -121,14 +126,26 @@ class ManhourService extends EntityService implements IManhourService {
 
     }
 
+    public function getOutliersOnDateRange($employeeId, $datefrom, $dateto) {
+        $records = Manhour::where('employee_id', $employeeId    )->whereBetween('recordDate', [$datefrom, $dateto])->get();
 
-    public function getSummaryOfRecord($employeeId, $date) {
+        if ($records == null) return null;
+
+        $recordsEntity = array();
+        foreach ($records as $record) {
+            $recordsEntity[] = $this->mapToEntity($record, new ManhourEntity());
+        }
+
+        return $recordsEntity;
+    }
+
+    public function getSummaryOfRecord($employeeId, $date, $employee = null) {
 
         $record = $this->getRecord($employeeId, $date);
 
-        if ($record == null) return null;
+        if ($record == null) return new ManhourSummaryEntity();
 
-        return $this->formatSummary($record);
+        return $this->formatSummary($record, $employee);
 
     }
 
@@ -137,13 +154,13 @@ class ManhourService extends EntityService implements IManhourService {
         $records = $this->getAllRecordsByDateRange($datefrom, $dateto);
         $recordsSummary = array();
         foreach ($records as $record) {
-            $recordsSummary[date_format(date_create($record->date), 'j')] = $this->formatSummary($record);
+            $recordsSummary[] = $this->formatSummary($record);
         }
 
         return $recordsSummary;
     }
 
-    private function formatSummary($record) {
+    private function formatSummary($record, EmployeeEntity $employee = null) {
 
         $summary = new ManhourSummaryEntity();
         $summary->timecard = $record->timeCard;
@@ -153,12 +170,14 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->departmentName = $record->department['displayName'];
 
         $date = date_create($record->date);
-        $employee = $this->employeeService->getEmployeeById($record->employeeId);
         $otRequest = $this->otRequestService->getApprovedOtRequestByDateRange($record->employeeId, $date, $date);
 
         if ($employee == null)
+            $employee = $this->employeeService->getEmployeeById($record->employeeId);
+        if ($employee == null)
             return;
         $summary->employeeId = $employee->employeeId;
+
         $summary->date = date_format($date, 'M d Y');
         $actualHours = 0;
         $otHours = 0;
@@ -266,7 +285,8 @@ class ManhourService extends EntityService implements IManhourService {
             }
         }
         $summary->remarks = $record->remarks;
-
+        $summary->outlier = $record->outlier != null ? $record->outlier['displayName'] : null;
+        $summary->authorized = $record->authorized;
         return $summary;
     }
 }

@@ -25,7 +25,7 @@ class ManhourController extends Controller
 
     public function index() {
         $departments = $this->categoryService->getCategories('department');
-        $employees = $this->employeeService->getAllEmployees('lastName');
+        $employees = $this->employeeService->getAllEmployees('lastname');
         return view("manhour.index", ['employees' => $employees, 'departments' => $departments ]);
     }
 
@@ -84,18 +84,23 @@ class ManhourController extends Controller
         $datefrom = date_create($year.'-'.$month.'-'.$startDay);
         $dateto = date_create($year.'-'.$month.'-'.$endDay);
         $details = array();
+        $employee = $this->employeeService->getEmployeeById($id);
+        if ($employee == null)
+            return redirect()->action('ManhourController@index');
         $details['startday'] = $startDay;
         $details['endday'] = $endDay;
-        $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
-        foreach ($records as $record) {
-            if ($record->employee_id != $id) {
-                unset($record);
-                continue;
-            }
-            $details['employeeId'] = $record->employeeId;
-            $details['timecard'] = $record->timecard;
-            $details['name'] = $record->employeeName;
-            $details['department'] = $record->departmentName;
+        $details['employeeId'] = $employee->employeeId;
+        $details['timecard'] = $employee->details['timecard']['value'];
+        $details['lastname'] = $employee->lastName;
+        $details['firstname'] = $employee->firstName;
+        $details['middlename'] = $employee->middleName;
+        $details['name'] = $employee->fullName;
+        $details['department'] = $employee->employmentDetails['department']['displayName'];
+        $records = array();
+        //$records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
+        for ($i = $startDay; $i <= $endDay; $i++) {
+            $record = $this->manhourService->getSummaryOfRecord($id, $year.'-'.$month.'-'.$i, $employee);
+            $records[$i] = $record;
         }
         return view('manhour.viewindividual', ['records' => $records, 'details' => $details]);
     }
@@ -218,7 +223,7 @@ class ManhourController extends Controller
         return response()->json([
             'timeIn' => $record->timeIn,
             'timeOut' => $record->timeOut,
-            'outlier' => $record->outlier,
+            'outlier' => $record->outlier != null ? $record->outlier['value'] : null,
             'remarks'  => $record->remarks,
             'authorized' => $record->authorized
         ]);

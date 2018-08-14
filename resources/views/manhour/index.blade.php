@@ -67,7 +67,7 @@ Manhour Masterlist
                     <td>
                         <span class="btn-group">
                             <a href="{{ action('ManhourController@input', ['id' => $emp->id]) }}" class="btn btn-sm btn-light">Input Record</a>
-                            <a href="{{ action('EmployeeController@show', ['id' => $emp->id ]) }}" class="btn btn-sm btn-light">View Record</a>
+                            <a href="{{ action('ManhourController@viewRecord', ['id' => $emp->id ]) }}" class="btn btn-sm btn-light">View Record</a>
                         </span>
                     </td>
                 </tr>

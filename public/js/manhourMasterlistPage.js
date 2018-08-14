@@ -4,6 +4,7 @@ $(function() {
     table = $("#masterListTable").DataTable({
         "lengthChange": false,
         "info": false,
+        "ordering": false,
         "dom": "<t<'float-right'p>>"
     });
 });

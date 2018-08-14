@@ -19,7 +19,7 @@ class Manhour extends Model
         return $this->belongsTo('App\Models\Category', 'department', 'id');
     }
 
-    public function outlier() {
-        return $this->belongsTo('App\Models\Category');
+    public function outlierDetails() {
+        return $this->belongsTo('App\Models\Category', 'outlier', 'id');
     }
 }

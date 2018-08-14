@@ -44,20 +44,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                 <div class="form-group">
                     <label for="monthSelect" class="form-paper-label">Month and Year</label>
                     <div class="input-group">
-                        <select  form="filterForm" id="monthSelect" class="form-control form-control-sm" name="month">
-                            <option></option>
-                            {{-- Get months --}}
-                            <?php
-                                $months = array();
-                                for( $m=1; $m<=12; ++$m ) {
-                                    $months[date('m', mktime(0, 0, 0, $m, 1))] = date('F', mktime(0, 0, 0, $m, 1));
-                                }
-                            ?>
-                            {{-- Iterate to make options --}}
-                            @foreach ($months as $key => $month)
-                            <option value="{{ $key }}" {{ isset($date['datefrom']) && date_format(date_create($date['datefrom']), 'm') == $key ? 'selected' : '' }}>{{ $month }}</option>
-                            @endforeach
-                        </select>
+                        @include('layout.monthselect', ['form' => 'filterForm'])
                         <input form="filterForm" type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($date['year']) ? $date['year'] : date_format(now(), 'Y') }}" />
                         <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                     </div>
