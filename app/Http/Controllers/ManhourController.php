@@ -67,10 +67,29 @@ class ManhourController extends Controller
         return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
 
-    public function viewRecord($id) {
+
+    public function viewRecordNow($id) {
         $month = date_format(now(), 'm');
         $day = date_format(now(), 'j');
         $year = date_format(now(), 'Y');
+        return redirect()->action('ManhourController@viewRecord', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
+    }
+
+
+    public function setRecordDate(Request $request, $id) {
+        $year = $request->get('year');
+        $month = $request->get('month');
+        $day = '01';
+        $period = $request->get('period');
+        if ($period !== 'second')
+            $day = '17';
+
+        return redirect()->action('ManhourController@viewRecord', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
+
+    }
+
+
+    public function viewRecord($id, $year = null, $month = null, $day = null) {
         $startDay;
         $endDay;
         if ($day <= 16) {
@@ -89,6 +108,9 @@ class ManhourController extends Controller
             return redirect()->action('ManhourController@index');
         $details['startday'] = $startDay;
         $details['endday'] = $endDay;
+        $details['year'] = $year;
+        $details['month'] = $month;
+        $details['id'] = $id;
         $details['employeeId'] = $employee->employeeId;
         $details['timecard'] = $employee->details['timecard']['value'];
         $details['lastname'] = $employee->lastName;

@@ -9,6 +9,6 @@
     ?>
     {{-- Iterate to make options --}}
     @foreach ($months as $key => $month)
-    <option value="{{ $key }}" {{ isset($date['datefrom']) && date_format(date_create($date['datefrom']), 'm') == $key ? 'selected' : '' }}>{{ $month }}</option>
+    <option value="{{ $key }}" {{ isset($monthSelected) && $monthSelected == $key ? 'selected' : '' }}>{{ $month }}</option>
     @endforeach
 </select>

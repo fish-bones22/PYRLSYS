@@ -9,56 +9,61 @@ Employee Record
     <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title">Summary for {{ $details['name'] }}</div>
+            <div class="col-12 form-paper section-title" id="title">Summary for {{ $details['name'] }}</div>
             <div class="col-12 form-paper section-divider"></div>
             <div class="col-2 form-paper">
                 <div class="form-group">
+                    <input type="hidden" id="currentOutlier" value="record" />
                     <div class="">
-                        <input id="Record" type="radio" name="summary" value="record" checked />
+                        <input id="Record" type="radio" name="summary" value="record" onchange="changeMode(this)" checked />
                         <label for="Record" class="form-check-label"> Record</label>
                     </div>
                     <div class="">
-                        <input id="Outlier" type="radio" name="summary" value="outlier" />
+                        <input id="Outlier" type="radio" name="summary" value="outlier" onchange="changeMode(this)" />
                         <label for="Outlier" class="form-check-label"> Outlier</label>
                     </div>
                 </div>
             </div>
             <div class="col-7 form-paper">
-                <div class="row">
-                    <div class="col-5">
-                        <div class="form-group">
-                            <label class="form-paper-label">Period</label><br />
-                            <div class="form-check-inline">
-                                <input id="secondPeriod" type="radio" name="period" value="second" checked />
-                                <label for="secondPeriod" class="form-check-label small">Second (1-16)</label>
+                <form action="{{ action('ManhourController@setRecordDate', $details['id']) }}" method="POST" id="setDateForm">
+                    @csrf
+                    @method('post')
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label class="form-paper-label">Period</label><br />
+                                <div class="form-check-inline">
+                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 16 ? 'checked' : '' }} />
+                                    <label for="secondPeriod" class="form-check-label small">Second (1-16)</label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 17 ? 'checked' : '' }} />
+                                    <label for="firstPeriod" class="form-check-label small">First (17-EoM)</label>
+                                </div>
                             </div>
-                            <div class="form-check-inline">
-                                <input id="firstPeriod" type="radio" name="period" value="first" />
-                                <label for="firstPeriod" class="form-check-label small">First (17-EoM)</label>
+                        </div>
+                        <div class="col-7">
+                            <div class="form-group">
+                                <label class="form-paper-label">Month and Year</label>
+                                <div class="input-group">
+                                    @include('layout.monthselect', ['form' => 'setDateForm', 'monthSelected' => ( isset($details['month']) ? $details['month'] : date_format(now(), 'm') ) ])
+                                    <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($details['year']) ? $details['year'] : date_format(now(), 'Y') }}" />
+                                    <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-7">
-                        <div class="form-group">
-                            <label class="form-paper-label">Month and Year</label>
-                            <div class="input-group">
-                                @include('layout.monthselect', ['form' => ''])
-                                <input form="" type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($date['year']) ? $date['year'] : date_format(now(), 'Y') }}" />
-                                <button form="" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="col-3 form-paper">
                 <div class="form-group">
                     <label for="searchBox" class="form-paper-label">Search</label>
-                    <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterRecords()" />
+                    <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterTables()" />
                 </div>
             </div>
             <div class="col-12 form-paper section-divider"></div>
 
-            <div class="col-12">
+            <div class="col-12 mode-view">
                 <div class="row">
                     <div class="col-12 form-paper section-title">Record</div>
                     <div class="col-12 form-paper section-divider"></div>
@@ -120,11 +125,11 @@ Employee Record
                                         }
                                     ?>
 
-                                    <td>{{ $trot }}</td>
-                                    <td>{{ $tsot }}</td>
-                                    <td>{{ $txsot }}</td>
-                                    <td>{{ $tlhot }}</td>
-                                    <td>{{ $txlhot }}</td>
+                                    <td>{{ $trot != 0 ? $trot : '' }}</td>
+                                    <td>{{ $tsot != 0 ? $tsot : ''  }}</td>
+                                    <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
+                                    <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>
+                                    <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>
                                     <td></td>
                                 </tr>
                                 @endif
@@ -135,7 +140,7 @@ Employee Record
 
                 </div>
             </div>
-            <div class="col-12">
+            <div class="col-12 mode-view" style="display:none">
                 <div class="row">
 
                     <div class="col-12 form-paper section-title">Outliers</div>
@@ -180,6 +185,18 @@ Employee Record
         </div>
     </div>
 </div>
+
+<div class="m-4">&nbsp;</div>
+<div class="fixed-bottom btn-container m-4">
+    <div class="float-right">
+        <div class="btn-group">
+            {{-- <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a> --}}
+            <button type="button" class="btn btn-primary" onclick="saveAsPDF()">Save as PDF</button>
+            <button type="button" class="btn btn-primary" onclick="saveAsExcel()">Save as Excel</button>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('script')

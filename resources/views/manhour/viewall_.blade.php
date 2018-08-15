@@ -44,7 +44,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                 <div class="form-group">
                     <label for="monthSelect" class="form-paper-label">Month and Year</label>
                     <div class="input-group">
-                        @include('layout.monthselect', ['form' => 'filterForm'])
+                        @include('layout.monthselect', ['form' => 'filterForm', 'monthSelected' => isset($date['month']) ? $date['month'] : date_format(now(), 'm') ])
                         <input form="filterForm" type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($date['year']) ? $date['year'] : date_format(now(), 'Y') }}" />
                         <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                     </div>
