@@ -4,10 +4,11 @@ namespace App\Services;
 
 use App\Contracts\IEmployeeService;
 use App\Models\Employee;
-use App\Models\EmployeeDetail;
-use App\Models\EmploymentDetail;
 use App\Models\EmployeeDeductible;
+use App\Models\EmployeeDetail;
+use App\Models\EmployeeHistory;
 use App\Models\EmployeePicture;
+use App\Models\EmploymentDetail;
 use App\Entities\EmployeeEntity;
 
 class EmployeeService extends EntityService implements IEmployeeService {
@@ -128,6 +129,13 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $entity->details = $this->getDetails($model->details);
         $entity->employmentDetails = $this->getEmploymentDetails($model->employmentDetails);
         $entity->deductibles = $this->getDeductibles($model->deductibles);
+
+        // History
+        $entity->current = $this->getHistoryDetails($model->current);
+        foreach ($model->history as $history) {
+            $entity->history[] = $this->getHistoryDetails($history);
+        }
+
         return $entity;
 
     }
@@ -184,6 +192,11 @@ class EmployeeService extends EntityService implements IEmployeeService {
         if (!$res['result'])
             return $res;
 
+        $res = $this->addEmploymentHistory($id, $entity->current);
+
+        if (!$res['result'])
+            return $res;
+
         $res = $this->saveDeductibles($id, $entity->deductibles);
 
         return [
@@ -223,6 +236,11 @@ class EmployeeService extends EntityService implements IEmployeeService {
             return $res;
 
         $res = $this->saveEmploymentDetails($id, $entity->employmentDetails);
+
+        if (!$res['result'])
+            return $res;
+
+        $res = $this->updateEmploymentHistory($id, $entity->current);
 
         if (!$res['result'])
             return $res;
@@ -449,6 +467,116 @@ class EmployeeService extends EntityService implements IEmployeeService {
         return $detail;
 
     }
+
+
+    private function updateEmploymentHistory($id, $history) {
+
+        $current = EmployeeHistory::where('employee_id', $id)->where('current', true)->first();
+        $current->timecard = $history['timecard'];
+        $current->position = $history['position'];
+        $current->department = $history['department']['value'];
+        $current->dateStarted = $history['datestarted'];
+        $current->dateTransfered = $history['datetransfered'];
+        $current->employmenttype = $history['employmenttype'];
+        $current->status = $history['status'];
+        $current->paymenttype = $history['paymenttype'];
+        $current->paymentmode = $history['paymentmode'];
+        $current->rate = $history['rate'];
+        $current->allowance = $history['allowance'];
+        $current->timein = $history['timein'];
+        $current->timeout = $history['timeout'];
+
+        try {
+            $current->save();
+        }
+        catch (\Exception $e) {
+            return [
+                'result' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true
+        ];
+
+    }
+
+
+    private function addEmploymentHistory($id, $history) {
+
+        $new = new EmployeeHistory();
+        $new->timecard = $history['timecard'];
+        $new->position = $history['position'];
+        $new->department = $history['department']['value'];
+        $new->dateStarted = $history['datestarted'];
+        $new->dateTransfered = $history['datetransfered'];
+        $new->employmenttype = $history['employmenttype'];
+        $new->status = $history['status'];
+        $new->paymenttype = $history['paymenttype'];
+        $new->paymentmode = $history['paymentmode'];
+        $new->rate = $history['rate'];
+        $new->allowance = $history['allowance'];
+        $new->timein = $history['timein'];
+        $new->timeout = $history['timeout'];
+
+        $new->current = true;
+
+        $current = EmployeeHistory::where('employee_id', $id)->where('current', true)->first();
+        if ($current != null) {
+            $current->current = false;
+            $current->dateTransfered = $history['currentdatetransfered'];
+        }
+
+        try {
+            $new->save();
+            if ($current != null)
+                $current->save();
+        }
+        catch (\Exception $e) {
+            return [
+                'result' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true
+        ];
+
+    }
+
+
+    private function getHistoryDetails($model) {
+        $history = array();
+        $history['timecard'] = $model->timecard;
+        $history['position'] = $model->position;
+        $history['department'] = array();
+        $history['department']['value'] = $model->department;
+        $history['department']['displayName'] = $model->departmentDetails->value;
+        $history['datestarted'] = $model->dateStarted;
+        $history['datetransfered'] = $model->dateTransfered;
+        $history['current'] = $model->current;
+        $history['employmenttype'] = array();
+        $history['employmenttype']['value'] = $model->employmenttype;
+        $history['employmenttype']['displayName'] = $model->employmentType->value;
+        $history['paymenttype'] = array();
+        $history['paymenttype']['value'] = $model->paymenttype;
+        $history['paymenttype']['displayName'] = $model->paymentType->value;
+        $history['status'] = array();
+        $history['status']['value'] = $model->status;
+        $history['status']['displayName'] = $model->statusDetails->value;
+        $history['paymentmode'] = array();
+        $history['paymentmode']['value'] = $model->paymentmode;
+        $history['paymentmode']['displayName'] = $model->paymentMode->value;
+        $history['rate'] = $model->rate;
+        $history['allowance'] = $model->allowance;
+        $history['timein'] = $model->timein;
+        $history['timeout'] = $model->timeout;
+
+        return $history;
+    }
+
 
     private function saveDeductibles($id, $deductibles) {
 

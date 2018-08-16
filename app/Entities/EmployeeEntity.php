@@ -19,9 +19,7 @@ class EmployeeEntity extends Entity {
     public $details = array();
     public $employmentDetails = array();
     public $deductibles = array();
-
-    public $contactNumber;
-    public $email;
-    public $otherContacts;
+    public $history = array();
+    public $current = array();
 
 }

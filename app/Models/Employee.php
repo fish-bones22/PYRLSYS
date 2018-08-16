@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\EmployeeDetail;
-use App\Model\EmployeePicture;
 
 class Employee extends Model
 {
@@ -41,6 +39,15 @@ class Employee extends Model
     public function pictures() {
         $rawPics = $this->hasMany('App\Models\EmployeePicture')->orderBy('updated_at', 'desc')->orderBy('isCurrent', 'desc');
         return $rawPics;
+    }
+
+
+    public function history() {
+        return $this->hasMany('App\Models\EmployeeHistory', 'id', 'employee_id');
+    }
+
+    public function current() {
+        return $this->hasMany('App\Models\EmployeeHistory', 'id', 'employee_id')->where('current', true)->first();
     }
 
  }

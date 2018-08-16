@@ -14,7 +14,7 @@ class UpdateEmployementHistoriesTable extends Migration
     public function up()
     {
         Schema::table('employment_histories', function(Blueprint $table) {
-            $table->string('timeCard');
+            $table->string('timecard');
             $table->string('position');
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('department')->nullable();
