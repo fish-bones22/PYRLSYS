@@ -78,18 +78,20 @@ class EmployeeController extends Controller
         $employee->sex = $req['sex'];
 
         $employee->details = $this->detailsToEntity($req);
+        $employee->current = $this->historyToEntity($req);
 
-        $employee->employmentDetails = $this->employmentDetailsToEntity($req);
+        //$employee->employmentDetails = $this->employmentDetailsToEntity($req);
 
         $employee->deductibles = $this->deductiblesToEntity($req);
         $action = 'updated';
-
+        // Update
         if ($id != 0) {
             $result = $this->employeeService->updateEmployee($employee);
             if (!$result['result']) {
                 return redirect()->action('EmployeeController@show', $id)->with('error', $result['message']);
             }
         }
+        // Add
         else {
 
             $action = 'added';
@@ -236,6 +238,69 @@ class EmployeeController extends Controller
     }
 
 
+    private function historyToEntity($history) {
+
+        $entity = array();
+
+        // Time card
+        $entity['timecard'] =  $history['time_card'];
+
+        // Position
+        $entity['position'] = $history['position'];
+
+        // Date hired
+        $entity['datestarted'] = $history['date_started'];
+
+        // Date End
+        $entity['datetransfered'] = $history['date_transfered'];
+
+        // Rate
+        $entity['rate'] = $history['rate'];
+
+        // Allowance
+        $entity['allowance'] = $history['allowance'];
+
+        // Time In
+        $entity['timein'] = $history['time_in'];
+
+        // Time Out
+        $entity['timeout'] = $history['time_out'];
+
+        // Department
+        $entity['department'] = [
+            'key' => 'department',
+            'value' => $history['department']
+        ];
+
+        // Employment Type
+        $entity['employmenttype'] = [
+            'key' => 'employmenttype',
+            'value' => $history['employment_type']
+        ];
+
+        // Status
+        $entity['contractstatus'] = [
+            'key' => 'contractstatus',
+            'value' => $history['contract_status']
+        ];
+
+        // Payment Type
+        $entity['paymenttype'] = [
+            'key' => 'paymenttype',
+            'value' => $history['payment_type']
+        ];
+
+        // Payment Type
+        $entity['paymentmode'] = [
+            'key' => 'paymenttype',
+            'value' => $history['payment_mode']
+        ];
+
+        return $entity;
+
+    }
+
+
     private function detailsToEntity($details) {
 
         $entity = array();
@@ -250,6 +315,9 @@ class EmployeeController extends Controller
         // Spouse
         $entity['spouse'] = array();
         for ($i = 0; $i < sizeof($details['spouse_last_name']); $i++) {
+
+            if ($details['spouse_last_name'][$i] == null)
+                continue;
 
             $entity['spouse'][] = [
                 'lastname' => [
@@ -276,6 +344,10 @@ class EmployeeController extends Controller
         // Dependent
         $entity['dependent'] = array();
         for($i = 0; $i < sizeof($details['dependent_last_name']); $i++) {
+
+            if ($details['dependent_last_name'][$i] == null)
+                continue;
+
             $entity['dependent'][] = [
                 'lastname' => [
                     'key' => 'lastname',
@@ -305,60 +377,60 @@ class EmployeeController extends Controller
         }
 
         // Time card
-        $entity['timecard'] = [
-            'key' => 'timecard',
-            'value' => $details['time_card'],
-            'displayName' => 'Time Card'
-        ];
+        // $entity['timecard'] = [
+        //     'key' => 'timecard',
+        //     'value' => $details['time_card'],
+        //     'displayName' => 'Time Card'
+        // ];
 
-        // Position
-        $entity['position'] = [
-            'key' => 'position',
-            'value' => $details['position'],
-            'displayName' => 'Position'
-        ];
+        // // Position
+        // $entity['position'] = [
+        //     'key' => 'position',
+        //     'value' => $details['position'],
+        //     'displayName' => 'Position'
+        // ];
 
-        // Date hired
-        $entity['datehired'] = [
-            'key' => 'datehired',
-            'value' => $details['date_hired'],
-            'displayName' => 'Date Hired'
-        ];
+        // // Date hired
+        // $entity['datehired'] = [
+        //     'key' => 'datehired',
+        //     'value' => $details['date_hired'],
+        //     'displayName' => 'Date Hired'
+        // ];
 
-        // Date End
-        $entity['dateend'] = [
-            'key' => 'dateend',
-            'value' => $details['date_end'],
-            'displayName' => 'Date End'
-        ];
+        // // Date End
+        // $entity['dateend'] = [
+        //     'key' => 'dateend',
+        //     'value' => $details['date_end'],
+        //     'displayName' => 'Date End'
+        // ];
 
-        // Date hired
-        $entity['rate'] = [
-            'key' => 'rate',
-            'value' => $details['rate'],
-            'displayName' => 'Hourly Rate'
-        ];
+        // // Date hired
+        // $entity['rate'] = [
+        //     'key' => 'rate',
+        //     'value' => $details['rate'],
+        //     'displayName' => 'Hourly Rate'
+        // ];
 
-        // Allowance
-        $entity['allowance'] = [
-            'key' => 'allowance',
-            'value' => $details['allowance'],
-            'displayName' => 'Allowance'
-        ];
+        // // Allowance
+        // $entity['allowance'] = [
+        //     'key' => 'allowance',
+        //     'value' => $details['allowance'],
+        //     'displayName' => 'Allowance'
+        // ];
 
-        // Time In
-        $entity['timein'] = [
-            'key' => 'timein',
-            'value' => $details['time_in'],
-            'displayName' => 'Time In'
-        ];
+        // // Time In
+        // $entity['timein'] = [
+        //     'key' => 'timein',
+        //     'value' => $details['time_in'],
+        //     'displayName' => 'Time In'
+        // ];
 
-        // Time Out
-        $entity['timeout'] = [
-            'key' => 'timeout',
-            'value' => $details['time_out'],
-            'displayName' => 'Time Out'
-        ];
+        // // Time Out
+        // $entity['timeout'] = [
+        //     'key' => 'timeout',
+        //     'value' => $details['time_out'],
+        //     'displayName' => 'Time Out'
+        // ];
 
         // Number of Memo
         $entity['numberofmemo'] = [

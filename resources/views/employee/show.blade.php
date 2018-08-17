@@ -211,16 +211,16 @@
                 <div class="col-md-2 col-5 form-paper">
                     <div class="form-group">
                         <label for="timeCard" class="form-paper-label">Time Card #</label>
-                        <input id="timeCard" type="text" name="time_card" class="form-control" value="{{ key_exists('timecard', $employee->details) ? $employee->details['timecard']['value'] : '' }}" required />
+                        <input id="timeCard" type="text" name="time_card" class="form-control" value="{{ $employee->current != null && key_exists('timecard', $employee->current) ? $employee->current['timecard'] : '' }}" required />
                     </div>
                 </div>
                 <div class="col-md-3 col-7 form-paper">
                     <div class="form-group">
                         <label for="department" class="form-paper-label">Department/Project</label>
-                        <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department']['value'] : '' }}" />
+                        <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ $employee->current != null &&  key_exists('department', $employee->current) ? $employee->current['department']['value'] : '' }}" />
                             <option value="0"></option>
                             @foreach($categories['department'] as $category)
-                            <option value="{{ $category->id }}" {{ key_exists('department', $employee->employmentDetails) && $employee->employmentDetails['department']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                            <option value="{{ $category->id }}" {{ $employee->current != null &&  key_exists('department', $employee->current) && $employee->current['department']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -228,15 +228,15 @@
                 <div class="col-md-4 col-7 form-paper">
                     <div class="form-group">
                         <label for="position" class="form-paper-label">Position</label>
-                        <input id="position" type="text" name="position" class="form-control" value="{{ key_exists('position', $employee->details) ? $employee->details['position']['value'] : '' }}" />
+                        <input id="position" type="text" name="position" class="form-control" value="{{  $employee->current != null && key_exists('position', $employee->current) ? $employee->current['position'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-3 col-5 form-paper">
                     <div class="form-group">
                         <label for="employmentType" class="form-paper-label">Employment Type</label>
-                        <select id="employmentType" type="text" name="employment_type" class="form-control" value="{{ key_exists('employmenttype', $employee->employmentDetails) ? $employee->employmentDetails['employmenttype']['value'] : '' }}" />
+                        <select id="employmentType" type="text" name="employment_type" class="form-control" value="{{  $employee->current != null && key_exists('employmenttype', $employee->current) ? $employee->current['employmenttype']['value'] : '' }}" />
                             @foreach($categories['employmenttype'] as $category)
-                            <option value="{{ $category->id }}" {{ key_exists('employmenttype', $employee->employmentDetails) && $employee->employmentDetails['employmenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                            <option value="{{ $category->id }}" {{ $employee->current != null &&  key_exists('employmenttype', $employee->current) && $employee->current['employmenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -247,21 +247,21 @@
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="dateHired" class="form-paper-label">Date Started</label>
-                        <input id="dateHired" type="date" name="date_hired" class="form-control" value="{{ key_exists('datehired', $employee->details) ? $employee->details['datehired']['value'] : '' }}" />
+                        <input id="dateHired" type="date" name="date_started" class="form-control" value="{{  $employee->current != null && key_exists('datestarted', $employee->current) ? $employee->current['datestarted']: '' }}" />
                     </div>
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="dateEnded" class="form-paper-label">Until</label>
-                        <input id="dateEnded" type="date" name="date_end" class="form-control" value="{{ key_exists('dateend', $employee->details) ? $employee->details['dateend']['value'] : '' }}" />
+                        <input id="dateEnded" type="date" name="date_transfered" class="form-control" value="{{  $employee->current != null && key_exists('datetransfered', $employee->current) ? $employee->current['datetransfered'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="status" class="form-paper-label">Status</label>
-                        <select id="status" name="contract_status" class="form-control" value="{{ key_exists('contractstatus', $employee->employmentDetails) ? $employee->employmentDetails['contractstatus']['value'] : '' }}" />
+                        <select id="status" name="contract_status" class="form-control" value="{{  $employee->current != null && key_exists('contractstatus', $employee->current) ? $employee->current['contractstatus']['value'] : '' }}" />
                             @foreach($categories['contractstatus'] as $category)
-                            <option value="{{ $category->id }}" {{ key_exists('contractstatus', $employee->employmentDetails) && $employee->employmentDetails['contractstatus']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                            <option value="{{ $category->id }}" {{  $employee->current != null && key_exists('contractstatus', $employee->current) && $employee->current['contractstatus']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -269,9 +269,9 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
-                        <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ key_exists('paymenttype', $employee->employmentDetails) ? $employee->employmentDetails['paymenttype']['value'] : '' }}" />
+                        <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ $employee->current != null &&  key_exists('paymenttype', $employee->current) ? $employee->current['paymenttype']['value'] : '' }}" />
                             @foreach($categories['paymenttype'] as $category)
-                            <option value="{{ $category->id }}" {{ key_exists('paymenttype', $employee->employmentDetails) && $employee->employmentDetails['paymenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                            <option value="{{ $category->id }}" {{ $employee->current != null &&  key_exists('paymenttype', $employee->current) && $employee->current['paymenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -279,9 +279,9 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
-                        <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{ key_exists('paymentmode', $employee->employmentDetails) ? $employee->employmentDetails['paymentmode']['value'] : '' }}" />
+                        <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{  $employee->current != null && key_exists('paymentmode', $employee->current) ? $employee->current['paymentmode']['value'] : '' }}" />
                             @foreach($categories['paymentmode'] as $category)
-                            <option value="{{ $category->id }}" {{ key_exists('paymentmode', $employee->employmentDetails) && $employee->employmentDetails['paymentmode']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                            <option value="{{ $category->id }}" {{  $employee->current != null && key_exists('paymentmode', $employee->current) && $employee->current['paymentmode']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -289,13 +289,13 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="ratePerHour" class="form-paper-label">Hourly rate</label>
-                        <input id="ratePerHour" type="number" name="rate" step="0.05" class="form-control" value="{{ key_exists('rate', $employee->details) ? $employee->details['rate']['value'] : '' }}" required />
+                        <input id="ratePerHour" type="number" name="rate" step="0.05" class="form-control" value="{{ $employee->current != null &&  key_exists('rate', $employee->current) ? $employee->current['rate'] : '' }}" required />
                     </div>
                 </div>
                 <div class="col-sm-3 form-paper">
                     <div class="form-group">
                         <label for="allowance" class="form-paper-label">Allowance</label>
-                        <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{ key_exists('allowance', $employee->details) ? $employee->details['allowance']['value'] : '' }}" />
+                        <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{  $employee->current != null && key_exists('allowance', $employee->current) ? $employee->current['allowance'] : '' }}" />
                     </div>
                 </div>
             </div>
@@ -304,13 +304,13 @@
                 <div class="col-sm-6 form-paper">
                     <div class="form-group">
                         <label for="timeIn" class="form-paper-label">Time In</label>
-                        <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{ key_exists('timein', $employee->details) ? $employee->details['timein']['value'] : '' }}" required />
+                        <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{  $employee->current != null && key_exists('timein', $employee->current) ? $employee->current['timein'] : '' }}" required />
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="timeOut" class="form-paper-label">Time Out</label>
-                        <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ key_exists('timeout', $employee->details) ? $employee->details['timeout']['value'] : '' }}" required />
+                        <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->current != null && key_exists('timeout', $employee->current) ? $employee->current['timeout'] : '' }}" required />
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>

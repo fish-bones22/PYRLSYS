@@ -43,11 +43,11 @@ class Employee extends Model
 
 
     public function history() {
-        return $this->hasMany('App\Models\EmployeeHistory', 'id', 'employee_id');
+        return $this->hasMany('App\Models\EmployeeHistory');
     }
 
     public function current() {
-        return $this->hasMany('App\Models\EmployeeHistory', 'id', 'employee_id')->where('current', true)->first();
+        return $this->hasMany('App\Models\EmployeeHistory');
     }
 
  }

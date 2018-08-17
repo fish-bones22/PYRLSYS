@@ -127,11 +127,13 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
         // Details
         $entity->details = $this->getDetails($model->details);
-        $entity->employmentDetails = $this->getEmploymentDetails($model->employmentDetails);
+        //$entity->employmentDetails = $this->getEmploymentDetails($model->employmentDetails);
         $entity->deductibles = $this->getDeductibles($model->deductibles);
 
         // History
-        $entity->current = $this->getHistoryDetails($model->current);
+        //$entity->current = $this->getHistoryDetails($model->history->where('current', true)->first());
+        $curr =  $this->getHistoryDetails($model->history->where('current', true)->first());
+        $entity->current = $curr;
         foreach ($model->history as $history) {
             $entity->history[] = $this->getHistoryDetails($history);
         }
@@ -187,7 +189,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         if (!$res['result'])
             return $res;
 
-        $res = $this->saveEmploymentDetails($id, $entity->employmentDetails);
+        //$res = $this->saveEmploymentDetails($id, $entity->employmentDetails);
 
         if (!$res['result'])
             return $res;
@@ -472,13 +474,15 @@ class EmployeeService extends EntityService implements IEmployeeService {
     private function updateEmploymentHistory($id, $history) {
 
         $current = EmployeeHistory::where('employee_id', $id)->where('current', true)->first();
+        if ($current == null)
+            return $this->addEmploymentHistory($id, $history);
         $current->timecard = $history['timecard'];
         $current->position = $history['position'];
         $current->department = $history['department']['value'];
         $current->dateStarted = $history['datestarted'];
         $current->dateTransfered = $history['datetransfered'];
         $current->employmenttype = $history['employmenttype'];
-        $current->status = $history['status'];
+        $current->status = $history['contractstatus'];
         $current->paymenttype = $history['paymenttype'];
         $current->paymentmode = $history['paymentmode'];
         $current->rate = $history['rate'];
@@ -506,15 +510,16 @@ class EmployeeService extends EntityService implements IEmployeeService {
     private function addEmploymentHistory($id, $history) {
 
         $new = new EmployeeHistory();
+        $new->employee_id = $id;
         $new->timecard = $history['timecard'];
         $new->position = $history['position'];
         $new->department = $history['department']['value'];
         $new->dateStarted = $history['datestarted'];
         $new->dateTransfered = $history['datetransfered'];
-        $new->employmenttype = $history['employmenttype'];
-        $new->status = $history['status'];
-        $new->paymenttype = $history['paymenttype'];
-        $new->paymentmode = $history['paymentmode'];
+        $new->employmenttype = $history['employmenttype']['value'];
+        $new->status = $history['contractstatus']['value'];
+        $new->paymenttype = $history['paymenttype']['value'];
+        $new->paymentmode = $history['paymentmode']['value'];
         $new->rate = $history['rate'];
         $new->allowance = $history['allowance'];
         $new->timein = $history['timein'];
@@ -548,6 +553,9 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
 
     private function getHistoryDetails($model) {
+
+        if (is_null($model))
+            return null;
         $history = array();
         $history['timecard'] = $model->timecard;
         $history['position'] = $model->position;
@@ -563,9 +571,9 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $history['paymenttype'] = array();
         $history['paymenttype']['value'] = $model->paymenttype;
         $history['paymenttype']['displayName'] = $model->paymentType->value;
-        $history['status'] = array();
-        $history['status']['value'] = $model->status;
-        $history['status']['displayName'] = $model->statusDetails->value;
+        $history['contractstatus'] = array();
+        $history['contractstatus']['value'] = $model->status;
+        $history['contractstatus']['displayName'] = $model->statusDetails->value;
         $history['paymentmode'] = array();
         $history['paymentmode']['value'] = $model->paymentmode;
         $history['paymentmode']['displayName'] = $model->paymentMode->value;

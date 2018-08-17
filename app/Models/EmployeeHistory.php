@@ -8,7 +8,7 @@ class EmployeeHistory extends Model
 {
     protected $table = 'employment_histories';
     protected $fillable = [
-        'timeCard', 'position', 'employee_id', 'department', 'dateStarted', 'dateTransfered', 'current',
+        'timecard', 'position', 'employee_id', 'department', 'dateStarted', 'dateTransfered', 'current',
         'employmenttype', 'status', 'paymenttype', 'paymentmode', 'rate', 'allowance', 'timein', 'timeout'
     ];
 

@@ -15,7 +15,7 @@ class UpdateEmploymentHistoriesTable2 extends Migration
     {
         Schema::table('employment_histories', function(Blueprint $table) {
             $table->unsignedInteger('employmenttype')->nullable();
-            $table->unsignedInteger('stutus')->nullable();
+            $table->unsignedInteger('status')->nullable();
             $table->unsignedInteger('paymenttype')->nullable();
             $table->unsignedInteger('paymentmode')->nullable();
             $table->decimal('rate');
@@ -24,7 +24,7 @@ class UpdateEmploymentHistoriesTable2 extends Migration
             $table->time('timeout');
 
             $table->foreign('employmenttype')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('stutus')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('status')->references('id')->on('categories')->onDelete('set null');
             $table->foreign('paymenttype')->references('id')->on('categories')->onDelete('set null');
             $table->foreign('paymentmode')->references('id')->on('categories')->onDelete('set null');
         });
