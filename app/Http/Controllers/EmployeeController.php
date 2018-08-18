@@ -129,6 +129,17 @@ class EmployeeController extends Controller
 
     }
 
+    public function transferEmployee(Request $request, $id) {
+
+        $req  = $request->all();
+        $employmentDetails = $this->historyToEntity($req);
+        $res = $this->employeeService->transferEmployee($id, $employmentDetails);
+
+        if (!$res['result'])
+            return redirect()->back()->with('error', 'Transfer failed. '.$res['message']);
+
+        return redirect()->back()->with('success', 'Transfer success');
+    }
 
     public function updateImage(Request $request, $id) {
 

@@ -43,6 +43,7 @@ Route::get('employee/delete/{id}', 'EmployeeController@destroy');
 Route::post('employee/updateImage/{id}', 'EmployeeController@updateImage');
 Route::post('employee/deleteImage/{id}', 'EmployeeController@deleteImage');
 Route::post('employee/getbasic/{id}', 'EmployeeController@getEmployeeBasicDetails');
+Route::post('employee/transferemployee/{id}', 'EmployeeController@transferEmployee');
 
 Route::get('applicants', 'ApplicantController@index');
 Route::get('application-form', 'ApplicantController@new');

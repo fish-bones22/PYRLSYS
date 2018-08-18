@@ -217,7 +217,7 @@
                 <div class="col-md-3 col-7 form-paper">
                     <div class="form-group">
                         <label for="department" class="form-paper-label">Department/Project</label>
-                        <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ $employee->current != null &&  key_exists('department', $employee->current) ? $employee->current['department']['value'] : '' }}" />
+                        <select id="department" type="text" onchange="updateTimeInTimeOut(this)" name="department" class="form-control" value="{{ $employee->current != null &&  key_exists('department', $employee->current) ? $employee->current['department']['value'] : '' }}" >
                             <option value="0"></option>
                             @foreach($categories['department'] as $category)
                             <option value="{{ $category->id }}" {{ $employee->current != null &&  key_exists('department', $employee->current) && $employee->current['department']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
@@ -234,7 +234,7 @@
                 <div class="col-md-3 col-5 form-paper">
                     <div class="form-group">
                         <label for="employmentType" class="form-paper-label">Employment Type</label>
-                        <select id="employmentType" type="text" name="employment_type" class="form-control" value="{{  $employee->current != null && key_exists('employmenttype', $employee->current) ? $employee->current['employmenttype']['value'] : '' }}" />
+                        <select id="employmentType" type="text" name="employment_type" class="form-control" value="{{  $employee->current != null && key_exists('employmenttype', $employee->current) ? $employee->current['employmenttype']['value'] : '' }}" >
                             @foreach($categories['employmenttype'] as $category)
                             <option value="{{ $category->id }}" {{ $employee->current != null &&  key_exists('employmenttype', $employee->current) && $employee->current['employmenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
@@ -269,7 +269,7 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
-                        <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ $employee->current != null &&  key_exists('paymenttype', $employee->current) ? $employee->current['paymenttype']['value'] : '' }}" />
+                        <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ $employee->current != null &&  key_exists('paymenttype', $employee->current) ? $employee->current['paymenttype']['value'] : '' }}">
                             @foreach($categories['paymenttype'] as $category)
                             <option value="{{ $category->id }}" {{ $employee->current != null &&  key_exists('paymenttype', $employee->current) && $employee->current['paymenttype']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
@@ -279,7 +279,7 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
-                        <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{  $employee->current != null && key_exists('paymentmode', $employee->current) ? $employee->current['paymentmode']['value'] : '' }}" />
+                        <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{  $employee->current != null && key_exists('paymentmode', $employee->current) ? $employee->current['paymentmode']['value'] : '' }}" >
                             @foreach($categories['paymentmode'] as $category)
                             <option value="{{ $category->id }}" {{  $employee->current != null && key_exists('paymentmode', $employee->current) && $employee->current['paymentmode']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
@@ -319,7 +319,7 @@
             <div class="row">
                 <div class="col-12 form-paper">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-link">Transfer Employee</button>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#transferEmployeeModal">Transfer Employee</button>
                         <button type="button" class="btn btn-link">View History of Transfers</button>
                     </div>
                 </div>
@@ -487,6 +487,146 @@
             <div class="modal-footer">
                 <input type="submit" class="btn btn-primary" value="Save" form="imageForm" />
             </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+{{-- Transfer employee --}}
+<div class="modal fade" role="dialog" id="transferEmployeeModal" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form action="{{ action('EmployeeController@transferEmployee', $employee->id) }}" method="post">
+                @csrf
+                @method('post')
+                <div class="row">
+                    <div class="col-12 form-paper section-title">Transfer Employee
+                        <button type="button" class="close" data-dismiss='modal'>&times;</button>
+                    </div>
+                    <div class="col-12 form-paper section-divider"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2 col-5 form-paper">
+                        <div class="form-group">
+                            <label for="newTimecard" class="form-paper-label">Time Card</label>
+                            <input id="newTimecard" type="text" class="form-control" name="time_card" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-7 form-paper">
+                        <div class="form-group">
+                            <label for="newDepartment" class="form-paper-label">Department</label>
+                            <select id="newDepartment" name="department" class="form-control">
+                                <option></option>
+                                @foreach($categories['department'] as $category)
+                                <option value="{{ $category->id }}" >{{ $category->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-7 form-paper">
+                        <div class="form-group">
+                            <label for="newPosition" class="form-paper-label">Position</label>
+                            <input type="text" id="newPosition" name="position" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-5 form-paper">
+                        <div class="form-group">
+                            <label for="employmentType" class="form-paper-label">Employment Type</label>
+                            <select id="employmentType" type="text" name="employment_type" class="form-control">
+                                <option></option>
+                                @foreach($categories['employmenttype'] as $category)
+                                <option value="{{ $category->id }}">{{ $category->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 form-paper">
+                        <div class="form-group">
+                            <label for="mewDateHired" class="form-paper-label">Date Started</label>
+                            <input id="mewDateHired" type="date" name="date_started" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-4 form-paper">
+                        <div class="form-group">
+                            <label for="newDateEnded" class="form-paper-label">Until</label>
+                            <input id="newDateEnded" type="date" name="date_transfered" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-4 form-paper">
+                        <div class="form-group">
+                            <label for="newStatus" class="form-paper-label">Status</label>
+                            <select id="newStatus" name="contract_status" class="form-control" />
+                                @foreach($categories['contractstatus'] as $category)
+                                <option value="{{ $category->id }}" >{{ $category->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-paper">
+                        <div class="form-group">
+                            <label for="newTypeOfPayment" class="form-paper-label">Type of payment</label>
+                            <select id="newTypeOfPayment" name="payment_type" class="form-control" />
+                                @foreach($categories['paymenttype'] as $category)
+                                <option value="{{ $category->id }}" >{{ $category->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-paper">
+                        <div class="form-group">
+                            <label for="newModeOfPayment" class="form-paper-label">Mode of payment</label>
+                            <select id="newModeOfPayment" name="payment_mode" class="form-control" />
+                                @foreach($categories['paymentmode'] as $category)
+                                <option value="{{ $category->id }}" >{{ $category->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 form-paper">
+                        <div class="form-group">
+                            <label for="newRatePerHour" class="form-paper-label">Hourly rate</label>
+                            <input id="newRatePerHour" type="number" name="rate" step="0.05" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-3 form-paper">
+                        <div class="form-group">
+                            <label for="newAllowance" class="form-paper-label">Allowance</label>
+                            <input id="newAllowance" type="number" name="allowance" step="0.05" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6 form-paper">
+                        <div class="form-group">
+                            <label for="timeIn" class="form-paper-label">Time In</label>
+                            <input id="timeIn" type="time" name="time_in" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-paper">
+                        <div class="form-group">
+                            <label for="timeOut" class="form-paper-label">Time Out</label>
+                            <input id="timeOut" type="time" name="time_out" class="form-control"  required />
+                        </div>
+                    </div>
+                    <div class="col-12 form-paper section-divider"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 form-paper">
+                        <div class="form-group">
+                            <div class="float-right">
+                                <input type="submit" class="btn btn-primary" value="Transfer" />
+                            </div>
+                        </div>
+                        <div class="mb-2">&nbsp;</div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

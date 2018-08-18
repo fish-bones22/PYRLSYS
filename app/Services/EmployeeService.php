@@ -340,6 +340,11 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
+    public function transferEmployee($id, $employmentDetails) {
+        return $this->addEmploymentHistory($id, $employmentDetails);
+    }
+
+
     public function getDetails($detailsModel) {
 
         $detail = array();
@@ -530,7 +535,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $current = EmployeeHistory::where('employee_id', $id)->where('current', true)->first();
         if ($current != null) {
             $current->current = false;
-            $current->dateTransfered = $history['currentdatetransfered'];
+            $current->dateTransfered = $history['datestarted'];
         }
 
         try {
