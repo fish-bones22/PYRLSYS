@@ -74,7 +74,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
         foreach ($employees as $key => $emp) {
 
-            if (!key_exists('department', $emp->employmentDetails) || $emp->employmentDetails['department']['value'] == $dept) {
+            if ($emp->current == null || !key_exists('department', $emp->current) || $emp->current['department']['value'] != $dept) {
                 unset($employees[$key]);
             }
         }

@@ -114,7 +114,7 @@ class EmployeeController extends Controller
         }
 
 
-        return redirect()->action('EmployeeController@show', $id)->with('success', 'Successfully $action employee. ');
+        return redirect()->action('EmployeeController@show', $id)->with('success', 'Successfully '.$action.' employee. ');
 
     }
 
@@ -208,9 +208,12 @@ class EmployeeController extends Controller
             'firstName' => $employee->firstName,
             'middleName' => $employee->middleName,
             'fullName' => $employee->fullName,
-            'department' => $employee->employmentDetails['department']['displayName'],
-            'departmentValue' => $employee->employmentDetails['department']['value'],
-            'timecard' => $employee->details['timecard']['value'],
+            //'department' => $employee->employmentDetails['department']['displayName'],
+            'department' => $employee->current['department']['displayName'],
+            //'departmentValue' => $employee->employmentDetails['department']['value'],
+            'departmentValue' => $employee->current['department']['value'],
+            //'timecard' => $employee->details['timecard']['value'],
+            'timecard' => $employee->current['timecard']
         ]);
 
     }

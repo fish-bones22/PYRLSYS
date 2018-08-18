@@ -320,7 +320,7 @@
                 <div class="col-12 form-paper">
                     <div class="btn-group">
                         <button type="button" class="btn btn-link" data-toggle="modal" data-target="#transferEmployeeModal">Transfer Employee</button>
-                        <button type="button" class="btn btn-link">View History of Transfers</button>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#transferHistoryModal">View History of Transfers</button>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -627,6 +627,67 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+
+{{-- Transfer History --}}
+<div class="modal fade" role="dialog" id="transferHistoryModal" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-12 form-paper section-title">Transfer History
+                    <button type="button" class="close" data-dismiss='modal'>&times;</button>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
+            </div>
+            <div class="row">
+                <div class="col-12 form-paper">
+                    <table class="table table-sm" style="font-size:0.8em;">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">ID</th>
+                                <th rowspan="2">Name</th>
+                                <th colspan="3">Current</th>
+                                <th colspan="3">New</th>
+                                <th rowspan="2">Date Started</th>
+                                <th rowspan="2">Date Transfered</th>
+                            </tr>
+                            <tr>
+                                <th>Department</th>
+                                <th>Position</th>
+                                <th>TC #</th>
+                                <th>Department </th>
+                                <th>Position </th>
+                                <th>TC # </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for ($i = 0; $i < sizeof($employee->history); $i++)
+                            <tr>
+                                <td>{{ $employee->employeeId }}</td>
+                                <td>{{ $employee->fullName }}</td>
+                                <td>{{ $employee->history[$i]['department']['displayName'] }}</td>
+                                <td>{{ $employee->history[$i]['position'] }}</td>
+                                <td>{{ $employee->history[$i]['timecard'] }}</td>
+                                @if ($i+1 != sizeof($employee->history))
+                                <td>{{ $employee->history[$i+1]['department']['displayName'] }}</td>
+                                <td>{{ $employee->history[$i+1]['position'] }}</td>
+                                <td>{{ $employee->history[$i+1]['timecard'] }}</td>
+                                @else
+                                <td><i class="text-muted"></i></td>
+                                <td></td>
+                                <td></td>
+                                @endif
+                                <td>{{ $employee->history[$i]['datestarted'] }}</td>
+                                <td>{{ $employee->history[$i]['datetransfered'] }}</td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

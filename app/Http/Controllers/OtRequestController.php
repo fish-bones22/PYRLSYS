@@ -132,7 +132,7 @@ class OtRequestController extends Controller
                 'id' => $emp->id,
                 'name' => $emp->fullName,
                 'employeeId' => $emp->employeeId,
-                'timecard' => $emp->details['timecard']['value']
+                'timecard' => $emp->current['timecard']
             ];
         }
 

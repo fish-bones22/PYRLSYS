@@ -33,8 +33,8 @@ Manhour Input
                 <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Timecard</label>
-                        <div class="form-paper-display">{!! key_exists('timecard', $employee->details) ? $employee->details['timecard']['value'] : '<i class="text-muted small">No Timecard</i>' !!}</div>
-                        <input type="hidden" name="time_card" value="{{ key_exists('timecard', $employee->details) ? $employee->details['timecard']['value'] : '' }}" />
+                        <div class="form-paper-display">{!! key_exists('timecard', $employee->current) ? $employee->current['timecard'] : '<i class="text-muted small">No Timecard</i>' !!}</div>
+                        <input type="hidden" name="time_card" value="{{ key_exists('timecard', $employee->current) ? $employee->current['timecard'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-6 form-paper">
@@ -48,8 +48,8 @@ Manhour Input
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Department</label>
-                        <div class="form-paper-display">{!! key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department']['displayName'] : '<i class="text-muted small">No Department</i>' !!}</div>
-                        <input type="hidden" name="department" value="{{ key_exists('department', $employee->employmentDetails) ? $employee->employmentDetails['department']['value'] : '' }}" />
+                        <div class="form-paper-display">{!! key_exists('department', $employee->current) ? $employee->current['department']['displayName'] : '<i class="text-muted small">No Department</i>' !!}</div>
+                        <input type="hidden" name="department" value="{{ key_exists('department', $employee->current) ? $employee->current['department']['value'] : '' }}" />
                     </div>
                 </div>
             </div>

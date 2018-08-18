@@ -63,7 +63,7 @@ Manhour Masterlist
                 <tr>
                     <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
                     <td>{{ $emp->fullName }}</td>
-                    <td>{{ isset($emp->employmentDetails['department']['displayName']) ? $emp->employmentDetails['department']['displayName'] : ''}}</td>
+                    <td>{{ isset($emp->current['department']['displayName']) ? $emp->current['department']['displayName'] : ''}}</td>
                     <td>
                         <span class="btn-group">
                             <a href="{{ action('ManhourController@input', ['id' => $emp->id]) }}" class="btn btn-sm btn-light">Input Record</a>
