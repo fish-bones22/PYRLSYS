@@ -45,7 +45,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" data-target="#payrollDropdown">Payroll</a>
                     <div class="dropdown-menu" id="payrollDropdown">
-                        <a class="dropdown-item" href="{{ action('ManhourController@viewNow') }}">Masterlist</a>
+                        <a class="dropdown-item" href="{{ action('PayrollController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@index') }}">Benefits Records</a>
                     </div>
                 </li>

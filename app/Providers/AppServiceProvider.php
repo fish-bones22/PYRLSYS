@@ -51,5 +51,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\IOtRequestService',
             'App\Services\OtRequestService'
         );
+        $this->app->bind(
+            'App\Contracts\IPayrollService',
+            'App\Services\PayrollService'
+        );
     }
 }
