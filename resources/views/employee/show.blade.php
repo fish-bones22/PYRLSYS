@@ -620,7 +620,7 @@
                     <div class="col-12 form-paper">
                         <div class="form-group">
                             <div class="float-right">
-                                <input type="submit" class="btn btn-primary" value="Transfer" />
+                                <input type="submit" class="btn btn-primary" value="Transfer" data-confirm="save" />
                             </div>
                         </div>
                         <div class="mb-2">&nbsp;</div>

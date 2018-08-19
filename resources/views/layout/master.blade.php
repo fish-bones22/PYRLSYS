@@ -13,7 +13,7 @@
 </head>
 <body>
     <nav class="navbar navbar-dark fixed-top navbar-expand-md bg-primary">
-        <a href="/" class="navbar-brand">Home</a>
+        <a href="/" class="navbar-brand"><img src="{{ asset('images/icons/logo-inverted.svg') }}" style="width:50px"/></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -61,8 +61,36 @@
         @yield('content')
     </div>
 
+    <div id="confirmationModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-12 form-paper section-title">
+                        <button class="close" type="button" data-dismiss="modal">&times;</button>
+                        <span class="confirmationTitle">Confirmation</span>
+                    </div>
+                    <div class="col-12 form-paper section-divider"></div>
+                    <div class="col-12 form-paper">
+                        <div class="form-paper">
+                            <div class="form-paper-display">Do you want to <span class="confirmationAction">{action}</span>?</div>
+                        </div>
+                    </div>
+                    <div class="col-12 form-paper">
+                        <div class="form-paper">
+                            <div class="btn-group">
+                                <button class="btn btn-primary btn-confirm-yes" type="button">Yes</button>
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ asset('js/app.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/confirmation.js') }}"></script>
     @yield('script')
 </body>
 </html>

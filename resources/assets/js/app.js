@@ -32,11 +32,6 @@ window.moment = require('moment');
 // });
 
 
-$(document).ready(function() {
-    $('form').one('submit', function() {
-        $(this).find('[type="submit"]').attr('disabled', 'disabled');
-    });
-});
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;

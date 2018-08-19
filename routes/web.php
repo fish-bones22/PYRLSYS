@@ -36,7 +36,7 @@ Route::post('categories', 'CategoryController@setCategory');
 
 // Route::resource('employee', 'EmployeeController');
 Route::get('employees', 'EmployeeController@index');
-Route::get('employee/new', 'EmployeeController@show');
+Route::get('employee/new', 'EmployeeController@show')->name('employee.new');
 Route::get('employee/{id}', 'EmployeeController@show');
 Route::post('employee/{id}', 'EmployeeController@update');
 Route::get('employee/delete/{id}', 'EmployeeController@destroy');
@@ -53,7 +53,7 @@ Route::get('applicant-process/{id}', 'ApplicantController@process');
 Route::get('applicant-hire/{id}', 'ApplicantController@hire');
 Route::delete('applicant/{id}', 'ApplicantController@destroy')->name('applicant.destroy');
 
-Route::get('manhour/input', 'ManhourController@input');
+Route::get('manhour/input', 'ManhourController@input')->name('manhour.input');
 Route::get('manhour/input/{id}', 'ManhourController@input');
 Route::get('manhour/getNext/{id}', 'ManhourController@getNext');
 Route::post('manhour/record/{id}', 'ManhourController@record');

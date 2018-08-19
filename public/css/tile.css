@@ -1,24 +1,72 @@
-.tile {
-    height: 200%;
-    width: 100%;
-}
-
-.tile:hover {
+.tile-selection {
     cursor: pointer;
-    background-color: steelblue!important;
 }
 
-.tile-light .tile-body a  {
-    color: white!important;
-    text-decoration: none;
+.tile-selection:hover {
+    background-color: lightgray;
+    transition: ease-in-out 0.1s;
 }
 
-.tile-content {
-    padding: 5px;
+.tile-logo {
+    width:10em;
 }
 
-.tile-body {
-    align-content: center;
-    padding: 5px;
-    text-align: center;
+.tile-header {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 3em;
+}
+
+@media (max-width: 575px) {
+    .tile-icon {
+        width:2em;
+        transition: ease-in-out 0.1s;
+    }
+    .tile-selection:hover .tile-icon {
+        opacity: 0.8;
+    }
+
+}
+
+@media (min-width: 576px) {
+    .tile-icon {
+        width:4em;
+        transition: ease-in-out 0.1s;
+    }
+    .tile-selection:hover .tile-icon {
+        opacity: 0.8;
+    }
+
+}
+
+@media (min-width: 768px) {
+    .tile-icon {
+        width:5em;
+        transition: ease-in-out 0.1s;
+    }
+    .tile-selection:hover .tile-icon {
+        opacity: 0.8;
+    }
+
+}
+
+@media (min-width: 992px) {
+    .tile-icon {
+        width:8em;
+        transition: ease-in-out 0.1s;
+    }
+    .tile-selection:hover .tile-icon {
+        opacity: 0.8;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    .tile-icon {
+        width:10em;
+        transition: ease-in-out 0.1s;
+    }
+    .tile-selection:hover .tile-icon {
+        opacity: 0.8;
+    }
+
 }

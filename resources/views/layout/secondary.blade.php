@@ -16,6 +16,7 @@
         <div class="m-3">&nbsp;</div>
         @yield('content')
     </div>
+    <script src="{{ asset('js/app.js') }}"></script>
     @yield('script')
 </body>
 </html>
