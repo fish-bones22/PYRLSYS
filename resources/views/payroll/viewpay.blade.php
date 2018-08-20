@@ -45,6 +45,7 @@
                     <input id="searchBox" type="search" class="form-control form-control-sm" />
                 </div>
             </div>
+           <span>Gross Pay: {{ $payroll->grossPay }}</span>
         </div>
 
     </div>

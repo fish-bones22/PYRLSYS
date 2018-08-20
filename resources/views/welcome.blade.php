@@ -138,7 +138,7 @@ Welcome
                         <tr><td><a href="{{ action('ManhourController@viewNow') }}">Show Daily Work Hours</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@index') }}">Show OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@new') }}">Add OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('PayrollController@new') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                     </tbody>
                 </table>
             </div>

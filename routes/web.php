@@ -75,5 +75,5 @@ Route::post('otrequest/deny/{id}', 'OtRequestController@deny')->name('otrequest.
 Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@getOtRequestForEmployee');
 
 Route::get('payroll', 'PayrollController@index');
-Route::get('payroll/{id}', 'PayrollController@viewNow');
 Route::get('payroll/{id}/{date}', 'PayrollController@viewPay');
+Route::get('payroll/{id}', 'PayrollController@viewNow');

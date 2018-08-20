@@ -13,6 +13,7 @@ class PayrollController extends Controller
 {
     public $payrollService;
     public $employeeService;
+    public $manhourService;
 
     public function __construct (IPayrollService $payrollService, IEmployeeService $employeeService, IManhourService $manhourService) {
         $this->payrollService = $payrollService;
@@ -34,7 +35,11 @@ class PayrollController extends Controller
     public function viewPay($id, $date) {
 
         $employee = $this->employeeService->getEmployeeById($id);
-        return view('payroll.viewpay', ['employee' => $employee, 'details' => array() ]);
+
+        if ($employee == null)
+            return redirect()->action('PayrollController@index');
+        $payroll = $this->payrollService->getPayroll($id, date_create($date));
+        return view('payroll.viewpay', ['employee' => $employee, 'details' => array(), 'payroll' => $payroll ]);
 
     }
 }

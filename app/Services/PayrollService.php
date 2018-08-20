@@ -2,16 +2,19 @@
 
 namespace App\Services;
 
+use App\Contracts\IEmployeeService;
+use App\Contracts\IManhourService;
 use App\Contracts\IPayrollService;
+
+use App\Entities\ManhourSummaryEntity;
+use App\Entities\PayrollEntity;
 
 class PayrollService implements IPayrollService {
 
-    public $payrollService;
     public $employeeService;
     public $manhourService;
 
-    public function __construct (IPayrollService $payrollService, IEmployeeService $employeeService, IManhourService $manhourService) {
-        $this->payrollService = $payrollService;
+    public function __construct (IEmployeeService $employeeService, IManhourService $manhourService) {
         $this->employeeService = $employeeService;
         $this->manhourService = $manhourService;
     }
@@ -32,16 +35,34 @@ class PayrollService implements IPayrollService {
         }
 
         $employee = $this->employeeService->getEmployeeById($employeeId);
+        if ($employee == null)
+            return null;
+
+        if ($employee->current['rate'] == null)
+            return null;
+
         $rate = $employee->current['rate'];
+
         $payroll = new PayrollEntity();
         $gross = 0;
 
         for ($i = $day; $i <= $endDate; $i++) {
             // Create new date
-            $date = date_create($monthYear.'-'.$day);
-            $manhour = getSummaryOfRecord($employeeId, $date, $employee);
+            $date = date_create($monthYear.'-'.$i);
+            $manhour = $this->manhourService->getSummaryOfRecord($employeeId, $date, $employee);
+
+            if ($manhour == null)
+                continue;
+
+            $hours = $manhour->hours != null ? $manhour->hours : 0;
+
+            $gross += $hours * $rate;
 
         }
+
+        $payroll->grossPay = $gross;
+
+        return $payroll;
 
     }
 }
