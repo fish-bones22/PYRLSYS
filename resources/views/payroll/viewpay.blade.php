@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-10 offset-md-1">
+    <div class="col-md-8 offset-md-2">
         <div class="row">
             <div class="col-12 form-paper section-title">{{ $employee->fullName }} - Payroll</div>
             <div class="col-12 form-paper section-divider"></div>
         </div>
         <div class="row">
-            <div class="col-8 form-paper">
+            <div class="col-12 form-paper">
                 <form action="{{ action('ManhourController@setRecordDate', $employee->id) }}" method="POST" id="setDateForm">
                     @csrf
                     @method('post')
@@ -39,13 +39,15 @@
                     </div>
                 </form>
             </div>
-            <div class="col-4 form-paper">
+            <div class="col-12 form-paper section-title">Summary</div>
+            <div class="col-12 form-paper section-divider"></div>
+            <div class="col-12 form-paper">
                 <div class="form-group">
-                    <label for="searchBox" class="form-paper-label">Search</label>
-                    <input id="searchBox" type="search" class="form-control form-control-sm" />
+                    <label for="searchBox" class="form-paper-label">Basic Salary</label>
+                    <div class="form-paper-subdisplay small">{{ $payroll->hours.' hrs * '.$payroll->rate }}</div>
+                    <div class="form-paper-display">{{ $payroll->grossPay }}</div>
                 </div>
             </div>
-           <span>Gross Pay: {{ $payroll->grossPay }}</span>
         </div>
 
     </div>

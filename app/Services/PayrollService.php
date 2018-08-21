@@ -45,6 +45,8 @@ class PayrollService implements IPayrollService {
 
         $payroll = new PayrollEntity();
         $gross = 0;
+        $totalHours = 0;
+        $workDays = 0;
 
         for ($i = $day; $i <= $endDate; $i++) {
             // Create new date
@@ -54,13 +56,15 @@ class PayrollService implements IPayrollService {
             if ($manhour == null)
                 continue;
 
-            $hours = $manhour->hours != null ? $manhour->hours : 0;
-
+            $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
+            $totalHours += $hours;
             $gross += $hours * $rate;
 
         }
 
         $payroll->grossPay = $gross;
+        $payroll->rate = $rate;
+        $payroll->hours = $totalHours;
 
         return $payroll;
 

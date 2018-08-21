@@ -33,7 +33,7 @@ Manhour Input
                 <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Timecard</label>
-                        <div class="form-paper-display">{!! key_exists('timecard', $employee->current) ? $employee->current['timecard'] : '<i class="text-muted small">No Timecard</i>' !!}</div>
+                        <div class="form-paper-display" id="timeCardDisplay">{!! key_exists('timecard', $employee->current) ? $employee->current['timecard'] : '<i class="text-muted small">No Timecard</i>' !!}</div>
                         <input type="hidden" name="time_card" value="{{ key_exists('timecard', $employee->current) ? $employee->current['timecard'] : '' }}" />
                     </div>
                 </div>
@@ -48,8 +48,8 @@ Manhour Input
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Department</label>
-                        <div class="form-paper-display">{!! key_exists('department', $employee->current) ? $employee->current['department']['displayName'] : '<i class="text-muted small">No Department</i>' !!}</div>
-                        <input type="hidden" name="department" value="{{ key_exists('department', $employee->current) ? $employee->current['department']['value'] : '' }}" />
+                        <div class="form-paper-display"  id="departmentNameDisplay">{!! key_exists('department', $employee->current) ? $employee->current['department']['displayName'] : '<i class="text-muted small">No Department</i>' !!}</div>
+                        <input type="hidden" id="departmentIdDisplay" name="department" value="{{ key_exists('department', $employee->current) ? $employee->current['department']['value'] : '' }}" />
                     </div>
                 </div>
             </div>
@@ -58,10 +58,10 @@ Manhour Input
             </div>
             <?php
 
-            $scheduledTimeInStr = key_exists('timein', $employee->details) ? $employee->details['timein']['value'] : '';
+            $scheduledTimeInStr = key_exists('timein', $employee->current) ? $employee->current['timein'] : '';
             $scheduledTimeIn = $scheduledTimeInStr != '' ? date_create($scheduledTimeInStr) : null;
             $scheduledTimeIn = $scheduledTimeIn != null ? date_format($scheduledTimeIn, 'h:i A') : '';
-            $scheduledTimeOutStr = key_exists('timeout', $employee->details) ? $employee->details['timeout']['value'] : '';
+            $scheduledTimeOutStr = key_exists('timeout', $employee->current) ? $employee->current['timeout'] : '';
             $scheduledTimeOut = $scheduledTimeOutStr != '' ? date_create($scheduledTimeOutStr) : null;
             $scheduledTimeOut = $scheduledTimeOut != null ? date_format($scheduledTimeOut, 'h:i A') : '';
 

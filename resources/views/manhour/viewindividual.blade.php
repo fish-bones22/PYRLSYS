@@ -91,20 +91,40 @@ Employee Record
                                 </tr>
                             </thead>
                             <tbody>
+
                                 @if (sizeof($records) > 0)
+                                <?php
+                                $currentDept = '';
+                                $currentTimecard = '';
+                                ?>
+
+                                @foreach ($records as $record)
+                                <?php
+                                // Skip record with the same timecard and department
+                                if ($record == null || $record->timeCard == null || $currentTimecard === $record->timeCard)
+                                    continue;
+
+                                $currentTimecard = $record->timeCard;
+                                $currentDept = $record->departmentName;
+                                ?>
                                 <tr>
                                     <td>{{ $details['employeeId'] }}</td>
-                                    <td>{{ $details['timecard'] }}</td>
+                                    <td>{{ $record->timeCard }}</td>
                                     <td>{{ $details['name'] }}</td>
-                                    <td>{{ $details['department'] }}</td>
+                                    <td>{{ $record->departmentName }}</td>
                                     <?php
                                     $total = 0;
                                     ?>
                                     @for ($i = $details['startday']; $i <= $details['endday']; $i++)
+                                    {{-- Skip record not belonging to current timecard --}}
+                                    @if ($records[$i]->timeCard != $currentTimecard)
+                                    <td width="25px" style="border-right:1px solid lightgray;"></td>
+                                    @else
                                     <?php
-                                    $total = isset($records[$i]) ? $total + $records[$i]->hours : $total;
+                                    $total = isset($records[$i]) ? $total + $records[$i]->totalHours : $total;
                                     ?>
-                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($records[$i]) ? $records[$i]->hours : '' }}</td>
+                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($records[$i]) ? $records[$i]->totalHours : '' }}</td>
+                                    @endif
                                     @endfor
                                     <td>{{ $total }}</td>
 
@@ -115,7 +135,7 @@ Employee Record
                                         $tlhot = 0;
                                         $txlhot = 0;
                                         foreach ($records as $key => $record) {
-                                            if ($record == null)
+                                            if ($record == null || $record->timeCard != $currentTimecard)
                                                 continue;
                                             $trot += $record->rot != '' ? $record->rot : 0;
                                             $tsot += $record->sot != '' ? $record->sot : 0;
@@ -132,6 +152,8 @@ Employee Record
                                     <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>
                                     <td></td>
                                 </tr>
+
+                                @endforeach
                                 @endif
                             </tbody>
                         </table>
@@ -165,11 +187,11 @@ Employee Record
                                 <?php if ($record->outlier == null) continue; ?>
                                 <tr>
                                     <td>{{ $details['employeeId'] }}</td>
-                                    <td>{{ $details['timecard'] }}</td>
+                                    <td>{{ $record->timeCard }}</td>
                                     <td>{{ $details['name'] }}</td>
-                                    <td>{{ $details['department'] }}</td>
+                                    <td>{{ $record->departmentName }}</td>
                                     <td>{{ $record->date }}</td>
-                                    <td>{{ $record->hours }}</td>
+                                    <td>{{ $record->totalHours }}</td>
                                     <td>{{ $record->outlier }}</td>
                                     <td>{{ $record->authorized == true ? 'Yes' : 'No' }}</td>
                                     <td>{{ $record->remarks }}</td>

@@ -66,6 +66,43 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
+    public function getEmployeeByIdWithStateOnDate($id, $date) {
+
+        $employee = $this->getEmployeeById($id);
+
+        if ($employee == null) return null;
+
+        $current = $employee->current;
+
+        foreach ($employee->history as $history) {
+            if (!isset($history['datestarted'])) {
+                continue;
+            }
+
+            $start = strtotime($history['datestarted']);
+            $end = $history['datestarted'] != null ? strtotime($history['datestarted']) : null;
+            $date_ = strtotime(date_format($date,'Y-m-d'));
+
+            //
+            if ($end == null) {
+                if ($start <= $date_) {
+                    $current = $history;
+                    break;
+                }
+            }
+            else {
+                if ($start <= $date_ && $end > $date_) {
+                    $current = $history;
+                    break;
+                }
+            }
+        }
+
+        $employee->current = $current;
+        return $employee;
+    }
+
+
     public function getEmployeesByDepartment($dept) {
 
         $employees = $this->getAllEmployees('lastName');
@@ -140,6 +177,46 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
         return $entity;
 
+    }
+
+
+    public function getEmployeeHistoryOnDate($id, $date) {
+        $histories = EmployeeHistory::where('employee_id', $id)->get();
+        $current = null;
+
+        if ($histories == null)
+            return null;
+
+        foreach ($histories as $history) {
+
+            if ($history->dateStarted == null) {
+                continue;
+            }
+
+            // $start = strtotime($history->dateStarted);
+            // $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
+            // $date_ = strtotime($date);
+
+            $start = strtotime($history->dateStarted);
+            $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
+            $date_ = strtotime(date_format($date, 'Y-m-d'));
+
+            //
+            if ($end == null) {
+                if ($start <= $date_) {
+                    $current = $history;
+                    break;
+                }
+            }
+            else {
+                if ($start <= $date_ && $end > $date_) {
+                    $current = $history;
+                    break;
+                }
+            }
+        }
+
+        return $this->getHistoryDetails($current);
     }
 
 

@@ -8,7 +8,9 @@ class ManhourSummaryEntity extends Entity {
     public $timeIn;
     public $timeOut;
     public $undertime;
-    public $hours;
+    public $regularHours;
+    public $otHours;
+    public $totalHours;
 
     public $rot;
     public $sot;

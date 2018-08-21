@@ -127,7 +127,7 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
     public function getOutliersOnDateRange($employeeId, $datefrom, $dateto) {
-        $records = Manhour::where('employee_id', $employeeId    )->whereBetween('recordDate', [$datefrom, $dateto])->get();
+        $records = Manhour::where('employee_id', $employeeId)->whereBetween('recordDate', [$datefrom, $dateto])->get();
 
         if ($records == null) return null;
 
@@ -173,22 +173,30 @@ class ManhourService extends EntityService implements IManhourService {
         $otRequest = $this->otRequestService->getApprovedOtRequestByDateRange($record->employeeId, $date, $date);
 
         if ($employee == null)
-            $employee = $this->employeeService->getEmployeeById($record->employeeId);
+            $employee = $this->employeeService->getEmployeeByIdWithStateOnDate($record->employeeId, $date);
+            //$employee = $this->employeeService->getEmployeeById($record->employeeId);
         if ($employee == null)
             return;
         $summary->employeeId = $employee->employeeId;
 
         $summary->date = date_format($date, 'M d Y');
+
+        $history = $this->employeeService->getEmployeeHistoryOnDate($record->employeeId, $date);
+        $summary->timeCard = $history['timecard'];
+        $summary->departmentName = $history['department']['displayName'];
+        $summary->departmentId = $history['department']['value'];
+
         $actualHours = 0;
+        $recordHours = 0;
         $otHours = 0;
         $overtimeCounted = false;
         if ($record->timeIn != null && $record->timeOut != null) {
             // Get employee schedule
-            $scheduledTimeIn = key_exists('timein', $employee->details) ? date_create($employee->details['timein']['value']) : null;
-            $scheduledTimeOut = key_exists('timeout', $employee->details) ? date_create($employee->details['timeout']['value']) : null;
+            $scheduledTimeIn = key_exists('timein', $employee->current) ? date_create($employee->current['timein']) : null;
+            $scheduledTimeOut = key_exists('timeout', $employee->current) ? date_create($employee->current['timeout']) : null;
             // Get scheduled time in/out in Time object
-            $scheduledTimeIn_ = key_exists('timein', $employee->details) ? strtotime($employee->details['timein']['value']) : null;
-            $scheduledTimeOut_ =  key_exists('timeout', $employee->details) ? strtotime($employee->details['timeout']['value']) : null;
+            $scheduledTimeIn_ = key_exists('timein', $employee->current) ? strtotime($employee->current['timein']) : null;
+            $scheduledTimeOut_ =  key_exists('timeout', $employee->current) ? strtotime($employee->current['timeout']) : null;
             // Get time in/out in Date object
             $timeIn = date_create($record->timeIn);
             $timeOut = date_create($record->timeOut);
@@ -260,7 +268,9 @@ class ManhourService extends EntityService implements IManhourService {
             $summary->undertime = '';
         }
 
-        $summary->hours = $actualHours;
+        $summary->totalHours = $actualHours;
+        $summary->otHours = $otHours;
+        $summary->regularHours = $actualHours - $otHours;
 
         $summary->rot = '';
         $summary->sot = '';

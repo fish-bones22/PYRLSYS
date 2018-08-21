@@ -84,12 +84,19 @@ function clearDetails() {
 
 function mapDetails(json) {
 
+    $("#departmentNameDisplay").html(json.departmentName);
+    $("#departmentIdDisplay").val(json.departmentId);
+    $("[name='outlier'][value='" + json.outlier+ "']").prop('checked', true);
+
+    if (json.timeIn == null)
+        return;
+
     $("#timeIn").setTime(json.timeIn);
     $("#timeOut").setTime(json.timeOut);
 
     $("#timeIn").val(json.timeIn);
     $("#timeOut").val(json.timeOut);
-    $("[name='outlier'][value='" + json.outlier+ "']").prop('checked', true);
+    $("#timeCardDisplay").html(json.timeCard);
 
     if (json.authorized)
         $("[name='authorized']").prop('checked', true);

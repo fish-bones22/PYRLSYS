@@ -49,16 +49,6 @@ class ManhourController extends Controller
 
         $departments = $this->categoryService->getCategories('department');
         $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
-        //$records = $this->formatForView($manhours);
-        // $records = array();
-        // $interval = DateInterval::createFromDateString('1 day');
-        // $period = new DatePeriod($datefrom, $interval, $dateto);
-
-        // foreach ($period as $dt) {
-        //     $record = $this->manhourService->getSummaryOfRecord($employeeId, $date);
-        //     if ($record == null) continue;
-        //     $records[] = $record;
-        // }
 
         $date['datefrom'] = date_format($datefrom, 'Y-m-d');
         $date['dateto'] = date_format($dateto, 'Y-m-d');
@@ -104,6 +94,7 @@ class ManhourController extends Controller
         $dateto = date_create($year.'-'.$month.'-'.$endDay);
         $details = array();
         $employee = $this->employeeService->getEmployeeById($id);
+
         if ($employee == null)
             return redirect()->action('ManhourController@index');
         $details['startday'] = $startDay;
@@ -112,14 +103,13 @@ class ManhourController extends Controller
         $details['month'] = $month;
         $details['id'] = $id;
         $details['employeeId'] = $employee->employeeId;
-        $details['timecard'] = $employee->current['timecard'];
         $details['lastname'] = $employee->lastName;
         $details['firstname'] = $employee->firstName;
         $details['middlename'] = $employee->middleName;
         $details['name'] = $employee->fullName;
-        $details['department'] = $employee->current['department']['displayName'];
+
         $records = array();
-        //$records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
+
         for ($i = $startDay; $i <= $endDay; $i++) {
             $record = $this->manhourService->getSummaryOfRecord($id, $year.'-'.$month.'-'.$i, $employee);
             $records[$i] = $record;
@@ -238,147 +228,18 @@ class ManhourController extends Controller
             return null;
 
         $record = $this->manhourService->getRecord($id, $date);
-
-        if ($record == null)
-            return null;
+        $empDetails = $this->employeeService->getEmployeeHistoryOnDate($id, date_create($date));
 
         return response()->json([
-            'timeIn' => $record->timeIn,
-            'timeOut' => $record->timeOut,
-            'outlier' => $record->outlier != null ? $record->outlier['value'] : null,
-            'remarks'  => $record->remarks,
-            'authorized' => $record->authorized
+            'timeIn' => $record != null ? $record->timeIn : null,
+            'timeOut' => $record != null ? $record->timeOut : null,
+            'outlier' => $record != null && $record->outlier != null ? $record->outlier['value'] : null,
+            'remarks'  => $record != null ? $record->remarks : null,
+            'authorized' => $record != null ? $record->authorized : null,
+            'timeCard' => $empDetails['timecard'],
+            'departmentName' => $empDetails['department']['displayName'],
+            'departmentId' => $empDetails['department']['value']
         ]);
     }
 
-    // private function formatForView($entities) {
-
-    //     $viewModels = array();
-    //     foreach ($entities as $entity) {
-
-    //         $viewModel = array();
-    //         $viewModel['timecard'] = $entity->timeCard;
-    //         $viewModel['employeeName'] = $entity->employeeName;
-    //         $viewModel['department'] = $entity->department['displayName'];
-
-    //         $date = date_create($entity->date);
-    //         $employee = $this->employeeService->getEmployeeById($entity->employeeId);
-    //         $otRequest = $this->otRequestService->getApprovedOtRequestByDateRange($entity->employeeId, $date, $date);
-
-    //         if ($employee == null)
-    //             return;
-
-    //         $viewModel['date'] = date_format($date, 'M d Y');
-    //         $hours = 0;
-    //         $otHours = 0;
-    //         $overtimeCounted = false;
-    //         if ($entity->timeIn != null && $entity->timeOut != null) {
-    //             // Get employee schedule
-    //             $scheduledTimeIn = key_exists('timein', $employee->details) ? date_create($employee->details['timein']['value']) : null;
-    //             $scheduledTimeOut = key_exists('timeout', $employee->details) ? date_create($employee->details['timeout']['value']) : null;
-    //             // Get scheduled time in/out in Time object
-    //             $scheduledTimeIn_ = key_exists('timein', $employee->details) ? strtotime($employee->details['timein']['value']) : null;
-    //             $scheduledTimeOut_ =  key_exists('timeout', $employee->details) ? strtotime($employee->details['timeout']['value']) : null;
-    //             // Get time in/out in Date object
-    //             $timeIn = date_create($entity->timeIn);
-    //             $timeOut = date_create($entity->timeOut);
-    //             // Get time in/out in Time object
-    //             $timeIn_ = strtotime($entity->timeIn);
-    //             $timeOut_ = strtotime($entity->timeOut);
-    //             // Get time to use (either scheduled or actual)
-    //             $actualTimeIn = $timeIn_;
-    //             $actualTimeOut = $timeOut_;
-    //             if ($scheduledTimeIn_ != null && $timeIn_ <= $scheduledTimeIn_) {
-    //                 $actualTimeIn = $scheduledTimeIn_;
-    //             }
-    //             if ($scheduledTimeOut_ != null && $timeOut_ >= $scheduledTimeOut_) {
-    //                 $actualTimeOut = $scheduledTimeOut_;
-    //             }
-
-    //             // Get time in/out recorded hour
-    //             $x = ($timeOut_ - $timeIn_) / 3600;
-    //             $recordHour = floor($x * 2) / 2;
-    //             $recordHour = $recordHour < 0 ? (24 + $recordHour) : $recordHour;
-
-    //             // Get scheduled hour
-    //             $x = $scheduledTimeIn_ != null && $scheduledTimeOut_ != null ? ($scheduledTimeOut_ - $scheduledTimeIn_) / 3600 : null;
-    //             $scheduledHour = $x != null ? floor($x * 2) / 2 : null;
-    //             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? (24 + $scheduledHour) : $scheduledHour;
-
-    //             // Get actual hours
-    //             $x = ($actualTimeOut - $actualTimeIn) / 3600;
-    //             $actualHours = floor($x * 2) / 2;
-    //             $actualHours = $actualHours < 0 ? (24 + $actualHours) : $actualHours;
-
-    //             $viewModel['timeIn'] = date_format($timeIn, 'h:i A');
-    //             $viewModel['timeOut'] = date_format($timeOut, 'h:i A');
-    //             $viewModel['undertime'] = '';
-    //             // If Under time
-    //             if ($scheduledTimeOut != null) {
-    //                 if ($scheduledTimeOut > $timeOut) {
-    //                     $viewModel['timeOut'] = '';
-    //                     $viewModel['undertime'] = date_format($timeOut, 'h:i A');
-    //                 }
-    //             }
-
-    //             // Check if OT is counted
-    //             if($otRequest != null) {
-
-    //                 // Get OT start and end time
-    //                 $otStartTime_ = strtotime($otRequest[0]->startTime);
-    //                 $otEndTime_ = strtotime($otRequest[0]->endTime);
-
-    //                 if ($timeOut_ > $scheduledTimeOut_ && $otStartTime_ < $timeOut_) {
-    //                     $overtimeCounted = true;
-    //                     $otHours =  $otRequest[0]->allowedHours;
-
-    //                     // Get actual hours in OT
-    //                     $otActualHours = ($timeOut_ - $otStartTime_) / 3600;
-    //                     $otActualHours = floor($otActualHours * 2) / 2;
-    //                     $otActualHours = $otActualHours < 0 ? (24 + $otActualHours) : $otActualHours;
-
-    //                     if ($otActualHours < $otHours) {
-    //                         $otHours = $otActualHours;
-    //                     }
-
-    //                 }
-    //             }
-    //         }
-    //         else {
-    //             $viewModel['timeIn'] = 'A';
-    //             $viewModel['timeOut'] = '';
-    //             $viewModel['undertime'] = '';
-    //         }
-
-    //         $viewModel['hours'] = $actualHours;
-
-    //         $viewModel['rot'] = '';
-    //         $viewModel['sot'] = '';
-    //         $viewModel['xsot'] = '';
-    //         $viewModel['lhot'] = '';
-    //         $viewModel['xlhot'] = '';
-    //         if ($otRequest != null && $overtimeCounted) {
-    //             if ($otRequest[0]->otType == 'rot') {
-    //                 $viewModel['rot'] = $otHours;
-    //             }
-    //             else if ($otRequest[0]->otType == 'sot') {
-    //                 $viewModel['sot'] = $otHours;
-    //             }
-    //             else if ($otRequest[0]->otType == 'xsot') {
-    //                 $viewModel['xsot'] = $otHours;
-    //             }
-    //             else if ($otRequest[0]->otType == 'lhot') {
-    //                 $viewModel['lhot'] = $otHours;
-    //             }
-    //             else if ($otRequest[0]->otType == 'xlhot') {
-    //                 $viewModel['xlhot'] = $otHours;
-    //             }
-    //         }
-    //         $viewModel['remarks'] = $entity->remarks;
-
-    //         $viewModels[] = $viewModel;
-    //     }
-
-    //     return $viewModels;
-    // }
 }
