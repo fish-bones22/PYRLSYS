@@ -39,12 +39,34 @@
                     </div>
                 </form>
             </div>
+            <div class="col-12 form-paper section-divider"></div>
             <div class="col-12 form-paper section-title">Summary</div>
             <div class="col-12 form-paper section-divider"></div>
-            <div class="col-12 form-paper">
+            <div class="col-3 form-paper">
                 <div class="form-group">
                     <label for="searchBox" class="form-paper-label">Basic Salary</label>
-                    <div class="form-paper-subdisplay small">{{ $payroll->hours.' hrs * '.$payroll->rate }}</div>
+                    <div class="form-paper-subdisplay small">{{ $payroll->regularHours.' hrs' }}</div>
+                    <div class="form-paper-display">{{ $payroll->basicPay }}</div>
+                </div>
+            </div>
+            <div class="col-3 form-paper">
+                <div class="form-group">
+                    <label for="searchBox" class="form-paper-label">Allowance</label>
+                    <div class="form-paper-subdisplay small">{{ $payroll->workDays.' work days' }}</div>
+                    <div class="form-paper-display">{{ $payroll->allowance }}</div>
+                </div>
+            </div>
+            <div class="col-3 form-paper">
+                <div class="form-group">
+                    <label for="searchBox" class="form-paper-label">Overtime Pay</label>
+                    <div class="form-paper-subdisplay small">{{ $payroll->otHours.' hrs' }}</div>
+                    <div class="form-paper-display">{{ $payroll->otPay }}</div>
+                </div>
+            </div>
+            <div class="col-3 form-paper">
+                <div class="form-group">
+                    <label for="searchBox" class="form-paper-label">Gross Pay</label>
+                    <div class="form-paper-subdisplay small">{{ $payroll->totalHours.' hrs total' }}</div>
                     <div class="form-paper-display">{{ $payroll->grossPay }}</div>
                 </div>
             </div>

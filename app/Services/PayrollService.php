@@ -38,14 +38,13 @@ class PayrollService implements IPayrollService {
         if ($employee == null)
             return null;
 
-        if ($employee->current['rate'] == null)
-            return null;
-
-        $rate = $employee->current['rate'];
 
         $payroll = new PayrollEntity();
-        $gross = 0;
-        $totalHours = 0;
+        $basicPay = 0;
+        $otPay = 0;
+        $totalAllowance = 0;
+        $regularHours = 0;
+        $totalOtHours = 0;
         $workDays = 0;
 
         for ($i = $day; $i <= $endDate; $i++) {
@@ -53,20 +52,90 @@ class PayrollService implements IPayrollService {
             $date = date_create($monthYear.'-'.$i);
             $manhour = $this->manhourService->getSummaryOfRecord($employeeId, $date, $employee);
 
-            if ($manhour == null)
+            if ($manhour == null || $manhour->date == null)
                 continue;
 
+            $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
+
+            $rate = 0;
+            $allowance = 0;
+            if ($history['rate'] != null)
+                $rate = $history['rate'];
+            if ($history['allowance'] != null)
+                $allowance = $history['allowance'];
+
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
-            $totalHours += $hours;
-            $gross += $hours * $rate;
+            $regularHours += $hours;
+            $basicPay += $hours * $rate;
+
+            $totalAllowance += $allowance;
+
+            $workDays++;
+
+            // OT
+            $otDetails = $this->getOtDetails($manhour);
+            $otPay += ($otDetails['multiplier'] * $otDetails['value'] * $rate);
+            $totalOtHours += $otDetails['value'];
 
         }
 
-        $payroll->grossPay = $gross;
-        $payroll->rate = $rate;
-        $payroll->hours = $totalHours;
+        $payroll->basicPay = $basicPay;
+        $payroll->otPay = $otPay;
+        $payroll->allowance = $totalAllowance;
+
+        $payroll->grossPay = $basicPay + $otPay + $totalAllowance;
+
+        $payroll->regularHours = $regularHours;
+        $payroll->otHours = $totalOtHours;
+        $payroll->totalHours = $totalOtHours + $regularHours;
+        $payroll->workDays = $workDays;
 
         return $payroll;
 
+    }
+
+    private function getOtDetails($manhour) {
+
+        $otDetails = array();
+
+        if ($manhour->rot != '') {
+            return [
+                'multiplier' => 1.25,
+                'value' => $manhour->rot
+            ];
+        }
+
+        if ($manhour->sot != ''){
+            return [
+                'multiplier' => 1.3,
+                'value' => $manhour->sot
+            ];
+        }
+
+        if ($manhour->xsot != ''){
+            return [
+                'multiplier' => 1.69,
+                'value' => $manhour->xsot
+            ];
+        }
+
+        if ($manhour->lhot != ''){
+            return [
+                'multiplier' => 2,
+                'value' => $manhour->lhot
+            ];
+        }
+
+        if ($manhour->xlhot != ''){
+            return [
+                'multiplier' => 2.69,
+                'value' => $manhour->xlhot
+            ];
+        }
+
+        return [
+            'multiplier' => 1,
+            'value' => 1
+        ];
     }
 }

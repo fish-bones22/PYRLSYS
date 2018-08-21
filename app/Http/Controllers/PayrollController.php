@@ -42,4 +42,8 @@ class PayrollController extends Controller
         return view('payroll.viewpay', ['employee' => $employee, 'details' => array(), 'payroll' => $payroll ]);
 
     }
+
+    public function deductibles($id, $date) {
+        return view('payroll.deductibles');
+    }
 }

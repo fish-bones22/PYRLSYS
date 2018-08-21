@@ -4,12 +4,19 @@ namespace App\Entities;
 
 class PayrollEntity extends Entity {
 
-    public $hours;
-    public $rate;
+    public $regularHours;
+    public $otHours;
+    public $totalHours;
+
+    public $basicPay;
+    public $otPay;
+    public $allowance;
     public $grossPay;
+
+    public $workDays;
+
     public $exemption;
     public $taxableIncome;
-    public $allowance;
     public $totalTaxableIncome;
     public $taxDueDate;
     public $remarks;
