@@ -78,3 +78,7 @@ Route::get('payroll', 'PayrollController@index');
 Route::get('payroll/{id}/{date}', 'PayrollController@viewPay');
 Route::get('payroll/{id}', 'PayrollController@viewNow');
 Route::get('payroll/deductibles/{id}/{date}', 'PayrollController@deductibles');
+
+Route::get('deductibles/goto/{id}', 'DeductibleRecordController@goToDate');
+Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get');
+Route::post('deductibles/{id}', 'DeductibleRecordController@add');

@@ -49,14 +49,14 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
 
     public function getEmployeeDeductiblesOnDate($employeeId, $date) {
 
-        $records = DeductibleRecord::where('employee_id', $employeeId)->where('recordDate' == $date)->get();
+        $records = DeductibleRecord::where('employee_id', $employeeId)->where('recordDate', $date)->get();
 
         if ($records == null) return null;
 
         $recordEntities = array();
 
         foreach ($records as $record) {
-            $recordEntities[] = $this->mapToEntity($record, new DeductibleRecord());
+            $recordEntities[$record->details] = $this->mapToEntity($record, new DeductibleRecord());
         }
 
         return $recordEntities;

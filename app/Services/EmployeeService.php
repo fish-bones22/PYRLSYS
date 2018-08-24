@@ -563,10 +563,10 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $current->department = $history['department']['value'];
         $current->dateStarted = $history['datestarted'];
         $current->dateTransfered = $history['datetransfered'];
-        $current->employmenttype = $history['employmenttype'];
-        $current->status = $history['contractstatus'];
-        $current->paymenttype = $history['paymenttype'];
-        $current->paymentmode = $history['paymentmode'];
+        $current->employmenttype = $history['employmenttype']['value'];
+        $current->status = $history['contractstatus']['value'];
+        $current->paymenttype = $history['paymenttype']['value'];
+        $current->paymentmode = $history['paymentmode']['value'];
         $current->rate = $history['rate'];
         $current->allowance = $history['allowance'];
         $current->timein = $history['timein'];

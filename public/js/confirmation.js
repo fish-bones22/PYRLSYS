@@ -1,9 +1,9 @@
 ﻿
 $(document).ready(function () {
 
-    $('form').one('submit', function() {
-        $(this).find('[type="submit"]').attr('disabled', 'disabled');
-    });
+    // $('form').one('submit', function() {
+    //     $(this).find('[type="submit"]').attr('disabled', 'disabled');
+    // });
 
     var condition = false;
     $('[data-confirm]').click(function (e) {
@@ -55,7 +55,9 @@ $(document).ready(function () {
 function dialog(message, yesCallback, noCallback) {
     $('#confirmationModal').modal("show");
     $('#dialog-modal .confirmationTitle').text(message);
+    $("#confirmationModal .confirmationAction").text(message);
     $('.btn-confirm-yes').click(function () {
+        $(this).attr('disabled', 'disabled');
         $('#confirmationModal').modal("hide");
         yesCallback();
     });

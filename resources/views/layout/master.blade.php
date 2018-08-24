@@ -71,17 +71,18 @@
                     </div>
                     <div class="col-12 form-paper section-divider"></div>
                     <div class="col-12 form-paper">
-                        <div class="form-paper">
+                        <div class="form-group">
                             <div class="form-paper-display">Do you want to <span class="confirmationAction">{action}</span>?</div>
                         </div>
                     </div>
                     <div class="col-12 form-paper">
-                        <div class="form-paper">
-                            <div class="btn-group">
+                        <div class="form-group">
+                            <div class="btn-group float-right">
                                 <button class="btn btn-primary btn-confirm-yes" type="button">Yes</button>
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                             </div>
                         </div>
+                        <div class="m-2">&nbsp;</div>
                     </div>
                 </div>
             </div>

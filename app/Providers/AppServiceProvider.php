@@ -55,5 +55,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\IPayrollService',
             'App\Services\PayrollService'
         );
+        $this->app->bind(
+            'App\Contracts\IDeductibleRecordService',
+            'App\Services\DeductibleRecordService'
+        );
     }
 }
