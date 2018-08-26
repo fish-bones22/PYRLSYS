@@ -35,8 +35,12 @@ class CategoryService extends EntityService implements ICategoryService {
 
     public function getCategories($key) {
 
+        $hasKey = CategoryDetail::where('key', $key)->first();
         $categories = Category::all()->where('key', $key);
-        //$categories = Category::where('key', $key);
+
+        if ($categories == null && $hasKey == null)
+            return null;
+
         $categoryEntities = array();
 
         foreach ($categories as $category) {
@@ -57,6 +61,7 @@ class CategoryService extends EntityService implements ICategoryService {
 
     protected function mapToEntity($model, $entity) {
         $entity = parent::mapToEntity($model, $entity);
+
         $entity->key = $model->key;
         $entity->value = $model->value;
         $entity->detail = $model->detail;
@@ -116,6 +121,11 @@ class CategoryService extends EntityService implements ICategoryService {
         $category = CategoryDetail::where('key', $key)->first();
         $category->description = $description;
         $category->save();
+    }
+
+    public function getDisplayName($key) {
+        $category = CategoryDetail::where('key', $key)->first();
+        return $category->displayName;
     }
 
 }

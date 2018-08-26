@@ -77,8 +77,17 @@ Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@ge
 Route::get('payroll', 'PayrollController@index');
 Route::get('payroll/{id}/{date}', 'PayrollController@viewPay');
 Route::get('payroll/{id}', 'PayrollController@viewNow');
+Route::post('payroll/{id}', 'PayrollController@setRecordDate');
 Route::get('payroll/deductibles/{id}/{date}', 'PayrollController@deductibles');
 
 Route::get('deductibles/goto/{id}', 'DeductibleRecordController@goToDate');
-Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get');
+Route::get('deductibles/getall/{date}', 'DeductibleRecordController@getAll');
+Route::get('deductibles/getalltodate/', 'DeductibleRecordController@getAllOnDate');
+Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get')->name('deductible.get');
 Route::post('deductibles/{id}', 'DeductibleRecordController@add');
+
+Route::get('adjustments/goto/{id}', 'AdjustmentsRecordController@goToDate');
+Route::get('adjustments/getall/{date}', 'AdjustmentsRecordController@getAll');
+Route::get('adjustments/getalltodate/', 'AdjustmentsRecordController@getAllOnDate');
+Route::get('adjustments/{id}/{date}', 'AdjustmentsRecordController@get')->name('adjustments.get');
+Route::post('adjustments/{id}', 'AdjustmentsRecordController@add');

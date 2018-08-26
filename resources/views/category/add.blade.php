@@ -5,7 +5,7 @@
         <div class="col-12 form-paper">
             <input type="hidden" name="key" value="{{ $key }}" />
             <div class="form-group">
-                <label for="nameAdd">Department Name:</label>
+                <label for="nameAdd">{{$displayName}} Name:</label>
                 <input type="text" id="nameAdd" class="form-control" name="name" required   />
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ICategoryService;
 use App\Contracts\IDeductibleRecordService;
 use App\Contracts\IEmployeeService;
 use App\Entities\DeductibleRecordEntity;
@@ -11,10 +12,12 @@ class DeductibleRecordController extends Controller
 {
     private $deductibleRecordService;
     private $employeeService;
+    private $categoryService;
 
-    public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService) {
+    public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService, ICategoryService $categoryService) {
         $this->deductibleRecordService =  $deductibleRecordService;
         $this->employeeService = $employeeService;
+        $this->categoryService = $categoryService;
     }
 
     public function add(Request $request, $id) {
@@ -29,36 +32,73 @@ class DeductibleRecordController extends Controller
             $entity = $this->mapToEntity($id, $req['record_date'], $req['employee_name'], $model);
 
             // If entry has loan field create separate model entry
-            if (isset($model['loan'])) {
+            if (isset($model['loan']) ) {
 
                 $lnEntity = new DeductibleRecordEntity();
                 $lnEntity->employee = array();
-                $lnEntity->employee['id'] =  $model['employee_id'];
-                $lnEntity->employee['name'] = $model['employee_name'];
+                $lnEntity->employee['id'] =  $id;
+                $lnEntity->employee['name'] = $req['employee_name'];
 
                 $lnEntity->identifier = array();
                 $lnEntity->identifier['value'] = $model['identifier'];
                 $lnEntity->identifier['details'] = $model['identifier_details'];
 
                 $lnEntity->deductible = array();
-                $lnEntity->deductible['details'] = $model['details'].'loan';
+                $lnEntity->id = isset($req['models'][$model['key'].'loan']['id']) ? $req['models'][$model['key'].'loan']['id'] : 0;
+                $lnEntity->id = isset($req['models'][$model['key'].'loan']['id']) ? $req['models'][$model['key'].'loan']['id'] : 0;
+                $lnEntity->key = $model['key'].'loan';
+                $lnEntity->details = $model['details'].' Loan';
+                $lnEntity->recordDate = $req['record_date'];
 
                 $lnEntity->amount = $model['loan'];
-                $result = $deductibleRecordService->add($lnEntity);
+                $result = $this->deductibleRecordService->addRecord($lnEntity);
 
                 if (!$result['result'])
-                    return redirect()->back()->withInputs($model)->with('error', $result->message);
+                    return redirect()->back()->withInputs($req)->with('error', $result['message']);
 
             }
 
-        $result = $deductibleRecordService->add($entity);
+        $result = $this->deductibleRecordService->addRecord($entity);
 
         if (!$result['result'])
-                return redirect()->back()->withInputs($model)->with('error', $result->message);
-
+            return redirect()->back()->withInputs($req)->with('error', $result['message']);
         }
 
-        return redirect()->back()->with('success');
+        // Other models
+        // Delete all first to avoid stale data retention
+        $this->deductibleRecordService->deleteAllOtherDeductible($id, $req['record_date']);
+
+        foreach ($req['other_models'] as $model) {
+
+            if (!isset($model['details']) || $model['details'] == '')
+                continue;
+
+            if (!isset($model['amount']) || $model['amount'] == '')
+            continue;
+
+            $lnEntity = new DeductibleRecordEntity();
+
+            $lnEntity->id = isset($model['id']) ? $model['id'] : 0;
+
+            $lnEntity->employee = array();
+            $lnEntity->employee['id'] =  $id;
+            $lnEntity->employee['name'] = $req['employee_name'];
+
+            $lnEntity->deductible = array();
+            $lnEntity->details = $model['details'];
+            $lnEntity->key = $model['details'] != null ? strtolower(str_replace($model['details'], ' ', '')) : null;
+            $lnEntity->recordDate = $req['record_date'];
+
+            $lnEntity->amount = $model['amount'];
+            $lnEntity->remarks = $model['remarks'];
+
+            $result = $this->deductibleRecordService->addRecord($lnEntity);
+
+            if (!$result['result'])
+                return redirect()->back()->withInputs($req)->with('error', $result['message']);
+        }
+
+        return redirect()->back()->with('success', 'Deductible added successfuly');
 
     }
 
@@ -83,8 +123,10 @@ class DeductibleRecordController extends Controller
 
         $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($id, $date);
         $employee = $this->employeeService->getEmployeeById($id);
+        $categories = $this->categoryService->getCategories('deductible');
 
         $models = array();
+        $otherModels = array();
 
         foreach ($records as $record) {
             $model = array();
@@ -98,17 +140,29 @@ class DeductibleRecordController extends Controller
             $model['identifier_details'] = $record->identifier['value'];
 
             $model['deductible_id'] = $record->deductible['id'];
-            $model['details'] = $record->deductible['details'];
+            $model['duedate'] = $record->dueDate;
+
+            $model['key'] = $record->key;
+            $model['details'] = $record->details;
 
             $model['amount'] = $record->amount;
             $model['subamount'] = $record->subamount;
             $model['remarks'] = $record->remarks;
 
-            $models[] = $model;
+            if ($model['key'] === 'sss' || $model['key'] === 'sssloan'
+            || $model['key'] === 'pagibig' || $model['key'] === 'pagibigloan'
+            || $model['key'] === 'philhealth' || $model['key'] === 'tin') {
+                if ($model['key'] != '')
+                    $models[$model['key']] = $model;
+                else
+                    $models[] = $model;
+            }
+            else {
+                $otherModels[] = $model;
+            }
         }
 
-        $otherModels = array();
-        return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details]);//
+        return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//
 
     }
 
@@ -129,15 +183,47 @@ class DeductibleRecordController extends Controller
         $entity->identifier['details'] = $viewModel['identifier_details'];
 
         $entity->recordDate = $date;
+        $entity->dueDate = isset($viewModel['duedate']) ? $viewModel['duedate'] : null;
 
         $entity->deductible = array();
-        $entity->deductible['id'] = $viewModel['id'];
-        $entity->deductible['details'] = $viewModel['details'];
+        //$entity->deductible['id'] = $viewModel['id'];
+        $entity->details = $viewModel['details'];
+        $entity->key = $viewModel['key'];
 
         $entity->amount = $viewModel['amount'] != null ? $viewModel['amount'] : 0;
         $entity->subamount = isset($viewModel['subamount']) ?$viewModel['subamount'] : null;
         $entity->remarks = isset($viewModel['remarks']) ?$viewModel['remarks'] : null;
 
         return $entity;
+    }
+
+
+    public function getAll($date) {
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $startDay = $day <= 16 ? '01' : '17';
+        $date = $year.'-'.$month.'-'.$startDay;
+        $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
+
+        $details = [
+            'date' => $year.'-'.$month.'-'.$startDay,
+            'startday' => $startDay,
+            'month' => $month,
+            'year' => $year
+        ];
+
+        return view('deductibles.getall', ['records' => $records, 'details' => $details]);
+    }
+
+    public function getAllOnDate(Request $request) {
+
+        $month = $request->get('month');
+        $year = $request->get('year');
+        $period = $request->get('period');
+        $day = $period === 'first' ? '17' : '01';
+
+        return redirect()->action('DeductibleRecordController@getAll', ['date' => $year.'-'.$month.'-'.$day]);
     }
 }

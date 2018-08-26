@@ -2,8 +2,10 @@
 
 @section('title')
 <?php
-    $displayName =  is_array($categories) && sizeof($categories) != 0 ? $categories[0]->displayName : 'Category';
-    $key =  is_array($categories) && sizeof($categories) != 0 ? $categories[0]->key : '';
+    // $displayName =  is_array($categories) && sizeof($categories) != 0 ? $categories['key'] : 'Category';
+    $displayName = $details['displayName'];
+    $key =  $details['key'];
+    //$key = $categories['key'];
 ?>
 {{ $displayName }}
 @stop
@@ -18,7 +20,7 @@
 @endif
 
 <div class="row">
-    <div class="col-md-6 offset-md-3 form-paper section-title">Departments</div>
+    <div class="col-md-6 offset-md-3 form-paper section-title">{{ $displayName }}</div>
     <div class="col-md-6 offset-md-3 form-paper section-divider"></div>
 </div>
 <div class="row">
@@ -40,7 +42,7 @@
         <table class="table table-sm" id="departmentsTable">
             <thead>
                 <tr>
-                    <th>Department Name</th>
+                    <th>{{$displayName}} Name</th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
@@ -55,7 +57,7 @@
                                 @csrf
                                 @method('delete')
                                 <input type="hidden" name="key" value="{{ $category->key }}" />
-                                <input type="submit" class="btn btn-sm btn-light" value="Delete" />
+                                <input type="submit" class="btn btn-sm btn-light" data-confirm="Delete" value="Delete" />
                             </form>
                         </div>
                     </td>
@@ -72,11 +74,11 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-12 form-paper section-title">
-                    New Department
+                    New {{$displayName}}
                     <button class="close" type="button" data-dismiss="modal">&times;</button>
                 </div>
             </div>
-            @include('category.add', ['key' => $key])
+            @include('category.add', ['key' => $key, 'displayName' => $displayName])
         </div>
     </div>
 </div>
@@ -86,11 +88,11 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-12 form-paper section-title">
-                    Edit Department
+                    Edit {{$displayName}}
                     <button class="close" type="button" data-dismiss="modal">&times;</button>
                 </div>
             </div>
-            @include('category.edit', ['key' => $key])
+            @include('category.edit', ['key' => $key, 'displayName' => $displayName])
         </div>
     </div>
 </div>

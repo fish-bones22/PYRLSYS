@@ -32,14 +32,40 @@ class PayrollController extends Controller
         return redirect()->action('PayrollController@viewPay', ['id' => $id, 'date' => $date]);
     }
 
+
+    public function setRecordDate(Request $request, $id) {
+
+        $month = $request->get('month');
+        $year = $request->get('year');
+        $period = $request->get('period');
+        $day = $period === 'first' ? '17' : '01';
+
+        return redirect()->action('PayrollController@viewPay', ['id' => $id, 'date' => $year.'-'.$month.'-'.$day]);
+
+    }
+
     public function viewPay($id, $date) {
+
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $startDay = $day <= 16 ? '01' : '17';
+        $date = $year.'-'.$month.'-'.$startDay;
+
+        $details = [
+            'date' => $year.'-'.$month.'-'.$startDay,
+            'startday' => $startDay,
+            'month' => $month,
+            'year' => $year
+        ];
 
         $employee = $this->employeeService->getEmployeeById($id);
 
         if ($employee == null)
             return redirect()->action('PayrollController@index');
         $payroll = $this->payrollService->getPayroll($id, date_create($date));
-        return view('payroll.viewpay', ['employee' => $employee, 'details' => array(), 'payroll' => $payroll ]);
+        return view('payroll.viewpay', ['employee' => $employee, 'details' => $details, 'payroll' => $payroll ]);
 
     }
 

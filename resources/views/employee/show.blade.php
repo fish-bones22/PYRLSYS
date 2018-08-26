@@ -411,7 +411,7 @@
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a>
                         <button type="reset" class="btn btn-secondary">Reset</button>
-                        <input type="submit" class="btn btn-primary" value="Save"/>
+                        <input type="submit" class="btn btn-primary" data-confirm="save" value="Save"/>
                     </div>
                 </div>
             </div>
@@ -485,7 +485,7 @@
                 @endif
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Save" form="imageForm" />
+                <input type="submit" class="btn btn-primary" value="Save" form="imageForm" data-confirm="save" />
             </div>
         </div>
     </div>

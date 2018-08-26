@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Contracts\IDeductibleRecordService;
-use App\Entities\DeductibleRecordEntity;
-use App\Models\DeductibleRecord;
+use App\Contracts\IAdjustmentsRecordService;
+use App\Entities\AdjustmentsRecordEntity;
+use App\Models\AdjustmentsRecord;
 
-class DeductibleRecordService extends EntityService implements IDeductibleRecordService {
+class AdjustmentsRecordService extends EntityService implements IAdjustmentsRecordService {
 
 
     public function addRecord($entity) {
 
         $model;
         if ($entity->id == 0) {
-            $model = new DeductibleRecord();
+            $model = new AdjustmentsRecord();
         }
         else {
-            $model = DeductibleRecord::find($entity->id);
+            $model = AdjustmentsRecord::find($entity->id);
             if ($model == null)
                 return [
                     'result' => false,
@@ -24,18 +24,12 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
                 ];
         }
 
-        $model->deductible_id = isset($entity->deductible['id']) && $entity->deductible['id'] != 0 ? $entity->deductible['id'] : null;
         $model->employee_id = $entity->employee['id'];
         $model->employeeName = $entity->employee['name'];
-        $model->identifier = $entity->identifier['value'];
-        $model->identifierDetails = $entity->identifier['details'];
         $model->details = $entity->details;
-        $model->key = $entity->key;
         $model->amount = $entity->amount;
-        $model->subamount = $entity->subamount;
         $model->remarks = $entity->remarks;
         $model->recordDate = $entity->recordDate;
-        $model->dueDate = $entity->dueDate;
 
         try {
             $model->save();
@@ -54,16 +48,16 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
     }
 
 
-    public function getEmployeeDeductiblesOnDate($employeeId, $date) {
+    public function getEmployeeAdjustmentsOnDate($employeeId, $date) {
 
-        $records = DeductibleRecord::where('employee_id', $employeeId)->where('recordDate', $date)->get();
+        $records = AdjustmentsRecord::where('employee_id', $employeeId)->where('recordDate', $date)->get();
 
         if ($records == null) return null;
 
         $recordEntities = array();
 
         foreach ($records as $record) {
-            $recordEntities[$record->key] = $this->mapToEntity($record, new DeductibleRecordEntity());
+            $recordEntities[$record->details] = $this->mapToEntity($record, new AdjustmentsRecordEntity());
         }
 
         return $recordEntities;
@@ -80,19 +74,10 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $entity->employee['employeeId'] =  $model->employee->employeeId;
         $entity->employee['name'] = $model->employee->fullName();
 
-        $entity->identifier = array();
-        $entity->identifier['value'] = $model->identifier;
-        $entity->identifier['details'] = $model->identifierDetails;
-
-        $entity->deductible = array();
-        $entity->deductible['id'] = $model->deductible_id;
+        $entity->adjustments = array();
         $entity->details = $model->details;
-        $entity->key = $model->key;
 
-        $entity->recordDate = $model->recordDate;
-        $entity->dueDate = $model->dueDate;
         $entity->amount = $model->amount;
-        $entity->subamount = $model->subamount;
         $entity->remarks = $model->remarks;
 
         return $entity;
@@ -100,24 +85,24 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
     }
 
 
-    public function getAllDeductiblesOnDate($date) {
+    public function getAllAdjustmentsOnDate($date) {
 
-        $records = DeductibleRecord::where('recordDate', $date)->get();
+        $records = AdjustmentsRecord::where('recordDate', $date)->get();
 
         if ($records == null) return null;
 
         $recordEntities = array();
 
         foreach ($records as $record) {
-            $recordEntities[] = $this->mapToEntity($record, new DeductibleRecordEntity());
+            $recordEntities[] = $this->mapToEntity($record, new AdjustmentsRecordEntity());
         }
 
         return $recordEntities;
     }
 
-    public function deleteAllOtherDeductible($employeeId, $date) {
+    public function deleteAllOtherAdjustments($employeeId, $date) {
 
-        $records = DeductibleRecord::where('employee_id', $employeeId)->where('recordDate', $date)->whereNull('identifier');
+        $records = AdjustmentsRecord::where('employee_id', $employeeId)->where('recordDate', $date);
 
         if ($records == null) return true;
 

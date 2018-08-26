@@ -46,8 +46,16 @@ class CategoryController extends Controller
 
 
     public function index($key) {
+
         $categories = $this->categoryService->getCategories($key);
-        return view('category.index', compact('categories'));
+
+        if ($categories === null)
+            return view('layout.404');
+
+        $details = array();
+        $details['key'] = $key;
+        $details['displayName'] = $this->categoryService->getDisplayName($key);
+        return view('category.index',['categories' => $categories, 'details' => $details]);
     }
 
 

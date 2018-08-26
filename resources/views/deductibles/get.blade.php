@@ -1,9 +1,26 @@
 @extends('layout.master')
 
+@section('title')
+{{ $employee->fullName }} - Deductibles
+@stop
+
 @section('content')
+
+@if (session('error') != null)
+<div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+@if (session('success') != null)
+<div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+
+
 <div class="row">
     <div class="col-md-10 offset-md-1">
 
+        <div class="row">
+            <div class="col-12 form-paper section-title">{{ $employee->fullName }} - Deductible</div>
+            <div class="col-12 form-paper section-divider"></div>
+        </div>
         <div class="row">
             <div class="col-12 form-paper">
 
@@ -48,6 +65,37 @@
             <input type="hidden" name="employee_name" value="{{ $employee->fullName }}" />
             <input type="hidden" name="record_date" value="{{ $details['year'].'-'.$details['month'].'-'.$details['startday'] }}" />
 
+            @if (isset($employee->deductibles['tin']))
+            <div class="row">
+                <div class="col-12 form-paper section-title">Withholding Tax</div>
+                <div class="col-12 form-paper section-divider"></div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">TIN</label>
+                        <div class="form-paper-display">{{ $employee->deductibles['tin'] }}</div>
+                        <input type="hidden" name="models[tin][identifier]" value="{{ isset($employee->deductibles['tin']) ? $employee->deductibles['tin'] : old('models["tin"]["identifier"]') }}" />
+                        <input type="hidden" name="models[tin][identifier_details]" value="TIN" />
+                        <input type="hidden" name="models[tin][key]" value="tin" />
+                        <input type="hidden" name="models[tin][details]" value="Withholding Tax" />
+                        <input type="hidden" name="models[tin][id]" value="{{ isset($models['tin']['id']) ? $models['tin']['id'] : old('models["tin"]["id"]') }}" />
+                    </div>
+                </div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">Employee's Share</label>
+                        <input type="number" class="form-control" name="models[tin][amount]" value="{{ isset($models['tin']['amount']) ? $models['tin']['amount'] : old('models["tin"]["amount"]') }}" />
+                    </div>
+                </div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">Due Date</label>
+                        <input type="date" class="form-control" name="models[tin][duedate]" value="{{ isset($models['tin']['duedate']) ? $models['tin']['duedate'] : old('models["tin"]["duedate"]') }}" />
+                    </div>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
+            </div>
+            @endif
+
             @if (isset($employee->deductibles['sss']))
             <div class="row">
                 <div class="col-12 form-paper section-title">SSS</div>
@@ -58,7 +106,8 @@
                         <div class="form-paper-display">{{ $employee->deductibles['sss'] }}</div>
                         <input type="hidden" name="models[sss][identifier]" value="{{ isset($employee->deductibles['sss']) ? $employee->deductibles['sss'] : old('models["sss"]["identifier"]') }}" />
                         <input type="hidden" name="models[sss][identifier_details]" value="SS Number" />
-                        <input type="hidden" name="models[sss][details]" value="sss" />
+                        <input type="hidden" name="models[sss][key]" value="sss" />
+                        <input type="hidden" name="models[sss][details]" value="SSS" />
                         <input type="hidden" name="models[sss][id]" value="{{ isset($models['sss']['id']) ? $models['sss']['id'] : old('models["sss"]["id"]') }}" />
                     </div>
                 </div>
@@ -77,7 +126,9 @@
                 <div class="col-3 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">SSS Loan</label>
-                        <input type="number" class="form-control" name="models[sss][loan]" value="{{ isset($models['sss']['loan']) ? $models['sss']['loan'] : old('models["sss"]["loan"]') }}" />
+                        <input type="number" class="form-control" name="models[sss][loan]" value="{{ isset($models['sssloan']['amount']) ? $models['sssloan']['amount'] : old('models["sssloan"]["amount"]') }}" />
+                        <input type="hidden" name="models[sssloan][id]" value="{{ isset($models['sssloan']['id']) ? $models['sssloan']['id'] : old('models["sssloan"]["id"]') }}" />
+                        <input type="hidden" name="models[sssloan][details]" value="SSS Loan" />
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -95,7 +146,8 @@
                         <div class="form-paper-display">{{ $employee->deductibles['philhealth'] }}</div>
                         <input type="hidden" name="models[philhealth][identifier]" value="{{ isset($employee->deductibles['philhealth']) ? $employee->deductibles['philhealth'] : old('models["philhealth"]["identifier"]') }}" />
                         <input type="hidden" name="models[philhealth][identifier_details]" value="PhilHealth Number" />
-                        <input type="hidden" name="models[philhealth][details]" value="philhealth" />
+                        <input type="hidden" name="models[philhealth][key]" value="philhealth" />
+                        <input type="hidden" name="models[philhealth][details]" value="PhilHealth" />
                         <input type="hidden" name="models[philhealth][id]" value="{{ isset($models['philhealth']['id']) ? $models['philhealth']['id'] : old('models["philhealth"]["id"]') }}" />
                     </div>
                 </div>
@@ -126,7 +178,8 @@
                         <div class="form-paper-display">{{ $employee->deductibles['pagibig'] }}</div>
                         <input type="hidden" name="models[pagibig][identifier]" value="{{ isset($employee->deductibles['pagibig']) ? $employee->deductibles['pagibig'] : old('models["pagibig"]["identifier"]') }}" />
                         <input type="hidden" name="models[pagibig][identifier_details]" value="PAGIBIG Number" />
-                        <input type="hidden" name="models[pagibig][details]" value="pagibig" />
+                        <input type="hidden" name="models[pagibig][key]" value="pagibig" />
+                        <input type="hidden" name="models[pagibig][details]" value="PAGIBIG" />
                         <input type="hidden" name="models[pagibig][id]" value="{{ isset($models['pagibig']['id']) ? $models['pagibig']['id'] : old('models["pagibig"]["id"]') }}" />
                     </div>
                 </div>
@@ -145,7 +198,9 @@
                 <div class="col-3 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">PAGIBIG Loan</label>
-                        <input type="number" class="form-control" name="models[pagibig][loan]" value="{{ isset($models['pagibig']['loan']) ? $models['pagibig']['loan'] : old('models["pagibig"]["loan"]') }}" />
+                        <input type="number" class="form-control" name="models[pagibig][loan]" value="{{ isset($models['pagibigloan']['amount']) ? $models['pagibigloan']['amount'] : old('models["pagibigloan"]["amount"]') }}" />
+                        <input type="hidden" name="models[pagibigloan][id]" value="{{ isset($models['pagibigloan']['id']) ? $models['pagibigloan']['id'] : old('models["pagibigloan"]["id"]') }}" />
+                        <input type="hidden" name="models[pagibigloan][details]" value="PAGIBIG Loan" />
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -157,49 +212,55 @@
                 <div class="col-12 form-paper section-divider"></div>
             </div>
 
-            @for ($i = 0; $i < sizeof($otherModels); $i)
+            <?php
+            $actualSize = sizeof($otherModels);
+            if ($actualSize == 0)
+                $actualSize = 1;
+            ?>
 
-            <div class="row">
-                <div class="col-3 form-paper">
+            <input type="hidden" id="loan-index" value="{{ $actualSize }}" />
+
+            @for ($i = 0; $i < $actualSize; $i++)
+
+            <div class="row loan-{{$i}}">
+                <div class="col-12 form-paper section-delete">
+                    <button type="button" class="close" data-index="{{$i}}" onclick="deleteRow(this, 'loan')">&times;</button>
+                    {{-- <input type="hidden" name="other_models[{{$i}}][id]" value="{{ isset($otherModels[$i]['id']) ? $otherModels[$i]['id'] : '' }}" /> --}}
+                </div>
+                <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Deduction Type</label>
-                        <select class="form-control" name="other_model[{{$i}}]['details']">
+                        <select class="form-control" name="other_models[{{$i}}][details]">
                             <?php
                             $options = [
                                 'Company Loan', 'Meal Deduction', 'Medical Deduction'
                             ]
                             ?>
-                            @foreach ($options as $option)
-                            <option value="{{ $option }}" {{ $otherModels[$i]['details'] === $option ? 'selected' : '' }}>{{ $option }}</option>
+                            @foreach ($categories as $cat)
+                            <option value="{{ $cat->value }}" {{ (isset($otherModels[$i]['details']) && $otherModels[$i]['details'] === $cat->value) ? 'selected' : '' }}>{{ $cat->value }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <div class="col-3 form-paper">
-                    <div class="form-group">
-                        <label class="form-paper-label">Details</label>
-                        <div class="form-paper-subdisplay">Loan Details</div>
-                    </div>
-                </div>
-                <div class="col-3 form-paper">
+                <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Amount</label>
-                        <input type="number" class="form-control" name="otherModels[{{$i}}][amount]" value="{{ isset($otherModels[$i]['amount']) ? $otherModels[$i]['amount'] : old("otherModels[".$i."][amount]") }}" />
+                        <input type="number" class="form-control" name="other_models[{{$i}}][amount]" value="{{ isset($otherModels[$i]['amount']) ? $otherModels[$i]['amount'] : '' }}" />
                     </div>
                 </div>
-                <div class="col-3 form-paper">
+                <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Remarks</label>
-                        <input type="text" class="form-control" name="otherModels[{{$i}}]['remarks']" value="{{ isset($otherModels[$i]['remarks']) ? $otherModels[$i][remarks] : old("otherModels[".$i."][remarks]") }}" />
+                        <input type="text" class="form-control" name="other_models[{{$i}}][remarks]" value="{{ isset($otherModels[$i]['remarks']) ? $otherModels[$i]['remarks'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
             @endfor
 
-            <div class="row">
+            <div class="row addContainer">
                 <div class="col-12 form-paper">
-                    <button class="btn btn-link" type="button">Add Deductible</button>
+                    <button class="btn btn-link" type="button" onclick="createNewRow(this, 'loan')">Add Deductible</button>
                 </div>
             </div>
 
@@ -222,5 +283,5 @@
 @stop
 
 @section('script')
-
+<script src="{{ asset('js/dynamicAddAndDelete.js') }}"></script>
 @stop

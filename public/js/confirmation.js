@@ -1,5 +1,5 @@
 ﻿
-$(document).ready(function () {
+$(window).ready(function () {
 
     // $('form').one('submit', function() {
     //     $(this).find('[type="submit"]').attr('disabled', 'disabled');
@@ -8,6 +8,7 @@ $(document).ready(function () {
     var condition = false;
     $('[data-confirm]').click(function (e) {
         var self = this;
+
         if (condition) {
             condition = false;
             return true;
@@ -16,7 +17,8 @@ $(document).ready(function () {
         var isOkay = true;
 
         $("input, select").each(function () {
-            if ($(this).prop("validity").valid == false) {
+            if ($(this).prop("validity").badInput === true) {
+                console.log("Bad input");
                 isOkay = false;
             }
         });
@@ -37,7 +39,6 @@ $(document).ready(function () {
              $(self).attr("data-confirm"),
              function () {
                  condition = true;
-
                  if ($(self).attr("id") === "Delete") {
                      $("[required]").removeAttr("required");
                  }

@@ -8,7 +8,9 @@ class DeductibleRecordEntity extends Entity {
     public $identifier;
     public $deductible;
 
+    public $dueDate;
     public $recordDate;
+    public $key;
     public $details;
     public $amount;
     public $subamount;

@@ -35,11 +35,8 @@
                             <td>
                                 <span class="btn-group">
                                     <a role="button" href="{{ action('PayrollController@viewNow', $employee->id) }}" class="btn btn-secondary btn-sm">View Pay</a>
-                                    <form action="" method="POST">
-                                        @csrf
-                                        @method('post')
-                                        <button type="submit" class="btn btn-secondary btn-sm">Set Deductibles</button>
-                                    </form>
+                                    <a role="button" href="{{ route('deductible.get',  ['id' => $employee->id, 'date' => date_format(now(), 'Y-m-d')]) }}" class="btn btn-secondary btn-sm">Set Deductibles</a>
+                                    <a role="button" href="{{ route('adjustments.get',  ['id' => $employee->id, 'date' => date_format(now(), 'Y-m-d')]) }}" class="btn btn-secondary btn-sm">Set Adjustments</a>
                                 </span>
                             </td>
                         </tr>
