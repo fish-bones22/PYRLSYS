@@ -11,17 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('user', 'UserController@index');
 Route::get('user/{id}', 'UserController@getUser');
 Route::post('user/{id}', 'UserController@updateUser');
-Route::get('user/delete/{id}', 'UserController@deleteUser');
+Route::post('user/delete/{id}', 'UserController@deleteUser')->name('user.delete');
 Route::get('register', 'UserController@register');
 Route::post('register', 'UserController@addUser');
-Route::get('login', 'UserController@login');
+Route::get('login', 'UserController@login')->name('login');
 Route::post('login', 'UserController@login');
 Route::get('logout', 'UserController@logout');
 
@@ -37,9 +35,10 @@ Route::post('categories', 'CategoryController@setCategory');
 // Route::resource('employee', 'EmployeeController');
 Route::get('employees', 'EmployeeController@index');
 Route::get('employee/new', 'EmployeeController@show')->name('employee.new');
+Route::get('employee/view/{id}', 'EmployeeController@view');
 Route::get('employee/{id}', 'EmployeeController@show');
 Route::post('employee/{id}', 'EmployeeController@update');
-Route::get('employee/delete/{id}', 'EmployeeController@destroy');
+Route::post('employee/delete/{id}', 'EmployeeController@destroy')->name('employee.delete');
 Route::post('employee/updateImage/{id}', 'EmployeeController@updateImage');
 Route::post('employee/deleteImage/{id}', 'EmployeeController@deleteImage');
 Route::post('employee/getbasic/{id}', 'EmployeeController@getEmployeeBasicDetails');
@@ -75,6 +74,8 @@ Route::post('otrequest/deny/{id}', 'OtRequestController@deny')->name('otrequest.
 Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@getOtRequestForEmployee');
 
 Route::get('payroll', 'PayrollController@index');
+Route::get('payroll/summary/{date}', 'PayrollController@summary');
+Route::post('payroll/summary', 'PayrollController@goToDateSummary')->name('payroll.gotodatesummary');
 Route::get('payroll/{id}/{date}', 'PayrollController@viewPay');
 Route::get('payroll/{id}', 'PayrollController@viewNow');
 Route::post('payroll/{id}', 'PayrollController@setRecordDate');

@@ -30,4 +30,34 @@ class User extends Authenticatable
     public function accesses() {
         return $this->hasMany('App\Models\UserAccess');
     }
+
+    public function departmentAccesses() {
+        return $this->hasMany('App\Models\DepartmentAccess');
+    }
+
+    public function GetSessionAccessesAttribute() {
+        return $this->getAccesses();
+    }
+
+    public function GetSessionDepartmentsAttribute() {
+        return $this->getDepartmentAccesses();
+    }
+
+    private function getAccesses() {
+        $accesses =  $this->hasMany('App\Models\UserAccess')->get();
+        $acc = array();
+        foreach ($accesses as $access) {
+            $acc[] = $access->details->roleKey;
+         }
+         return $acc;
+    }
+
+    private function getDepartmentAccesses() {
+        $accesses =  $this->hasMany('App\Models\DepartmentAccess')->get();
+        $acc = array();
+        foreach ($accesses as $access) {
+            $acc[] = $access->category_id;
+         }
+         return $acc;
+    }
 }

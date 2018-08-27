@@ -47,7 +47,7 @@ class Employee extends Model
     }
 
     public function current() {
-        return $this->hasMany('App\Models\EmployeeHistory');
+        return $this->hasMany('App\Models\EmployeeHistory')->where('current', true);
     }
 
  }

@@ -28,12 +28,12 @@ Adjustments
                             <div class="form-group">
                                 <label class="form-paper-label">Period</label><br />
                                 <div class="form-check-inline">
-                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 16 ? 'checked' : '' }} />
-                                    <label for="secondPeriod" class="form-check-label small">Second (1-16)</label>
+                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
+                                    <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
                                 </div>
                                 <div class="form-check-inline">
-                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 17 ? 'checked' : '' }} />
-                                    <label for="firstPeriod" class="form-check-label small">First (17-EoM)</label>
+                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
+                                    <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
                                 </div>
                             </div>
                         </div>

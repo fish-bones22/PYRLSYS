@@ -6,7 +6,14 @@ Login
 
 @section('content')
 
-{{ session('error') }}
+
+@if (session('error') != null)
+<div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+@if (session('success') != null)
+<div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+
 
 <div class="row">
     <div class="col-md-4 offset-md-4">

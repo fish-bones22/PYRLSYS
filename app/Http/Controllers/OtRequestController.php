@@ -13,6 +13,7 @@ class OtRequestController extends Controller
     private $otRequestService;
     private $categoryService;
     private $employeeService;
+    private $pageKey = 'manhourmanagement';
 
     public function __construct(IOtRequestService $otRequestService, ICategoryService $categoryService, IEmployeeService $employeeService) {
 
@@ -23,6 +24,7 @@ class OtRequestController extends Controller
 
     public function index() {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $departments = $this->categoryService->getCategories('department');
         $otRequests = $this->otRequestService->getPendingOtRequests();
         return view('otrequest.index', ['otRequests' => $otRequests, 'departments' => $departments]);
@@ -30,6 +32,7 @@ class OtRequestController extends Controller
     }
 
     public function new() {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $departments = $this->categoryService->getCategories('department');
         return view('otrequest.new', [ 'departments' => $departments ]);
     }

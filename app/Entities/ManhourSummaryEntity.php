@@ -17,6 +17,7 @@ class ManhourSummaryEntity extends Entity {
     public $xsot;
     public $lhot;
     public $xlhot;
+    public $nd;
 
     public $employee_id;
     public $employeeId;

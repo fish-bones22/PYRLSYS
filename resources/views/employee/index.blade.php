@@ -27,7 +27,7 @@ Employee
                 <tr>
                     <th>Id</th>
                     <th>Name</th>
-                    <th></th>
+                    <th>Department</th>
                     <th></th>
                 </tr>
             </thead>
@@ -36,8 +36,17 @@ Employee
                 <tr>
                     <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
                     <td>{{ $emp->fullName }}</td>
-                    <td><a href="{{ action('EmployeeController@show', ['id' => $emp->id ]) }}">Edit</a></td>
-                    <td><a href="{{ action('EmployeeController@destroy', ['id' => $emp->id ]) }}">Delete</a></td>
+                    <td>{{ $emp->current['department']['displayName'] }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-light" href="{{ action('EmployeeController@view', ['id' => $emp->id ]) }}">View</a>
+                            <form action="{{ route('employee.delete', $emp->id) }}" method="post">
+                                @csrf
+                                @method('post')
+                                <input class="btn btn-sm btn-secondary" type="submit" value="Delete" />
+                            </form>
+                        </div>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

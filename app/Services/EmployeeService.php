@@ -10,6 +10,7 @@ use App\Models\EmployeeHistory;
 use App\Models\EmployeePicture;
 use App\Models\EmploymentDetail;
 use App\Entities\EmployeeEntity;
+use AuthUtility;
 
 class EmployeeService extends EntityService implements IEmployeeService {
 
@@ -24,6 +25,13 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
 
         foreach ($employees as $emp) {
+
+            $current = $emp->current;
+            if ($current == null) {
+                continue;
+            }
+            if (!AuthUtility::hasDepartmentAccess($current->first()['department']))
+                continue;
 
             $detail = $emp->details;
 
@@ -110,7 +118,8 @@ class EmployeeService extends EntityService implements IEmployeeService {
         if ($employees == null) return 'Hello';
 
         foreach ($employees as $key => $emp) {
-
+            if ($dept == 0)
+                break;
             if ($emp->current == null || !key_exists('department', $emp->current) || $emp->current['department']['value'] != $dept) {
                 unset($employees[$key]);
             }

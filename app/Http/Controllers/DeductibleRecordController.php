@@ -13,6 +13,7 @@ class DeductibleRecordController extends Controller
     private $deductibleRecordService;
     private $employeeService;
     private $categoryService;
+    private $pageKey = 'payrollmanagement';
 
     public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService, ICategoryService $categoryService) {
         $this->deductibleRecordService =  $deductibleRecordService;
@@ -107,19 +108,19 @@ class DeductibleRecordController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
-        $day = $period === 'first' ? '17' : '01';
+        $day = $period === 'first' ? '16' : '01';
 
         return redirect()->action('DeductibleRecordController@get', ['id' => $id, 'date' => $year.'-'.$month.'-'.$day]);
     }
 
 
     public function get($id, $date) {
-
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $details = array();
         $details['year'] = date_format(date_create($date), 'Y');
         $details['month'] = date_format(date_create($date), 'm');
         $day = date_format(date_create($date), 'd');
-        $details['startday'] = $day <= 16 ? '01' : '17';
+        $details['startday'] = $day <= 15 ? '01' : '16';
 
         $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($id, $date);
         $employee = $this->employeeService->getEmployeeById($id);
@@ -199,11 +200,12 @@ class DeductibleRecordController extends Controller
 
 
     public function getAll($date) {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $day = date_format(date_create($date),'d');
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
 
-        $startDay = $day <= 16 ? '01' : '17';
+        $startDay = $day <= 15 ? '01' : '16';
         $date = $year.'-'.$month.'-'.$startDay;
         $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
 
@@ -222,7 +224,7 @@ class DeductibleRecordController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
-        $day = $period === 'first' ? '17' : '01';
+        $day = $period === 'first' ? '16' : '01';
 
         return redirect()->action('DeductibleRecordController@getAll', ['date' => $year.'-'.$month.'-'.$day]);
     }

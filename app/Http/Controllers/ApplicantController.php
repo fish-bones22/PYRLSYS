@@ -17,6 +17,7 @@ class ApplicantController extends Controller
 {
     protected $employeeService;
     protected $categoryService;
+    private $pageKey = 'humanresourcemanagement';
 
     public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService) {
 
@@ -26,6 +27,8 @@ class ApplicantController extends Controller
     }
 
     public function index() {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         $applicants = $this->employeeService->getAllApplicants();
 
@@ -42,6 +45,7 @@ class ApplicantController extends Controller
 
     public function show($id = 0) {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $applicant= $this->employeeService->getEmployeeById($id);
 
         if ($applicant == null)

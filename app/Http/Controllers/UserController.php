@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Contracts\IUserRoleService;
 use App\Contracts\IUserService;
+use App\Contracts\ICategoryService;
 use App\Entities\UserEntity;
 use App\Http\Controllers\Controller;
 use Auth;
@@ -17,17 +18,20 @@ class UserController extends Controller {
 
     private $userService;
     private $userRoleService;
+    private $categoryService;
+    private $pageKey = 'accountsmanagement';
 
-    public function __construct(IUserService $userService, IUserRoleService $userRoleService) {
+
+    public function __construct(IUserService $userService, IUserRoleService $userRoleService, ICategoryService $categoryService) {
         $this->userService = $userService;
         $this->userRoleService = $userRoleService;
+        $this->categoryService = $categoryService;
     }
 
 
     public function index() {
 
-        if (!Auth::check())
-            return redirect()->action('UserController@login');
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         $users = $this->userService->getAllUsers();
         return view('user.index', compact('users'));
@@ -44,7 +48,7 @@ class UserController extends Controller {
         $result = $this->userService->login($req['username'], $req['password']);
 
         if (!$result) {
-            return view('user.login')->with('error', 'Incorrect username or password');
+            return redirect()->back()->with('error', 'Incorrect username or password');
         }
 
         session([
@@ -66,8 +70,11 @@ class UserController extends Controller {
 
     public function register() {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $roles = $this->userRoleService->getAllRoles();
-        return view('user.register', compact('roles'));
+        $categories = $this->categoryService->getCategoriesNofilter('department');
+        return view('user.register', ['roles' => $roles, 'categories' => $categories]);
 
     }
 
@@ -77,7 +84,7 @@ class UserController extends Controller {
         $req = $request->all();
 
         if ($req['password'] != $req['confirm_password'])
-            return view('user.register').withErrors('Passwords do not match');
+            return view('user.register').with('error', 'Passwords do not match');
 
         $user = new UserEntity();
         $user->fullName = $req['username'];
@@ -96,6 +103,16 @@ class UserController extends Controller {
 
                 $user->accesses[] = $userAccess[$i]['id'];
             }
+            // Departments
+            $user->departmentAccesses = array();
+            $departments = $req['department_accesses'];
+            for($i = 0; $i < sizeof($departments); $i++) {
+
+                if (!isset($departments[$i]['key']))
+                    continue;
+
+                $user->departmentAccesses[] = $departments[$i]['id'];
+            }
 
         }
 
@@ -106,9 +123,13 @@ class UserController extends Controller {
 
 
     public function getUser($id) {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $user = $this->userService->getUserById($id);
         $roles = $this->userRoleService->getAllRoles();
-        return view('user.update', compact('user'), compact('roles'));
+        $categories = $this->categoryService->getCategoriesNofilter('department');
+        return view('user.update', ['user' => $user, 'roles' => $roles, 'categories' => $categories]);
     }
 
 
@@ -164,6 +185,20 @@ class UserController extends Controller {
                     continue;
 
                 $user->accesses[] = $userAccess[$i]['id'];
+            }
+        }
+
+        if (sizeof($req['department_accesses']) != 0) {
+
+            $user->departmentAccesses = array();
+            $departmentAccesses = $req['department_accesses'];
+
+            for($i = 0; $i < sizeof($departmentAccesses); $i++) {
+
+                if (!isset($departmentAccesses[$i]['key']))
+                    continue;
+
+                $user->departmentAccesses[] = $departmentAccesses[$i]['id'];
             }
         }
 

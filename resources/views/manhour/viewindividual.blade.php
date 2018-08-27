@@ -33,12 +33,12 @@ Employee Record
                             <div class="form-group">
                                 <label class="form-paper-label">Period</label><br />
                                 <div class="form-check-inline">
-                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 16 ? 'checked' : '' }} />
-                                    <label for="secondPeriod" class="form-check-label small">Second (1-16)</label>
+                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
+                                    <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
                                 </div>
                                 <div class="form-check-inline">
-                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 17 ? 'checked' : '' }} />
-                                    <label for="firstPeriod" class="form-check-label small">First (17-EoM)</label>
+                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
+                                    <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
                                 </div>
                             </div>
                         </div>
@@ -134,6 +134,7 @@ Employee Record
                                         $txsot = 0;
                                         $tlhot = 0;
                                         $txlhot = 0;
+                                        $nd = 0;
                                         foreach ($records as $key => $record) {
                                             if ($record == null || $record->timeCard != $currentTimecard)
                                                 continue;
@@ -142,6 +143,7 @@ Employee Record
                                             $txsot += $record->xsot != '' ? $record->xsot : 0;
                                             $tlhot += $record->lhot != '' ? $record->lhot : 0;
                                             $txlhot += $record->xlhot != '' ? $record->xlhot : 0;
+                                            $nd += $record->nd != '' ? $record->nd : 0;
                                         }
                                     ?>
 
@@ -150,7 +152,7 @@ Employee Record
                                     <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
                                     <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>
                                     <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>
-                                    <td></td>
+                                    <td>{{ $nd != 0 ? $nd : ''  }}</td>
                                 </tr>
 
                                 @endforeach

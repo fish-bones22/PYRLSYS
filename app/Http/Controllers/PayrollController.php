@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ICategoryService;
 use App\Contracts\IEmployeeService;
 use App\Contracts\IManhourService;
 use App\Contracts\IPayrollService;
@@ -14,17 +15,22 @@ class PayrollController extends Controller
     public $payrollService;
     public $employeeService;
     public $manhourService;
+    public $categoryService;
+    private $pageKey = 'payrollmanagement';
 
-    public function __construct (IPayrollService $payrollService, IEmployeeService $employeeService, IManhourService $manhourService) {
+    public function __construct (IPayrollService $payrollService, IEmployeeService $employeeService, IManhourService $manhourService, ICategoryService $categoryService) {
         $this->payrollService = $payrollService;
         $this->employeeService = $employeeService;
         $this->manhourService = $manhourService;
+        $this->categoryService = $categoryService;
     }
 
 
     public function index() {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $employees = $this->employeeService->getAllEmployees('lastname');
-        return view('payroll.index', ['employees' => $employees ]);
+        $departments = $this->categoryService->getCategories('department');
+        return view('payroll.index', ['employees' => $employees, 'departments' => $departments ]);
     }
 
     public function viewNow($id) {
@@ -38,7 +44,7 @@ class PayrollController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
-        $day = $period === 'first' ? '17' : '01';
+        $day = $period === 'first' ? '16' : '01';
 
         return redirect()->action('PayrollController@viewPay', ['id' => $id, 'date' => $year.'-'.$month.'-'.$day]);
 
@@ -46,11 +52,13 @@ class PayrollController extends Controller
 
     public function viewPay($id, $date) {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $day = date_format(date_create($date),'d');
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
 
-        $startDay = $day <= 16 ? '01' : '17';
+        $startDay = $day <= 15 ? '01' : '16';
         $date = $year.'-'.$month.'-'.$startDay;
 
         $details = [
@@ -70,6 +78,44 @@ class PayrollController extends Controller
     }
 
     public function deductibles($id, $date) {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         return view('payroll.deductibles');
+    }
+
+    public function goToDateSummary(Request $request) {
+
+        $month = $request->get('month');
+        $year = $request->get('year');
+        $period = $request->get('period');
+        $day = $period === 'first' ? '16' : '01';
+
+        return redirect()->action('PayrollController@summary', ['date' => $year.'-'.$month.'-'.$day]);
+    }
+
+    public function summary($date) {
+
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $startDay = $day <= 15 ? '01' : '16';
+        $date = $year.'-'.$month.'-'.$startDay;
+
+        $details = [
+            'date' => $year.'-'.$month.'-'.$startDay,
+            'startday' => $startDay,
+            'month' => $month,
+            'year' => $year
+        ];
+
+        $employees = $this->employeeService->getAllEmployees('lastname');
+        $summary = array();
+        foreach ($employees as $emp) {
+            $payroll = $this->payrollService->getPayroll($emp->id, date_create($date));
+            $summary[$emp->id] = $payroll;
+        }
+
+        $departments = $this->categoryService->getCategories('department');
+        return view('payroll.summary', ['departments' => $departments, 'employees' => $employees, 'details' => $details, 'summary' => $summary]);
     }
 }

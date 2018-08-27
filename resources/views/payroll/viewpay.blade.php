@@ -21,12 +21,12 @@
                             <div class="form-group">
                                 <label class="form-paper-label">Period</label><br />
                                 <div class="form-check-inline">
-                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 16 ? 'checked' : '' }} />
-                                    <label for="secondPeriod" class="form-check-label small">Second (1-16)</label>
+                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
+                                    <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
                                 </div>
                                 <div class="form-check-inline">
-                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 17 ? 'checked' : '' }} />
-                                    <label for="firstPeriod" class="form-check-label small">First (17-EoM)</label>
+                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
+                                    <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                             <td><strong>Add: Allowance</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->grossPay }}</td>
+                            <td>{{ $payroll->adjustments }}</td>
                         </tr>
                         @foreach ($payroll->adjustmentsDetails as $key => $ex)
                         <?php if ($key == '_TOTAL') continue; ?>
@@ -166,7 +166,7 @@
 <div class="fixed-bottom btn-container m-4">
     <div class="float-right">
         <div class="btn-group">
-            {{-- <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a> --}}
+            <a class="btn btn-light" href="{{ action('PayrollController@index') }}">Back to List</a>
             <button type="button" class="btn btn-primary" onclick="saveAsPDF()">Save as PDF</button>
             <button type="button" class="btn btn-primary" onclick="saveAsExcel()">Save as Excel</button>
         </div>

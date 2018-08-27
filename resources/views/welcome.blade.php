@@ -10,6 +10,10 @@ Welcome
 
 @section('content')
 
+<?php
+$userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
+?>
+
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="row">
@@ -36,7 +40,7 @@ Welcome
             <div class="col-12 form-paper">
                 <div class="mt-2">
                     <div class="float-right"><a href="{{ action('UserController@logout') }}" class="btn btn-link btn-sm">Log Out</a></div>
-                    <i class="text-muted">Welcome $name. Select from naviagtion to start.</i>
+                    <i class="text-muted">Welcome <strong>{{ $userName }}</strong>. Select from naviagtion to start.</i>
                 </div>
             </div>
             <div class="col-12 form-paper section-divider"></div>
@@ -44,6 +48,7 @@ Welcome
 
         <div class="row" id="masterNavigation">
 
+            @if ($auth['admin'])
             <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Administrator')">
                 <div class="form-group text-sm-center">
                     <div class="row">
@@ -59,7 +64,22 @@ Welcome
                     </div>
                 </div>
             </div>
+            @else
+            <div class="col-sm-6 form-paper tile-selection disabled">
+                <div class="form-group text-sm-center">
+                    <div class="row">
+                        <div class="col-sm-12 col-2">
+                            <img src="{{ asset('images/icons/gears.svg') }}" class="img-responsive tile-icon" />
+                        </div>
+                        <div class="col-sm-12 col-10">
+                            <div class="form-paper-display">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
+            @if ($auth['human'])
             <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Human Resource')">
                 <div class="form-group">
                     <div class="form-group text-sm-center">
@@ -77,7 +97,24 @@ Welcome
                     </div>
                 </div>
             </div>
+            @else
+            <div class="col-sm-6 form-paper tile-selection disabled">
+                <div class="form-group">
+                    <div class="form-group text-sm-center">
+                        <div class="row">
+                            <div class="col-sm-12 col-2">
+                                <img src="{{ asset('images/icons/multi-user.svg') }}" class="img-responsive tile-icon" />
+                            </div>
+                            <div class="col-sm-12 col-10">
+                                <div class="form-paper-display">Human Resource</div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
+            @if ($auth['manhour'])
             <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Manhour')">
                 <div class="form-group">
                     <div class="form-group text-sm-center">
@@ -95,7 +132,24 @@ Welcome
                     </div>
                 </div>
             </div>
+            @else
+            <div class="col-sm-6 form-paper tile-selection disabled">
+                <div class="form-group">
+                    <div class="form-group text-sm-center">
+                        <div class="row">
+                            <div class="col-sm-12 col-2">
+                                <img src="{{ asset('images/icons/clock.svg') }}" class="img-responsive tile-icon" />
+                            </div>
+                            <div class="col-sm-12 col-10">
+                                <div class="form-paper-display">Manhour</div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
+            @if ($auth['payroll'])
             <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Payroll')">
                 <div class="form-group">
                     <div class="form-group text-sm-center">
@@ -113,6 +167,22 @@ Welcome
                     </div>
                 </div>
             </div>
+            @else
+            <div class="col-sm-6 form-paper tile-selection disabled">
+                <div class="form-group">
+                    <div class="form-group text-sm-center">
+                        <div class="row">
+                            <div class="col-sm-12 col-2">
+                                <img src="{{ asset('images/icons/money.svg') }}" class="img-responsive tile-icon" />
+                            </div>
+                            <div class="col-sm-12 col-10">
+                                <div class="form-paper-display">Payroll</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
         </div>
 
@@ -126,20 +196,29 @@ Welcome
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($auth['admin'])
                         <tr><td><a href="{{ action('UserController@index') }}">Show Users</a></td><td><i class="text-muted small">Administrator</i></td></tr>
                         <tr><td><a href="{{ action('UserController@register') }}">Add User</a></td><td><i class="text-muted small">Administrator</i></td></tr>
                         <tr><td><a href="{{ action('CategoryController@manage', 'department') }}">Manage Departments</a></td><td><i class="text-muted small">Administrator</i></td></tr>
+                        @endif
+                        @if ($auth['human'])
                         <tr><td><a href="{{ action('EmployeeController@index') }}">Show Employees</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
                         <tr><td><a href="{{ route('employee.new') }}">Add Employee</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
                         <tr><td><a href="{{ action('ApplicantController@index') }}">Show Applicants</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
                         <tr><td><a href="{{ action('ApplicantController@new') }}">Show Application Form</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
+                        @endif
+                        @if ($auth['manhour'])
                         <tr><td><a href="{{ action('ManhourController@index') }}">Show Manhour Master List</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ route('manhour.input') }}">Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('ManhourController@viewNow') }}">Show Daily Work Hours</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@index') }}">Show OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@new') }}">Add OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                        @endif
+                        @if ($auth['payroll'])
                         <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Benefits Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Show Payroll Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

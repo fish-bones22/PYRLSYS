@@ -11,6 +11,7 @@ $(function() {
 
 function filterDepartment() {
     var term = $("#department").val();
+    console.log(term);
     table.column(2).search(term);
     table.column(2).draw();
 }

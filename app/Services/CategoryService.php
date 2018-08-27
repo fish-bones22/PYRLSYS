@@ -6,6 +6,7 @@ use App\Contracts\ICategoryService;
 use App\Entities\CategoryEntity;
 use App\Models\Category;
 use App\Models\CategoryDetail;
+use AuthUtility;
 
 class CategoryService extends EntityService implements ICategoryService {
 
@@ -38,7 +39,26 @@ class CategoryService extends EntityService implements ICategoryService {
         $hasKey = CategoryDetail::where('key', $key)->first();
         $categories = Category::all()->where('key', $key);
 
-        if ($categories == null && $hasKey == null)
+        if (sizeof($categories) === 0 && $hasKey === null)
+            return null;
+
+        $categoryEntities = array();
+
+        foreach ($categories as $category) {
+            if (!AuthUtility::hasDepartmentAccess($category->id) && $key === 'department')
+                continue;
+            $categoryEntities[] = $this->mapToEntity($category, new CategoryEntity());
+        }
+
+        return $categoryEntities;
+    }
+
+    public function getCategoriesNofilter($key) {
+
+        $hasKey = CategoryDetail::where('key', $key)->first();
+        $categories = Category::all()->where('key', $key);
+
+        if (sizeof($categories) === 0 && $hasKey === null)
             return null;
 
         $categoryEntities = array();

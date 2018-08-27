@@ -19,4 +19,8 @@ class UserAccess extends Authenticatable
     protected $fillable = [
         'user_id', 'user_role_id',
     ];
+
+    public function details() {
+        return $this->belongsTo('App\Models\UserRole', 'user_role_id', 'id');
+    }
 }

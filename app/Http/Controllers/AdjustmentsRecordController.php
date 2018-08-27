@@ -13,6 +13,7 @@ class AdjustmentsRecordController extends Controller
     private $adjustmentsRecordService;
     private $employeeService;
     private $categoryService;
+    private $pageKey = 'payrollmanagement';
 
     public function __construct(IAdjustmentsRecordService $adjustmentsRecordService,
     IEmployeeService $employeeService,
@@ -51,7 +52,7 @@ class AdjustmentsRecordController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
-        $day = $period === 'first' ? '17' : '01';
+        $day = $period === 'first' ? '16' : '01';
 
         return redirect()->action('AdjustmentsRecordController@get', ['id' => $id, 'date' => $year.'-'.$month.'-'.$day]);
     }
@@ -59,11 +60,13 @@ class AdjustmentsRecordController extends Controller
 
     public function get($id, $date) {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $details = array();
         $details['year'] = date_format(date_create($date), 'Y');
         $details['month'] = date_format(date_create($date), 'm');
         $day = date_format(date_create($date), 'd');
-        $details['startday'] = $day <= 16 ? '01' : '17';
+        $details['startday'] = $day <= 15 ? '01' : '16';
 
         $records = $this->adjustmentsRecordService->getEmployeeAdjustmentsOnDate($id, $date);
         $employee = $this->employeeService->getEmployeeById($id);
@@ -117,11 +120,12 @@ class AdjustmentsRecordController extends Controller
 
 
     public function getAll($date) {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $day = date_format(date_create($date),'d');
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
 
-        $startDay = $day <= 16 ? '01' : '17';
+        $startDay = $day <= 15 ? '01' : '16';
         $date = $year.'-'.$month.'-'.$startDay;
         $records = $this->adjustmentsRecordService->getAllAdjustmentsOnDate($date);
 
@@ -140,7 +144,7 @@ class AdjustmentsRecordController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
-        $day = $period === 'first' ? '17' : '01';
+        $day = $period === 'first' ? '16' : '01';
 
         return redirect()->action('AdjustmentsRecordController@getAll', ['date' => $year.'-'.$month.'-'.$day]);
     }

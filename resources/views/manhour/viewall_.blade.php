@@ -88,6 +88,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                     <th rowspan="2">Undertime</th>
                     <th rowspan="2">Total <br />Regular <br />Hours</th>
                     <th colspan="5">Overtime</th>
+                    <th rowspan="2">ND</th>
                     <th rowspan="2">Remarks/Comments</th>
                 </tr>
                 <tr>
@@ -116,6 +117,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                     <td>{{ $record->xsot }}</td>
                     <td>{{ $record->lhot }}</td>
                     <td>{{ $record->xlhot }}</td>
+                    <td>{{ $record->nd }}</td>
                     <td>{{ $record->remarks }}</td>
                 </tr>
                 @endforeach

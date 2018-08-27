@@ -41,6 +41,7 @@ New User
             </div>
             <div class="row">
                 <div class="col-12 form-paper section-title">User Access</div>
+
                 <div class="col-12 form-paper">
                     <div class="form-check mt-2">
                         <input type="checkbox" id="isAdmin" class="form-check-input" name="admin" />
@@ -58,8 +59,26 @@ New User
                             <label for="{{ $roles[$i]->roleKey }}">{{ $roles[$i]->roleName }}</label>
                         </div>
                         @endfor
+
                     </div>
                 </div>
+
+
+                <div class="col-12 form-paper section-title">Department Access</div>
+                <div class="col-12 form-paper">
+                    <div class="form-group">
+
+                        @for ($i = 0; $i < sizeof($categories); $i++)
+                        <div class="form-check">
+                            <input type="hidden" name="department_accesses[{{ $i }}][id]" value="{{ $categories[$i]->id }}" />
+                            <input type="checkbox" id="{{ $categories[$i]->value }}" class="form-check-input" name="department_accesses[{{ $i }}][key]" />
+                            <label for="{{ $categories[$i]->value }}">{{ $categories[$i]->value }}</label>
+                        </div>
+                        @endfor
+
+                    </div>
+                </div>
+
             </div>
             <div class="mt-4 mb-4">&nbsp;</div>
             <div class="fixed-bottom m-4">

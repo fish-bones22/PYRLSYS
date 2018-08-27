@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Contracts\IUserService;
 use App\Entities\UserEntity;
+use App\Models\DepartmentAccess;
 use App\Models\User;
 use App\Models\UserAccess;
+use App\Models\UserRole;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,11 +31,19 @@ class UserService extends EntityService implements IUserService {
         $entity->password = $model->password;
         $entity->admin = $model->admin;
 
-        if (sizeof($model->accesses) != 0) {
+        if ($model->accesses != null && sizeof($model->accesses) != 0) {
             $entity->accesses = array();
 
             foreach ($model->accesses as $access) {
                 $entity->accesses[] = $access->user_role_id;
+            }
+        }
+
+        if ($model->departmentAccesses != null && sizeof($model->departmentAccesses) != 0) {
+            $entity->departmentAccesses = array();
+
+            foreach ($model->departmentAccesses as $departmentAccess) {
+                $entity->departmentAccesses[] = $departmentAccess->category_id;
             }
         }
 
@@ -118,6 +128,15 @@ class UserService extends EntityService implements IUserService {
             }
         }
 
+        if (sizeof($user->departmentAccesses) != 0) {
+            foreach($user->departmentAccesses as $departmentAccess) {
+                $acc = new DepartmentAccess();
+                $acc->user_id = $id;
+                $acc->category_id = $departmentAccess;
+                $acc->save();
+            }
+        }
+
     }
 
 
@@ -138,7 +157,6 @@ class UserService extends EntityService implements IUserService {
         $model->save();
 
         $userAccesses = $user->accesses;
-
         UserAccess::where('user_id', $id)->delete();
         if (sizeof($userAccesses) != 0) {
 
@@ -146,6 +164,19 @@ class UserService extends EntityService implements IUserService {
                 $userAccess = new UserAccess();
                 $userAccess->user_id = $id;
                 $userAccess->user_role_id = $access;
+                $userAccess->save();
+            }
+
+        }
+
+        $departmentAccess = $user->departmentAccesses;
+        DepartmentAccess::where('user_id', $id)->delete();
+        if (sizeof($departmentAccess) != 0) {
+
+            foreach ($departmentAccess as $access) {
+                $userAccess = new DepartmentAccess();
+                $userAccess->user_id = $id;
+                $userAccess->category_id = $access;
                 $userAccess->save();
             }
 
@@ -168,6 +199,49 @@ class UserService extends EntityService implements IUserService {
 
         return $accesses;
 
+    }
+
+    public function hasAccess($id, $pageKey) {
+
+        if ($this->easyCheckIfAdmin($id))
+            return true;
+
+        $userRole = UserRole::where('roleKey', $pageKey)->first();
+
+        if ($userRole == null)
+            return false;
+
+        $access = UserAccess::where('user_id', $id)->where('user_role_id', $userRole->id)->first();
+
+        if ($access == null)
+            return false;
+
+        return true;
+    }
+
+    public function getDepartmentAccess($id) {
+
+
+        $departmentAccesses = DepartmentAccess::where('employee_id', $id);
+        if ($departmentAccess == null)
+            return array();
+
+        $accesses = array();
+
+        foreach ($departmentAccesses as $access) {
+            $accesses[$access->category_id] = $access->category_id;
+        }
+
+        return $accesses;
+    }
+
+    private function easyCheckIfAdmin($id) {
+        $user = User::where('id', $id)->where('admin', true)->first();
+
+        if ($user == null)
+            return false;
+
+        return true;
     }
 
 }

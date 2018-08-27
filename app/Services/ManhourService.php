@@ -189,6 +189,7 @@ class ManhourService extends EntityService implements IManhourService {
         $actualHours = 0;
         $recordHours = 0;
         $otHours = 0;
+        $ndHours = 0;
         $overtimeCounted = false;
         if ($record->timeIn != null && $record->timeOut != null) {
             // Get employee schedule
@@ -209,7 +210,11 @@ class ManhourService extends EntityService implements IManhourService {
             if ($scheduledTimeIn_ != null && $timeIn_ <= $scheduledTimeIn_) {
                 $actualTimeIn = $scheduledTimeIn_;
             }
-            if ($scheduledTimeOut_ != null && $timeOut_ >= $scheduledTimeOut_) {
+            if ($timeIn_ < $timeOut_) {
+                if ($scheduledTimeOut_ != null && $timeOut_ >= $scheduledTimeOut_) {
+                    $actualTimeOut = $scheduledTimeOut_;
+                }
+            } else {
                 $actualTimeOut = $scheduledTimeOut_;
             }
 
@@ -233,12 +238,15 @@ class ManhourService extends EntityService implements IManhourService {
             $summary->undertime = '';
             // If Under time
             if ($scheduledTimeOut != null) {
-                if ($scheduledTimeOut > $timeOut) {
+                if ($scheduledTimeOut > $timeOut && $timeIn < $timeOut) {
                     $summary->timeOut = '';
                     $summary->undertime = date_format($timeOut, 'h:i A');
                 }
             }
 
+            $otStartTime_;
+            $otEndTime_;
+            $overtimeCounted = false;
             // Check if OT is counted
             if($otRequest != null) {
 
@@ -246,7 +254,9 @@ class ManhourService extends EntityService implements IManhourService {
                 $otStartTime_ = strtotime($otRequest[0]->startTime);
                 $otEndTime_ = strtotime($otRequest[0]->endTime);
 
-                if ($timeOut_ > $scheduledTimeOut_ && $otStartTime_ < $timeOut_) {
+
+                if (($timeOut_ > $scheduledTimeOut_ && $otStartTime_ < $timeOut_ && $timeIn_ < $timeOut_)
+                || ($otStartTime_ > $timeOut_ && $timeIn_ > $timeOut_)) {
                     $overtimeCounted = true;
                     $otHours =  $otRequest[0]->allowedHours;
 
@@ -261,6 +271,38 @@ class ManhourService extends EntityService implements IManhourService {
 
                 }
             }
+
+            $totalTimeIn = $actualTimeIn;
+            $totalTimeOut = $actualTimeOut;
+            if ($overtimeCounted) {
+                $totalTimeOut = $otEndTime_;
+            }
+
+            // Check for Night Differential
+            $ndTimeStart = 0;
+            $ndTimeEnd = 0;
+            if (($totalTimeOut > strtotime('22:00:00') && $totalTimeOut <= strtotime('23:59:00'))
+            || ($totalTimeIn > strtotime('22:00:00') && $totalTimeIn <= strtotime('23:59:00'))
+            || ($totalTimeOut >= strtotime('00:00:00') && $totalTimeOut < strtotime('04:00:00'))) {
+
+                if ($totalTimeIn < strtotime('22:00:00')) {
+                    $ndTimeStart = strtotime('22:00:00');
+                }
+                else {
+                    $ndTimeStart = $totalTimeIn;
+                }
+
+                if ($totalTimeOut > strtotime('04:00:00')) {
+                    $ndTimeEnd = strtotime('04:00:00');
+                }
+                else {
+                    $ndTimeEnd = $totalTimeOut;
+                }
+                 // Get ND hours
+                $x = ($ndTimeEnd - $ndTimeStart) / 3600;
+                $ndHours = floor($x * 2) / 2;
+                $ndHours = $ndHours < 0 ? (24 + $ndHours) : $ndHours;
+            }
         }
         else {
             $summary->timeIn = 'A';
@@ -270,7 +312,8 @@ class ManhourService extends EntityService implements IManhourService {
 
         $summary->totalHours = $actualHours;
         $summary->otHours = $otHours;
-        $summary->regularHours = $actualHours - $otHours;
+        $summary->regularHours = $actualHours;// - $otHours;
+        $summary->nd = $ndHours;
 
         $summary->rot = '';
         $summary->sot = '';

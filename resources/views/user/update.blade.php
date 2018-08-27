@@ -19,6 +19,7 @@ Update User
                 <div class="col-12 form-paper section-title">
                     Credentials
                 </div>
+                <div class="col-12 form-paper section-divider"></div>
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label for="fullName" class="form-paper-label">Full Name:</label>
@@ -70,9 +71,11 @@ Update User
                         </div>
                     </div>
                 </div>
+                <div class="col-12 form-paper section-divider"></div>
             </div>
             <div class="row">
                 <div class="col-12 form-paper section-title">User Access</div>
+                <div class="col-12 form-paper section-divider"></div>
                 <div class="col-12 form-paper">
                     <div class="form-check mt-2">
                         <input type="checkbox" id="isAdmin" class="form-check-input" name="admin" {{ ($user->admin == 1) ? 'checked' : '' }} />
@@ -100,9 +103,38 @@ Update User
                     </div>
 
                 </div>
+                <div class="col-12 form-paper section-divider"></div>
+
+
+                <div class="col-12 form-paper section-title">Department Access</div>
+                <div class="col-12 form-paper section-divider"></div>
+                <div class="col-12 form-paper">
+                    <div class="form-group">
+
+                        @for ($i = 0; $i < sizeof($categories); $i++)
+                        <?php
+
+                        $isChecked = '';
+                        $categoryId = $categories[$i]->id;
+
+                        if ($user->departmentAccesses != null && in_array($categoryId, $user->departmentAccesses))
+                            $isChecked = 'checked';
+                        ?>
+
+                        <div class="form-check">
+                            <input type="hidden" name="department_accesses[{{ $i }}][id]" value="{{ $categories[$i]->id }}" />
+                            <input type="checkbox" id="{{ $categories[$i]->value }}" class="form-check-input" name="department_accesses[{{ $i }}][key]" {{$isChecked}}/>
+                            <label for="{{ $categories[$i]->value }}">{{ $categories[$i]->value }}</label>
+                        </div>
+                        @endfor
+
+                    </div>
+                </div>
+
             </div>
 
-            <div class="fixed-bottom m-4">
+            <div class="m-4">&nbsp;</div>
+            <div class="fixed-bottom btn-container m-4">
                 <div class="float-right">
                     <div class="btn-group">
                         <a href="{{ action('UserController@index') }}" class="btn btn-light">Back to List</a>

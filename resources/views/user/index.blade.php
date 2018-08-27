@@ -36,7 +36,11 @@ All Users
                     <td>
                         <span class="btn-group">
                             <a role="button" class="btn btn-sm btn-light" href="{{ action('UserController@updateUser', $user->id) }}">Edit</a>
-                            <a role="button" class="btn btn-sm btn-light" href="{{ action('UserController@deleteUser', $user->id) }}">Delete</a>
+                            <form action="{{ route('user.delete', $user->id) }}" method="POST">
+                                @csrf
+                                @method('post')
+                                <input type="submit" class="btn btn-sm btn-light" value="Delete" />
+                            </form>
                         </span>
                     </td>
                 </tr>

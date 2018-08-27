@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Contracts\ICategoryService;
+use App\Contracts\IUserService;
 use App\Entities\CategoryEntity;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     private $categoryService;
+    private $userService;
     private $key;
+    private $pageKey = 'accountsmanagement';
 
-    public function __construct(ICategoryService $categoryService) {
+    public function __construct(ICategoryService $categoryService, IUserService $userService) {
         $this->categoryService = $categoryService;
-        //$this->key = 'department';
-        //$this->setKey($this->key);
+        $this->userService = $userService;
     }
 
     private function setKey($key) {
@@ -28,6 +31,7 @@ class CategoryController extends Controller
     }
 
     public function categories() {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $categories = $this->categoryService->getAllCategories();
         return view('category.category', compact('categories'));
     }
@@ -47,7 +51,9 @@ class CategoryController extends Controller
 
     public function index($key) {
 
-        $categories = $this->categoryService->getCategories($key);
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $categories = $this->categoryService->getCategoriesNofilter($key);
 
         if ($categories === null)
             return view('layout.404');
@@ -61,6 +67,7 @@ class CategoryController extends Controller
 
     public function create()
     {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         return view('category.add');
     }
 
@@ -89,6 +96,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $category = $this->categoryService->getCategoryById($id);
         return view('category.show', compact('category'));
     }
@@ -96,6 +104,7 @@ class CategoryController extends Controller
 
     public function edit($id)
     {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $category = $this->departmentService->getCategoryById($id);
         return view('category.edit', compact('category'));
     }

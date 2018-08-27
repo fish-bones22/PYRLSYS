@@ -30,13 +30,13 @@ class PayrollService implements IPayrollService {
 
         $day = date_format($date, 'd');
         $monthYear  = date_format($date, 'Y-m');
-        $endDate = 16;
+        $endDate = 15;
         // Get proper date start
-        if ($day <= 16) {
+        if ($day <= 15) {
             $day = 1;
         }
         else {
-            $day = 17;
+            $day = 16;
             $endDate = date_format($date, 't');
         }
 
@@ -48,6 +48,8 @@ class PayrollService implements IPayrollService {
         $payroll = new PayrollEntity();
         $basicPay = 0;
         $otPay = 0;
+        $rotPay = 0;
+        $ndPay = 0;
         $totalAllowance = 0;
         $regularHours = 0;
         $totalOtHours = 0;
@@ -82,6 +84,13 @@ class PayrollService implements IPayrollService {
             $otMultiplier = $this->getOtMultiplier($manhour);
             $otDetails = $this->getOtDetails($manhour, $otDetails, $rate);
 
+            if ($otMultiplier['multiplier'] === 1.25) {
+                $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $rate);
+            }
+            if ($otMultiplier['multiplier'] === 0.1) {
+                $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $rate);
+            }
+
             $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $rate);
             $totalOtHours += $otMultiplier['value'];
 
@@ -89,6 +98,8 @@ class PayrollService implements IPayrollService {
 
         $payroll->basicPay = $basicPay;
         $payroll->otPay = $otPay;
+        $payroll->rotPay = $rotPay;
+        $payroll->ndPay = $ndPay;
         $payroll->otDetails = $otDetails;
         $payroll->allowance = $totalAllowance;
 
@@ -158,6 +169,13 @@ class PayrollService implements IPayrollService {
             ];
         }
 
+        if ($manhour->nd != ''){
+            return [
+                'multiplier' => 0.1,
+                'value' => $manhour->nd
+            ];
+        }
+
         return [
             'multiplier' => 1,
             'value' => 0
@@ -197,21 +215,21 @@ class PayrollService implements IPayrollService {
         $details['xsot']  += ($model->xsot != null ? $model->xsot : 0);
         $details['lhot'] += ($model->lhot != null ? $model->lhot : 0);
         $details['xlhot'] += ($model->xlhot != null ? $model->xlhot : 0);
-        $details['nd'] += ($model->xlhot != null ? $model->xlhot : 0);
+        $details['nd'] += ($model->nd != null ? $model->nd : 0);
 
         $details['rotrate']  += ($model->rot != null ? $model->rot*$rate*1.25 : 0);
         $details['sotrate']  += ($model->sot != null ? $model->sot*$rate*1.3 : 0);
         $details['xsotrate']  += ($model->xsot != null ? $model->xsot*$rate*1.69 : 0);
         $details['lhotrate'] += ($model->lhot != null ? $model->lhot*$rate*2 : 0);
         $details['xlhotrate'] += ($model->xlhot != null ? $model->xlhot*$rate*2.69 : 0);
-        $details['ndrate'] += ($model->xlhot != null ? $model->xlhot*$rate*0.1 : 0);
+        $details['ndrate'] += ($model->nd != null ? $model->nd*$rate*0.1 : 0);
         return $details;
     }
 
     private function getDeductibles($employeeId, $date) {
 
         $monthYear = date_format($date, 'Y-m');
-        $startDay = date_format($date, 'd') <= 16 ? '01' : '17';
+        $startDay = date_format($date, 'd') <= 15 ? '01' : '16';
 
         $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($employeeId, $monthYear.'-'.$startDay);
         $summary = array();
@@ -229,7 +247,7 @@ class PayrollService implements IPayrollService {
     private function getAdjustments($employeeId, $date) {
 
         $monthYear = date_format($date, 'Y-m');
-        $startDay = date_format($date, 'd') <= 16 ? '01' : '17';
+        $startDay = date_format($date, 'd') <= 15 ? '01' : '16';
 
         $records = $this->adjustmentsRecordService->getEmployeeAdjustmentsOnDate($employeeId, $monthYear.'-'.$startDay);
         $summary = array();

@@ -7,6 +7,20 @@
     transition: ease-in-out 0.1s;
 }
 
+.tile-selection:hover .tile-icon {
+    opacity: 0.8;
+}
+
+.tile-selection.disabled {
+    color: gray;
+    cursor: default;
+    background-color: gainsboro;
+}
+
+.tile-selection.disabled .tile-icon {
+    opacity: 0.3;
+}
+
 .tile-logo {
     width:10em;
 }
@@ -21,9 +35,6 @@
         width:2em;
         transition: ease-in-out 0.1s;
     }
-    .tile-selection:hover .tile-icon {
-        opacity: 0.8;
-    }
 
 }
 
@@ -31,9 +42,6 @@
     .tile-icon {
         width:4em;
         transition: ease-in-out 0.1s;
-    }
-    .tile-selection:hover .tile-icon {
-        opacity: 0.8;
     }
 
 }
@@ -43,9 +51,6 @@
         width:5em;
         transition: ease-in-out 0.1s;
     }
-    .tile-selection:hover .tile-icon {
-        opacity: 0.8;
-    }
 
 }
 
@@ -54,9 +59,6 @@
         width:8em;
         transition: ease-in-out 0.1s;
     }
-    .tile-selection:hover .tile-icon {
-        opacity: 0.8;
-    }
 
 }
 
@@ -64,9 +66,6 @@
     .tile-icon {
         width:10em;
         transition: ease-in-out 0.1s;
-    }
-    .tile-selection:hover .tile-icon {
-        opacity: 0.8;
     }
 
 }

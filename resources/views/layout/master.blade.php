@@ -19,6 +19,7 @@
         </button>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
+                @if(AuthUtility::hasAuth('accountsmanagement'))
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" id="humanResourceDropdown" data-toggle="dropdown">Administrator</a>
                     <div class="dropdown-menu">
@@ -26,6 +27,8 @@
                         <a class="dropdown-item" href="{{ action('CategoryController@manage', 'department') }}">Departments</a>
                     </div>
                 </li>
+                @endif
+                @if(AuthUtility::hasAuth('humanresourcemanagement'))
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" id="humanResourceDropdown" data-toggle="dropdown">Human Resource</a>
                     <div class="dropdown-menu">
@@ -33,6 +36,8 @@
                         <a class="dropdown-item" href="{{ action('ApplicantController@index') }}">Applicants</a>
                     </div>
                 </li>
+                @endif
+                @if(AuthUtility::hasAuth('manhourmanagement'))
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" data-target="#manhourDropdown">Manhour</a>
                     <div class="dropdown-menu" id="manhourDropdown">
@@ -42,13 +47,17 @@
                         <a class="dropdown-item" href="{{ action('OtRequestController@index') }}" role="button">OT Requests</a>
                     </div>
                 </li>
+                @endif
+                @if(AuthUtility::hasAuth('payrollmanagement'))
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" data-target="#payrollDropdown">Payroll</a>
                     <div class="dropdown-menu" id="payrollDropdown">
                         <a class="dropdown-item" href="{{ action('PayrollController@index') }}">Masterlist</a>
+                        <a class="dropdown-item" href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Payroll Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Benefits Records</a>
                     </div>
                 </li>
+                @endif
             </ul>
             <div class="ml-auto">
                 <a href="{{ action('UserController@logout') }}" class="btn btn-outline-light float-right">Log out</a>

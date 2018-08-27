@@ -15,6 +15,7 @@ class ManhourController extends Controller
     private $otRequestService;
     private $employeeService;
     private $categoryService;
+    private $pageKey = 'manhourmanagement';
 
     public function __construct(IManhourService $manhourService, IOtRequestService $otRequestService, IEmployeeService $employeeService, ICategoryService $categoryService) {
         $this->manhourService = $manhourService;
@@ -72,7 +73,7 @@ class ManhourController extends Controller
         $day = '01';
         $period = $request->get('period');
         if ($period !== 'second')
-            $day = '17';
+            $day = '16';
 
         return redirect()->action('ManhourController@viewRecord', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
 
@@ -80,14 +81,17 @@ class ManhourController extends Controller
 
 
     public function viewRecord($id, $year = null, $month = null, $day = null) {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $startDay;
         $endDay;
-        if ($day <= 16) {
+        if ($day <= 15) {
             $startDay = '1';
-            $endDay = 16;
+            $endDay = 15;
         }
         else {
-            $startDay = 17;
+            $startDay = 16;
             $endDay = date_format(now(), 't'); // End of month
         }
         $datefrom = date_create($year.'-'.$month.'-'.$startDay);
@@ -161,6 +165,8 @@ class ManhourController extends Controller
 
 
     public function input($id = null) {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         if ($id == null) {
             return redirect()->action('ManhourController@getNext', 0);

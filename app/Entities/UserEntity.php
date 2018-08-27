@@ -10,5 +10,6 @@ class UserEntity extends Entity {
     public $password;
     public $admin;
     public $accesses;
+    public $departmentAccesses;
 
 }

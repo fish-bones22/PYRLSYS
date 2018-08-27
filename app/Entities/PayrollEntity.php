@@ -7,10 +7,14 @@ class PayrollEntity extends Entity {
     public $rate;
     public $regularHours;
     public $otHours;
+    public $rotHours;
+    public $ndHours;
     public $totalHours;
 
     public $basicPay;
     public $otPay;
+    public $rotPay;
+    public $ndPay;
     public $allowance;
     public $grossPay;
     public $netPay;

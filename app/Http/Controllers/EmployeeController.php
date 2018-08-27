@@ -18,6 +18,7 @@ class EmployeeController extends Controller
 {
     protected $employeeService;
     protected $categoryService;
+    private $pageKey = 'humanresourcemanagement';
 
     public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService) {
 
@@ -28,6 +29,7 @@ class EmployeeController extends Controller
 
     public function index() {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $employees = $this->employeeService->getAllEmployees();
 
         return view('employee.index', compact('employees'));
@@ -40,8 +42,34 @@ class EmployeeController extends Controller
         return redirect()->action('EmployeeController@show', 0);
     }
 
+    public function view($id) {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $categories = array();
+
+        $categories['department'] = $this->categoryService->getCategories('department');
+        $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
+        $categories['contractstatus'] = $this->categoryService->getCategories('contractstatus');
+        $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
+        $categories['paymentmode'] = $this->categoryService->getCategories('paymentmode');
+
+        if ($id == 0) {
+            return view('employee.view', ['employee' => new EmployeeEntity(), 'categories' => $categories]);
+        }
+
+        $employee= $this->employeeService->getEmployeeById($id);
+
+        if ($employee == null)
+            return redirect()->action('EmployeeController@index');
+
+
+        return view('employee.view', ['employee' => $employee, 'categories' => $categories]);
+
+    }
+
     public function show($id = 0) {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $categories = array();
 
         $categories['department'] = $this->categoryService->getCategories('department');
