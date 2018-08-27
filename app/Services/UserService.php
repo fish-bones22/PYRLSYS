@@ -19,6 +19,8 @@ class UserService extends EntityService implements IUserService {
         $users = User::all();
         $userEntities = array();
         foreach ($users as $user) {
+            if ($user->username === 'dev')
+                continue;
             $userEntities[] = $this->mapToEntity($user, new UserEntity());
         }
         return $userEntities;
