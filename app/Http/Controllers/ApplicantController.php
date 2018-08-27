@@ -99,7 +99,6 @@ class ApplicantController extends Controller
         $applicant->sex = $req['sex'];
 
         $applicant->details = $this->detailsToEntity($req);
-        // $applicant->employmentDetails = $this->employmentDetailsToEntity($req);
         $applicant->deductibles = $this->deductiblesToEntity($req);
 
         if ($id != 0) {
@@ -138,7 +137,8 @@ class ApplicantController extends Controller
         }
 
 
-        return redirect()->action('ApplicantController@new')->with('success', '');
+        // return redirect()->action('ApplicantController@new')->with('success', '');
+        return redirect()->action('ApplicantController@success');
 
     }
 
@@ -149,8 +149,18 @@ class ApplicantController extends Controller
         if (!$result['result'])
             return redirect()->action('ApplicantController@index')->with('error', $result['message']);
 
-        return redirect()->action('ApplicantController@index')->with('success', '');
+        return redirect()->action('ApplicantController@index')->with('success', 'Delete successful');
 
+    }
+
+
+    public function deleteAll() {
+        $this->employeeService->deleteAllApplicant();
+        return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
+    }
+
+    public function success() {
+        return view('applicant.success');
     }
 
 

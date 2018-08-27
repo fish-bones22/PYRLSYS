@@ -516,7 +516,7 @@
                     <div class="col-md-3 col-7 form-paper">
                         <div class="form-group">
                             <label for="newDepartment" class="form-paper-label">Department</label>
-                            <select id="newDepartment" name="department" class="form-control">
+                            <select id="newDepartment" name="department" class="form-control" onchange="updateTimeInTimeOutOnModal(this)">
                                 <option></option>
                                 @foreach($categories['department'] as $category)
                                 <option value="{{ $category->id }}" >{{ $category->value }}</option>
@@ -603,14 +603,14 @@
                 <div class="row">
                     <div class="col-sm-6 form-paper">
                         <div class="form-group">
-                            <label for="timeIn" class="form-paper-label">Time In</label>
-                            <input id="timeIn" type="time" name="time_in" class="form-control" required />
+                            <label for="timeInModal" class="form-paper-label">Time In</label>
+                            <input id="timeInModal" type="time" name="time_in" class="form-control" required />
                         </div>
                     </div>
                     <div class="col-md-6 form-paper">
                         <div class="form-group">
-                            <label for="timeOut" class="form-paper-label">Time Out</label>
-                            <input id="timeOut" type="time" name="time_out" class="form-control"  required />
+                            <label for="timeOutModal" class="form-paper-label">Time Out</label>
+                            <input id="timeOutModal" type="time" name="time_out" class="form-control"  required />
                         </div>
                     </div>
                     <div class="col-12 form-paper section-divider"></div>
@@ -637,18 +637,20 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="row">
-                <div class="col-12 form-paper section-title">Transfer History
+                <div class="col-12 form-paper section-title"><span id="title">{{ $employee->fullName }} - Transfer History</span>
                     <button type="button" class="close" data-dismiss='modal'>&times;</button>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
             <div class="row">
                 <div class="col-12 form-paper">
-                    <table class="table table-sm" style="font-size:0.8em;">
+                    <table class="table table-sm" style="font-size:0.75em;" id="transferHistoryTable">
                         <thead>
                             <tr>
                                 <th rowspan="2">ID</th>
-                                <th rowspan="2">Name</th>
+                                <th rowspan="2">Last Name</th>
+                                <th rowspan="2">First Name</th>
+                                <th rowspan="2">Middle Name</th>
                                 <th colspan="3">Current</th>
                                 <th colspan="3">New</th>
                                 <th rowspan="2">Date Started</th>
@@ -667,7 +669,9 @@
                             @for ($i = 0; $i < sizeof($employee->history); $i++)
                             <tr>
                                 <td>{{ $employee->employeeId }}</td>
-                                <td>{{ $employee->fullName }}</td>
+                                <td>{{ $employee->lastName }}</td>
+                                <td>{{ $employee->firstName }}</td>
+                                <td>{{ $employee->middleName }}</td>
                                 <td>{{ $employee->history[$i]['department']['displayName'] }}</td>
                                 <td>{{ $employee->history[$i]['position'] }}</td>
                                 <td>{{ $employee->history[$i]['timecard'] }}</td>
@@ -686,6 +690,19 @@
                             @endfor
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 form-paper">
+                    <div class="form-group">
+                        <div class="float-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary" onclick="saveAsPDF()">Save as PDF</button>
+                                <button type="button" class="btn btn-secondary" onclick="saveAsExcel()">Save as Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">&nbsp;</div>
                 </div>
             </div>
         </div>

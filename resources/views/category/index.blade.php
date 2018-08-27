@@ -1,5 +1,9 @@
 @extends('layout.master')
 
+@section('style')
+<link href="{{ asset('vendors/timepicki/css/timepicki.css') }}" media="all" rel="stylesheet" type="text/css" />
+@stop
+
 @section('title')
 <?php
     // $displayName =  is_array($categories) && sizeof($categories) != 0 ? $categories['key'] : 'Category';
@@ -100,5 +104,6 @@
 @stop
 
 @section('script')
+<script src="{{ asset('vendors/timepicki/js/timepicki.js') }}"></script>
 <script src="{{ asset('js/categories.js') }}"></script>
 @stop

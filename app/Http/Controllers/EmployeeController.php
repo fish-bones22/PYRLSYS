@@ -153,8 +153,13 @@ class EmployeeController extends Controller
         if (!$result['result'])
             return redirect()->action('EmployeeController@index')->with('error', $result['message']);
 
-        return redirect()->action('EmployeeController@index')->with('success', '');
+        return redirect()->action('EmployeeController@index')->with('success', 'Delete successful');
 
+    }
+
+    public function deleteAll() {
+        $this->employeeService->deleteAllEmployee();
+        return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
     }
 
     public function transferEmployee(Request $request, $id) {

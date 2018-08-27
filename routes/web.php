@@ -35,6 +35,7 @@ Route::post('categories', 'CategoryController@setCategory');
 // Route::resource('employee', 'EmployeeController');
 Route::get('employees', 'EmployeeController@index');
 Route::get('employee/new', 'EmployeeController@show')->name('employee.new');
+Route::post('employee/deleteall', 'EmployeeController@deleteAll')->name('employee.deleteall');
 Route::get('employee/view/{id}', 'EmployeeController@view');
 Route::get('employee/{id}', 'EmployeeController@show');
 Route::post('employee/{id}', 'EmployeeController@update');
@@ -46,7 +47,9 @@ Route::post('employee/transferemployee/{id}', 'EmployeeController@transferEmploy
 
 Route::get('applicants', 'ApplicantController@index');
 Route::get('application-form', 'ApplicantController@new');
+Route::get('application-success', 'ApplicantController@success');
 Route::post('application-form/{id}', 'ApplicantController@update');
+Route::post('applicant/deleteall', 'ApplicantController@deleteAll')->name('applicant.deleteall');
 Route::get('applicant/{id}', 'ApplicantController@show');
 Route::get('applicant-process/{id}', 'ApplicantController@process');
 Route::get('applicant-hire/{id}', 'ApplicantController@hire');

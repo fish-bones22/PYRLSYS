@@ -280,10 +280,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
         if (!$res['result'])
             return $res;
 
-        $res = $this->addEmploymentHistory($id, $entity->current);
+        if ($employee->employeeId != null && $employee->employeeId != '') {
+            $res = $this->addEmploymentHistory($id, $entity->current);
 
-        if (!$res['result'])
-            return $res;
+            if (!$res['result'])
+                return $res;
+        }
 
         $res = $this->saveDeductibles($id, $entity->deductibles);
 
@@ -328,10 +330,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
         if (!$res['result'])
             return $res;
 
-        $res = $this->updateEmploymentHistory($id, $entity->current);
+        if ($entity->employeeId != null && $entity->employeeId != '') {
+            $res = $this->updateEmploymentHistory($id, $entity->current);
 
-        if (!$res['result'])
-            return $res;
+            if (!$res['result'])
+                return $res;
+        }
 
         $res = $this->saveDeductibles($id, $entity->deductibles);
 
@@ -808,6 +812,22 @@ class EmployeeService extends EntityService implements IEmployeeService {
         return [
             'result' => true
         ];
+    }
+
+    public function deleteAllEmployee() {
+        $employee = Employee::whereNotNull('employeeId', null);
+        foreach ($employee as $emp) {
+            $emp->delete();
+        }
+    }
+
+
+
+    public function deleteAllApplicant() {
+        $employee = Employee::whereNull('employeeId', null);
+        foreach ($employee as $emp) {
+            $emp->delete();
+        }
     }
 
 

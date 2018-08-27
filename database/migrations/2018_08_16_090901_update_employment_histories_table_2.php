@@ -19,7 +19,7 @@ class UpdateEmploymentHistoriesTable2 extends Migration
             $table->unsignedInteger('paymenttype')->nullable();
             $table->unsignedInteger('paymentmode')->nullable();
             $table->decimal('rate');
-            $table->decimal('allowance');
+            $table->decimal('allowance')->nullable();
             $table->time('timein');
             $table->time('timeout');
 

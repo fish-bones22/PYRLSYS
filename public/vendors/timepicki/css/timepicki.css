@@ -22,8 +22,8 @@ Author: senthil
 	font-weight: 700;
 }
 
-.prev,
-.next {
+.time_pick .prev,
+.time_pick .next {
 	cursor: pointer;
 	padding: 10px 14px;
 	width: 28%;
@@ -31,16 +31,16 @@ Author: senthil
     background-size: auto;
 }
 
-.prev:hover,
-.next:hover {
+.time_pick .prev:hover,
+.time_pick .next:hover {
 	background-color: #ccc;
 }
 
-.next {
+.time_pick .next {
 	background-position: 50% 105%;
 }
 
-.prev {
+.time_pick .prev {
 	background-position: 50% -10%;
 }
 

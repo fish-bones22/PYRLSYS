@@ -72,14 +72,14 @@ Applicants
                         <a href="{{ action('ApplicantController@hire', ['id' => $app->id ]) }}" class="btn btn-sm btn-secondary">Hire</a>
 
                         @else
-
+                        <a href="{{ action('EmployeeController@show', ['id' => $app->id ]) }}" class="btn btn-sm btn-secondary">Assign</a>
                         @endif
                     </td>
                     <td>
                         <form action="{{ route('applicant.destroy', $app->id) }}" method="POST">
                             @csrf
                             @method('delete')
-                            <button type="submit" class="close">&times;</button>
+                            <button type="submit" class="close" data-confirm="delete">&times;</button>
                         </form>
 
                     </td>
@@ -88,6 +88,19 @@ Applicants
             </tbody>
         </table>
 
+    </div>
+</div>
+
+<div class="m-4">&nbsp;</div>
+<div class="fixed-bottom btn-container m-4">
+    <div class="float-right">
+        <div class="btn-group">
+            <form action="{{ route('applicant.deleteall') }}" method="POST">
+                @csrf
+                @method('post')
+                <input type="submit" class="btn btn-primary" data-confirm="delete all" value="Delete All"/>
+            </form>
+        </div>
     </div>
 </div>
 

@@ -43,7 +43,7 @@ Employee
                             <form action="{{ route('employee.delete', $emp->id) }}" method="post">
                                 @csrf
                                 @method('post')
-                                <input class="btn btn-sm btn-secondary" type="submit" value="Delete" />
+                                <input class="btn btn-sm btn-secondary" data-confirm="delete" type="submit" value="Delete" />
                             </form>
                         </div>
                     </td>
@@ -51,6 +51,18 @@ Employee
                 @endforeach
             </tbody>
         </table>
+    </div>
+</div>
+<div class="m-4">&nbsp;</div>
+<div class="fixed-bottom btn-container m-4">
+    <div class="float-right">
+        <div class="btn-group">
+            <form action="{{ route('employee.deleteall') }}" method="POST">
+                @csrf
+                @method('post')
+                <input type="submit" class="btn btn-primary" data-confirm="delete all" value="Delete All"/>
+            </form>
+        </div>
     </div>
 </div>
 

@@ -39,7 +39,7 @@ All Users
                             <form action="{{ route('user.delete', $user->id) }}" method="POST">
                                 @csrf
                                 @method('post')
-                                <input type="submit" class="btn btn-sm btn-light" value="Delete" />
+                                <input type="submit" class="btn btn-sm btn-light" data-confirm="delete" value="Delete" />
                             </form>
                         </span>
                     </td>

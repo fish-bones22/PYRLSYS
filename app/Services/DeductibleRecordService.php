@@ -109,6 +109,8 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $recordEntities = array();
 
         foreach ($records as $record) {
+            if ($record === null || $record->employee === null)
+                continue;
             $recordEntities[] = $this->mapToEntity($record, new DeductibleRecordEntity());
         }
 
