@@ -4,6 +4,13 @@ namespace App\Entities;
 
 class PayrollEntity extends Entity {
 
+    public $employeeId;
+    public $employeeName;
+    public $employeeDepartment;
+    public $dateStart;
+    public $dateEnd;
+    public $period;
+
     public $rate;
     public $regularHours;
     public $otHours;

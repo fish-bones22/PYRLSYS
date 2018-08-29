@@ -118,4 +118,19 @@ class PayrollController extends Controller
         $departments = $this->categoryService->getCategories('department');
         return view('payroll.summary', ['departments' => $departments, 'employees' => $employees, 'details' => $details, 'summary' => $summary]);
     }
+
+    public function getPay($id, $date) {
+
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $startDay = $day <= 15 ? '01' : '16';
+        $date = $year.'-'.$month.'-'.$startDay;
+
+
+        $payroll = $this->payrollService->getPayroll($id, date_create($date));
+        return json_encode($payroll);
+
+    }
 }

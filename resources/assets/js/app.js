@@ -14,6 +14,7 @@ require('datatables.net-buttons/js/buttons.html5');
 window.JSZip = require('jszip/dist/jszip.min.js');
 window.vfs = require('pdfmake/build/vfs_fonts.js');
 window.pdfMake = require('pdfmake/build/pdfmake.min.js');
+window.jsPDF = require('jspdf/dist/jspdf.min.js')
 
 window.moment = require('moment');
 

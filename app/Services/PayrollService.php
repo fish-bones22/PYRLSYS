@@ -44,8 +44,16 @@ class PayrollService implements IPayrollService {
         if ($employee == null)
             return null;
 
-
         $payroll = new PayrollEntity();
+
+        $payroll->employeeId = $employee->employeeId;
+        $payroll->employeeName = $employee->fullName;
+        $payroll->employeeDepartment = $employee->current['department']['displayName'];
+        $payroll->dateStart = $monthYear.'-'.$day ;
+        $payroll->dateEnd = $monthYear.'-'.$endDate ;
+        $payroll->period =  date_format($date, 'M').' '.$day.'-'.$endDate.', '.date_format($date, 'Y');
+        $payroll->rate = $employee->current['rate'];
+
         $basicPay = 0;
         $otPay = 0;
         $rotPay = 0;
