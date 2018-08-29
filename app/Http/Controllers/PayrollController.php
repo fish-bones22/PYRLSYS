@@ -133,4 +133,18 @@ class PayrollController extends Controller
         return json_encode($payroll);
 
     }
+
+    public function getEmployees($date) {
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $startDay = $day <= 15 ? '01' : '16';
+        $date = $year.'-'.$month.'-'.$startDay;
+
+
+        $employees = $this->employeeService->getAllEmployees('lastname');
+        return json_encode($employees);
+
+    }
 }

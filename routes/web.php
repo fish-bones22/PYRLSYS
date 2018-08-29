@@ -79,6 +79,7 @@ Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@ge
 Route::get('payroll', 'PayrollController@index');
 Route::get('payroll/summary/{date}', 'PayrollController@summary');
 Route::post('payroll/summary', 'PayrollController@goToDateSummary')->name('payroll.gotodatesummary');
+Route::get('payroll/getemployees/{date}', 'PayrollController@getEmployees');
 Route::get('payroll/get/{id}/{date}', 'PayrollController@getPay');
 Route::get('payroll/{id}/{date}', 'PayrollController@viewPay');
 Route::get('payroll/{id}', 'PayrollController@viewNow');

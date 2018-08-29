@@ -4,6 +4,39 @@ var col2Margin = 0.7;
 var col2MarginWider = 0.8;
 var col3Margin = 1.5;
 var doc;
+var isDone = false;
+
+function printOne(id, date) {
+    isDone = true;
+    newDoc();
+    getJson(id, date);
+}
+
+function printAll(date) {
+
+    var emp;
+    console.log('printingall');
+
+    var url = '/payroll/getemployees/' + date;
+    $.ajax({
+        url: url,
+        contentType: 'text/plain',
+        dataType:"json",
+        success: function(result) {
+            console.log(result);
+            emp =  result;
+            size = Object.keys(emp).length;
+            newDoc();
+            for (var i = 0; i < size; i++) {
+                if (i === size-1) {
+                    isDone = true;
+                }
+                getJson(emp[i].id, date);
+                doc.setPage(i+1);
+            }
+        }
+    });
+}
 
 function getJson(id, date) {
 
@@ -20,13 +53,15 @@ function getJson(id, date) {
 
 }
 
-function mapJson(result) {
-
+function newDoc() {
     doc = new jsPDF({
         orientation: 'portrait',
         unit: 'in',
         format: [2, 6]
     });
+}
+
+function mapJson(result) {
 
     var logo = new Image;
     logo.src = "/images/logo-small.jpg";
@@ -154,7 +189,11 @@ function mapJson(result) {
     underline(col3Margin, i, 7);
     underline(col3Margin, i+0.025, 7);
 
-    save(doc);
+    if (isDone) {
+        save(doc);
+    } else {
+        doc.addPage();
+    }
 }
 
 
