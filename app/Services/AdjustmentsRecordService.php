@@ -30,6 +30,7 @@ class AdjustmentsRecordService extends EntityService implements IAdjustmentsReco
         $model->amount = $entity->amount;
         $model->remarks = $entity->remarks;
         $model->recordDate = $entity->recordDate;
+        // $model->taxSchedule = $entity->taxSchedule;
 
         try {
             $model->save();
@@ -79,6 +80,7 @@ class AdjustmentsRecordService extends EntityService implements IAdjustmentsReco
 
         $entity->amount = $model->amount;
         $entity->remarks = $model->remarks;
+        // $entity->taxSchedule = $model->taxSchedule;
 
         return $entity;
 

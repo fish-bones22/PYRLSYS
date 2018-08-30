@@ -224,30 +224,30 @@
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['contractstatus']['displayName']) ? $employee->current['contractstatus']['displayName'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-3 form-paper">
+                <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['paymenttype']['displayName']) ? $employee->current['paymenttype']['displayName'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-3 form-paper">
+                <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['paymentmode']['displayName']) ? $employee->current['paymentmode']['displayName'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-3 form-paper">
+                <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="ratePerHour" class="form-paper-label">Hourly rate</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['rate']) ? $employee->current['rate'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-sm-3 form-paper">
+                {{-- <div class="col-sm-3 form-paper">
                     <div class="form-group">
                         <label for="allowance" class="form-paper-label">Allowance</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['allowance']) ? $employee->current['allowance'] : 'None' }}</div>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="row">

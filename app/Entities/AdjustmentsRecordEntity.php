@@ -9,5 +9,6 @@ class AdjustmentsRecordEntity extends Entity {
     public $details;
     public $amount;
     public $remarks;
+    public $taxSchedule;
 
 }

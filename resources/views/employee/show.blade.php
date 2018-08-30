@@ -266,7 +266,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 form-paper">
+                <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
                         <select id="typeOfPayment" name="payment_type" class="form-control" value="{{ $employee->current != null &&  key_exists('paymenttype', $employee->current) ? $employee->current['paymenttype']['value'] : '' }}">
@@ -276,7 +276,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 form-paper">
+                <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
                         <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{  $employee->current != null && key_exists('paymentmode', $employee->current) ? $employee->current['paymentmode']['value'] : '' }}" >
@@ -286,18 +286,18 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3 form-paper">
+                <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="ratePerHour" class="form-paper-label">Hourly rate</label>
                         <input id="ratePerHour" type="number" name="rate" step="0.05" class="form-control" value="{{ $employee->current != null &&  key_exists('rate', $employee->current) ? $employee->current['rate'] : '' }}" required />
                     </div>
                 </div>
-                <div class="col-sm-3 form-paper">
+                {{-- <div class="col-sm-3 form-paper">
                     <div class="form-group">
                         <label for="allowance" class="form-paper-label">Allowance</label>
                         <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{  $employee->current != null && key_exists('allowance', $employee->current) ? $employee->current['allowance'] : '' }}" />
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="row">
