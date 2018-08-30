@@ -98,6 +98,16 @@ class UserService extends EntityService implements IUserService {
     }
 
 
+    public function usernameExists($username) {
+        $user = User::where('username', $username)->first();
+
+        if ($user == null)
+            return false;
+
+        return true;
+    }
+
+
     public function checkIfAdmin($username, $password) {
         $hashed = Hash::make($password);
         $user = User::where('username', $username)->where('admin', 1)->first();

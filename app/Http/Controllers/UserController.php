@@ -84,7 +84,12 @@ class UserController extends Controller {
         $req = $request->all();
 
         if ($req['password'] != $req['confirm_password'])
-            return view('user.register').with('error', 'Passwords do not match');
+            return redirect()->back()->withInputs($req)->with('error', 'Passwords do not match');
+
+        if ($this->userService->usernameExists($req['username'])) {
+            $request->flush();
+            return redirect()->back()->withInputs($request->all())->with('error', 'Username already in use');
+        }
 
         $user = new UserEntity();
         $user->fullName = $req['username'];

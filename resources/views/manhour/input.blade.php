@@ -15,8 +15,8 @@ Manhour Input
 @if (session('error') != null)
 <div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
 @endif
-@if (session('success') != null)
-<div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@if (isset($success))
+<div class="alert alert-success">{{ $success }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
 @endif
 
 <div class="row">

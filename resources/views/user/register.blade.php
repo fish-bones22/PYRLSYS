@@ -6,6 +6,13 @@ New User
 
 @section('content')
 
+@if (session('error') != null)
+<div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+@if (session('success') != null)
+<div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <form action="{{ action('UserController@addUser') }}" method="POST">
@@ -19,23 +26,23 @@ New User
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label for="fullName" class="form-paper-label">Full Name:</label>
-                        <input type="text" id="fullName" class="form-control" name="full_name" />
+                        <input type="text" id="fullName" class="form-control" name="full_name" value="{{ old('full_name') }}" required />
                     </div>
                 </div>
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label for="username" class="form-paper-label">Username:</label>
-                        <input type="text" id="username" class="form-control" name="username" />
+                        <input type="text" id="username" class="form-control" name="username"  value="{{ old('user_name') }}" required />
                     </div>
                 </div>
                 <div class="col-12 form-paper">
                     <div class="form-group" class="form-paper-label">
                         <label for="password" class="form-paper-label">Password:</label>
-                        <input type="password" id="password" class="form-control" name="password" />
+                        <input type="password" id="password" class="form-control" name="password" required />
                     </div>
                     <div class="form-group">
                         <label for="confirmPassword" class="form-paper-label">Confirm Password:</label>
-                        <input type="password" id="confirmPassword" class="form-control" name="confirm_password" />
+                        <input type="password" id="confirmPassword" class="form-control" name="confirm_password" required />
                     </div>
                 </div>
             </div>
@@ -44,7 +51,7 @@ New User
 
                 <div class="col-12 form-paper">
                     <div class="form-check mt-2">
-                        <input type="checkbox" id="isAdmin" class="form-check-input" name="admin" />
+                        <input type="checkbox" id="isAdmin" class="form-check-input" name="admin" {{ old('admin') != null ? 'checked' : '' }} />
                         <label for="isAdmin">Admin</label>
                     </div>
                 </div>
@@ -81,12 +88,12 @@ New User
 
             </div>
             <div class="mt-4 mb-4">&nbsp;</div>
-            <div class="fixed-bottom m-4">
+            <div class="fixed-bottom btn-container m-4">
                 <div class="float-right">
                     <div class="btn-group">
                         <a href="{{ action('UserController@index') }}" class="btn btn-light">Back to List</a>
                         <button type="reset" class="btn btn-secondary">Reset</button>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="submit" class="btn btn-primary" data-confirm="register" >Register</button>
                     </div>
                 </div>
             </div>

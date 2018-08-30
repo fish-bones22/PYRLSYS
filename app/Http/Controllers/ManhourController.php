@@ -186,6 +186,13 @@ class ManhourController extends Controller
 
         $outliers = $this->categoryService->getCategories('outlier');
 
+        if (session()->has('success')) {
+            $message = session()->get('success');
+            session()->forget('success');
+            return view('manhour.input', ['employee' => $employee, 'outliers' => $outliers])->with('success', $message);
+        }
+
+
         return view('manhour.input', ['employee' => $employee, 'outliers' => $outliers]);
     }
 
@@ -231,6 +238,7 @@ class ManhourController extends Controller
             return redirect()->back()->withInputs($req)->with('error', $result['message']);
         }
 
+        session()->put('success', 'Manhour record is successfully added');
         return redirect()->action('ManhourController@getNext', $id);
     }
 
