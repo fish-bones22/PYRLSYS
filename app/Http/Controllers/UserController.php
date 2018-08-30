@@ -92,7 +92,7 @@ class UserController extends Controller {
         }
 
         $user = new UserEntity();
-        $user->fullName = $req['username'];
+        $user->fullName = $req['full_name'];
         $user->username = $req['username'];
         $user->password = $req['password'];
         $user->admin = isset($req['admin']);

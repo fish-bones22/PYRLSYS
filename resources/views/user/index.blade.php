@@ -25,21 +25,21 @@ All Users
         <table class="table table-sm" id="usersTable">
             <thead>
                 <tr>
-                    <th>Username</th>
+                    <th>Name</th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($users as $user)
                 <tr>
-                    <td>{{ $user->username }}</td>
+                    <td>{{ $user->fullName }}</td>
                     <td>
                         <span class="btn-group">
                             <a role="button" class="btn btn-sm btn-light" href="{{ action('UserController@updateUser', $user->id) }}">Edit</a>
                             <form action="{{ route('user.delete', $user->id) }}" method="POST">
                                 @csrf
                                 @method('post')
-                                <input type="submit" class="btn btn-sm btn-light" data-confirm="delete" value="Delete" />
+                                <input type="submit" class="btn btn-sm btn-secondary" data-confirm="delete" value="Delete" />
                             </form>
                         </span>
                     </td>

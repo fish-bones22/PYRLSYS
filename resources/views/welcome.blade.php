@@ -38,8 +38,8 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
 
         <div class="row">
             <div class="col-12 form-paper">
-                <div class="mt-2">
-                    <div class="float-right"><a href="{{ action('UserController@logout') }}" class="btn btn-link btn-sm">Log Out</a></div>
+                <div class="mt-1 mb-2">
+                    <div class="float-right"><a href="{{ action('UserController@logout') }}" class="btn btn-danger btn-sm">Log Out</a></div>
                     <i class="text-muted">Welcome <strong>{{ $userName }}</strong>. Select from naviagtion to start.</i>
                 </div>
             </div>
@@ -191,8 +191,8 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                 <table class="table table-sm table-hover" id="navigationTable">
                     <thead>
                         <tr>
-                            <th>&nbsp;</th>
-                            <th class=""><button class="btn btn-link float-right" type="button" onclick="clearFilter()">Back to Main</button></th>
+                            <th>&nbsp;<i class="text-muted">Select an item</i></th>
+                            <th class=""><button class="btn btn-sm btn-secondary float-right" type="button" onclick="clearFilter()">Back to Main</button></th>
                         </tr>
                     </thead>
                     <tbody>

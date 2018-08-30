@@ -51,8 +51,8 @@ class ManhourController extends Controller
         $departments = $this->categoryService->getCategories('department');
         $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
 
-        if ($records == null || sizeof($records) == 0 || $records[0] == null)
-            return redirect()->action('ManhourController@index');
+        // if ($records == null || sizeof($records) == 0 || $records[0] == null)
+        //     return redirect()->action('ManhourController@index');
 
         $date['datefrom'] = date_format($datefrom, 'Y-m-d');
         $date['dateto'] = date_format($dateto, 'Y-m-d');

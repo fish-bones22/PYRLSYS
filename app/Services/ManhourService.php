@@ -97,10 +97,12 @@ class ManhourService extends EntityService implements IManhourService {
         $entity->employeeId = $model->employee_id;
         $entity->employeeName = $model->employeeName;
         $entity->timeCard = $model->timeCard;
-        $entity->department = [
-            'value' => $model->department,
-            'displayName' => $model->departmentDetails->value
-        ];
+
+        if ($model->department != null)
+            $entity->department = [
+                'value' => $model->department,
+                'displayName' => $model->departmentDetails->value
+            ];
 
         $entity->authorized = $model->authorized;
         if ($model->outlier != null)

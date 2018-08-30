@@ -103,6 +103,10 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
             </thead>
             <tbody>
                 @foreach ($records as $record)
+                <?php
+                    if ($record === null)
+                        continue;
+                ?>
                 <tr>
                     <td>{{ $record->timecard }}</td>
                     <td>{{ $record->employeeName }}</td>
