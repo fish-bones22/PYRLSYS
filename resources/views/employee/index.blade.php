@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-Employee
+Employees
 @stop
 
 @section('content')
@@ -53,6 +53,86 @@ Employee
         </table>
     </div>
 </div>
+
+
+
+<div class="row" style="display:none">
+    <div class="col">
+        <div id="title">Employees Masterlist</div>
+        <table id="employeesSummaryTable" style="font-size:0.5em;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Timecard</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Sex</th>
+                    <th>Civil Status</th>
+                    <th>Spouse</th>
+                    <th>Dependents</th>
+                    <th>Department</th>
+                    <th>Position</th>
+                    <th>Employment Type</th>
+                    <th>Date Hired</th>
+                    <th>Date End</th>
+                    <th>Contract Status</th>
+                    <th>SSS</th>
+                    <th>TIN</th>
+                    <th>PhilHealth</th>
+                    <th>PAGIBIG</th>
+                    <th>Type of Payment</th>
+                    <th>Mode of Payment</th>
+                    <th>Rate</th>
+                    <th>Allowance</th>
+                    <th>Pending Memos</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($employees as $employee)
+                <tr>
+                    <td>{{ $employee->employeeId }}</td>
+                    <td>{{ isset($employee->current['timecard']) ? $employee->current['timecard'] : '' }}</td>
+                    <td>{{ $employee->lastName }}</td>
+                    <td>{{ $employee->firstName }}</td>
+                    <td>{{ $employee->middleName }}</td>
+                    <td>{{ $employee->sex }}</td>
+                    <td>{{ isset($employee->details['civilstatus']['value']) ? $employee->details['civilstatus']['value'] : '' }}</td>
+                    <td>{{ isset($employee->details['spouse']) ? $employee->details['spouse'][0]['firstname']['value'].' '.$employee->details['spouse'][0]['middlename']['value'].' '.$employee->details['spouse'][0]['lastname']['value'] : '' }}</td>
+                        <?php
+                        $dependents = '';
+                        if (isset($employee->details['dependents'])) {
+                            foreach ($employee->details['dependents'] as $key => $value) {
+                                $dependents = $dependents.$value['firstname']['value'].' '.$value['middlename']['value'].' '.$value['lastname']['value'].', ';
+                            }
+                            $dependents = substr($dependents, sizeof($dependents) - 1);
+                        }
+                        ?>
+                    <td>{{ $dependents }}</td>
+                    <td>{{ isset($employee->current['department']) ? $employee->current['department']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->current['position']) ? $employee->current['position'] : '' }}</td>
+                    <td>{{ isset($employee->current['employmenttype']) ? $employee->current['employmenttype']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->current['datestarted']) ? date_format(date_create($employee->current['datestarted']), 'Y-m-d') : '' }}</td>
+                    <td>{{ isset($employee->current['datetransfered']) ? date_format(date_create($employee->current['datetransfered']), 'Y-m-d') : '' }}</td>
+                    <td>{{ isset($employee->current['contractstatus']) ? $employee->current['contractstatus']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['sss']) ? $employee->deductibles['sss'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['tin']) ? $employee->deductibles['tin'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['philhealth']) ? $employee->deductibles['philhealth'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['pagibig']) ? $employee->deductibles['pagibig'] : '' }}</td>
+                    <td>{{ isset($employee->current['paymenttype']) ? $employee->current['paymenttype']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->current['paymentmode']) ? $employee->current['paymentmode']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->current['rate']) ? $employee->current['rate'] : '' }}</td>
+                    <td>{{ isset($employee->current['allowance']) ? $employee->current['allowance'] : '' }}</td>
+                    <td>{{ isset($employee->details['numberofmemo']) ? $employee->details['numberofmemo']['value'] : '' }}</td>
+                    <td>{{ isset($employee->details['remarks']) ? $employee->details['remarks']['value'] : '' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <div class="m-4">&nbsp;</div>
 <div class="fixed-bottom btn-container m-4">
     <div class="float-right">
@@ -60,8 +140,10 @@ Employee
             <form action="{{ route('employee.deleteall') }}" method="POST">
                 @csrf
                 @method('post')
-                <input type="submit" class="btn btn-primary" data-confirm="delete all" value="Delete All"/>
+                <input type="submit" class="btn btn-secondary" data-confirm="delete all" value="Delete All"/>
             </form>
+            {{-- <button type="button" class="btn btn-primary" onclick="saveAsPDF()">Save as PDF</button> --}}
+            <button type="button" class="btn btn-primary" onclick="saveAsExcel()">Save as Excel</button>
         </div>
     </div>
 </div>

@@ -316,6 +316,7 @@
                 <div class="col-12 form-paper section-divider"></div>
             </div>
 
+            @if ($employee->id != 0)
             <div class="row">
                 <div class="col-12 form-paper">
                     <div class="btn-group">
@@ -325,6 +326,7 @@
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
+            @endif
 
             <div class="row">
                 <div class="col-12 form-paper section-title">Other Information</div>

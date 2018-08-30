@@ -53,6 +53,7 @@ class PayrollService implements IPayrollService {
         $payroll->dateEnd = $monthYear.'-'.$endDate ;
         $payroll->period =  date_format($date, 'M').' '.$day.'-'.$endDate.', '.date_format($date, 'Y');
         $payroll->rate = $employee->current['rate'];
+        $payroll->modeOfPayment = $employee->current['paymentmode']['displayName'];
 
         $basicPay = 0;
         $otPay = 0;

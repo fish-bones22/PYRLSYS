@@ -3,13 +3,14 @@ var subEntryMargin = 0.2;
 var col2Margin = 0.7;
 var col2MarginWider = 0.8;
 var col3Margin = 1.5;
-var doc;
+
 var isDone = false;
+var currPage = 0;
+
 
 function printOne(id, date) {
-    isDone = true;
-    newDoc();
-    getJson(id, date);
+    var doc = newDoc();
+    getJson(id, date, doc, 'save', null);
 }
 
 function printAll(date) {
@@ -26,19 +27,20 @@ function printAll(date) {
             console.log(result);
             emp =  result;
             size = Object.keys(emp).length;
-            newDoc();
+            var doc = newDoc();
+            var mode = 'add';
+            var filename = 'all-payslip-' + getTimestamp() + '.pdf';
             for (var i = 0; i < size; i++) {
                 if (i === size-1) {
-                    isDone = true;
+                    mode = 'save';
                 }
-                getJson(emp[i].id, date);
-                doc.setPage(i+1);
+                getJson(emp[i].id, date, doc, mode, filename);
             }
         }
     });
 }
 
-function getJson(id, date) {
+function getJson(id, date, doc, mode, filename) {
 
     var url = '/payroll/get/' + id + '/' + date;
     $.ajax({
@@ -46,8 +48,8 @@ function getJson(id, date) {
         contentType: 'text/plain',
         dataType:"json",
         success: function(result) {
-            console.log(result);
-            mapJson(result);
+            print(result, doc, 'new', 'Employee', filename);
+            print(result, doc, mode, 'Company',filename);
         }
     });
 
@@ -59,17 +61,57 @@ function newDoc() {
         unit: 'in',
         format: [2, 6]
     });
+
+    return doc;
 }
 
-function mapJson(result) {
+function print(result, doc, mode, copy, filename) {
 
-    var logo = new Image;
-    logo.src = "/images/logo-small.jpg";
+    var logo = new Image();
+
     logo.onload = function() {
         doc.addImage(logo, 'JPEG', 0.4, mainMargin, 1, 0.5, 'logo');
-    }
+        printText(doc, result, copy);
 
-    var i = 0.55;
+        if (mode === 'save') {
+            if (filename === null) {
+
+                filename = (result.employeeName + '-payslip-'+ getTimestamp()).toLowerCase().replaceAll(" ", "-").replaceAll("/", "-").replaceAll(".", "") + ".pdf";
+            }
+            doc.save(filename);
+        } else {
+            doc.addPage();
+        }
+    }
+    logo.src = "/images/logo-small.jpg";
+}
+
+function spacer(i) {
+    return i + 0.15;
+}
+
+function underline(doc, x, y, length) {
+    var str = "";
+    for (var i = 0; i < length; i++) {
+        str += "_";
+    }
+    doc.text(str, x, y);
+}
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
+function printText(doc, result, copy) {
+    var i = 0.1;
+
+    doc.setFontSize(5);
+    doc.text(copy + "'s copy", 0.1, i);
+
+    i = 0.55;
     doc.setFontSize(6);
     doc.text('CJI GENERAL SERVICES INC.', 0.4, i = spacer(i));
     doc.setFontSize(10);
@@ -79,23 +121,27 @@ function mapJson(result) {
 
     doc.text('Payroll period:', mainMargin, i = spacer(i));
     doc.text(result.period, col2MarginWider, i);
-    underline(col2MarginWider, i, 20);
+    underline(doc, col2MarginWider, i, 20);
 
     doc.text('No:', mainMargin, i = spacer(i));
     doc.text(result.employeeId, col2MarginWider, i);
-    underline(col2MarginWider, i, 20);
+    underline(doc, col2MarginWider, i, 20);
 
     doc.text('Name:', mainMargin, i = spacer(i));
     doc.text(result.employeeName, col2MarginWider, i);
-    underline(col2MarginWider, i, 20);
+    underline(doc, col2MarginWider, i, 20);
 
     doc.text('Department:', mainMargin, i = spacer(i));
     doc.text(result.employeeDepartment, col2MarginWider, i);
-    underline(col2MarginWider, i, 20);
+    underline(doc, col2MarginWider, i, 20);
 
     doc.text('Rate:', mainMargin, i = spacer(i));
     doc.text(result.rate, col2MarginWider, i);
-    underline(col2MarginWider, i, 20);
+    underline(doc, col2MarginWider, i, 20);
+
+    doc.text('Payment:', mainMargin, i = spacer(i));
+    doc.text(result.modeOfPayment, col2MarginWider, i);
+    underline(doc, col2MarginWider, i, 20);
 
     doc.text("*************************************************", mainMargin, i = spacer(i));
 
@@ -129,7 +175,7 @@ function mapJson(result) {
     doc.text('1.3', col2Margin, i);
     doc.text('xlhot' in result.otDetails ? result.otDetails.xlhot + ' hrs' : '0', 1.05, i);
     doc.text('xlhotrate' in result.otDetails ? result.otDetails.xlhotrate + '' : '0', col3Margin, i);
-    underline(col3Margin, i, 7);
+    underline(doc, col3Margin, i, 7);
 
     doc.text('Gross Pay:', mainMargin, i = spacer(i));
     doc.text(result.grossPay + '', col3Margin, i);
@@ -164,7 +210,7 @@ function mapJson(result) {
         }
     }
 
-    underline(col3Margin, i, 7);
+    underline(doc, col3Margin, i, 7);
 
     doc.text('Net Pay:', mainMargin, i = spacer(i));
     doc.text(result.netPay + '', col3Margin, i);
@@ -182,35 +228,29 @@ function mapJson(result) {
         }
     }
 
-    underline(col3Margin, i, 7);
+    underline(doc, col3Margin, i, 7);
 
     doc.text('Take Home Pay:', mainMargin, i = spacer(i));
     doc.text(result.takeHomePay + '', col3Margin, i);
-    underline(col3Margin, i, 7);
-    underline(col3Margin, i+0.025, 7);
+    underline(doc, col3Margin, i, 7);
+    underline(doc, col3Margin, i+0.025, 7);
 
-    if (isDone) {
-        save(doc);
-    } else {
-        doc.addPage();
-    }
+    i = 5.5;
+    underline(doc, col3Margin-0.4, i+0.05, 15);
+    doc.text(new Date(Date.now()).toDateString(), mainMargin, i = spacer(i));
+    doc.text("Signature", col3Margin-0.2, i);
+
 }
 
 
-function save(doc) {
-    setTimeout(function (){
-        doc.save('a4.pdf')
-    }, 1000);
-}
-
-function spacer(i) {
-    return i + 0.15;
-}
-
-function underline(x, y, length) {
-    var str = "";
-    for (var i = 0; i < length; i++) {
-        str += "_";
-    }
-    doc.text(str, x, y);
+function getTimestamp() {
+    var now = new Date(Date.now());
+    var year = now.getFullYear();
+    var month = now.getMonth();
+    var day = now.getDay();
+    var hour = now.getHours();
+    var minutes  = now.getMinutes();
+    var sec = now.getSeconds();
+    var mill = now.getMilliseconds();
+    return year + "" + month + "" + day + "" + hour + "" + minutes + "" + sec + "" + mill;
 }

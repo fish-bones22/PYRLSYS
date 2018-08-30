@@ -11,6 +11,7 @@ class PayrollEntity extends Entity {
     public $dateEnd;
     public $period;
 
+    public $modeOfPayment;
     public $rate;
     public $regularHours;
     public $otHours;

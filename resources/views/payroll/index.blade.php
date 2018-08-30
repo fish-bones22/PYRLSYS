@@ -66,6 +66,7 @@
 <div class="fixed-bottom btn-container m-4">
     <div class="float-right">
         <div class="btn-group">
+            <button class="btn btn-secondary" onclick="printAll('{{ date_format(now(), 'Y-m-d') }}')">Print All Payslip</button>
             <a role="button" href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}" class="btn btn-primary">View Payroll Summary</a>
         </div>
     </div>
@@ -75,4 +76,5 @@
 
 @section('script')
 <script src="{{ asset('js/payrollMasterlist.js') }}"></script>
+<script src="{{ asset('js/printPayroll.js') }}"></script>
 @stop
