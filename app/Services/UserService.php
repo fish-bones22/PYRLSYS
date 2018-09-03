@@ -152,6 +152,14 @@ class UserService extends EntityService implements IUserService {
     }
 
 
+    public function addDepartmentToUser($departmentId, $userId) {
+        $acc = new DepartmentAccess();
+        $acc->user_id = $userId;
+        $acc->category_id = $departmentId;
+        $acc->save();
+    }
+
+
     public function deleteUser($id) {
         User::find($id)->delete();
     }

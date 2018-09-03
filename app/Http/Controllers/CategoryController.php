@@ -7,6 +7,7 @@ use App\Contracts\ICategoryService;
 use App\Contracts\IUserService;
 use App\Entities\CategoryEntity;
 use Illuminate\Http\Request;
+use Auth;
 
 class CategoryController extends Controller
 {
@@ -83,7 +84,11 @@ class CategoryController extends Controller
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
         $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
         $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
-        $this->categoryService->addCategory($category);
+        $result = $this->categoryService->addCategory($category);
+
+        if (Auth::user() != null) {
+            $this->userService->addDepartmentToUser($result, Auth::user()->id);
+        }
 
         return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully added');
     }

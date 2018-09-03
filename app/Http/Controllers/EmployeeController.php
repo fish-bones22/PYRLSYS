@@ -123,6 +123,12 @@ class EmployeeController extends Controller
         else {
 
             $action = 'added';
+            $result = $this->employeeService->idExists($req['employee_id']);
+
+            if ($result) {
+                return redirect()->action('EmployeeController@show', $id)->withinput($req)->with('error', 'Employee Id already exists');
+            }
+
             $result = $this->employeeService->addEmployee($employee);
             if (!$result['result']) {
                 return redirect()->action('EmployeeController@show', $id)->with('error', $result['message']);
@@ -305,7 +311,7 @@ class EmployeeController extends Controller
         $entity['rate'] = $history['rate'];
 
         // Allowance
-        $entity['allowance'] = $history['allowance'];
+        // $entity['allowance'] = $history['allowance'];
 
         // Time In
         $entity['timein'] = $history['time_in'];

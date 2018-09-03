@@ -616,7 +616,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $new->paymenttype = $history['paymenttype']['value'];
         $new->paymentmode = $history['paymentmode']['value'];
         $new->rate = $history['rate'];
-        $new->allowance = $history['allowance'];
+        $new->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         $new->timein = $history['timein'];
         $new->timeout = $history['timeout'];
 
@@ -851,6 +851,16 @@ class EmployeeService extends EntityService implements IEmployeeService {
             'result' => true
         ];
 
+    }
+
+
+    public function idExists($id) {
+        $result = Employee::where('employeeId', $id)->first();
+
+        if ($result == null)
+            return false;
+
+        return true;
     }
 
 }

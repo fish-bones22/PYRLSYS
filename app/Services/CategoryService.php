@@ -104,6 +104,8 @@ class CategoryService extends EntityService implements ICategoryService {
         $categoryModel->subvalue1 = $category->subvalue1;
         $categoryModel->subvalue2 = $category->subvalue2;
         $categoryModel->save();
+
+        return Category::orderBy('created_at', 'desc')->first()->id;
     }
 
 
