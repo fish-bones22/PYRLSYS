@@ -79,7 +79,7 @@ Manhour Input
                         </div>
                         <div class="col-sm-7">
                             <label for="timeIn" class="form-paper-label">Time In</label>
-                            <input type="time" id="timeIn" name="time_in" class="timepicker form-control" onchange="setHour()" value="{{ old('time_in') }}" />
+                            <input type="time" id="timeIn" name="time_in" class="{{--timepicker--}} form-control" onchange="setHour()" value="{{ old('time_in') }}" />
                         </div>
                         <div class="col-sm-5">
                             <label for="timeIn" class="form-paper-label">Scheduled In</label>
@@ -87,7 +87,7 @@ Manhour Input
                         </div>
                         <div class="col-sm-7">
                             <label for="timeOut" class="form-paper-label">Time Out</label>
-                            <input type="time" id="timeOut" name="time_out" class="timepicker form-control" onchange="setHour()" value="{{ old('time_out') }}"d />
+                            <input type="time" id="timeOut" name="time_out" class="{{--timepicker--}} form-control" onchange="setHour()" value="{{ old('time_out') }}"d />
                         </div>
                         <div class="col-sm-5">
                             <label for="timeOut" class="form-paper-label">Scheduled Out</label>
