@@ -78,7 +78,7 @@ class PayrollService implements IPayrollService {
             $allowance = 0;
             if ($history['rate'] != null)
                 $rate = $history['rate'];
-            if ($history['allowance'] != null)
+            if (isset($history['allowance']) && $history['allowance'] != null)
                 $allowance = $history['allowance'];
 
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
