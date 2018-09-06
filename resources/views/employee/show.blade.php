@@ -203,6 +203,47 @@
 
 
             <div class="row">
+                <div class="col-12 form-paper">
+                    <div class="form-group">
+                        <label for="phoneNumber" class="form-paper-label">Address</label>
+                        <input id="address" type="text" name="address" class="form-control" value="{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: '' }}" />
+                    </div>
+                </div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label for="phoneNumber" class="form-paper-label">Phone Number</label>
+                        <input id="phoneNumber" type="text" name="phone_number" class="form-control" value="{{  $employee->details != null && key_exists('phonenumber', $employee->details) ? $employee->details['phonenumber']['value']: '' }}" />
+                    </div>
+                </div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label for="email" class="form-paper-label">Email Address</label>
+                        <input id="email" type="text" name="email" class="form-control" value="{{  $employee->details != null && key_exists('email', $employee->details) ? $employee->details['email']['value']: '' }}" />
+                    </div>
+                </div>
+                <div class="col-12 form-paper">
+                    <div class="row">
+                        <div class="col-12 section-label">Person to contact in case of emergency</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="emergencyName" class="form-paper-label">Name</label>
+                                <input id="address" type="text" name="emergency_name" class="form-control" value="{{  $employee->details != null && key_exists('emergencyname', $employee->details) ? $employee->details['emergencyname']['value']: '' }}" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="emergencyContact" class="form-paper-label">Contact</label>
+                                <input id="emergencyContact" type="text" name="emergency_phone" class="form-control" value="{{  $employee->details != null && key_exists('emergencyphone', $employee->details) ? $employee->details['emergencyphone']['value']: '' }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
                 <div class="col form-paper section-title">Employment Information</div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
@@ -259,7 +300,7 @@
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="status" class="form-paper-label">Status</label>
-                        <select id="status" name="contract_status" class="form-control" value="{{  $employee->current != null && key_exists('contractstatus', $employee->current) ? $employee->current['contractstatus']['value'] : '' }}" />
+                        <select id="status" name="contract_status" class="form-control" value="{{  $employee->current != null && key_exists('contractstatus', $employee->current) ? $employee->current['contractstatus']['value'] : '' }}" >
                             @foreach($categories['contractstatus'] as $category)
                             <option value="{{ $category->id }}" {{  $employee->current != null && key_exists('contractstatus', $employee->current) && $employee->current['contractstatus']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
                             @endforeach
