@@ -157,9 +157,10 @@ class OtRequestService extends EntityService implements IOtRequestService {
         $entity->approval = $model->approval;
         $entity->otType = $model->otType;
         $dept = $model->departmentDetails;
+
         $entity->department = [
             'value' => $model->department,
-            'displayName' => $dept->value
+            'displayName' => $dept != null ? $dept->value : ''
         ];
 
         return $entity;

@@ -15,7 +15,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
     <div class="col-12 form-paper section-divider"></div>
 </div>
 <div class="row">
-    <div class="col-2 form-paper">
+    {{-- <div class="col-2 form-paper">
         <div class="form-group">
             <label class="form-check-label">
                 <input form="filterForm" type="radio" class="form-radio" value="daily" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && !$date['mode'] ? 'checked' : '' }}> Daily Record
@@ -24,7 +24,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                 <input form="filterForm" type="radio" class="form-radio" value="monthly" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] ? 'checked' : '' }}> Monthly Record
             </label>
         </div>
-    </div>
+    </div> --}}
     <div class="col form-paper" id="dailyRow"  {{ isset($date['mode']) && $date['mode'] ? 'style=display:none' : '' }}>
         <div class="form-group ">
             <label for="searchBox" class="form-paper-label">Date</label>
@@ -38,7 +38,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
             </form>
         </div>
     </div>
-    <div class="col form-paper" {{ isset($date['mode']) && !$date['mode'] ? 'style=display:none' : '' }} id="monthlyRow">
+    {{-- <div class="col form-paper" {{ isset($date['mode']) && !$date['mode'] ? 'style=display:none' : '' }} id="monthlyRow">
         <div class="row">
             <div class="col">
                 <div class="form-group">
@@ -51,7 +51,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="col-4 form-paper">
         <div class="row">
             <div class="col-6">
@@ -102,6 +102,9 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                 </tr>
             </thead>
             <tbody>
+                <?php
+                    $index = 0;
+                ?>
                 @foreach ($records as $record)
                 <?php
                     if ($record === null)
@@ -112,9 +115,9 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                     <td>{{ $record->employeeName }}</td>
                     <td>{{ $record->departmentName }}</td>
                     {!! isset($date['mode']) && $date['mode'] == true ? '<td>'.$record->date.'</td>' : '' !!}
-                    <td>{{ $record->timeIn }}</td>
-                    <td>{{ $record->timeOut }}</td>
-                    <td>{{ $record->undertime }}</td>
+                    <td><input type="time" class="form-control form-control-sm" name="time_in[{{$index}}]" value="{{ $record->timeIn }}" /></td>
+                    <td><input type="time" class="form-control form-control-sm" name="time_out[{{$index}}]" value="{{ $record->timeOut }}" /></td>
+                    <td><input type="time" class="form-control form-control-sm" name="time_out_undertime[{{$index}}]" value="{{ $record->undertime }}" /></td>
                     <td>{{ $record->regularHours }}</td>
                     <td>{{ $record->rot }}</td>
                     <td>{{ $record->sot }}</td>
