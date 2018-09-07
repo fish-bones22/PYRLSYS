@@ -77,6 +77,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
 </div>
 <div class="row">
     <div class="col form-paper">
+        <input type="hidden" name="date" value="{{$date['datefrom']}}" />
         <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.8em;">
             <thead>
                 <tr class="text-center">
@@ -86,6 +87,8 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                     {!! isset($date['mode']) && $date['mode'] == true ? '<th rowspan="2">Date</th>' : '' !!}
                     <th colspan="2">Regular Time</th>
                     <th rowspan="2">Undertime</th>
+                    <th rowspan="2">Outlier</th>
+                    <th rowspan="2">Authorized</th>
                     <th rowspan="2">Total <br />Regular <br />Hours</th>
                     <th colspan="5">Overtime</th>
                     <th rowspan="2">ND</th>
@@ -111,13 +114,36 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                         continue;
                 ?>
                 <tr>
-                    <td>{{ $record->timecard }}</td>
-                    <td>{{ $record->employeeName }}</td>
-                    <td>{{ $record->departmentName }}</td>
+                    <td>
+                        {{ $record->timecard }}
+                        <input type="hidden" name="time_card[{{$index}}]" value="{{ $record->timecard }}" />
+                    </td>
+                    <td>
+                        {{ $record->employeeName }}
+                        <input type="hidden" name="employee_id[{{$index}}]" value="{{ $record->employee_id }}" />
+                        <input type="hidden" name="employee_name[{{$index}}]" value="{{ $record->employeeName }}" />
+                    </td>
+                    <td>
+                        {{ $record->departmentName }}
+                        <input type="hidden" name="department[{{$index}}]" value="{{ $record->departmentId }}" />
+                    </td>
                     {!! isset($date['mode']) && $date['mode'] == true ? '<td>'.$record->date.'</td>' : '' !!}
                     <td><input type="time" class="form-control form-control-sm" name="time_in[{{$index}}]" value="{{ $record->timeIn }}" /></td>
                     <td><input type="time" class="form-control form-control-sm" name="time_out[{{$index}}]" value="{{ $record->timeOut }}" /></td>
                     <td><input type="time" class="form-control form-control-sm" name="time_out_undertime[{{$index}}]" value="{{ $record->undertime }}" /></td>
+                    <td>
+                        <select class="form-control form-control-sm" name="outlier[{{$index}}]">
+                            <option></option>
+                            @foreach ($outliers as $outlier)
+                            <option value="{{ $outlier->id }}" {{ $outlier->id == $record->outlierId ? 'selected' : '' }}>{{ $outlier->value }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <label class="form-label">
+                            <input type="checkbox" name="authorized[{{$i}}]" /> Authorized
+                        </label>
+                    </td>
                     <td>{{ $record->regularHours }}</td>
                     <td>{{ $record->rot }}</td>
                     <td>{{ $record->sot }}</td>
@@ -125,7 +151,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                     <td>{{ $record->lhot }}</td>
                     <td>{{ $record->xlhot }}</td>
                     <td>{{ $record->nd }}</td>
-                    <td>{{ $record->remarks }}</td>
+                    <td><input type="text" name="remarks[{{$i}}]" class="form-control form-control-sm" value="{{ $record->remarks }}" /></td>
                 </tr>
                 @endforeach
             </tbody>

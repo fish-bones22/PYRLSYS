@@ -341,6 +341,7 @@ class ManhourService extends EntityService implements IManhourService {
         }
         $summary->remarks = $record->remarks;
         $summary->outlier = $record->outlier != null ? $record->outlier['displayName'] : null;
+        $summary->outlierId = $record->outlier != null ? $record->outlier['value'] : null;
         $summary->authorized = $record->authorized;
         return $summary;
     }

@@ -243,6 +243,46 @@ class ManhourController extends Controller
     }
 
 
+    public function recordAll(Request $request) {
+
+        $req = $request->all();
+
+        for ($i = 0; $i < sizeof($req['time_in']); $i++) {
+
+            $manhourEntity = new ManhourEntity();
+
+            $manhourEntity->date = $req['date'];
+            $manhourEntity->timeIn = $req['time_in'][$i];
+
+            if (isset($req['time_out'][$i]) && $req['time_out'][$i] != null) {
+                $manhourEntity->timeOut = $req['time_out'][$i];
+            }
+            else {
+                $manhourEntity->timeOut = $req['time_out_undertime'][$i];
+            }
+
+            $manhourEntity->employeeId = $req['employee_id'][$i];
+            $manhourEntity->employeeName = $req['employee_name'][$i];
+            $manhourEntity->timeCard = $req['time_card'][$i];
+            $manhourEntity->department = $req['department'][$i];
+
+            if (isset($req['outlier'][$i]) && $req['outlier'][$i] != '') {
+                $manhourEntity->authorized = isset($req['authorized'][$i]) ? true : false;
+            }
+
+            $manhourEntity->outlier = isset($req['outlier'][$i]) ? $req['outlier'][$i] : null;
+            $manhourEntity->remarks = $req['remarks'][$i];
+
+            $result = $this->manhourService->recordManhour($manhourEntity);
+
+            if (!$result['result']) {
+                return redirect()->back()->withInputs($req)->with('error', $result['message']);
+            }
+
+        }
+    }
+
+
     public function getRecord($id, $date) {
 
         if ($id == null || $id == 0 || $date == null || $date == '')
