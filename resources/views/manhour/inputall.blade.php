@@ -25,10 +25,10 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
             </label>
         </div>
     </div> --}}
-    <div class="col form-paper" id="dailyRow"  {{ isset($date['mode']) && $date['mode'] ? 'style=display:none' : '' }}>
+    <div class="col form-paper">
         <div class="form-group ">
             <label for="searchBox" class="form-paper-label">Date</label>
-            <form id="filterForm" action="{{ route('manhour.filterdate') }}" method="POST">
+            <form id="filterForm" action="{{ route('manhour.filterdateall') }}" method="POST">
                 @csrf
                 @method('post')
                 <div class="input-group">
@@ -172,5 +172,5 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
 @stop
 
 @section('script')
-<script src="{{ asset('js/dailyRecordPage.js') }}"></script>
+<script src="{{ asset('js/inputAllPage.js') }}"></script>
 @stop

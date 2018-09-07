@@ -243,6 +243,28 @@ class ManhourController extends Controller
     }
 
 
+    public function inputAll($date) {
+
+        if ($datefrom == null)
+            $date = now();
+        else
+            $date = date_create($date);
+
+        $departments = $this->categoryService->getCategories('department');
+        $records = $this->manhourService->getSummaryOfRecordsByDateRange($date, $date);
+        $outliers = $this->categoryService->getCategories('outlier');
+
+        // if ($records == null || sizeof($records) == 0 || $records[0] == null)
+        //     return redirect()->action('ManhourController@index');
+
+        $date['datefrom'] = date_format($datefrom, 'Y-m-d');
+        $date['dateto'] = date_format($dateto, 'Y-m-d');
+        $date['mode'] = $datefrom != $dateto ? true : false;
+
+        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date, 'outliers' => $outliers ]);
+    }
+
+
     public function recordAll(Request $request) {
 
         $req = $request->all();
@@ -280,6 +302,12 @@ class ManhourController extends Controller
             }
 
         }
+    }
+
+    public function filterDateAll(Request $request) {
+
+        $date = $request->get('date');
+        return redirect()->route('manhour.inputall', ['date' => $date]);
     }
 
 
