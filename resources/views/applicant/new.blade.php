@@ -31,7 +31,7 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="position" class="form-paper-label">Position Applied for:</label>
-                        <input id="position" class="form-control" name="position" value="{{ old('position') }}" />
+                        <input id="position" class="form-control" name="position" value="{{ old('position') }}" required />
                     </div>
                 </div>
                 <div class="col-6 form-paper">
@@ -49,7 +49,7 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="sex" class="form-paper-label">Sex:</label>
-                        <select id="sex" name="sex" class="form-control" value="{{ $applicant->sex }}" onchange="changeMiddleToMaiden()">
+                        <select id="sex" name="sex" class="form-control" value="{{ $applicant->sex }}" onchange="changeMiddleToMaiden()" required>
                             <option value="m" {{ $applicant->sex == 'm' ? 'selected' : '' }}>Male</option>
                             <option value="f" {{ $applicant->sex == 'f' ? 'selected' : '' }}>Female</option>
                         </select>
@@ -58,7 +58,7 @@ Application For Employment
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="civilStatus" class="form-paper-label">Civil Status:</label>
-                        <select id="civilStatus" name="civil_status" class="form-control" onchange="changeMiddleToMaiden()" >
+                        <select id="civilStatus" name="civil_status" class="form-control" onchange="changeMiddleToMaiden()" required>
                             <option value="Single" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'single' ? 'selected' : ''}} >Single</option>
                             <option value="Married" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'married' ? 'selected' : ''}} >Married</option>
                             <option value="Widow" {{ key_exists('civilstatus', $applicant->details) && $applicant->details['civilstatus']['value'] == 'widow' ? 'selected' : ''}} >Widow</option>
@@ -71,13 +71,13 @@ Application For Employment
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="lastname" class="form-paper-label">Last name:</label>
-                                <input id="lastname" name="last_name" type="text" class="form-control" value="{{ $applicant->lastName }}"/>
+                                <input id="lastname" name="last_name" type="text" class="form-control" value="{{ $applicant->lastName }}" required/>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="firstname" class="form-paper-label">First name:</label>
-                                <input id="firstname" name="first_name" type="text" class="form-control" value="{{ $applicant->firstName }}"/>
+                                <input id="firstname" name="first_name" type="text" class="form-control" value="{{ $applicant->firstName }}" required/>
                             </div>
                         </div>
                         <div class="col-4">

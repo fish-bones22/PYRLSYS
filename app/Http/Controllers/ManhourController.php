@@ -243,6 +243,74 @@ class ManhourController extends Controller
     }
 
 
+    public function inputAll($date) {
+
+        if ($datefrom == null)
+            $date = now();
+        else
+            $date = date_create($date);
+
+        $departments = $this->categoryService->getCategories('department');
+        $records = $this->manhourService->getSummaryOfRecordsByDateRange($date, $date);
+        $outliers = $this->categoryService->getCategories('outlier');
+
+        // if ($records == null || sizeof($records) == 0 || $records[0] == null)
+        //     return redirect()->action('ManhourController@index');
+
+        $date['datefrom'] = date_format($datefrom, 'Y-m-d');
+        $date['dateto'] = date_format($dateto, 'Y-m-d');
+        $date['mode'] = $datefrom != $dateto ? true : false;
+
+        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date, 'outliers' => $outliers ]);
+    }
+
+
+    public function recordAll(Request $request) {
+
+        $req = $request->all();
+
+        for ($i = 0; $i < sizeof($req['time_in']); $i++) {
+
+            $manhourEntity = new ManhourEntity();
+
+            $manhourEntity->date = $req['date'];
+            $manhourEntity->timeIn = $req['time_in'][$i];
+
+            if (isset($req['time_out'][$i]) && $req['time_out'][$i] != null) {
+                $manhourEntity->timeOut = $req['time_out'][$i];
+            }
+            else {
+                $manhourEntity->timeOut = $req['time_out_undertime'][$i];
+            }
+
+            $manhourEntity->employeeId = $req['employee_id'][$i];
+            $manhourEntity->employeeName = $req['employee_name'][$i];
+            $manhourEntity->timeCard = $req['time_card'][$i];
+            $manhourEntity->department = $req['department'][$i];
+
+            if (isset($req['outlier'][$i]) && $req['outlier'][$i] != '') {
+                $manhourEntity->authorized = isset($req['authorized'][$i]) ? true : false;
+            }
+
+            $manhourEntity->outlier = isset($req['outlier'][$i]) ? $req['outlier'][$i] : null;
+            $manhourEntity->remarks = $req['remarks'][$i];
+
+            $result = $this->manhourService->recordManhour($manhourEntity);
+
+            if (!$result['result']) {
+                return redirect()->back()->withInputs($req)->with('error', $result['message']);
+            }
+
+        }
+    }
+
+    public function filterDateAll(Request $request) {
+
+        $date = $request->get('date');
+        return redirect()->route('manhour.inputall', ['date' => $date]);
+    }
+
+
     public function getRecord($id, $date) {
 
         if ($id == null || $id == 0 || $date == null || $date == '')

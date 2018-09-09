@@ -11,8 +11,8 @@ var table;
         "dom": "<t<'float-right'p>>"
     });
 
-    $("#subvalue1Add").timepicki();
-    $("#subvalue2Add").timepicki();
+    // $("#subvalue1Add").timepicki();
+    // $("#subvalue2Add").timepicki();
 
 })();
 

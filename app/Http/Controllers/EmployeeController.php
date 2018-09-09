@@ -429,40 +429,40 @@ class EmployeeController extends Controller
             ];
         }
 
-        // Time card
-        // $entity['timecard'] = [
-        //     'key' => 'timecard',
-        //     'value' => $details['time_card'],
-        //     'displayName' => 'Time Card'
-        // ];
+        // Address
+        $entity['address'] = [
+            'key' => 'address',
+            'value' => $details['address'],
+            'displayName' => 'Address'
+        ];
 
-        // // Position
-        // $entity['position'] = [
-        //     'key' => 'position',
-        //     'value' => $details['position'],
-        //     'displayName' => 'Position'
-        // ];
+        // Phone Number
+        $entity['phonenumber'] = [
+            'key' => 'phonenumber',
+            'value' => $details['phone_number'],
+            'displayName' => 'Phone Number'
+        ];
 
-        // // Date hired
-        // $entity['datehired'] = [
-        //     'key' => 'datehired',
-        //     'value' => $details['date_hired'],
-        //     'displayName' => 'Date Hired'
-        // ];
+        // Email
+        $entity['email'] = [
+            'key' => 'email',
+            'value' => $details['email'],
+            'displayName' => 'Email Address'
+        ];
 
-        // // Date End
-        // $entity['dateend'] = [
-        //     'key' => 'dateend',
-        //     'value' => $details['date_end'],
-        //     'displayName' => 'Date End'
-        // ];
+        // Emergency Person Name
+        $entity['emergencyname'] = [
+            'key' => 'emergencyname',
+            'value' => $details['emergency_name'],
+            'displayName' => 'Name'
+        ];
 
-        // // Date hired
-        // $entity['rate'] = [
-        //     'key' => 'rate',
-        //     'value' => $details['rate'],
-        //     'displayName' => 'Hourly Rate'
-        // ];
+        // Emergency Person Number
+        $entity['emergencyphone'] = [
+            'key' => 'emergencyphone',
+            'value' => $details['emergency_phone'],
+            'displayName' => 'Hourly Rate'
+        ];
 
         // // Allowance
         // $entity['allowance'] = [
