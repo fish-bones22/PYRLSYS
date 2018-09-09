@@ -138,6 +138,14 @@
                             <td></td>
                             <td>{{ $payroll->adjustments }}</td>
                         </tr>
+                        @if ($payroll->allowance != null && $payroll->allowance != 0)
+                        <tr>
+                            <td>&emsp;Allowance</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $payroll->allowance }}</td>
+                        </tr>
+                        @endif
                         @foreach ($payroll->adjustmentsDetails as $key => $ex)
                         <?php if ($key == '_TOTAL') continue; ?>
                         <tr>

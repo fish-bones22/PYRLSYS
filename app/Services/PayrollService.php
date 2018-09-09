@@ -18,6 +18,8 @@ class PayrollService implements IPayrollService {
     public $deductibleRecordService;
     public $adjustmentsRecordService;
 
+    private $hoursPerDay = 8;
+
     public function __construct (IEmployeeService $employeeService, IManhourService $manhourService, IDeductibleRecordService $deductibleRecordService, IAdjustmentsRecordService $adjustmentsRecordService ) {
         $this->employeeService = $employeeService;
         $this->manhourService = $manhourService;
@@ -52,7 +54,8 @@ class PayrollService implements IPayrollService {
         $payroll->dateStart = $monthYear.'-'.$day ;
         $payroll->dateEnd = $monthYear.'-'.$endDate ;
         $payroll->period =  date_format($date, 'M').' '.$day.'-'.$endDate.', '.date_format($date, 'Y');
-        $payroll->rate = $employee->current['rate'];
+        $payroll->rate = isset($employee->current['rate']) ? $employee->current['rate'] : 0;
+        $payroll->rateBasis = isset($employee->current['ratebasis']) ? $employee->current['ratebasis'] : 'monthly';
         $payroll->modeOfPayment = $employee->current['paymentmode']['displayName'];
 
         $basicPay = 0;
@@ -63,6 +66,7 @@ class PayrollService implements IPayrollService {
         $regularHours = 0;
         $totalOtHours = 0;
         $workDays = 0;
+        $hourlyRate = 0;
         $otDetails = array();
         for ($i = $day; $i <= $endDate; $i++) {
             // Create new date
@@ -74,45 +78,59 @@ class PayrollService implements IPayrollService {
 
             $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
 
+            $rateBasis = 'monthly';
             $rate = 0;
             $allowance = 0;
             if ($history['rate'] != null)
                 $rate = $history['rate'];
+
+            if ($history['ratebasis'] != null)
+                $rateBasis = $history['ratebasis'];
+
             if (isset($history['allowance']) && $history['allowance'] != null)
                 $allowance = $history['allowance'];
 
+            if ($rateBasis == 'daily') {
+                $hourlyRate = $rate/$this->hoursPerDay;
+            }
+            else if ($rateBasis == 'monthly') {
+                $hourlyRate = $rate/(26*$this->hoursPerDay);
+                $allowance = $allowance/26;
+            }
+
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
             $regularHours += $hours;
-            $basicPay += $hours * $rate;
+            $basicPay += $hours * $hourlyRate;
 
-            //$totalAllowance += $allowance;
+            $totalAllowance += $allowance;
 
             $workDays++;
 
             // OT
             $otMultiplier = $this->getOtMultiplier($manhour);
-            $otDetails = $this->getOtDetails($manhour, $otDetails, $rate);
+            $otDetails = $this->getOtDetails($manhour, $otDetails, $hourlyRate);
 
             if ($otMultiplier['multiplier'] === 1.25) {
-                $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $rate);
+                $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
             }
             if ($otMultiplier['multiplier'] === 0.1) {
-                $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $rate);
+                $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
             }
 
-            $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $rate);
+            $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
             $totalOtHours += $otMultiplier['value'];
 
         }
 
-        $payroll->basicPay = $basicPay;
-        $payroll->otPay = $otPay;
-        $payroll->rotPay = $rotPay;
-        $payroll->ndPay = $ndPay;
+        $payroll->hourlyRate = $hourlyRate;
+        $payroll->basicPay = round($basicPay, 2);
+        $payroll->otPay = round($otPay, 2);
+        $payroll->rotPay = round($rotPay, 2);
+        $payroll->ndPay = round($ndPay, 2);
         $payroll->otDetails = $otDetails;
-        $payroll->allowance = $totalAllowance;
+        $payroll->allowance = round($totalAllowance, 2);
 
-        $payroll->grossPay = $basicPay + $otPay + $totalAllowance;
+        $payroll->grossPay = round($basicPay + $otPay + $totalAllowance, 2);
 
         $payroll->regularHours = $regularHours;
         $payroll->otHours = $totalOtHours;

@@ -125,7 +125,8 @@ Payroll Summary
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
                                 <td>{{ 0 }}</td>
                                 <td>{{ $summary[$employee->id]->netPay }}</td>
-                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : '0' }}</td>
+                                <td>{{ isset($summary[$employee->id]->allowance) ? $summary[$employee->id]->allowance : '0' }}</td>
+                                {{-- <td>{{ isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : '0' }}</td> --}}
                                 <td>{{ isset($summary[$employee->id]->adjustmentsDetails['Meal Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Meal Allowance'] : '0' }}</td>
                                 <td>0</td>
                                 <td>{{ $summary[$employee->id]->takeHomePay }}</td>

@@ -46,7 +46,7 @@
                         <button class="btn btn-light" data-dismiss="modal">Back to List</button>
                         <button type="reset" class="btn btn-secondary edit-toggle" onclick="toggleEdit()">Edit</button>
                         <button type="reset" class="btn btn-secondary view-toggle" style="display:none">Reset</button>
-                        <input type="submit" class="btn btn-primary view-toggle" value="Save" style="display:none"/>
+                        <input type="submit" data-confirm="save" class="btn btn-primary view-toggle" value="Save" style="display:none"/>
                     </div>
                 </div>
             </div>

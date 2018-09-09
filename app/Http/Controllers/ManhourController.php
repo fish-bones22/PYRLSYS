@@ -245,6 +245,8 @@ class ManhourController extends Controller
 
     public function inputAll($date) {
 
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         if ($date == null)
             $date = now();
         else

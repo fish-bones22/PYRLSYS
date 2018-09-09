@@ -311,7 +311,10 @@ class EmployeeController extends Controller
         $entity['rate'] = $history['rate'];
 
         // Allowance
-        // $entity['allowance'] = $history['allowance'];
+        $entity['allowance'] = $history['allowance'];
+
+        // Allowance
+        $entity['ratebasis'] = $history['rate_basis'];
 
         // Time In
         $entity['timein'] = $history['time_in'];

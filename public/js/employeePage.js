@@ -3,7 +3,7 @@ $(function() {
     table = $("#transferHistoryTable").DataTable({
         "lengthChange": false,
         "info": false,
-        "order": [[ 3, "asc" ], [1, "asc"]],
+        "order": false,//[[ 3, "asc" ], [1, "asc"]],
         "dom": "<t<'float-right'p>>",
         "paging": false,
         "buttons": [

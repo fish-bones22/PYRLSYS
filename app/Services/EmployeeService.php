@@ -581,6 +581,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $current->paymenttype = $history['paymenttype']['value'];
         $current->paymentmode = $history['paymentmode']['value'];
         $current->rate = $history['rate'];
+        $current->rateBasis = isset($history['ratebasis']) ? $history['ratebasis'] : null;
         $current->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         $current->timein = $history['timein'];
         $current->timeout = $history['timeout'];
@@ -616,6 +617,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $new->paymenttype = $history['paymenttype']['value'];
         $new->paymentmode = $history['paymentmode']['value'];
         $new->rate = $history['rate'];
+        $new->rateBasis = isset($history['ratebasis']) ? $history['ratebasis'] : null;
         $new->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         $new->timein = $history['timein'];
         $new->timeout = $history['timeout'];
@@ -672,6 +674,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $history['paymentmode'] = array();
         $history['paymentmode']['value'] = $model->paymentmode;
         $history['paymentmode']['displayName'] = $model->paymentMode->value;
+        $history['ratebasis'] = $model->rateBasis;
         $history['rate'] = $model->rate;
         $history['allowance'] = $model->allowance;
         $history['timein'] = $model->timein;

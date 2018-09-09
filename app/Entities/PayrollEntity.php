@@ -13,6 +13,8 @@ class PayrollEntity extends Entity {
 
     public $modeOfPayment;
     public $rate;
+    public $rateBasis;
+    public $hourlyRate;
     public $regularHours;
     public $otHours;
     public $rotHours;

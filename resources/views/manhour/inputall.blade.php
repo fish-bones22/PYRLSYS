@@ -144,7 +144,7 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
             <div class="btn-group">
                 <a class="btn btn-light" href="{{ action('ManhourController@index') }}">Back to List</a>
                 <a class="btn btn-secondary" href="{{ route('manhour.input') }}">Individual Input</a>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" data-confirm="save">Save</button>
             </div>
         </div>
     </div>

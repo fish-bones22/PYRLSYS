@@ -84,7 +84,7 @@
                 <div class="col-12 form-paper section-divider"></div>
             </div>
 
-
+            @if (key_exists('spouse', $employee->details))
             <div class="row">
 
                 <div class="col-md-12 form-paper">
@@ -114,6 +114,7 @@
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
+            @endif
 
             <?php
 
@@ -128,10 +129,7 @@
 
             ?>
 
-            <input type="hidden" id="dependent-index" value="{{ $limit }}" />
-
-            {{-- Use the $limit variable for looping --}}
-
+            @if (key_exists('dependent', $employee->details))
             <div class="row">
                 <div class="col-12 form-paper section-title">Dependent</div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -172,6 +170,47 @@
             </div>
 
             @endfor
+            @endif
+
+            <div class="row">
+                <div class="col-6 form-paper">
+                    <div class="form-group">
+                        <label for="phoneNumber" class="form-paper-label">Address</label>
+                        <div class="form-paper-display">{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: 'No Address' }}</div>
+                    </div>
+                </div>
+                <div class="col-3 form-paper">
+                    <div class="form-group">
+                        <label for="phoneNumber" class="form-paper-label">Phone Number</label>
+                        <div class="form-paper-display">{{  $employee->details != null && key_exists('phonenumber', $employee->details) ? $employee->details['phonenumber']['value']: 'No Phone Number' }}</div>
+                    </div>
+                </div>
+                <div class="col-3 form-paper">
+                    <div class="form-group">
+                        <label for="email" class="form-paper-label">Email Address</label>
+                        <div class="form-paper-display">{{  $employee->details != null && key_exists('email', $employee->details) ? $employee->details['email']['value']: 'No Email' }}</div>
+                    </div>
+                </div>
+                <div class="col-12 form-paper">
+                    <div class="row">
+                        <div class="col-12 section-label">Person to contact in case of emergency</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="emergencyName" class="form-paper-label">Name</label>
+                                <div class="form-paper-display">{{  $employee->details != null && key_exists('emergencyname', $employee->details) ? $employee->details['emergencyname']['value']: 'No Emergency Contact' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="emergencyContact" class="form-paper-label">Contact</label>
+                                <div class="form-paper-display">{{  $employee->details != null && key_exists('emergencyphone', $employee->details) ? $employee->details['emergencyphone']['value']: 'No Emergency Contact #' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col form-paper section-title">Employment Information</div>
@@ -224,43 +263,53 @@
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['contractstatus']['displayName']) ? $employee->current['contractstatus']['displayName'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-4 form-paper">
+                <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['paymenttype']['displayName']) ? $employee->current['paymenttype']['displayName'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-4 form-paper">
+                <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['paymentmode']['displayName']) ? $employee->current['paymentmode']['displayName'] : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-4 form-paper">
-                    <div class="form-group">
-                        <label for="ratePerHour" class="form-paper-label">Hourly rate</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['rate']) ? $employee->current['rate'] : 'None' }}</div>
+                <div class="col-md-6 form-paper">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="rateBasis" class="form-paper-label">Rate Basis</label>
+                                <div class="form-paper-display">{{ isset($employee->current['ratebasis']) ? $employee->current['ratebasis'] : 'Not set' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="ratePerHour" class="form-paper-label">Rate</label>
+                                <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['rate']) ? $employee->current['rate'] : 'None' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="allowance" class="form-paper-label">Allowance</label>
+                                <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['allowance']) ? $employee->current['allowance'] : 'None' }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {{-- <div class="col-sm-3 form-paper">
-                    <div class="form-group">
-                        <label for="allowance" class="form-paper-label">Allowance</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['allowance']) ? $employee->current['allowance'] : 'None' }}</div>
-                    </div>
-                </div> --}}
             </div>
 
             <div class="row">
                 <div class="col-sm-6 form-paper">
                     <div class="form-group">
                         <label for="timeIn" class="form-paper-label">Time In</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timein']) ? date_format(date_create($employee->current['timein']), 'h:m A') : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timein']) ? date_format(date_create($employee->current['timein']), 'h:i A') : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="timeOut" class="form-paper-label">Time Out</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timeout']) ? date_format(date_create($employee->current['timeout']), 'h:m A') : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timeout']) ? date_format(date_create($employee->current['timeout']), 'h:i A') : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -341,14 +390,14 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="row">
-                <div class="col-12 form-paper section-title">Transfer History
+                <div class="col-12 form-paper section-title"><span id="title">Transfer History - {{ $employee->fullName }}</span>
                     <button type="button" class="close" data-dismiss='modal'>&times;</button>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
             <div class="row">
                 <div class="col-12 form-paper">
-                    <table class="table table-sm" style="font-size:0.8em;">
+                    <table class="table table-sm" style="font-size:0.75em;" id="transferHistoryTable">
                         <thead>
                             <tr>
                                 <th rowspan="2">ID</th>
@@ -384,12 +433,25 @@
                                 <td></td>
                                 <td></td>
                                 @endif
-                                <td>{{ $employee->history[$i]['datestarted'] }}</td>
-                                <td>{{ $employee->history[$i]['datetransfered'] }}</td>
+                                <td>{{ $employee->history[$i]['datestarted'] != null ? date_format(date_create($employee->history[$i]['datestarted']), 'M d, Y') : '' }}</td>
+                                <td>{{ $employee->history[$i]['datetransfered'] != null ? date_format(date_create($employee->history[$i]['datetransfered']), 'M d, Y') : '' }}</td>
                             </tr>
                             @endfor
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 form-paper">
+                    <div class="form-group">
+                        <div class="float-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary" onclick="saveAsPDF()">Save as PDF</button>
+                                <button type="button" class="btn btn-secondary" onclick="saveAsExcel()">Save as Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">&nbsp;</div>
                 </div>
             </div>
         </div>
