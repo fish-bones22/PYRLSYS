@@ -52,12 +52,22 @@ class ManhourService extends EntityService implements IManhourService {
 
     public function recordManhour(ManhourEntity $entity) {
 
-        $record = Manhour::where('recordDate', $entity->date)->where('employee_id', $entity->employeeId)->first();
+        $record = Manhour::where('recordDate', $entity->date)->where('employee_id', $entity->employee_id)->first();
+
+        // Delete if passed time in is blank
+        if ($entity->timeIn == null || $entity->timeIn == '') {
+            if ($record != null) {
+                $record->delete();
+            }
+            return [
+                'result' => true
+            ];
+        }
 
         if ($record == null) {
             $record = new Manhour();
             $record->recordDate = $entity->date;
-            $record->employee_id = $entity->employeeId;
+            $record->employee_id = $entity->employee_id;
         }
 
         $record->timeIn = $entity->timeIn;
@@ -145,7 +155,20 @@ class ManhourService extends EntityService implements IManhourService {
 
         $record = $this->getRecord($employeeId, $date);
 
-        if ($record == null) return new ManhourSummaryEntity();
+        if ($record == null) {
+            $summary = new ManhourSummaryEntity();
+
+            if ($employee == null || !isset($employee->current['timecard']))
+                return $summary;
+
+            $summary->timecard = $employee->current['timecard'];
+            $summary->employee_id = $employee->id;
+            $summary->employeeName = $employee->fullName;
+            $summary->departmentId = $employee->current['department']['value'];
+            $summary->departmentName = $employee->current['department']['displayName'];
+
+            return $summary;
+        }
 
         return $this->formatSummary($record, $employee);
 
@@ -235,14 +258,14 @@ class ManhourService extends EntityService implements IManhourService {
             $actualHours = floor($x * 2) / 2;
             $actualHours = $actualHours < 0 ? (24 + $actualHours) : $actualHours;
 
-            $summary->timeIn = date_format($timeIn, 'h:i A');
-            $summary->timeOut = date_format($timeOut, 'h:i A');
+            $summary->timeIn = date_format($timeIn, 'H:i');
+            $summary->timeOut = date_format($timeOut, 'H:i');
             $summary->undertime = '';
             // If Under time
             if ($scheduledTimeOut != null) {
                 if ($scheduledTimeOut > $timeOut && $timeIn < $timeOut) {
                     $summary->timeOut = '';
-                    $summary->undertime = date_format($timeOut, 'h:i A');
+                    $summary->undertime = date_format($timeOut, 'H:i');
                 }
             }
 

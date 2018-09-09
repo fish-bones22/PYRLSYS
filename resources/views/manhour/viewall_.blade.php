@@ -112,9 +112,9 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                     <td>{{ $record->employeeName }}</td>
                     <td>{{ $record->departmentName }}</td>
                     {!! isset($date['mode']) && $date['mode'] == true ? '<td>'.$record->date.'</td>' : '' !!}
-                    <td>{{ $record->timeIn }}</td>
-                    <td>{{ $record->timeOut }}</td>
-                    <td>{{ $record->undertime }}</td>
+                    <td>{{ $record->timeIn != null ? date_format(date_create($record->timeIn), 'h:i A') : '' }}</td>
+                    <td>{{ $record->timeOut != null ? date_format(date_create($record->timeOut), 'h:i A') : '' }}</td>
+                    <td>{{ $record->undertime != null ? date_format(date_create($record->undertime), 'h:i A') : '' }}</td>
                     <td>{{ $record->regularHours }}</td>
                     <td>{{ $record->rot }}</td>
                     <td>{{ $record->sot }}</td>

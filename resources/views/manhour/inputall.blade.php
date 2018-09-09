@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 <?php
-$title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date_format(date_create($date['datefrom']), 'F d, Y') : date_format(date_create($date['datefrom']), 'F Y'));
+$title = 'Daily Working Hours - '.(date_format(date_create($details['date']), 'F Y'));
 ?>
 
 @section('title')
@@ -15,44 +15,20 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
     <div class="col-12 form-paper section-divider"></div>
 </div>
 <div class="row">
-    {{-- <div class="col-2 form-paper">
-        <div class="form-group">
-            <label class="form-check-label">
-                <input form="filterForm" type="radio" class="form-radio" value="daily" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && !$date['mode'] ? 'checked' : '' }}> Daily Record
-            </label>
-            <label class="form-check-label">
-                <input form="filterForm" type="radio" class="form-radio" value="monthly" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] ? 'checked' : '' }}> Monthly Record
-            </label>
-        </div>
-    </div> --}}
-    <div class="col form-paper">
+    <div class="col-6 form-paper">
         <div class="form-group ">
             <label for="searchBox" class="form-paper-label">Date</label>
             <form id="filterForm" action="{{ route('manhour.filterdateall') }}" method="POST">
                 @csrf
                 @method('post')
                 <div class="input-group">
-                    <input type="date" class="form-control form-control-sm" id="dateSelect" name="date" value="{{ isset($date['datefrom']) ? $date['datefrom'] : date_format(now(), 'Y-m-d') }}" />
+                    <input type="date" class="form-control form-control-sm" id="dateSelect" name="date" value="{{ isset($details['date']) ? $details['date'] : date_format(now(), 'Y-m-d') }}" />
                     <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                 </div>
             </form>
         </div>
     </div>
-    {{-- <div class="col form-paper" {{ isset($date['mode']) && !$date['mode'] ? 'style=display:none' : '' }} id="monthlyRow">
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    <label for="monthSelect" class="form-paper-label">Month and Year</label>
-                    <div class="input-group">
-                        @include('layout.monthselect', ['form' => 'filterForm', 'monthSelected' => isset($date['month']) ? $date['month'] : date_format(now(), 'm') ])
-                        <input form="filterForm" type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($date['year']) ? $date['year'] : date_format(now(), 'Y') }}" />
-                        <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <div class="col-4 form-paper">
+    <div class="col-6 form-paper">
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -75,102 +51,106 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
     </div>
     <div class="col-12 form-paper section-divider"></div>
 </div>
-<div class="row">
-    <div class="col form-paper">
-        <input type="hidden" name="date" value="{{$date['datefrom']}}" />
-        <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.8em;">
-            <thead>
-                <tr class="text-center">
-                    <th rowspan="2">Timecard</th>
-                    <th rowspan="2">Employee Name</th>
-                    <th rowspan="2">Project/Department</th>
-                    {!! isset($date['mode']) && $date['mode'] == true ? '<th rowspan="2">Date</th>' : '' !!}
-                    <th colspan="2">Regular Time</th>
-                    <th rowspan="2">Undertime</th>
-                    <th rowspan="2">Outlier</th>
-                    <th rowspan="2">Authorized</th>
-                    <th rowspan="2">Total <br />Regular <br />Hours</th>
-                    <th colspan="5">Overtime</th>
-                    <th rowspan="2">ND</th>
-                    <th rowspan="2">Remarks/Comments</th>
-                </tr>
-                <tr>
-                    <th>In</th>
-                    <th>Out</th>
-                    <th>ROT</th>
-                    <th>SOT</th>
-                    <th>XSOT</th>
-                    <th>LHOT</th>
-                    <th>XLOT</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    $index = 0;
-                ?>
-                @foreach ($records as $record)
-                <?php
-                    if ($record === null)
-                        continue;
-                ?>
-                <tr>
-                    <td>
-                        {{ $record->timecard }}
-                        <input type="hidden" name="time_card[{{$index}}]" value="{{ $record->timecard }}" />
-                    </td>
-                    <td>
-                        {{ $record->employeeName }}
-                        <input type="hidden" name="employee_id[{{$index}}]" value="{{ $record->employee_id }}" />
-                        <input type="hidden" name="employee_name[{{$index}}]" value="{{ $record->employeeName }}" />
-                    </td>
-                    <td>
-                        {{ $record->departmentName }}
-                        <input type="hidden" name="department[{{$index}}]" value="{{ $record->departmentId }}" />
-                    </td>
-                    {!! isset($date['mode']) && $date['mode'] == true ? '<td>'.$record->date.'</td>' : '' !!}
-                    <td><input type="time" class="form-control form-control-sm" name="time_in[{{$index}}]" value="{{ $record->timeIn }}" /></td>
-                    <td><input type="time" class="form-control form-control-sm" name="time_out[{{$index}}]" value="{{ $record->timeOut }}" /></td>
-                    <td><input type="time" class="form-control form-control-sm" name="time_out_undertime[{{$index}}]" value="{{ $record->undertime }}" /></td>
-                    <td>
-                        <select class="form-control form-control-sm" name="outlier[{{$index}}]">
-                            <option></option>
-                            @foreach ($outliers as $outlier)
-                            <option value="{{ $outlier->id }}" {{ $outlier->id == $record->outlierId ? 'selected' : '' }}>{{ $outlier->value }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <label class="form-label">
-                            <input type="checkbox" name="authorized[{{$i}}]" /> Authorized
-                        </label>
-                    </td>
-                    <td>{{ $record->regularHours }}</td>
-                    <td>{{ $record->rot }}</td>
-                    <td>{{ $record->sot }}</td>
-                    <td>{{ $record->xsot }}</td>
-                    <td>{{ $record->lhot }}</td>
-                    <td>{{ $record->xlhot }}</td>
-                    <td>{{ $record->nd }}</td>
-                    <td><input type="text" name="remarks[{{$i}}]" class="form-control form-control-sm" value="{{ $record->remarks }}" /></td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="m-4">&nbsp;</div>
-<div class="fixed-bottom btn-container m-4">
-    <div class="float-right">
-        <div class="btn-group">
-            {{-- <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a> --}}
-            <button type="button" class="btn btn-primary" onclick="saveAsPDF()">Save as PDF</button>
-            <button type="button" class="btn btn-primary" onclick="saveAsExcel()">Save as Excel</button>
+
+<form action="{{ action('ManhourController@recordAll') }}" method="POST">
+    @csrf
+    @method('post')
+    <div class="row">
+        <div class="col form-paper">
+            <input type="hidden" name="date" value="{{$details['date']}}" />
+            <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.75em;">
+                <thead>
+                    <tr class="text-center">
+                        <th rowspan="2">Timecard</th>
+                        <th rowspan="2">Employee Name</th>
+                        <th rowspan="2">Project/Department</th>
+                        <th colspan="2">Regular Time</th>
+                        <th rowspan="2">Undertime</th>
+                        <th rowspan="2">Outlier</th>
+                        <th rowspan="2">Authorized</th>
+                        <th rowspan="2">Total <br />Regular <br />Hours</th>
+                        <th colspan="5">Overtime</th>
+                        <th rowspan="2">ND</th>
+                        <th rowspan="2">Remarks/Comments</th>
+                    </tr>
+                    <tr>
+                        <th>In</th>
+                        <th>Out</th>
+                        <th>ROT</th>
+                        <th>SOT</th>
+                        <th>XSOT</th>
+                        <th>LHOT</th>
+                        <th>XLOT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        $index = 0;
+                    ?>
+                    @foreach ($records as $record)
+                    <?php
+                        if ($record === null)
+                    ?>
+                    <tr>
+                        <td>
+                            {{ $record != null ? $record->timecard : '' }}
+                            <input type="hidden" name="time_card[{{$index}}]" value="{{  $record != null ? $record->timecard : ''}}" />
+                        </td>
+                        <td>
+                            {{  $record != null ? $record->employeeName : ''}}
+                            <input type="hidden" name="employee_id[{{$index}}]" value="{{  $record != null ? $record->employee_id : ''}}" />
+                            <input type="hidden" name="employee_name[{{$index}}]" value="{{  $record != null ? $record->employeeName : ''}}" />
+                        </td>
+                        <td>
+                            {{  $record != null ? $record->departmentName : ''}}
+                            <input type="hidden" name="department[{{$index}}]" value="{{ $record != null ?  $record->departmentId : '' }}" />
+                        </td>
+                        <td><input type="time" class="form-control form-control-sm" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" /></td>
+                        <td><input type="time" class="form-control form-control-sm" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" /></td>
+                        <td><input type="time" class="form-control form-control-sm" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" /></td>
+                        <td>
+                            <select class="form-control form-control-sm" name="outlier[{{$index}}]">
+                                <option></option>
+                                @foreach ($outliers as $outlier)
+                                <option value="{{ $outlier->id }}" {{  $record != null && $outlier->id == $record->outlierId ? 'selected' : '' }}>{{ $outlier->value }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <label class="form-label">
+                                <input type="checkbox" name="authorized[{{$index}}]" {{ $record->authorized != null ? 'checked' : '' }} /> Yes
+                            </label>
+                        </td>
+                        <td>{{ $record != null ? $record->regularHours : '' }}</td>
+                        <td>{{ $record != null ? $record->rot : ''}}</td>
+                        <td>{{ $record != null ? $record->sot : ''}}</td>
+                        <td>{{ $record != null ? $record->xsot : ''}}</td>
+                        <td>{{ $record != null ? $record->lhot : ''}}</td>
+                        <td>{{ $record != null ?  $record->xlhot : '' }}</td>
+                        <td>{{ $record != null ? $record->nd : '' }}</td>
+                        <td><input type="text" name="remarks[{{$index}}]" class="form-control form-control-sm" value="{{ $record != null ? $record->remarks : '' }}" /></td>
+                    </tr>
+                    <?php
+                    $index++;
+                    ?>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
+    <div class="m-4">&nbsp;</div>
+    <div class="fixed-bottom btn-container m-4">
+        <div class="float-right">
+            <div class="btn-group">
+                {{-- <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a> --}}
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</form>
 
 @stop
 
 @section('script')
-<script src="{{ asset('js/inputAllPage.js') }}"></script>
+{{-- <script src="{{ asset('js/inputAllPage.js') }}"></script> --}}
 @stop

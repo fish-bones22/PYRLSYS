@@ -203,19 +203,19 @@
 
 
             <div class="row">
-                <div class="col-12 form-paper">
+                <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="phoneNumber" class="form-paper-label">Address</label>
                         <input id="address" type="text" name="address" class="form-control" value="{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: '' }}" />
                     </div>
                 </div>
-                <div class="col-4 form-paper">
+                <div class="col-3 form-paper">
                     <div class="form-group">
                         <label for="phoneNumber" class="form-paper-label">Phone Number</label>
                         <input id="phoneNumber" type="text" name="phone_number" class="form-control" value="{{  $employee->details != null && key_exists('phonenumber', $employee->details) ? $employee->details['phonenumber']['value']: '' }}" />
                     </div>
                 </div>
-                <div class="col-4 form-paper">
+                <div class="col-3 form-paper">
                     <div class="form-group">
                         <label for="email" class="form-paper-label">Email Address</label>
                         <input id="email" type="text" name="email" class="form-control" value="{{  $employee->details != null && key_exists('email', $employee->details) ? $employee->details['email']['value']: '' }}" />

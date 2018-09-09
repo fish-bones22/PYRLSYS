@@ -581,7 +581,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $current->paymenttype = $history['paymenttype']['value'];
         $current->paymentmode = $history['paymentmode']['value'];
         $current->rate = $history['rate'];
-        $current->allowance = $history['allowance'];
+        $current->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         $current->timein = $history['timein'];
         $current->timeout = $history['timeout'];
 

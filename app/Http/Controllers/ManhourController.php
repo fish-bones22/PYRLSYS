@@ -220,7 +220,7 @@ class ManhourController extends Controller
         $manhourEntity->timeIn = $req['time_in'];
         $manhourEntity->timeOut = $req['time_out'];
 
-        $manhourEntity->employeeId = $id;
+        $manhourEntity->employee_id = $id;
         $manhourEntity->employeeName = $req['full_name'];
         $manhourEntity->timeCard = $req['time_card'];
         $manhourEntity->department = $req['department'];
@@ -245,23 +245,28 @@ class ManhourController extends Controller
 
     public function inputAll($date) {
 
-        if ($datefrom == null)
+        if ($date == null)
             $date = now();
         else
             $date = date_create($date);
 
         $departments = $this->categoryService->getCategories('department');
-        $records = $this->manhourService->getSummaryOfRecordsByDateRange($date, $date);
+        $records = array();//$this->manhourService->getSummaryOfRecordsByDateRange($date, $date);
         $outliers = $this->categoryService->getCategories('outlier');
+        $employees = $this->employeeService->getAllEmployees();
+
+        if ($employees != null && sizeof($employees) > 0) {
+            foreach ($employees as $employee) {
+                $records[] = $this->manhourService->getSummaryOfRecord($employee->id, $date, $employee);
+            }
+        }
 
         // if ($records == null || sizeof($records) == 0 || $records[0] == null)
         //     return redirect()->action('ManhourController@index');
 
-        $date['datefrom'] = date_format($datefrom, 'Y-m-d');
-        $date['dateto'] = date_format($dateto, 'Y-m-d');
-        $date['mode'] = $datefrom != $dateto ? true : false;
+        $details['date'] = date_format($date, 'Y-m-d');
 
-        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date, 'outliers' => $outliers ]);
+        return view('manhour.inputall', ['records' => $records, 'departments' => $departments, 'details' => $details, 'outliers' => $outliers, 'employees' => $employees ]);
     }
 
 
@@ -283,7 +288,7 @@ class ManhourController extends Controller
                 $manhourEntity->timeOut = $req['time_out_undertime'][$i];
             }
 
-            $manhourEntity->employeeId = $req['employee_id'][$i];
+            $manhourEntity->employee_id = $req['employee_id'][$i];
             $manhourEntity->employeeName = $req['employee_name'][$i];
             $manhourEntity->timeCard = $req['time_card'][$i];
             $manhourEntity->department = $req['department'][$i];
@@ -302,6 +307,7 @@ class ManhourController extends Controller
             }
 
         }
+        return redirect()->back()->withInputs($req)->with('success', 'Success');
     }
 
     public function filterDateAll(Request $request) {
