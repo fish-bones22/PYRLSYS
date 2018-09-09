@@ -210,6 +210,7 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                         @if ($auth['manhour'])
                         <tr><td><a href="{{ action('ManhourController@index') }}">Show Manhour Master List</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ route('manhour.input') }}">Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                        <tr><td><a href="{{ action('ManhourController@inputAll', date_format(now(), 'Y-m-d')) }}">Batch Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('ManhourController@viewNow') }}">Show Daily Work Hours</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@index') }}">Show OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@new') }}">Add OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>

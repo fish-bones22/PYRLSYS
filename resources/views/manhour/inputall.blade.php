@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 <?php
-$title = 'Daily Working Hours - '.(date_format(date_create($details['date']), 'F Y'));
+$title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
 ?>
 
 @section('title')
@@ -142,7 +142,8 @@ $title = 'Daily Working Hours - '.(date_format(date_create($details['date']), 'F
     <div class="fixed-bottom btn-container m-4">
         <div class="float-right">
             <div class="btn-group">
-                {{-- <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a> --}}
+                <a class="btn btn-light" href="{{ action('ManhourController@index') }}">Back to List</a>
+                <a class="btn btn-secondary" href="{{ route('manhour.input') }}">Individual Input</a>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>

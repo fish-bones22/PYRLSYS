@@ -44,6 +44,7 @@
                         <a class="dropdown-item" href="{{ action('ManhourController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@viewNow') }}">Daily Work Hours</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@input', '') }}">Input Records</a>
+                        <a class="dropdown-item" href="{{ action('ManhourController@inputAll', date_format(now(),'Y-m-d')) }}">Batch Input Records</a>
                         <a class="dropdown-item" href="{{ action('OtRequestController@index') }}" role="button">OT Requests</a>
                     </div>
                 </li>
