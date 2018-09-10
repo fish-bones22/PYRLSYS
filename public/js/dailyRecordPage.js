@@ -38,7 +38,7 @@ function filterRecords() {
 
     table.search(term);
     table.columns().draw();
-}
+}``
 
 function toggleMode() {
     var mode = $("input[name='mode']:checked").val();
