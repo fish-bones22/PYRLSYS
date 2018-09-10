@@ -246,14 +246,27 @@ class DeductibleRecordController extends Controller
             'date' => $year.'-'.$month.'-'.$startDay,
             'startday' => $startDay,
             'month' => $month,
-            'year' => $year
+            'year' => $year,
+            'key' => $key
         ];
 
         if ($key === 'sss') {
-            return view('deductibles.sss', ['records' => $records]);
+            return view('deductibles.sss', ['records' => $records, 'details' => $details]);
         }
 
         return redirect()->action('DeductibleRecordController@getAll', $date);
+
+    }
+
+    public function goToDateView(Request $request) {
+
+        $month = $request->get('month');
+        $year = $request->get('year');
+        $period = $request->get('period');
+        $day = $period === 'first' ? '16' : '01';
+        $key = $request->get('key');
+
+        return redirect()->action('DeductibleRecordController@view', ['key' => $key, 'date' => $year.'-'.$month.'-'.$day]);
 
     }
 }

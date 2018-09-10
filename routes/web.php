@@ -93,7 +93,9 @@ Route::get('payroll/deductibles/{id}/{date}', 'PayrollController@deductibles');
 
 Route::get('deductibles/goto/{id}', 'DeductibleRecordController@goToDate');
 Route::get('deductibles/getall/{date}', 'DeductibleRecordController@getAll');
-Route::get('deductibles/getalltodate/', 'DeductibleRecordController@getAllOnDate');
+Route::get('deductibles/getalltodate', 'DeductibleRecordController@getAllOnDate');
+Route::get('deductibles/viewtodate', 'DeductibleRecordController@goToDateView');
+Route::get('deductibles/view/{key}/{date}', 'DeductibleRecordController@view');
 Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get')->name('deductible.get');
 Route::post('deductibles/{id}', 'DeductibleRecordController@add');
 
