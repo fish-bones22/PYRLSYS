@@ -9,12 +9,12 @@ $(function() {
 });
 
 function filterDepartment() {
-    var deptId = $("#dapartment").val();
+    var deptId = $("#department").val();
     if (deptId == 0) {
         table.column(2).search('');
     }
     else {
-        var text = $("#dapartment option[value='"+deptId+"']").text();
+        var text = $("#department option[value='"+deptId+"']").text();
         table.column(2).search(text);
     }
     table.column(2).draw();

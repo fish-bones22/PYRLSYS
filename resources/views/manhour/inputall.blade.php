@@ -32,8 +32,8 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label for="dapartment" class="form-paper-label">Dapartment</label>
-                    <select class="form-control form-control-sm" id="dapartment" onchange="filterDepartment()">
+                    <label for="department" class="form-paper-label">department</label>
+                    <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
                         <option value="0">All</option>
                         @foreach ($departments as $dept)
                             <option value="{{ $dept->id }}">{{ $dept->value }}</option>

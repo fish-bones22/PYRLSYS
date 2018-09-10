@@ -15,12 +15,12 @@ function searchEmployee(term) {
 }
 
 function filterDepartment() {
-    var deptId = $("#dapartment").val();
+    var deptId = $("#department").val();
     if (deptId == 0) {
         table.column(1).search('');
     }
     else {
-        var text = $("#dapartment option[value='"+deptId+"']").text();
+        var text = $("#department option[value='"+deptId+"']").text();
         table.column(1).search(text);
     }
     table.column(1).draw();
