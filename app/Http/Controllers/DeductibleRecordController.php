@@ -201,6 +201,7 @@ class DeductibleRecordController extends Controller
 
     public function getAll($date) {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $day = date_format(date_create($date),'d');
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
@@ -227,5 +228,32 @@ class DeductibleRecordController extends Controller
         $day = $period === 'first' ? '16' : '01';
 
         return redirect()->action('DeductibleRecordController@getAll', ['date' => $year.'-'.$month.'-'.$day]);
+    }
+
+    public function view($key, $date) {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $startDay = $day <= 15 ? '01' : '16';
+        $date = $year.'-'.$month.'-'.$startDay;
+        $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
+
+        $details = [
+            'date' => $year.'-'.$month.'-'.$startDay,
+            'startday' => $startDay,
+            'month' => $month,
+            'year' => $year
+        ];
+
+        if ($key === 'sss') {
+            return view('deductibles.sss', ['records' => $records]);
+        }
+
+        return redirect()->action('DeductibleRecordController@getAll', $date);
+
     }
 }
