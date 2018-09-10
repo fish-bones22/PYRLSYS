@@ -50,6 +50,20 @@ class OtRequestService extends EntityService implements IOtRequestService {
     }
 
 
+    public function getApprovedOtRequestsByDateRange($datefrom, $dateto) {
+
+        $otRequests = OtRequest::where('approval', true)->whereBetween('otDate', [$datefrom, $dateto])->get();
+        if ($otRequests == null) return null;
+
+        $otReq = array();
+        foreach ($otRequests as $otRequest) {
+            $otReq[] = $this->mapToEntity($otRequest, new OtRequestEntity());
+        }
+
+        return $otReq;
+    }
+
+
     public function getApprovedOtRequestByDateRange($employeeId, $datefrom, $dateto) {
 
         $otRequests = OtRequest::where('approval', true)->where('employee_id', $employeeId)->whereBetween('otDate', [$datefrom, $dateto])->get();

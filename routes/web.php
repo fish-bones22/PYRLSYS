@@ -72,6 +72,8 @@ Route::get('manhour/viewrecord/{id}/{year}-{month}-{day}', 'ManhourController@vi
 Route::post('manhour/viewrecord/{id}', 'ManhourController@setRecordDate');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
+Route::get('otrequest/approved/{date}', 'OtRequestController@viewApproved');
+Route::post('otrequest/approved', 'OtRequestController@filterDate')->name('otrequest.gotodate');
 Route::get('otrequest/new', 'OtRequestController@new')->name('otrequest.new');
 Route::post('otrequest/new', 'OtRequestController@add');
 Route::post('otrequest/getemployees/{dept}', 'OtRequestController@getEmployees');

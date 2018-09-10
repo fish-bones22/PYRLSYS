@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-OT Requests
+Approved OT Requests
 @stop
 
 @section('content')
@@ -15,16 +15,47 @@ OT Requests
 
 
 <div class="row">
-    <div class="col-md-10 offset-md-1 form-paper section-title">Overtime Requests</div>
+    <div class="col-md-10 offset-md-1 form-paper section-title">Approved Overtime Requests</div>
     <div class="col-md-10 offset-md-1 form-paper section-divider"></div>
 </div>
 <div class="row">
     <div class="col-md-10 offset-md-1">
         <div class="row">
-            <div class="col-6 form-paper">
+            <div class="col-4 form-paper">
                 <a class="mt-4 btn btn-sm btn-light btn-block" role="button" href="{{ route('otrequest.new') }}">New OT Request</a>
             </div>
-            <div class="col form-paper">
+            <div class="col-4 form-paper">
+                <form action="{{ route('otrequest.gotodate') }}" method="POST" id="setDateForm">
+                    @csrf
+                    @method('post')
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label class="form-paper-label">Period</label><br />
+                                <div class="form-check-inline">
+                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
+                                    <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
+                                    <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="form-group">
+                                <label class="form-paper-label">Month and Year</label>
+                                <div class="input-group">
+                                    @include('layout.monthselect', ['form' => 'setDateForm', 'monthSelected' => ( isset($details['month']) ? $details['month'] : date_format(now(), 'm') ) ])
+                                    <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($details['year']) ? $details['year'] : date_format(now(), 'Y') }}" />
+                                    <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-4 form-paper">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
@@ -59,7 +90,6 @@ OT Requests
                     <th>To</th>
                     <th>Hours</th>
                     <th>Reason</th>
-                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,20 +111,6 @@ OT Requests
                     <td>{{ date_format($endTime, 'h:i A') }}</td>
                     <td>{{ $req->allowedHours }}</td>
                     <td>{{ $req->reason }}</td>
-                    <td>
-                        <div class="form-inline">
-                        <form action="{{ route('otrequest.approve', $req->id) }}" method="POST">
-                            @csrf
-                            @method('post')
-                            <button type="submit" class="btn btn-sm btn-primary">Approve</button>
-                        </form>
-                        <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
-                            @csrf
-                            @method('post')
-                            <button type="submit" class="btn btn-sm btn-light">Deny</button>
-                        </form>
-                        </div>
-                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -106,7 +122,7 @@ OT Requests
 <div class="fixed-bottom btn-container m-4">
     <div class="float-right">
         <div class="btn-group">
-            <a class="btn btn-primary" href="{{ action('OtRequestController@viewApproved', date_format(now(), 'Y-m-d')) }}">View Approved Requests</a>
+            <a class="btn btn-primary" href="{{ action('OtRequestController@index') }}">View Pending Requests</a>
         </div>
     </div>
 </div>

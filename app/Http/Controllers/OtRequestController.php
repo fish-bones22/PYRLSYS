@@ -123,6 +123,37 @@ class OtRequestController extends Controller
     }
 
 
+    public function viewApproved($date) {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $start = $day <= 15 ? '01' : '16';
+        $dateFrom = $year.'-'.$month.'-'.$start;
+
+        $end = $day <= 15 ? '15' : date_format(date_create($date), 't'); // End of month;
+        $dateTo = $year.'-'.$month.'-'.$end;
+
+        $departments = $this->categoryService->getCategories('department');
+        $otRequests = $this->otRequestService->getApprovedOtRequestsByDateRange($dateFrom, $dateTo);
+        return view('otrequest.approvedindex', ['otRequests' => $otRequests, 'departments' => $departments]);
+    }
+
+
+    public function filterDate(Request $request) {
+
+        $month = $request->get('month');
+        $year = $request->get('year');
+        $period = $request->get('period');
+        $day = $period === 'first' ? '16' : '01';
+
+        return redirect()->action('OtRequestController@viewApproved', ['date' => $year.'-'.$month.'-'.$day]);
+    }
+
+
     public function getEmployees($dept) {
 
         $employees = $this->employeeService->getEmployeesByDepartment($dept);
