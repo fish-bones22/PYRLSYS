@@ -95,19 +95,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="spouseLastName" class="form-paper-label">Last name:</label>
-                                <div class="form-paper-display">{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['lastname']['value'] : '' }}</div>
+                                <div class="form-paper-display">{{ key_exists('spouse', $employee->details) && isset($employee->details['spouse'][0]['lastname']) ? $employee->details['spouse'][0]['lastname']['value'] : '' }}</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="spouseFirstName" class="form-paper-label">First name:</label>
-                                <div class="form-paper-display">{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['firstname']['value'] : '' }}</div>
+                                <div class="form-paper-display">{{ key_exists('spouse', $employee->details) && isset($employee->details['spouse'][0]['firstname']) ? $employee->details['spouse'][0]['firstname']['value'] : '' }}</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="spouseMiddleName" class="form-paper-label">Middle name:</label>
-                                <div class="form-paper-display">{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['middlename']['value'] : '' }}</div>
+                                <div class="form-paper-display">{{ key_exists('spouse', $employee->details) && isset($employee->details['spouse'][0]['middlename']) ? $employee->details['spouse'][0]['middlename']['value'] : '' }}</div>
                             </div>
                         </div>
                     </div>
@@ -141,19 +141,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dependentLastName[{{$i}}]" class="form-paper-label">Last name:</label>
-                                <div class="form-paper-display">{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['lastname']['value'] : '' }}</div>
+                                <div class="form-paper-display">{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][0]['lastname']) ? $employee->details['dependent'][$i]['lastname']['value'] : '' }}</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dependentFirstName[{{$i}}]" class="form-paper-label">First name:</label>
-                                <div class="form-paper-display">{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['firstname']['value'] : '' }}</div>
+                                <div class="form-paper-display">{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][0]['firstname']) ? $employee->details['dependent'][$i]['firstname']['value'] : '' }}</div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dependentMiddleName[{{$i}}]" class="form-paper-label">Middle name:</label>
-                                <div class="form-paper-display">{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['middlename']['value'] : '' }}</div>
+                                <div class="form-paper-display">{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][0]['middlename']) ? $employee->details['dependent'][$i]['middlename']['value'] : '' }}</div>
                             </div>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                 <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="dependentRelationship[{{$i}}]" class="form-paper-label">Relationship:</label>
-                        <div class="form-paper-display">{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][0]['relationship']) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>

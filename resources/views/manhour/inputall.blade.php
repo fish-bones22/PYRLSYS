@@ -32,7 +32,7 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label for="department" class="form-paper-label">department</label>
+                    <label for="department" class="form-paper-label">Department</label>
                     <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
                         <option value="0">All</option>
                         @foreach ($departments as $dept)

@@ -209,31 +209,31 @@
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Level:</label>
-                        <div class="form-paper-display">{{ $applicant->details['education'][$i]['level']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['education'][$i]['level']) ? $applicant->details['education'][$i]['level']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Name of School:</label>
-                        <div class="form-paper-display">{{ $applicant->details['education'][$i]['nameofschool']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['education'][$i]['nameofschool']) ? $applicant->details['education'][$i]['nameofschool']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="course[0]" class="form-paper-label">Course:</label>
-                        <div class="form-paper-display">{{ $applicant->details['education'][$i]['course']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['education'][$i]['course']) ? $applicant->details['education'][$i]['course']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-5 form-paper border-bottom">
                     <div class="form-group">
                         <label class="form-paper-label">Year Graduated:</label>
-                        <div class="form-paper-display">{{ $applicant->details['education'][$i]['yeargraduated']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['education'][$i]['yeargraduated']) ? $applicant->details['education'][$i]['yeargraduated']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-7 form-paper border-bottom">
                     <div class="form-group">
                         <label class="form-paper-label">Honors/Awards:</label>
-                        <div class="form-paper-display">{{ key_exists('recognition', $applicant->details['education'][$i]) ? $applicant->details['education'][$i]['recognition']['value'] : ''}}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['education'][$i]['recognition']) && key_exists('recognition', $applicant->details['education'][$i]) ? $applicant->details['education'][$i]['recognition']['value'] : ''}}</div>
                     </div>
                 </div>
             </div>
@@ -259,25 +259,25 @@
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Title of Examination:</label>
-                        <div class="form-paper-display">{{ $applicant->details['examination'][$i]['titleofexam']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['examination'][$i]['titleofexam']) ? $applicant->details['examination'][$i]['titleofexam']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-5 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Date of Examination:</label>
-                        <div class="form-paper-display">{{ $applicant->details['examination'][$i]['dateofexam']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['examination'][$i]['dateofexam']) ? $applicant->details['examination'][$i]['dateofexam']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-7 form-paper border-bottom">
                     <div class="form-group">
                         <label class="form-paper-label">Place of Examination:</label>
-                        <div class="form-paper-display">{{ $applicant->details['examination'][$i]['placeofexam']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['examination'][$i]['placeofexam']) ? $applicant->details['examination'][$i]['placeofexam']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-5 form-paper border-bottom">
                     <div class="form-group">
                         <label class="form-paper-label">Rating:</label>
-                        <div class="form-paper-display">{{ $applicant->details['examination'][$i]['rating']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['examination'][$i]['rating']) ? $applicant->details['examination'][$i]['rating']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -303,43 +303,43 @@
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">From:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['datefrom']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['datefrom']) ? $applicant->details['employmentrecord'][$i]['datefrom']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">To:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['dateto']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['dateto']) ? $applicant->details['employmentrecord'][$i]['dateto']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Position:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['position']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['position']) ? $applicant->details['employmentrecord'][$i]['position']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-5 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Status:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['status']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['status']) ? $applicant->details['employmentrecord'][$i]['status']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Employer/Location:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['employer']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['employer']) ? $applicant->details['employmentrecord'][$i]['employer']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Gross Monthly Salary:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['salary']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['salary']) ? $applicant->details['employmentrecord'][$i]['salary']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Reason for Leaving:</label>
-                        <div class="form-paper-display">{{ $applicant->details['employmentrecord'][$i]['reasonforleaving']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['employmentrecord'][$i]['reasonforleaving']) ? $applicant->details['employmentrecord'][$i]['reasonforleaving']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -364,37 +364,37 @@
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">From:</label>
-                        <div class="form-paper-display">{{ $applicant->details['training'][$i]['datefrom']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['training'][$i]['datefrom']) ? $applicant->details['training'][$i]['datefrom']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="traingingDateTo[0]" class="form-paper-label">To:</label>
-                        <div class="form-paper-display">{{ $applicant->details['training'][$i]['dateto']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['training'][$i]['dateto']) ? $applicant->details['training'][$i]['dateto']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label for="traingingTitle[0]" class="form-paper-label">Title/Course:</label>
-                        <div class="form-paper-display">{{ $applicant->details['training'][$i]['title']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['training'][$i]['title']) ? $applicant->details['training'][$i]['title']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-8 form-paper">
                     <div class="form-group">
                         <label for="trainingVenue[0]" class="form-paper-label">Venue:</label>
-                        <div class="form-paper-display">{{ $applicant->details['training'][$i]['venue']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['training'][$i]['venue']) ? $applicant->details['training'][$i]['venue']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="trainingNumberOfHours[0]" class="form-paper-label">Hours:</label>
-                        <div class="form-paper-display">{{ $applicant->details['training'][$i]['hours']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['training'][$i]['hours']) ? $applicant->details['training'][$i]['hours']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper border-bottom">
                     <div class="form-group">
                         <label for="trainingOrganizer[0]" class="form-paper-label">Organizer/Sponsor:</label>
-                        <div class="form-paper-display">{{ $applicant->details['training'][$i]['organizer']['value'] }}</div>
+                        <div class="form-paper-display">{{ isset($applicant->details['training'][$i]['organizer']) ? $applicant->details['training'][$i]['organizer']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -426,7 +426,13 @@
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Name:</label>
-                        <div class="form-paper-display">{{ key_exists('spouse', $applicant->details) ? $applicant->details['spouse'][0]['lastname']['value'].', '. $applicant->details['spouse'][0]['firstname']['value'].' '. $applicant->details['spouse'][0]['middlename']['value'] : '' }}</div>
+                        <?php
+                        $first = isset($applicant->details['spouse'][0]['firstname']) ? $applicant->details['spouse'][0]['firstname']['value'] : '';
+                        $middle = isset($applicant->details['spouse'][0]['middlename']) ? $applicant->details['spouse'][0]['middlename']['value'] : '';
+                        $last = isset($applicant->details['spouse'][0]['lastname']) ? $applicant->details['spouse'][0]['lastname']['value'] : '';
+                        $fullname = $last.', '.$first.' '.$middle;
+                        ?>
+                        <div class="form-paper-display">{{ key_exists('spouse', $applicant->details) ? $fullname : '' }}</div>
                     </div>
                 </div>
                 <div class="col-4 form-paper">
@@ -485,13 +491,19 @@
                 <div class="col-md-10 form-paper">
                     <div class="form-group">
                         <label for="motherLastName" class="form-paper-label">Maiden Name:</label>
-                        <div class="form-paper-display">{{ key_exists('mother', $applicant->details) ? $applicant->details['mother']['lastname']['value'].', '. $applicant->details['mother']['firstname']['value'].' '. $applicant->details['mother']['middlename']['value'] : '' }}</div>
+                        <?php
+                        $first = isset($applicant->details['mother']['firstname']) ? $applicant->details['mother']['firstname']['value'] : '';
+                        $middle = isset($applicant->details['mother']['middlename']) ? $applicant->details['mother']['middlename']['value'] : '';
+                        $last = isset($applicant->details['mother']['lastname']) ? $applicant->details['mother']['lastname']['value'] : '';
+                        $fullname = $last.', '.$first.' '.$middle;
+                        ?>
+                        <div class="form-paper-display">{{ key_exists('mother', $applicant->details) ? $fullname : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-2 form-paper">
                     <div class="form-group">
                         <label for="motherAge" class="form-paper-label">Age</label>
-                        <div class="form-paper-display">{{ key_exists('mother', $applicant->details) ? $applicant->details['mother']['age']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('mother', $applicant->details) && isset($applicant->details['mother']['age']) ? $applicant->details['mother']['age']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -513,13 +525,19 @@
                 <div class="col-md-10 form-paper">
                     <div class="form-group">
                         <label for="motherLastName" class="form-paper-label">Name:</label>
-                        <div class="form-paper-display">{{ key_exists('father', $applicant->details) ? $applicant->details['father']['lastname']['value'].', '. $applicant->details['father']['firstname']['value'].' '. $applicant->details['father']['middlename']['value'] : '' }}</div>
+                        <?php
+                        $first = isset($applicant->details['father']['firstname']) ? $applicant->details['father']['firstname']['value'] : '';
+                        $middle = isset($applicant->details['father']['middlename']) ? $applicant->details['father']['middlename']['value'] : '';
+                        $last = isset($applicant->details['father']['lastname']) ? $applicant->details['father']['lastname']['value'] : '';
+                        $fullname = $last.', '.$first.' '.$middle;
+                        ?>
+                        <div class="form-paper-display">{{ key_exists('father', $applicant->details) ? $fullname : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-2 form-paper">
                     <div class="form-group">
                         <label for="motherAge" class="form-paper-label">Age</label>
-                        <div class="form-paper-display">{{ key_exists('father', $applicant->details) ? $applicant->details['father']['age']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('father', $applicant->details) && isset($applicant->details['father']['age']) ? $applicant->details['father']['age']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -543,8 +561,16 @@
             <div class="row">
                 <div class="col-12 form-paper">
                     <div class="form-group">
+                        <?php
+
+                        $first = isset($applicant->details['child'][$i]['firstname']) ? $applicant->details['child'][$i]['firstname']['value'] : '';
+                        $middle = isset($applicant->details['child'][$i]['middlename']) ? $applicant->details['child'][$i]['middlename']['value'] : '';
+                        $last = isset($applicant->details['child'][$i]['lastname']) ? $applicant->details['child'][$i]['lastname']['value'] : '';
+                        $fullname = $last.', '.$first.' '.$middle;
+
+                        ?>
                         <label class="form-paper-label">Name:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['child'][$i]['lastname']['value'].', '. $applicant->details['child'][$i]['firstname']['value'].' '. $applicant->details['child'][$i]['middlename']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $fullname : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
