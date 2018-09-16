@@ -359,16 +359,22 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-6 form-paper">
+                <div class="col-sm-5 col-6 form-paper">
                     <div class="form-group">
                         <label for="timeIn" class="form-paper-label">Time In</label>
                         <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{  $employee->current != null && key_exists('timein', $employee->current) ? $employee->current['timein'] : '' }}" required />
                     </div>
                 </div>
-                <div class="col-md-6 form-paper">
+                <div class="col-sm-5 col-6 form-paper">
                     <div class="form-group">
                         <label for="timeOut" class="form-paper-label">Time Out</label>
                         <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->current != null && key_exists('timeout', $employee->current) ? $employee->current['timeout'] : '' }}" required />
+                    </div>
+                </div>
+                <div class="col-sm-2 form-paper">
+                    <div class="form-group">
+                        <label for="break" class="form-paper-label">Break</label>
+                        <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->current != null && key_exists('break', $employee->current) ? $employee->current['break'] : '' }}" required />
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -679,16 +685,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-6 form-paper">
+                    <div class="col-sm-5 form-paper">
                         <div class="form-group">
                             <label for="timeInModal" class="form-paper-label">Time In</label>
                             <input id="timeInModal" type="time" name="time_in" class="form-control" required />
                         </div>
                     </div>
-                    <div class="col-md-6 form-paper">
+                    <div class="col-md-5 form-paper">
                         <div class="form-group">
                             <label for="timeOutModal" class="form-paper-label">Time Out</label>
                             <input id="timeOutModal" type="time" name="time_out" class="form-control"  required />
+                        </div>
+                    </div>
+                    <div class="col-md-2 form-paper">
+                        <div class="form-group">
+                            <label for="breakModal" class="form-paper-label">Break (hrs)</label>
+                            <input id="breakModal" type="number" name="break" class="form-control" required />
                         </div>
                     </div>
                     <div class="col-12 form-paper section-divider"></div>

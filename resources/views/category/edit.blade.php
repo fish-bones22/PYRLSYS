@@ -22,18 +22,25 @@
 
         @if ($key == 'department')
 
-        <div class="col-6 form-paper">
+        <div class="col-4 form-paper">
             <div class="form-group">
                 <label for="subValue1Edit">Time In:</label>
                 <input id="subValue1Edit" class="form-control description  display-toggle" type="time" name="subvalue1" style="display:none" />
                 <div id="subValue1Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
-        <div class="col-6 form-paper">
+        <div class="col-4 form-paper">
             <div class="form-group">
                 <label for="subValue2Edit">Time Out:</label>
                 <input id="subValue2Edit" class="form-control description  display-toggle" type="time" name="subvalue2" style="display:none" />
                 <div id="subValue2Display" class="form-paper-display display-toggle">Retrieving information...</div>
+            </div>
+        </div>
+        <div class="col-4 form-paper">
+            <div class="form-group">
+                <label for="subValue3Edit">Break (hrs):</label>
+                <input id="subValue3Edit" class="form-control description  display-toggle" type="number" name="subvalue3" style="display:none" />
+                <div id="subValue3Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
 

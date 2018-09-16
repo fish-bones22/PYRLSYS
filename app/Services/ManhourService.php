@@ -210,6 +210,7 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->timeCard = $history['timecard'];
         $summary->departmentName = $history['department']['displayName'];
         $summary->departmentId = $history['department']['value'];
+        $summary->break = isset($history['break']) && $history['break'] != null ? $history['break'] : 0;
 
         $actualHours = 0;
         $recordHours = 0;
@@ -335,6 +336,7 @@ class ManhourService extends EntityService implements IManhourService {
             $summary->undertime = '';
         }
 
+        $actualHours = $actualHours > $summary->break ? $actualHours - $summary->break : $actualHours;
         $summary->totalHours = $actualHours;
         $summary->otHours = $otHours;
         $summary->regularHours = $actualHours - $otHours;

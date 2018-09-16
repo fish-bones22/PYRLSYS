@@ -84,6 +84,7 @@ class CategoryController extends Controller
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
         $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
         $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
+        $category->subvalue3 = isset($req['subvalue3']) ? $req['subvalue3'] : null;
         $result = $this->categoryService->addCategory($category);
 
         if (Auth::user() != null) {
@@ -130,6 +131,7 @@ class CategoryController extends Controller
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
         $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
         $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
+        $category->subvalue3 = isset($req['subvalue3']) ? $req['subvalue3'] : null;
         $this->categoryService->updateCategory($category);
 
         return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully updated');
@@ -152,7 +154,8 @@ class CategoryController extends Controller
             'name' => $category->value,
             'description' => $category->detail,
             'subvalue1' => $category->subvalue1,
-            'subvalue2' => $category->subvalue2
+            'subvalue2' => $category->subvalue2,
+            'subvalue3' => $category->subvalue3
         ]);
     }
 
@@ -163,7 +166,8 @@ class CategoryController extends Controller
 
         return response()->json([
             'subvalue1' => $category->subvalue1,
-            'subvalue2' => $category->subvalue2
+            'subvalue2' => $category->subvalue2,
+            'subvalue3' => $category->subvalue3
         ]);
     }
 }

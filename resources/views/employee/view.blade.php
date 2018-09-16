@@ -300,16 +300,22 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-6 form-paper">
+                <div class="col-sm-5 form-paper">
                     <div class="form-group">
                         <label for="timeIn" class="form-paper-label">Time In</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timein']) ? date_format(date_create($employee->current['timein']), 'h:i A') : 'None' }}</div>
                     </div>
                 </div>
-                <div class="col-md-6 form-paper">
+                <div class="col-md-5 form-paper">
                     <div class="form-group">
                         <label for="timeOut" class="form-paper-label">Time Out</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timeout']) ? date_format(date_create($employee->current['timeout']), 'h:i A') : 'None' }}</div>
+                    </div>
+                </div>
+                <div class="col-md-2 form-paper">
+                    <div class="form-group">
+                        <label for="break" class="form-paper-label">Break</label>
+                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['break']) ? $employee->current['break'] : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>

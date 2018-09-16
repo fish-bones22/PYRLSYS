@@ -87,6 +87,7 @@ class CategoryService extends EntityService implements ICategoryService {
         $entity->detail = $model->detail;
         $entity->subvalue1 = $model->subvalue1;
         $entity->subvalue2 = $model->subvalue2;
+        $entity->subvalue3 = $model->subvalue3;
 
         $details = $model->details;
         $entity->displayName = $details->displayName;
@@ -103,6 +104,7 @@ class CategoryService extends EntityService implements ICategoryService {
         $categoryModel->detail = $category->detail;
         $categoryModel->subvalue1 = $category->subvalue1;
         $categoryModel->subvalue2 = $category->subvalue2;
+        $categoryModel->subvalue3 = $category->subvalue3;
         $categoryModel->save();
 
         return Category::orderBy('created_at', 'desc')->first()->id;
@@ -116,6 +118,7 @@ class CategoryService extends EntityService implements ICategoryService {
         $categoryModel->detail = $category->detail;
         $categoryModel->subvalue1 = $category->subvalue1;
         $categoryModel->subvalue2 = $category->subvalue2;
+        $categoryModel->subvalue3 = $category->subvalue3;
         $categoryModel->save();
     }
 

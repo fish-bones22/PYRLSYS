@@ -49,8 +49,9 @@ function mapDetails(data) {
         $("#descriptionDisplay").text(data.description);
     }
 
-    $("#subValue1Edit").attr("value", data.subvalue1);
+    $("#subValue3Edit").attr("value", data.subvalue3);
     $("#subValue2Edit").attr("value", data.subvalue2);
+    $("#subValue1Edit").attr("value", data.subvalue1);
 
     if ($("#key").val() === 'department') {
         var sub1 = moment(data.subvalue1, 'HH:mm');
@@ -61,6 +62,7 @@ function mapDetails(data) {
 
     $("#subValue1Display").text(data.subvalue1);
     $("#subValue2Display").text(data.subvalue2);
+    $("#subValue3Display").text(data.subvalue3);
 }
 
 
@@ -80,6 +82,8 @@ function resetViewModal() {
     $("#subValue1Display").text("Retrieving information...");
     $("#subValue2Edit").attr("value", "");
     $("#subValue2Display").text("Retrieving information...");
+    $("#subValue3Edit").attr("value", "");
+    $("#subValue3Display").text("Retrieving information...");
 
     $(".display-toggle").not("div").hide();
     $("div.display-toggle").show();

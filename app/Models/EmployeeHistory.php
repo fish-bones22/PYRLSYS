@@ -9,7 +9,7 @@ class EmployeeHistory extends Model
     protected $table = 'employment_histories';
     protected $fillable = [
         'timecard', 'position', 'employee_id', 'department', 'dateStarted', 'dateTransfered', 'current',
-        'employmenttype', 'status', 'paymenttype', 'paymentmode', 'rateBasis', 'rate', 'allowance', 'timein', 'timeout'
+        'employmenttype', 'status', 'paymenttype', 'paymentmode', 'rateBasis', 'rate', 'allowance', 'timein', 'timeout', 'break'
     ];
 
     public function departmentDetails() {

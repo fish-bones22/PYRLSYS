@@ -585,6 +585,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $current->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         $current->timein = $history['timein'];
         $current->timeout = $history['timeout'];
+        $current->break = $history['break'];
 
         try {
             $current->save();
@@ -621,6 +622,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $new->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         $new->timein = $history['timein'];
         $new->timeout = $history['timeout'];
+        $new->break = $history['break'];
 
         $new->current = true;
 
@@ -679,6 +681,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $history['allowance'] = $model->allowance;
         $history['timein'] = $model->timein;
         $history['timeout'] = $model->timeout;
+        $history['break'] = $model->break;
 
         return $history;
     }

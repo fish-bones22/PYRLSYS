@@ -27,6 +27,7 @@ function updateTimeInTimeOut(self) {
     if (id == 0) {
         $("#timeIn").val('');
         $("#timeOut").val('');
+        $("#break").val(0);
         return;
     }
     var url = "/category/getsubvalues/" + id;
@@ -64,11 +65,13 @@ function updateTimeInTimeOutOnModal(self) {
 function mapSubvalues(json) {
     $("#timeIn").val(json.subvalue1);
     $("#timeOut").val(json.subvalue2);
+    $("#break").val(json.subvalue3);
 }
 
 function mapSubvaluesModal(json) {
     $("#timeInModal").val(json.subvalue1);
     $("#timeOutModal").val(json.subvalue2);
+    $("#breakModal").val(json.subvalue3);
 }
 
 function saveAsExcel() {
