@@ -239,8 +239,13 @@ class DeductibleRecordController extends Controller
         $month = date_format(date_create($date), 'm');
 
         $startDay = $day <= 15 ? '01' : '16';
+        $startDay2 = $day <= 15 ? '16' : '01';
+
         $date = $year.'-'.$month.'-'.$startDay;
+        $date2 = $year.'-'.$month.'-'.$startDay2;
+
         $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
+        $records2 = $this->deductibleRecordService->getAllDeductiblesOnDate($date2);
 
         $details = [
             'date' => $year.'-'.$month.'-'.$startDay,
@@ -251,7 +256,7 @@ class DeductibleRecordController extends Controller
         ];
 
         if ($key === 'sss') {
-            return view('deductibles.sss', ['records' => $records, 'details' => $details]);
+            return view('deductibles.sss', ['records' => $records, 'records2' => $records2, 'details' => $details]);
         }
 
         return redirect()->action('DeductibleRecordController@getAll', $date);

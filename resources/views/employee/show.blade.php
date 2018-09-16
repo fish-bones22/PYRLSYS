@@ -110,19 +110,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="spouseLastName" class="form-paper-label">Last name:</label>
-                                <input id="spouseLastName" name="spouse_last_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['lastname']['value'] : '' }}" />
+                                <input id="spouseLastName" name="spouse_last_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) && isset($employee->details['spouse'][0]['lastname']) ? $employee->details['spouse'][0]['lastname']['value'] : '' }}" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="spouseFirstName" class="form-paper-label">First name:</label>
-                                <input id="spouseFirstName" name="spouse_first_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['firstname']['value'] : '' }}" />
+                                <input id="spouseFirstName" name="spouse_first_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) && isset($employee->details['spouse'][0]['firstname']) ? $employee->details['spouse'][0]['firstname']['value'] : '' }}" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="spouseMiddleName" class="form-paper-label">Middle name:</label>
-                                <input id="spouseMiddleName" name="spouse_middle_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) ? $employee->details['spouse'][0]['middlename']['value'] : '' }}" />
+                                <input id="spouseMiddleName" name="spouse_middle_name[0]" type="text" class="form-control" value="{{ key_exists('spouse', $employee->details) && isset($employee->details['spouse'][0]['middlename']) ? $employee->details['spouse'][0]['middlename']['value'] : '' }}" />
                             </div>
                         </div>
                     </div>
@@ -164,19 +164,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dependentLastName[{{$i}}]" class="form-paper-label">Last name:</label>
-                                <input id="dependentLastName[{{$i}}]" name="dependent_last_name[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['lastname']['value'] : '' }}" />
+                                <input id="dependentLastName[{{$i}}]" name="dependent_last_name[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][$i]['lastname']) ? $employee->details['dependent'][$i]['lastname']['value'] : '' }}" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dependentFirstName[{{$i}}]" class="form-paper-label">First name:</label>
-                                <input id="dependentFirstName[{{$i}}]" name="dependent_first_name[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['firstname']['value'] : '' }}" />
+                                <input id="dependentFirstName[{{$i}}]" name="dependent_first_name[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][$i]['firstname']) ? $employee->details['dependent'][$i]['firstname']['value'] : '' }}" />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="dependentMiddleName[{{$i}}]" class="form-paper-label">Middle name:</label>
-                                <input id="dependentMiddleName[{{$i}}]" name="dependent_middle_name[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['middlename']['value'] : '' }}" />
+                                <input id="dependentMiddleName[{{$i}}]" name="dependent_middle_name[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][$i]['middlename']) ? $employee->details['dependent'][$i]['middlename']['value'] : '' }}" />
                             </div>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                 <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="dependentRelationship[{{$i}}]" class="form-paper-label">Relationship:</label>
-                        <input id="dependentRelationship[{{$i}}]" name="dependent_relationship[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}" />
+                        <input id="dependentRelationship[{{$i}}]" name="dependent_relationship[{{$i}}]" type="text" class="form-control" value="{{ key_exists('dependent', $employee->details) && isset($employee->details['dependent'][$i]['relationship']) ? $employee->details['dependent'][$i]['relationship']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
