@@ -46,9 +46,16 @@ function toggleMode() {
     if (mode === 'daily') {
         $("#dailyRow").show();
         $("#monthlyRow").hide();
+        $("#periodicRow").hide();
+    }
+    else if (mode === 'periodic') {
+        $("#periodicRow").show();
+        $("#monthlyRow").hide();
+        $("#dailyRow").hide();
     }
     else {
         $("#dailyRow").hide();
+        $("#periodicRow").hide();
         $("#monthlyRow").show();
     }
     var rand =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);

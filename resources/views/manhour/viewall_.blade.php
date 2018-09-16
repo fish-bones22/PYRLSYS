@@ -18,14 +18,17 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
     <div class="col-2 form-paper">
         <div class="form-group">
             <label class="form-check-label">
-                <input form="filterForm" type="radio" class="form-radio" value="daily" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && !$date['mode'] ? 'checked' : '' }}> Daily Record
+                <input form="filterForm" type="radio" class="form-radio" value="daily" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] == 'daily' ? 'checked' : '' }}> Daily Record
             </label>
             <label class="form-check-label">
-                <input form="filterForm" type="radio" class="form-radio" value="monthly" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] ? 'checked' : '' }}> Monthly Record
+                <input form="filterForm" type="radio" class="form-radio" value="monthly" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] == 'monthly' ? 'checked' : '' }}> Monthly Record
+            </label>
+            <label class="form-check-label">
+                <input form="filterForm" type="radio" class="form-radio" value="periodic" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] == 'periodic' ? 'checked' : '' }}> Periodical Record
             </label>
         </div>
     </div>
-    <div class="col form-paper" id="dailyRow"  {{ isset($date['mode']) && $date['mode'] ? 'style=display:none' : '' }}>
+    <div class="col form-paper" id="dailyRow"  {{ isset($date['mode']) && $date['mode'] === 'daily' ? '' : 'style=display:none' }}>
         <div class="form-group ">
             <label for="searchBox" class="form-paper-label">Date</label>
             <form id="filterForm" action="{{ route('manhour.filterdate') }}" method="POST">
@@ -38,14 +41,41 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
             </form>
         </div>
     </div>
-    <div class="col form-paper" {{ isset($date['mode']) && !$date['mode'] ? 'style=display:none' : '' }} id="monthlyRow">
+    <div class="col form-paper" {{ isset($date['mode']) && $date['mode'] === 'monthly' ? '' : 'style=display:none' }} id="monthlyRow">
         <div class="row">
             <div class="col">
                 <div class="form-group">
                     <label for="monthSelect" class="form-paper-label">Month and Year</label>
                     <div class="input-group">
-                        @include('layout.monthselect', ['form' => 'filterForm', 'monthSelected' => isset($date['month']) ? $date['month'] : date_format(now(), 'm') ])
+                        @include('layout.monthselect', ['form' => 'filterForm', 'monthSelected' => isset($date['month']) ? $date['month'] : date_format(now(), 'm'), 'name' => 'month' ])
                         <input form="filterForm" type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($date['year']) ? $date['year'] : date_format(now(), 'Y') }}" />
+                        <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col form-paper" {{ isset($date['mode']) && $date['mode'] === 'periodic' ? '' : 'style=display:none' }} id="periodicRow">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label class="form-paper-label">Period</label><br />
+                    <div class="form-check-inline">
+                        <input form="filterForm" id="secondPeriod" type="radio" name="period" value="second" {{ isset($date['startday']) && $date['startday'] <= 15 ? 'checked' : '' }} />
+                        <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input form="filterForm" id="firstPeriod" type="radio" name="period" value="first" {{ isset($date['startday']) && $date['startday'] >= 16 ? 'checked' : '' }} />
+                        <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="monthPeriodSelect" class="form-paper-label">Month and Year</label>
+                    <div class="input-group">
+                        @include('layout.monthselect', ['form' => 'filterForm', 'monthSelected' => isset($date['month']) ? $date['month'] : date_format(now(), 'm'), 'name' => 'month_period' ])
+                        <input form="filterForm" type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year_period" value="{{ isset($date['year']) ? $date['year'] : date_format(now(), 'Y') }}" />
                         <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                     </div>
                 </div>

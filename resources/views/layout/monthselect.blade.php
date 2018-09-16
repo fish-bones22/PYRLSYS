@@ -1,4 +1,4 @@
-<select  form="{{ $form }}" id="monthSelect" class="form-control form-control-sm" name="month">
+<select  form="{{ $form }}" id="monthSelect" class="form-control form-control-sm" name="{{ $name }}">
     <option></option>
     {{-- Get months --}}
     <?php

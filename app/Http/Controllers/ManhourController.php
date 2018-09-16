@@ -32,11 +32,11 @@ class ManhourController extends Controller
 
 
     public function viewNow() {
-        return redirect()->route('manhour.viewrange', ['datefrom' => date_format(now(), 'Y-m-d'), 'dateto' => date_format(now(), 'Y-m-d')]);
+        return redirect()->route('manhour.viewrange', ['mode' => 'daily', 'datefrom' => date_format(now(), 'Y-m-d'), 'dateto' => date_format(now(), 'Y-m-d')]);
     }
 
 
-    public function viewRange($datefrom = null, $dateto = null) {
+    public function viewRange($mode, $datefrom = null, $dateto = null) {
 
         if ($datefrom == null)
             $datefrom = date_create('1900-01-01');
@@ -56,7 +56,8 @@ class ManhourController extends Controller
 
         $date['datefrom'] = date_format($datefrom, 'Y-m-d');
         $date['dateto'] = date_format($dateto, 'Y-m-d');
-        $date['mode'] = $datefrom != $dateto ? true : false;
+        $date['startday'] = date_format($datefrom, 'd');
+        $date['mode'] = $mode;
 
         return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
@@ -131,6 +132,19 @@ class ManhourController extends Controller
         if ($mode === 'daily') {
             $date = $request->get('date');
             return redirect()->route('manhour.viewrange', ['datefrom' => $date, 'dateto' => $date]);
+        }
+        else if ($mode === 'periodic') {
+            $period = $request->get('period');
+            $month = $request->get('month_period');
+            $year = $request->get('year_period');
+
+            $startDay = $period === 'second' ? '01' : '16';
+            $datefrom = $year.'-'.$month.'-'.$startDay;
+
+            $endDay = $period === 'second' ? '15' : date_format(date_create($datefrom), 't');
+            $dateto = $year.'-'.$month.'-'.$endDay;
+
+            return redirect()->route('manhour.viewrange', ['mode' => $mode, 'datefrom' => $datefrom, 'dateto' => $dateto]);
         }
         else {
             $month = $request->get('month');
