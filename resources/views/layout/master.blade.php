@@ -56,6 +56,11 @@
                         <a class="dropdown-item" href="{{ action('PayrollController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Payroll Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Benefits Records</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittance Summary</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'pagibig', 'date' => date_format(now(), 'Y-m-d')]) }}">PAGIBIG Remittance Summary</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'philhealth', 'date' => date_format(now(), 'Y-m-d')]) }}">Philhealth Remittance Summary</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Company Loan Summary</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Overall Deduction Summary</a>
                     </div>
                 </li>
                 @endif

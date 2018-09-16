@@ -148,6 +148,7 @@ class DeductibleRecordController extends Controller
 
             $model['amount'] = $record->amount;
             $model['subamount'] = $record->subamount;
+            $model['subamount2'] = $record->subamount2;
             $model['remarks'] = $record->remarks;
 
             if ($model['key'] === 'sss' || $model['key'] === 'sssloan'
@@ -193,6 +194,7 @@ class DeductibleRecordController extends Controller
 
         $entity->amount = $viewModel['amount'] != null ? $viewModel['amount'] : 0;
         $entity->subamount = isset($viewModel['subamount']) ?$viewModel['subamount'] : null;
+        $entity->subamount2 = isset($viewModel['subamount2']) ?$viewModel['subamount2'] : null;
         $entity->remarks = isset($viewModel['remarks']) ?$viewModel['remarks'] : null;
 
         return $entity;
@@ -246,6 +248,7 @@ class DeductibleRecordController extends Controller
 
         $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
         $records2 = $this->deductibleRecordService->getAllDeductiblesOnDate($date2);
+        $departments = $this->categoryService->getCategories('department');
 
         $details = [
             'date' => $year.'-'.$month.'-'.$startDay,
@@ -255,8 +258,8 @@ class DeductibleRecordController extends Controller
             'key' => $key
         ];
 
-        if ($key === 'sss') {
-            return view('deductibles.sss', ['records' => $records, 'records2' => $records2, 'details' => $details]);
+        if ($key != 'all') {
+            return view('deductibles.item.sss', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }
 
         return redirect()->action('DeductibleRecordController@getAll', $date);

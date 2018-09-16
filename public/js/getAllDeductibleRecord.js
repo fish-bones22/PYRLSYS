@@ -20,6 +20,15 @@ $(function() {
     });
 });
 
+function filterDepartment() {
+
+}
+
+function filterEmployees() {
+    var term = $("#searchBox").val();
+    table.search(term);
+    table.draw();
+}
 
 function saveAsExcel() {
     table.button(0).trigger();

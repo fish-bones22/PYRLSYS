@@ -33,6 +33,7 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $model->key = $entity->key;
         $model->amount = $entity->amount;
         $model->subamount = $entity->subamount;
+        $model->subamount2 = $entity->subamount2;
         $model->remarks = $entity->remarks;
         $model->recordDate = $entity->recordDate;
         $model->dueDate = $entity->dueDate;
@@ -82,6 +83,7 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $entity->employee['lastname'] = $model->employee->lastName;
         $entity->employee['firstname'] = $model->employee->firstName;
         $entity->employee['middlename'] = $model->employee->middleName;
+        $entity->employee['basicsalary'] = $model->employee->current[0]->rate != null ? $model->employee->current[0]->rate : 0;
 
         $entity->identifier = array();
         $entity->identifier['value'] = $model->identifier;
@@ -96,6 +98,7 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $entity->dueDate = $model->dueDate;
         $entity->amount = $model->amount;
         $entity->subamount = $model->subamount;
+        $entity->subamount2 = $model->subamount2;
         $entity->remarks = $model->remarks;
 
         return $entity;

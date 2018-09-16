@@ -100,7 +100,7 @@
             <div class="row">
                 <div class="col-12 form-paper section-title">SSS</div>
                 <div class="col-12 form-paper section-divider"></div>
-                <div class="col-3 form-paper">
+                <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">SS Number</label>
                         <div class="form-paper-display">{{ $employee->deductibles['sss'] }}</div>
@@ -111,19 +111,25 @@
                         <input type="hidden" name="models[sss][id]" value="{{ isset($models['sss']['id']) ? $models['sss']['id'] : old('models["sss"]["id"]') }}" />
                     </div>
                 </div>
-                <div class="col-3 form-paper">
+                <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Employee's Share</label>
                         <input type="number" class="form-control" name="models[sss][amount]" value="{{ isset($models['sss']['amount']) ? $models['sss']['amount'] : old('models["sss"]["amount"]') }}" />
                     </div>
                 </div>
-                <div class="col-3 form-paper">
+                <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Employer's Share</label>
                         <input type="number" class="form-control" name="models[sss][subamount]" value="{{ isset($models['sss']['subamount']) ? $models['sss']['subamount'] : old('models["sss"]["subamount"]') }}" />
                     </div>
                 </div>
-                <div class="col-3 form-paper">
+                <div class="col-2 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">Emergency Contrib.</label>
+                        <input type="number" class="form-control" name="models[sss][subamount2]" value="{{ isset($models['sss']['subamount2']) ? $models['sss']['subamount2'] : old('models["sss"]["subamount2"]') }}" />
+                    </div>
+                </div>
+                <div class="col-2 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">SSS Loan</label>
                         <input type="number" class="form-control" name="models[sss][loan]" value="{{ isset($models['sssloan']['amount']) ? $models['sssloan']['amount'] : old('models["sssloan"]["amount"]') }}" />

@@ -210,7 +210,6 @@ class EmployeeService extends EntityService implements IEmployeeService {
             $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
             $date_ = strtotime(date_format($date, 'Y-m-d'));
 
-            //
             if ($end == null) {
                 if ($start <= $date_) {
                     $current = $history;

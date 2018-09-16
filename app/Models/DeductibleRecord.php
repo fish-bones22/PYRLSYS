@@ -8,7 +8,7 @@ class DeductibleRecord extends Model
 {
     protected $fillable = [
         'employee_id', 'employeeName', 'identifier', 'identifierDetails', 'deductible_id',
-        'recordDate', 'details', 'amount', 'subamount', 'remarks', 'taxSchedule'
+        'recordDate', 'details', 'amount', 'subamount', 'subamount2', 'remarks', 'taxSchedule'
     ];
 
     public function employee() {
