@@ -28,6 +28,7 @@ class PayrollEntity extends Entity {
     public $allowance;
     public $grossPay;
     public $netPay;
+    public $beforeTaxPay;
     public $takeHomePay;
 
     public $otDetails;

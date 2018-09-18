@@ -272,6 +272,9 @@ class DeductibleRecordController extends Controller
             }
             return view('deductibles.item.bir', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments, 'payrollRecord1' => $payrollRecord1, 'payrollRecord2' => $payrollRecord2 ]);
         }
+        if ($key == 'companyloan') {
+            return view('deductibles.item.clca', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
+        }
         if ($key != 'all') {
             return view('deductibles.item.sss', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }

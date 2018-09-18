@@ -5,7 +5,7 @@ $_key = $details['key'];
 ?>
 
 @section('title')
-{{date_format(date_create($details['date']), 'M Y') }} - Withholding Tax
+{{date_format(date_create($details['date']), 'M Y') }} - Company Loan
 @stop
 
 @section('content')
@@ -63,7 +63,7 @@ foreach ($records2 as $record) {
     <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - Withholding Tax</div>
+            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - Company Loan</div>
         </div>
         <div class="row">
             <div class="col-12 form-paper">
@@ -117,39 +117,19 @@ foreach ($records2 as $record) {
                             <th>First Name</th>
                             <th>Middle Name</th>
                             <th>Department</th>
-                            <th>{{ strtoupper($_key) }} Number</th>
-                            <th>Gross Pay</th>
-                            <th>Exemption</th>
-                            <th>Taxable <br />Income</th>
-                            <th>Allowance</th>
-                            <th>Exemption</th>
-                            <th>Taxable <br />Income</th>
-                            <th>Total Taxable <br />Income</th>
-                            <th>Tax <br />Due</th>
+                            <th>Loan Amount</th>
                             <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $taxDueTotal = 0;
+                        $totalLoanAmount = 0;
                         ?>
                         @foreach ($rcd as $key => $record)
                         <?php
-
-                        $gp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->grossPay : 0;
-                        $gp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->grossPay : 0;
-                        $np1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->netPay : 0;
-                        $np2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->netPay : 0;
-                        $al1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->allowance : 0;
-                        $al2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->allowance : 0;
-                        $tp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->takeHomePay : 0;
-                        $tp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->takeHomePay : 0;
-                        $td1 = isset($record[$_key]['employee']) ? $record[$_key]['employee'] : 0;
-                        $td2 = isset($rcd2[$key]) && isset($rcd2[$key][$_key]) ?  $rcd2[$key][$_key]['employee'] : 0;
-                        $pbt1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->beforeTaxPay : 0;
-                        $pbt2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->beforeTaxPay : 0;
-
-                        $taxDueTotal += $td1 + $td2;
+                        $loanAmount1 = isset($record[$_key]['employee']) ? $record[$_key]['employee']  : '0';
+                        $loanAmount2 = isset($rcd2[$key][$_key]['employee']) ? $rcd2[$key][$_key]['employee']  : '0';
+                        $totalLoanAmount += $loanAmount1 + $loanAmount2;
                         ?>
                             <tr>
                                 <td>{{ $record['employeeId'] }}</td>
@@ -157,15 +137,7 @@ foreach ($records2 as $record) {
                                 <td>{{ $record['firstName'] }}</td>
                                 <td>{{ $record['middleName'] }}</td>
                                 <td>{{ $record['department'] }}</td>
-                                <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
-                                <td>{{ $gp1 + $gp2 }}</td>
-                                <td>{{ 0 }}</td>
-                                <td>{{ $np1 + $np2 }}</td>
-                                <td>{{ $al1 + $al2 }}</td>
-                                <td>{{ 0 }}</td>
-                                <td>{{ $pbt1 + $pbt2 }}</td>
-                                <td>{{ $pbt1 + $pbt2 }}</td>
-                                <td>{{ $td1 + $td2 }}</td>
+                                <td>{{ $loanAmount1 + $loanAmount2 }}</td>
                                 <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
                             </tr>
                         @endforeach
@@ -175,16 +147,8 @@ foreach ($records2 as $record) {
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ $$taxDueTotal }}</td>
+                            <td>{{ $totalLoanAmount }}</td>
+                            <td>{{ $total }}</td>
                             <td></td>
                         </tr>
                         @endif

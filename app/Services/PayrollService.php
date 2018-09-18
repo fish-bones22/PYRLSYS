@@ -149,6 +149,9 @@ class PayrollService implements IPayrollService {
         $payroll->adjustmentsDetails = $summary;
         $payroll->adjustments = $summary['_TOTAL'];
 
+        // Net before tax
+        $payroll->beforeTaxPay = $payroll->grossPay -  $summary['_TOTAL_BEFORE_TAX'];
+
         // Net
         $payroll->netPay = $payroll->grossPay - $payroll->exemption;
 
@@ -286,6 +289,7 @@ class PayrollService implements IPayrollService {
             $total += $record->amount;
         }
 
+        $summary['_TOTAL_BEFORE_TAX'] = $total - (isset($summary['tin']) ? $summary['tin'] : 0);
         $summary['_TOTAL'] = $total;
 
         return $summary;
