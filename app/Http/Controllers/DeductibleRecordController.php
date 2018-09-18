@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\ICategoryService;
 use App\Contracts\IDeductibleRecordService;
 use App\Contracts\IEmployeeService;
+use App\Contracts\IPayrollService;
 use App\Entities\DeductibleRecordEntity;
 use Illuminate\Http\Request;
 
@@ -13,12 +14,14 @@ class DeductibleRecordController extends Controller
     private $deductibleRecordService;
     private $employeeService;
     private $categoryService;
+    private $payrollService;
     private $pageKey = 'payrollmanagement';
 
-    public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService, ICategoryService $categoryService) {
+    public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService, ICategoryService $categoryService, IPayrollService $payrollService) {
         $this->deductibleRecordService =  $deductibleRecordService;
         $this->employeeService = $employeeService;
         $this->categoryService = $categoryService;
+        $this->payrollService = $payrollService;
     }
 
     public function add(Request $request, $id) {
@@ -258,6 +261,17 @@ class DeductibleRecordController extends Controller
             'key' => $key
         ];
 
+        if ($key == 'tin') {
+            $payrollRecord1 = array();
+            $payrollRecord2 = array();
+            foreach ($records as $record) {
+                $payrollRecord1[$record->employee['id']] = $this->payrollService->getPayroll($record->employee['id'], date_create($date));
+            }
+            foreach ($records2 as $record) {
+                $payrollRecord2[$record->employee['id']] = $this->payrollService->getPayroll($record->employee['id'],  date_create($date2));
+            }
+            return view('deductibles.item.bir', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments, 'payrollRecord1' => $payrollRecord1, 'payrollRecord2' => $payrollRecord2 ]);
+        }
         if ($key != 'all') {
             return view('deductibles.item.sss', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }

@@ -1,7 +1,11 @@
 @extends('layout.master')
 
+<?php
+$_key = $details['key'];
+?>
+
 @section('title')
-{{date_format(date_create($details['date']), 'M Y') }} - SSS Remittance
+{{date_format(date_create($details['date']), 'M Y') }} - Withholding Tax
 @stop
 
 @section('content')
@@ -12,13 +16,43 @@ foreach ($records as $record) {
     if (!isset($rcd[$record->employee['id']])) {
         $rcd[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
-            'name' => $record->employee['name']
+            'lastName' => $record->employee['lastname'],
+            'firstName' => $record->employee['firstname'],
+            'middleName' => $record->employee['middlename'],
+            'basicsalary' => $record->employee['basicsalary'],
+            'department' => $record->employee['department']
         ];
     }
 
     $rcd[$record->employee['id']][$record->key] = [
         'employee' => $record->amount,
-        'employer' => $record->subamount
+        'employer' => $record->subamount,
+        'subamount2' => $record->subamount2,
+        'identifier' => isset($record->identifier['value']) ? $record->identifier['value'] : '',
+        'identifierName' => isset($record->identifier['details']) ? $record->identifier['details'] : '',
+        'remarks' => $record->remarks
+    ];
+
+
+}
+$rcd2 = array();
+foreach ($records2 as $record) {
+    if (!isset($rcd[$record->employee['id']])) {
+        $rcd2[$record->employee['id']] = [
+            'employeeId' => $record->employee['employeeId'],
+            'lastName' => $record->employee['lastname'],
+            'firstName' => $record->employee['firstname'],
+            'middleName' => $record->employee['middlename'],
+            'basicsalary' => $record->employee['basicsalary'],
+            'department' => $record->employee['department']
+        ];
+    }
+
+    $rcd2[$record->employee['id']][$record->key] = [
+        'employee' => $record->amount,
+        'employer' => $record->subamount,
+        'subamount2' => $record->subamount2,
+        'identifier' => isset($record->identifier['value']) ? $record->identifier['value'] : ''
     ];
 
 
@@ -26,32 +60,20 @@ foreach ($records as $record) {
 ?>
 
 <div class="row">
-    <div class="col-md-8 offset-md-2">
+    <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - SSS Remittance</div>
+            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - Withholding Tax</div>
         </div>
         <div class="row">
             <div class="col-12 form-paper">
 
-                <form id="setDateForm" action="{{ action('DeductibleRecordController@getAllOnDate') }}" method="get">
+                <form id="setDateForm" action="{{ action('DeductibleRecordController@goToDateView') }}" method="get">
                     @csrf
                     @method('get')
+                    <input type="hidden" name="key" value="{{ $_key }}" />
                     <div class="row">
-                        {{-- <div class="col-5">
-                            <div class="form-group">
-                                <label class="form-paper-label">Period</label><br />
-                                <div class="form-check-inline">
-                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
-                                    <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
-                                </div>
-                                <div class="form-check-inline">
-                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
-                                    <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
-                                </div>
-                            </div>
-                        </div> --}}
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label class="form-paper-label">Month and Year</label>
                                 <div class="input-group">
@@ -59,6 +81,23 @@ foreach ($records as $record) {
                                     <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($details['year']) ? $details['year'] : date_format(now(), 'Y') }}" />
                                     <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="department" class="form-paper-label">Department</label>
+                                <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
+                                    <option value="">All</option>
+                                    @foreach ($departments as $dept)
+                                        <option value="{{ $dept->value }}">{{ $dept->value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group float-right">
+                                <label for="searchBox" class="form-paper-label">Search</label>
+                                <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="filterEmployees()" />
                             </div>
                         </div>
                     </div>
@@ -77,60 +116,91 @@ foreach ($records as $record) {
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Middle Name</th>
-                            <th>SS Number</th>
-                            <th>Date of Coverage</th>
-                            <th>Basic Salary</th>
-                            <th>Emp 16-EoM</th>
-                            <th>Emp 1-15</th>
-                            <th>Emp Total</th>
-                            <th>Emr 16-EoM</th>
-                            <th>Emr 1-15</th>
-                            <th>Emr Total</th>
-                            <th>Total Remmitance</th>
+                            <th>Department</th>
+                            <th>{{ strtoupper($_key) }} Number</th>
+                            <th>Gross Pay</th>
+                            <th>Exemption</th>
+                            <th>Taxable <br />Income</th>
+                            <th>Allowance</th>
+                            <th>Exemption</th>
+                            <th>Taxable <br />Income</th>
+                            <th>Total Taxable <br />Income</th>
+                            <th>Tax <br />Due</th>
                             <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $sssEmp = 0;
-                        $philhealthEmp = 0;
-                        $pagibigEmp = 0;
-                        $sssEmr = 0;
-                        $philhealthEmr = 0;
-                        $pagibigEmr = 0;
+                        $emp1 = 0;
+                        $emr1 = 0;
+                        $emp2 = 0;
+                        $emr2 = 0;
+                        $subamount2 = 0;
+                        $empTotal1 = 0;
+                        $empTotal2 = 0;
+                        $total = 0;
                         ?>
                         @foreach ($rcd as $key => $record)
                         <?php
-                        $sssEmp += (isset($record['sss']) ? $record['sss']['employee'] : 0);
-                        $philhealthEmp += (isset($record['sss']) ? $record['philhealth']['employee'] : 0);
-                        $pagibigEmp += (isset($record['sss']) ? $record['pagibig']['employee'] : 0);
-                        $sssEmr += (isset($record['sss']) ? $record['sss']['employer'] : 0);
-                        $philhealthEmr += (isset($record['sss']) ? $record['philhealth']['employer'] : 0);
-                        $pagibigEmr += (isset($record['sss']) ? $record['pagibig']['employer'] : 0);
+                        $emp1 += (isset($record[$_key]) ? $record[$_key]['employee'] : 0);
+                        $emr1 += (isset($record[$_key]) ? $record[$_key]['employer'] : 0);
+                        $emp2 += (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employee'] : 0);
+                        $emr2 += (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employer'] : 0);
+                        $subtotal1 = $emp1 + $emp2;
+                        $emr = $emr1 + $emr2;
+                        $empTotal1 += $subtotal1;
+                        $empTotal2 += $emr;
+                        $subamount2 += (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['subamount2'] : 0) + (isset($record[$_key]) ? $record[$_key]['subamount2'] : 0);
+                        $total += $empTotal1 + $empTotal2;
                         ?>
                             <tr>
                                 <td>{{ $record['employeeId'] }}</td>
-                                <td>{{ $record['name'] }}</td>
-                                <td>{{ isset($record['sss']) ? $record['sss']['employee'] : '' }}</td>
-                                <td>{{ isset($record['sss']) ? $record['sss']['employer'] : '' }}</td>
-                                <td>{{ isset($record['philhealth']) ? $record['philhealth']['employee'] : '' }}</td>
-                                <td>{{ isset($record['philhealth']) ? $record['philhealth']['employer'] : '' }}</td>
-                                <td>{{ isset($record['pagibig']) ? $record['pagibig']['employee'] : '' }}</td>
-                                <td>{{ isset($record['pagibig']) ? $record['pagibig']['employer'] : '' }}</td>
-                                <td></td>
+                                <td>{{ $record['lastName'] }}</td>
+                                <td>{{ $record['firstName'] }}</td>
+                                <td>{{ $record['middleName'] }}</td>
+                                <td>{{ $record['department'] }}</td>
+                                <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
+                                <?php
+                                $gp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->grossPay : 0;
+                                $gp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->grossPay : 0;
+                                $np1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->netPay : 0;
+                                $np2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->netPay : 0;
+                                $al1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->allowance : 0;
+                                $al2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->allowance : 0;
+                                $tp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->takeHomePay : 0;
+                                $tp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->takeHomePay : 0;
+                                $td2 = isset($rcd2[$key]) && isset($rcd2[$key][$_key]) ?  $rcd2[$key][$_key]['employee'] : 0;
+                                ?>
+                                <td>{{ $gp1 + $gp2 }}</td>
+                                <td>{{ 0 }}</td>
+                                <td>{{ $np1 + $np2 }}</td>
+                                <td>{{ $al1 + $al2 }}</td>
+                                <td>{{ 0 }}</td>
+                                <td>{{ $tp1 + $tp2 }}</td>
+                                <td>{{ $tp1 + $tp2 }}</td>
+                                <td>{{ $record[$_key]['employee'] + $td2 }}</td>
+                                <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
                             </tr>
                         @endforeach
+                        @if (sizeof($rcd) > 0 && sizeof($rcd2) > 0)
                         <tr>
                             <td>TOTAL</td>
                             <td></td>
-                            <td>{{ $sssEmp }}</td>
-                            <td>{{ $sssEmr }}</td>
-                            <td>{{ $philhealthEmp }}</td>
-                            <td>{{ $philhealthEmr }}</td>
-                            <td>{{ $pagibigEmp }}</td>
-                            <td>{{ $pagibigEmr }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $emp1 }}</td>
+                            <td>{{ $emp2 }}</td>
+                            <td>{{ $empTotal1 }}</td>
+                            <td>{{ $emr }}</td>
+                            <td>{{ $total }}</td>
                             <td></td>
                         </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
@@ -153,5 +223,5 @@ foreach ($records as $record) {
 @stop
 
 @section('script')
-<script src="{{ asset('js/getAllDeductibleRecord.js') }}"></script>
+<script src="{{ asset('js/getSpecificDeductibleRecord.js') }}"></script>
 @stop

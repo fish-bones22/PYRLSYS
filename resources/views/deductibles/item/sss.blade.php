@@ -19,7 +19,8 @@ foreach ($records as $record) {
             'lastName' => $record->employee['lastname'],
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
-            'basicsalary' => $record->employee['basicsalary']
+            'basicsalary' => $record->employee['basicsalary'],
+            'department' => $record->employee['department']
         ];
     }
 
@@ -42,7 +43,8 @@ foreach ($records2 as $record) {
             'lastName' => $record->employee['lastname'],
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
-            'basicsalary' => $record->employee['basicsalary']
+            'basicsalary' => $record->employee['basicsalary'],
+            'department' => $record->employee['department']
         ];
     }
 
@@ -114,6 +116,7 @@ foreach ($records2 as $record) {
                             <th>Last Name</th>
                             <th>First Name</th>
                             <th>Middle Name</th>
+                            <th>Department</th>
                             <th>{{ strtoupper($_key) }} Number</th>
                             <th>Date of Coverage</th>
                             <th>Basic Salary</th>
@@ -157,6 +160,7 @@ foreach ($records2 as $record) {
                                 <td>{{ $record['lastName'] }}</td>
                                 <td>{{ $record['firstName'] }}</td>
                                 <td>{{ $record['middleName'] }}</td>
+                                <td>{{ $record['department'] }}</td>
                                 <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
                                 <td>{{ isset($details['date']) ? date_format(date_create($details['date']), 'M Y')  : '' }}</td>
                                 <td>{{ isset($record['basicsalary']) ? $record['basicsalary'] : '' }}</td>
@@ -174,6 +178,7 @@ foreach ($records2 as $record) {
                         @if (sizeof($rcd) > 0 && sizeof($rcd2) > 0)
                         <tr>
                             <td>TOTAL</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -213,5 +218,5 @@ foreach ($records2 as $record) {
 @stop
 
 @section('script')
-<script src="{{ asset('js/getAllDeductibleRecord.js') }}"></script>
+<script src="{{ asset('js/getSpecificDeductibleRecord.js') }}"></script>
 @stop
