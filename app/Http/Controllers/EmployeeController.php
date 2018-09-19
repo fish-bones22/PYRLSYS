@@ -105,6 +105,17 @@ class EmployeeController extends Controller
         $employee->employeeId = $req['employee_id'];
         $employee->sex = $req['sex'];
 
+        // File
+        if ($request->file('file_new')) {
+            // Save file to storage
+            $file = $request->file('file_new');
+            $details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
+            $filename = $employee->employeeId.'-'.$details.'.'.$image->getClientOriginalExtension();
+            // Store file to storage
+            Storage::putFile('public/'.$filename, $file) ;
+            $req['file_new_name'] = $filename;
+        }
+
         $employee->details = $this->detailsToEntity($req);
         $employee->current = $this->historyToEntity($req);
 
@@ -470,19 +481,14 @@ class EmployeeController extends Controller
             'displayName' => 'Hourly Rate'
         ];
 
-        // // Allowance
-        // $entity['allowance'] = [
-        //     'key' => 'allowance',
-        //     'value' => $details['allowance'],
-        //     'displayName' => 'Allowance'
-        // ];
-
-        // // Time In
-        // $entity['timein'] = [
-        //     'key' => 'timein',
-        //     'value' => $details['time_in'],
-        //     'displayName' => 'Time In'
-        // ];
+        // File
+        if (isset($details['file_new_name'])) {
+            $entity['file'] = [
+                'key' => 'file',
+                'value' => $details['file_new_name'],
+                'displayName' => $details['file_details']
+            ];
+        }
 
         // // Time Out
         // $entity['timeout'] = [
