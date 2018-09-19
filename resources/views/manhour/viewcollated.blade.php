@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-Employees Record
+Manhour Records
 @stop
 
 @section('content')
@@ -9,7 +9,8 @@ Employees Record
     <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title" id="title"></div>
+            <?php $dateSelected = date_create($details['year'].'-'.$details['month'].'-'.$details['startday']); ?>
+            <div class="col-12 form-paper section-title" id="title">Manhour Records - {{ date_format($dateSelected, 'F ').$details['startday'].'-'.$details['endday'].', '.$details['year']  }}</div>
             <div class="col-12 form-paper section-divider"></div>
             <div class="col-2 form-paper">
                 <div class="form-group">
@@ -93,44 +94,47 @@ Employees Record
                             <tbody>
 
                                 @if (sizeof($records) > 0)
-                                <?php
-                                $currentDept = '';
-                                $currentTimecard = '';
-                                ?>
 
                                 @foreach ($records as $empRecord)
 
                                 <?php
-                                if ($empRecord == null || !is_array($empRecord) || sizeof($empRecord) > 0)
+
+                                $currentDept = '';
+                                $currentTimecard = '';
+
+                                if ($empRecord == null || !is_array($empRecord) || sizeof($empRecord) <= 0)
                                     continue;
                                 ?>
 
                                 @foreach ($empRecord as $record)
                                 <?php
                                 // Skip record with the same timecard and department
-                                if ($record == null || $record->timeCard == null || $currentTimecard === $record->timeCard)
+                                if ($record === null)
+                                    continue;
+
+                                if ($record->timeCard === null || $currentTimecard === $record->timeCard)
                                     continue;
 
                                 $currentTimecard = $record->timeCard;
                                 $currentDept = $record->departmentName;
                                 ?>
                                 <tr>
-                                    <td>{{ $details['employeeId'] }}</td>
+                                    <td>{{ $details['employees'][$record->employee_id]['employeeId'] }}</td>
                                     <td>{{ $record->timeCard }}</td>
-                                    <td>{{ $details['name'] }}</td>
+                                    <td>{{ $details['employees'][$record->employee_id]['name'] }}</td>
                                     <td>{{ $record->departmentName }}</td>
                                     <?php
                                     $total = 0;
                                     ?>
                                     @for ($i = $details['startday']; $i <= $details['endday']; $i++)
                                     {{-- Skip record not belonging to current timecard --}}
-                                    @if ($records[$i]->timeCard != $currentTimecard)
+                                    @if ($empRecord[$i]->timeCard != $currentTimecard)
                                     <td width="25px" style="border-right:1px solid lightgray;"></td>
                                     @else
                                     <?php
-                                    $total = isset($records[$i]) ? $total + $records[$i]->totalHours : $total;
+                                    $total = isset($empRecord[$i]) ? $total + $empRecord[$i]->totalHours : $total;
                                     ?>
-                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($records[$i]) ? $records[$i]->totalHours : '' }}</td>
+                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($empRecord[$i]) ? $empRecord[$i]->totalHours : '' }}</td>
                                     @endif
                                     @endfor
                                     <td>{{ $total }}</td>
@@ -142,8 +146,8 @@ Employees Record
                                         $tlhot = 0;
                                         $txlhot = 0;
                                         $nd = 0;
-                                        foreach ($records as $key => $record) {
-                                            if ($record == null || $record->timeCard != $currentTimecard)
+                                        foreach ($empRecord as $key => $record) {
+                                            if ($record === null || $record->timeCard != $currentTimecard)
                                                 continue;
                                             $trot += $record->rot != '' ? $record->rot : 0;
                                             $tsot += $record->sot != '' ? $record->sot : 0;
@@ -198,9 +202,9 @@ Employees Record
                                 @foreach ($empRecord as $record)
                                 <?php if ($record->outlier == null) continue; ?>
                                 <tr>
-                                    <td>{{ $details['employeeId'] }}</td>
+                                    <td>{{ $details['employees'][$record->employee_id]['employeeId'] }}</td>
                                     <td>{{ $record->timeCard }}</td>
-                                    <td>{{ $details['name'] }}</td>
+                                    <td>{{ $details['employees'][$record->employee_id]['name'] }}</td>
                                     <td>{{ $record->departmentName }}</td>
                                     <td>{{ $record->date }}</td>
                                     <td>{{ $record->totalHours }}</td>

@@ -91,7 +91,7 @@ class ManhourController extends Controller
         if ($period !== 'second')
             $day = '16';
 
-        return redirect()->action('ManhourController@viewRecordCollated', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
+        return redirect()->action('ManhourController@viewRecordCollated', ['year' => $year, 'month' => $month, 'day' => $day]);
 
     }
 
@@ -158,35 +158,37 @@ class ManhourController extends Controller
         $employees =  $this->employeeService->getAllEmployees();
         $records = array();
 
+        $details['startday'] = $startDay;
+        $details['endday'] = $endDay;
+        $details['year'] = $year;
+        $details['month'] = $month;
+        $details['employees'] = array();
+
         foreach ($employees as $employee) {
-
-
-            $employee = $this->employeeService->getEmployeeById($id);
 
             if ($employee == null)
                 return redirect()->action('ManhourController@index');
-            $details['startday'] = $startDay;
-            $details['endday'] = $endDay;
-            $details['year'] = $year;
-            $details['month'] = $month;
-            $details['id'] = $id;
-            $details['employeeId'] = $employee->employeeId;
-            $details['lastname'] = $employee->lastName;
-            $details['firstname'] = $employee->firstName;
-            $details['middlename'] = $employee->middleName;
-            $details['name'] = $employee->fullName;
+
+            $emp = array();
+            $emp['id'] = $employee->id;
+            $emp['employeeId'] = $employee->employeeId;
+            $emp['lastname'] = $employee->lastName;
+            $emp['firstname'] = $employee->firstName;
+            $emp['middlename'] = $employee->middleName;
+            $emp['name'] = $employee->fullName;
+            $details['employees'][$employee->id] = $emp;
 
             $employeeRecord = array();
 
             for ($i = $startDay; $i <= $endDay; $i++) {
-                $record = $this->manhourService->getSummaryOfRecord($id, $year.'-'.$month.'-'.$i, $employee);
+                $record = $this->manhourService->getSummaryOfRecord($employee->id, $year.'-'.$month.'-'.$i, $employee);
                 $employeeRecord[$i] = $record;
             }
 
             $records[] = $employeeRecord;
 
         }
-        return view('manhour.viewindividual', ['records' => $records, 'details' => $details]);
+        return view('manhour.viewcollated', ['records' => $records, 'details' => $details]);
     }
 
 
