@@ -21,7 +21,7 @@ OT Requests
 <div class="row">
     <div class="col-md-10 offset-md-1">
         <div class="row">
-            <div class="col-6 form-paper">
+            <div class="col-3 form-paper">
                 <a class="mt-4 btn btn-sm btn-light btn-block" role="button" href="{{ route('otrequest.new') }}">New OT Request</a>
             </div>
             <div class="col form-paper">

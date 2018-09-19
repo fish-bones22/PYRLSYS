@@ -21,10 +21,10 @@ Approved OT Requests
 <div class="row">
     <div class="col-md-10 offset-md-1">
         <div class="row">
-            <div class="col-4 form-paper">
+            <div class="col-3 form-paper">
                 <a class="mt-4 btn btn-sm btn-light btn-block" role="button" href="{{ route('otrequest.new') }}">New OT Request</a>
             </div>
-            <div class="col-4 form-paper">
+            <div class="col-5 form-paper">
                 <form action="{{ route('otrequest.gotodate') }}" method="POST" id="setDateForm">
                     @csrf
                     @method('post')
@@ -90,14 +90,10 @@ Approved OT Requests
                     <th>To</th>
                     <th>Hours</th>
                     <th>Reason</th>
-                    <td>&nbsp;</td>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
-
-                {{-- @if (sizeof($otRequests) <= 0)
-                <tr><td colspan="8"><i class="text-muted">No OT Requests</i></td></tbody>
-                @endif --}}
                 @foreach ($otRequests as $req)
                 <tr>
                     <?php
