@@ -480,6 +480,7 @@
                             <div class="form-group">
                                 <label class="form-paper-label">File</label>
                                 <a class="btn btn-link" target="_blank" href="{{ asset('storage/'.key_exists('file', $employee->details) ? $employee->details['file']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}</a>
+                                <input type="hidden" name="file_old" value="{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}" />
                             </div>
                         </div>
                         @endif

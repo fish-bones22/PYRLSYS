@@ -275,6 +275,16 @@ class DeductibleRecordController extends Controller
         if ($key == 'companyloan') {
             return view('deductibles.item.clca', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }
+        if ($key == 'mealdeduction' || $key == 'medicaldeduction') {
+            $name = 'Deduction';
+            if ($key == 'mealdeduction') {
+                $name = "Meal Deduction";
+            }
+            if ($key == 'medicaldeduction') {
+                $name = "Medical Deduction";
+            }
+            return view('deductibles.item.meal', ['name' => $name, 'records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
+        }
         if ($key != 'all') {
             return view('deductibles.item.sss', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }

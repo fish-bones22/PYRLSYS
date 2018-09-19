@@ -79,10 +79,21 @@ class ManhourController extends Controller
         if ($period !== 'second')
             $day = '16';
 
-        return redirect()->action('ManhourController@viewRecord', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
+        return redirect()->action('ManhourController@viewRecord', ['year' => $year, 'month' => $month, 'day' => $day]);
 
     }
 
+    public function setRecordDateCollated(Request $request) {
+        $year = $request->get('year');
+        $month = $request->get('month');
+        $day = '01';
+        $period = $request->get('period');
+        if ($period !== 'second')
+            $day = '16';
+
+        return redirect()->action('ManhourController@viewRecordCollated', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
+
+    }
 
     public function viewRecord($id, $year = null, $month = null, $day = null) {
 
@@ -124,6 +135,60 @@ class ManhourController extends Controller
         }
         return view('manhour.viewindividual', ['records' => $records, 'details' => $details]);
     }
+
+
+    public function viewRecordCollated($year = null, $month = null, $day = null) {
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $startDay;
+        $endDay;
+        if ($day <= 15) {
+            $startDay = '1';
+            $endDay = 15;
+        }
+        else {
+            $startDay = 16;
+            $endDay = date_format(now(), 't'); // End of month
+        }
+        $datefrom = date_create($year.'-'.$month.'-'.$startDay);
+        $dateto = date_create($year.'-'.$month.'-'.$endDay);
+        $details = array();
+
+        $employees =  $this->employeeService->getAllEmployees();
+        $records = array();
+
+        foreach ($employees as $employee) {
+
+
+            $employee = $this->employeeService->getEmployeeById($id);
+
+            if ($employee == null)
+                return redirect()->action('ManhourController@index');
+            $details['startday'] = $startDay;
+            $details['endday'] = $endDay;
+            $details['year'] = $year;
+            $details['month'] = $month;
+            $details['id'] = $id;
+            $details['employeeId'] = $employee->employeeId;
+            $details['lastname'] = $employee->lastName;
+            $details['firstname'] = $employee->firstName;
+            $details['middlename'] = $employee->middleName;
+            $details['name'] = $employee->fullName;
+
+            $employeeRecord = array();
+
+            for ($i = $startDay; $i <= $endDay; $i++) {
+                $record = $this->manhourService->getSummaryOfRecord($id, $year.'-'.$month.'-'.$i, $employee);
+                $employeeRecord[$i] = $record;
+            }
+
+            $records[] = $employeeRecord;
+
+        }
+        return view('manhour.viewindividual', ['records' => $records, 'details' => $details]);
+    }
+
 
     public function filterDate(Request $request) {
 

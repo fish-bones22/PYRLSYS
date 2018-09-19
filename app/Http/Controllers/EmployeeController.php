@@ -489,6 +489,15 @@ class EmployeeController extends Controller
                 'displayName' => $details['file_details']
             ];
         }
+        else {
+            if (isset($details['file_old']) && $details['file_old'] != null) {
+                $entity['file'] = [
+                    'key' => 'file',
+                    'value' => $details['file_old'],
+                    'displayName' => $details['file_details']
+                ];
+            }
+        }
 
         // // Time Out
         // $entity['timeout'] = [

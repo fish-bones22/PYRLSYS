@@ -70,6 +70,8 @@ Route::get('manhour/dailyrecord/{mode}/{datefrom}/{dateto}', 'ManhourController@
 Route::get('manhour/viewrecord/{id}', 'ManhourController@viewRecordNow');
 Route::get('manhour/viewrecord/{id}/{year}-{month}-{day}', 'ManhourController@viewRecord');
 Route::post('manhour/viewrecord/{id}', 'ManhourController@setRecordDate');
+Route::get('manhour/viewrecordcollated/{year}-{month}-{day}', 'ManhourController@viewRecordCollated');
+Route::post('manhour/viewrecordcollated', 'ManhourController@setRecordDateCollated');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
 Route::get('otrequest/approved/{date}', 'OtRequestController@viewApproved');
