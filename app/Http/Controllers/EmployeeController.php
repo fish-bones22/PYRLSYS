@@ -110,9 +110,9 @@ class EmployeeController extends Controller
             // Save file to storage
             $file = $request->file('file_new');
             $details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
-            $filename = $employee->employeeId.'-'.$details.'.'.$image->getClientOriginalExtension();
+            $filename = $employee->employeeId.'-'.$details.'.'.$file->getClientOriginalExtension();
             // Store file to storage
-            Storage::putFile('public/'.$filename, $file) ;
+            Storage::putFileAs('public/', $file, $filename);
             $req['file_new_name'] = $filename;
         }
 
@@ -266,6 +266,11 @@ class EmployeeController extends Controller
             'timecard' => $employee->current['timecard']
         ]);
 
+    }
+
+
+    public function downloadFile($filename) {
+        return Storage::download('public/'.$filename);
     }
 
 

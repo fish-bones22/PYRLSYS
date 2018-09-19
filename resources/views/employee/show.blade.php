@@ -479,7 +479,7 @@
                         <div  class="col-6">
                             <div class="form-group">
                                 <label class="form-paper-label">File</label>
-                                <a class="btn btn-link" target="_blank" href="{{ asset('storage/'.key_exists('file', $employee->details) ? $employee->details['file']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}</a>
+                                <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}</a>
                                 <input type="hidden" name="file_old" value="{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}" />
                             </div>
                         </div>
@@ -487,14 +487,14 @@
                         <div  class="col">
                             <div class="form-group">
                                 <label for="file" class="form-paper-label">New File</label>
-                                <input id="file" type="file" name="file_new" class="form-control" />
+                                <input id="file" type="file" name="file_new" class="form-control-file " />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
-                        <label for="fileDetails" class="form-paper-label">Details</label>
+                        <label for="fileDetails" class="form-paper-label">File Details</label>
                         <input id="fileDetails" type="text" name="file_details" class="form-control" value="{{ key_exists('file', $employee->details ) ? $employee->details['file']['displayName'] : '' }}" />
                     </div>
                 </div>

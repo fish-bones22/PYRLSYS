@@ -377,6 +377,29 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-6 form-paper">
+                    <div class="row">
+                        <div  class="col-6">
+                            <div class="form-group">
+                                <label class="form-paper-label">File</label>
+                                @if (key_exists('file', $employee->details))
+                                <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file']['value'] : '#') }}">{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}</a>
+                                @else
+                                <div class="form-paper-subdisplay">No Files Uploaded</div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">File Details</label>
+                        <div class="form-paper-display">{{ key_exists('file', $employee->details ) ? $employee->details['file']['displayName'] : 'NA' }}</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="m-4">&nbsp;</div>
             <div class="fixed-bottom btn-container m-4">
                 <div class="float-right">
