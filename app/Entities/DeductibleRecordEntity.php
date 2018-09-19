@@ -14,6 +14,7 @@ class DeductibleRecordEntity extends Entity {
     public $details;
     public $amount;
     public $subamount;
+    public $subamount2;
     public $remarks;
     public $taxSchedule;
 

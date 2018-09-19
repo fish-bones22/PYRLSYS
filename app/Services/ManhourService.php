@@ -55,7 +55,7 @@ class ManhourService extends EntityService implements IManhourService {
         $record = Manhour::where('recordDate', $entity->date)->where('employee_id', $entity->employee_id)->first();
 
         // Delete if passed time in is blank
-        if ($entity->timeIn == null || $entity->timeIn == '') {
+        if (($entity->timeIn == null || $entity->timeIn == '') && $entity->outlier == null) {
             if ($record != null) {
                 $record->delete();
             }
@@ -170,7 +170,8 @@ class ManhourService extends EntityService implements IManhourService {
             return $summary;
         }
 
-        return $this->formatSummary($record, $employee);
+        $summ = $this->formatSummary($record, $employee);
+        return $summ;
 
     }
 
@@ -207,6 +208,10 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->date = date_format($date, 'M d Y');
 
         $history = $this->employeeService->getEmployeeHistoryOnDate($record->employeeId, $date);
+
+        if ($history == null)
+            $history = $this->employeeService->getCurrentEmployeeHistory($record->employeeId);
+
         $summary->timeCard = $history['timecard'];
         $summary->departmentName = $history['department']['displayName'];
         $summary->departmentId = $history['department']['value'];

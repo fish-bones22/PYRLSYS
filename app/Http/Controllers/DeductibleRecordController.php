@@ -90,7 +90,7 @@ class DeductibleRecordController extends Controller
 
             $lnEntity->deductible = array();
             $lnEntity->details = $model['details'];
-            $lnEntity->key = $model['details'] != null ? strtolower(str_replace($model['details'], ' ', '')) : null;
+            $lnEntity->key = $model['details'] != null ? strtolower(str_replace(' ', '', $model['details'])) : null;
             $lnEntity->recordDate = $req['record_date'];
 
             $lnEntity->amount = $model['amount'];

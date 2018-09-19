@@ -144,13 +144,13 @@ class PayrollService implements IPayrollService {
         $payroll->exemptionDetails = $summary;
         $payroll->exemption = $summary['_TOTAL'];
 
+        // Net before tax
+        $payroll->beforeTaxPay = $payroll->grossPay -  $summary['_TOTAL_BEFORE_TAX'];
+
         // Adjustments
         $summary = $this->getAdjustments($employeeId, $date);
         $payroll->adjustmentsDetails = $summary;
         $payroll->adjustments = $summary['_TOTAL'];
-
-        // Net before tax
-        $payroll->beforeTaxPay = $payroll->grossPay -  $summary['_TOTAL_BEFORE_TAX'];
 
         // Net
         $payroll->netPay = $payroll->grossPay - $payroll->exemption;
@@ -271,6 +271,7 @@ class PayrollService implements IPayrollService {
             $total += $record->amount;
         }
 
+        $summary['_TOTAL_BEFORE_TAX'] = $total - (isset($summary['tin']) ? $summary['tin'] : 0);
         $summary['_TOTAL'] = $total;
 
         return $summary;
@@ -288,8 +289,6 @@ class PayrollService implements IPayrollService {
             $summary[$key] = $record->amount;
             $total += $record->amount;
         }
-
-        $summary['_TOTAL_BEFORE_TAX'] = $total - (isset($summary['tin']) ? $summary['tin'] : 0);
         $summary['_TOTAL'] = $total;
 
         return $summary;

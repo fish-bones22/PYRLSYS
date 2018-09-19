@@ -153,5 +153,5 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
 @stop
 
 @section('script')
-{{-- <script src="{{ asset('js/inputAllPage.js') }}"></script> --}}
+<script src="{{ asset('js/inputAllPage.js') }}"></script>
 @stop

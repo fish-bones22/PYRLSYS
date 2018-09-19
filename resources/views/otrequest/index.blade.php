@@ -93,6 +93,11 @@ OT Requests
                             @method('post')
                             <button type="submit" class="btn btn-sm btn-light">Deny</button>
                         </form>
+                        <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
+                            @csrf
+                            @method('post')
+                            <button type="submit" class="close" data-confirm="delete">&times;</button>
+                        </form>
                         </div>
                     </td>
                 </tr>

@@ -52,7 +52,8 @@ foreach ($records2 as $record) {
         'employee' => $record->amount,
         'employer' => $record->subamount,
         'subamount2' => $record->subamount2,
-        'identifier' => isset($record->identifier['value']) ? $record->identifier['value'] : ''
+        'identifier' => isset($record->identifier['value']) ? $record->identifier['value'] : '',
+        'remarks' => $record->remarks
     ];
 
 
@@ -130,6 +131,10 @@ foreach ($records2 as $record) {
                         $loanAmount1 = isset($record[$_key]['employee']) ? $record[$_key]['employee']  : '0';
                         $loanAmount2 = isset($rcd2[$key][$_key]['employee']) ? $rcd2[$key][$_key]['employee']  : '0';
                         $totalLoanAmount += $loanAmount1 + $loanAmount2;
+                        $remarks = (isset($record[$_key]['remarks']) ? $record[$_key]['remarks'] : '').' '.(isset($rcd2[$key][$_key]['remarks']) ? $rcd2[$key][$_key]['remarks'] : '');
+
+                        if ($loanAmount1 + $loanAmount2 === 0)
+                            continue;
                         ?>
                             <tr>
                                 <td>{{ $record['employeeId'] }}</td>
@@ -138,17 +143,17 @@ foreach ($records2 as $record) {
                                 <td>{{ $record['middleName'] }}</td>
                                 <td>{{ $record['department'] }}</td>
                                 <td>{{ $loanAmount1 + $loanAmount2 }}</td>
-                                <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
+                                <td>{{ $remarks }}</td>
                             </tr>
                         @endforeach
-                        @if (sizeof($rcd) > 0 && sizeof($rcd2) > 0)
+                        @if (sizeof($rcd) > 0 && sizeof($rcd2) > 0 && $totalLoanAmount > 0)
                         <tr>
                             <td>TOTAL</td>
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td>{{ $totalLoanAmount }}</td>
-                            <td>{{ $total }}</td>
                             <td></td>
                         </tr>
                         @endif

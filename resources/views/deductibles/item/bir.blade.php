@@ -148,6 +148,8 @@ foreach ($records2 as $record) {
                         $td2 = isset($rcd2[$key]) && isset($rcd2[$key][$_key]) ?  $rcd2[$key][$_key]['employee'] : 0;
                         $pbt1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->beforeTaxPay : 0;
                         $pbt2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->beforeTaxPay : 0;
+                        $ex1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
+                        $ex2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
 
                         $taxDueTotal += $td1 + $td2;
                         ?>
@@ -159,7 +161,7 @@ foreach ($records2 as $record) {
                                 <td>{{ $record['department'] }}</td>
                                 <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
                                 <td>{{ $gp1 + $gp2 }}</td>
-                                <td>{{ 0 }}</td>
+                                <td>{{ $ex1 + $ex2 }}</td>
                                 <td>{{ $np1 + $np2 }}</td>
                                 <td>{{ $al1 + $al2 }}</td>
                                 <td>{{ 0 }}</td>
@@ -184,7 +186,7 @@ foreach ($records2 as $record) {
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $$taxDueTotal }}</td>
+                            <td>{{ $taxDueTotal }}</td>
                             <td></td>
                         </tr>
                         @endif

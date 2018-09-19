@@ -131,7 +131,7 @@ class ManhourController extends Controller
 
         if ($mode === 'daily') {
             $date = $request->get('date');
-            return redirect()->route('manhour.viewrange', ['datefrom' => $date, 'dateto' => $date]);
+            return redirect()->route('manhour.viewrange', ['mode' => $mode, 'datefrom' => $date, 'dateto' => $date]);
         }
         else if ($mode === 'periodic') {
             $period = $request->get('period');
@@ -151,7 +151,7 @@ class ManhourController extends Controller
             $year = $request->get('year');
             $datefrom = $year.'-'.$month.'-01';
             $dateto = date_format(date_create($datefrom), 'Y-m-t');
-            return redirect()->route('manhour.viewrange', ['datefrom' => $datefrom, 'dateto' => $dateto]);
+            return redirect()->route('manhour.viewrange', ['mode' => $mode, 'datefrom' => $datefrom, 'dateto' => $dateto]);
         }
     }
 

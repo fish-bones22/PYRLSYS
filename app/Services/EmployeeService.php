@@ -205,10 +205,11 @@ class EmployeeService extends EntityService implements IEmployeeService {
             // $start = strtotime($history->dateStarted);
             // $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
             // $date_ = strtotime($date);
-
-            $start = strtotime($history->dateStarted);
+            $startStr = $history->dateStarted;
+            $start = strtotime($startStr);
             $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
-            $date_ = strtotime(date_format($date, 'Y-m-d'));
+            $dateStr = date_format($date, 'Y-m-d');
+            $date_ = strtotime($dateStr);
 
             if ($end == null) {
                 if ($start <= $date_) {
@@ -223,6 +224,16 @@ class EmployeeService extends EntityService implements IEmployeeService {
                 }
             }
         }
+
+        return $this->getHistoryDetails($current);
+    }
+
+
+    public function getCurrentEmployeeHistory($id) {
+        $current = EmployeeHistory::where('employee_id', $id)->where('current', true)->first();
+
+        if ($current == null)
+            return null;
 
         return $this->getHistoryDetails($current);
     }
