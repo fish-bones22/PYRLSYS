@@ -14,7 +14,18 @@ Employees
             <a role="button" href="employee/new" class="btn btn-sm btn-block btn-light">New Employee</a>
         </div>
     </div>
-    <div class="col-md-4 form-paper">
+    <div class="col-md-2 form-paper">
+        <div class="form-group">
+            <label for="department" class="form-paper-label">Department</label>
+            <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
+                <option value="">All</option>
+                @foreach ($departments as $dept)
+                    <option value="{{ $dept->value }}">{{ $dept->value }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" class="form-control form-control-sm" type="search" onkeyup="filterEmployees()" />

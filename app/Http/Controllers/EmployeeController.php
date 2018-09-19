@@ -31,8 +31,9 @@ class EmployeeController extends Controller
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $employees = $this->employeeService->getAllEmployees();
+        $departments = $this->categoryService->getCategories('department');
 
-        return view('employee.index', compact('employees'));
+        return view('employee.index', ['employees' => $employees, 'departments' => $departments]);
 
     }
 

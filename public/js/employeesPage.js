@@ -26,6 +26,12 @@ $(function() {
     });
 });
 
+function filterDepartment() {
+    var term = $("#department").val();
+    table.column(2).search(term);
+    table.column(2).draw();
+}
+
 function filterEmployees() {
     var term = $("#searchBox").val();
     table.column(1).search(term);
