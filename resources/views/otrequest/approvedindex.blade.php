@@ -90,6 +90,7 @@ Approved OT Requests
                     <th>To</th>
                     <th>Hours</th>
                     <th>Reason</th>
+                    <td>&nbsp;</td>
                 </tr>
             </thead>
             <tbody>
@@ -111,6 +112,13 @@ Approved OT Requests
                     <td>{{ date_format($endTime, 'h:i A') }}</td>
                     <td>{{ $req->allowedHours }}</td>
                     <td>{{ $req->reason }}</td>
+                    <td>
+                        <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
+                            @csrf
+                            @method('post')
+                            <button type="submit" class="close" data-confirm="delete">&times;</button>
+                        </form>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
