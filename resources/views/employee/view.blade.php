@@ -382,6 +382,7 @@
                 <div class="float-right">
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a>
+                        <button class="btn btn-secondary" onclick="">Save as PDF</button>
                         <a class="btn btn-primary" href="{{ action('EmployeeController@show', $employee->id) }}">Edit</a>
                     </div>
                 </div>
@@ -470,5 +471,6 @@
 <script src="{{ asset('js/imageSelection.js') }}"></script>
 <script src="{{ asset('js/dynamicAddAndDelete.js') }}"></script>
 <script src="{{ asset('js/contactDetailManager.js') }}"></script>
+<script src="{{ asset('js/printEmployee.js') }}"></script>
 <script src="{{ asset('js/employeePage.js') }}"></script>
 @stop
