@@ -75,7 +75,6 @@ function print(result, doc, mode, copy, filename) {
 
         if (mode === 'save') {
             if (filename === null) {
-
                 filename = (result.employeeName + '-payslip-'+ getTimestamp()).toLowerCase().replaceAll(" ", "-").replaceAll("/", "-").replaceAll(".", "") + ".pdf";
             }
             doc.save(filename);
@@ -137,7 +136,7 @@ function printText(doc, result, copy) {
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Rate:', mainMargin, i = spacer(i));
-    doc.text(result.rate, col2MarginWider, i);
+    doc.text(result.rate + ' ' + result.rateBasis, col2MarginWider, i);
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Payment:', mainMargin, i = spacer(i));
