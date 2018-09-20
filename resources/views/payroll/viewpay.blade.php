@@ -12,7 +12,7 @@
             <div class="col-12 form-paper section-divider"></div>
         </div>
         <div class="row">
-            <div class="col-12 form-paper">
+            <div class="col-9 form-paper">
                 <form action="{{ action('PayrollController@setRecordDate', $employee->id) }}" method="POST" id="setDateForm">
                     @csrf
                     @method('post')
@@ -42,6 +42,12 @@
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="col-3 form-paper">
+                <div class="form-group">
+                    <label class="form-paper-label">Payslip Date</label>
+                    <input type="date" class="form-control form-control-sm" id="payslipDate" />
+                </div>
             </div>
             <div class="col-12 form-paper section-divider"></div>
             <div class="col-12 form-paper section-title">Summary</div>
@@ -118,7 +124,7 @@
                             <td>{{ $payroll->exemption }}</td>
                         </tr>
                         @foreach ($payroll->exemptionDetails as $key => $ex)
-                        <?php if ($key == '_TOTAL') continue; ?>
+                        <?php if ($key == '_TOTAL' || $key == '_TOTAL_BEFORE_TAX') continue; ?>
                         <tr>
                             <td>&emsp;{{ $key }}</td>
                             <td></td>

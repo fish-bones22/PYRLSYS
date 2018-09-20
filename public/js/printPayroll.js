@@ -1,8 +1,8 @@
-var mainMargin = 0.1;
-var subEntryMargin = 0.2;
-var col2Margin = 0.7;
-var col2MarginWider = 0.8;
-var col3Margin = 1.5;
+var mainMargin = 0.05;
+var subEntryMargin = 0.1;
+var col2Margin = 0.45;
+var col2MarginWider = 0.47;
+var col3Margin = 0.79;
 
 var isDone = false;
 var currPage = 0;
@@ -59,7 +59,7 @@ function newDoc() {
     doc = new jsPDF({
         orientation: 'portrait',
         unit: 'in',
-        format: [2, 6]
+        format: [1, 3]
     });
 
     return doc;
@@ -70,7 +70,7 @@ function print(result, doc, mode, copy, filename) {
     var logo = new Image();
 
     logo.onload = function() {
-        doc.addImage(logo, 'JPEG', 0.4, mainMargin, 1, 0.5, 'logo');
+        doc.addImage(logo, 'JPEG', 0.18, 0.11, 0.6, 0.3, 'logo');
         printText(doc, result, copy);
 
         if (mode === 'save') {
@@ -87,7 +87,7 @@ function print(result, doc, mode, copy, filename) {
 }
 
 function spacer(i) {
-    return i + 0.15;
+    return i + 0.06;
 }
 
 function underline(doc, x, y, length) {
@@ -95,7 +95,7 @@ function underline(doc, x, y, length) {
     for (var i = 0; i < length; i++) {
         str += "_";
     }
-    doc.text(str, x, y);
+    doc.text(str, x-0.01, y);
 }
 
 
@@ -108,16 +108,17 @@ function sleep(ms) {
 function printText(doc, result, copy) {
     var i = 0.1;
 
-    doc.setFontSize(5);
+    doc.setFontSize(2);
     doc.text(copy + "'s copy", 0.1, i);
 
-    i = 0.55;
-    doc.setFontSize(6);
-    doc.text('CJI GENERAL SERVICES INC.', 0.4, i = spacer(i));
-    doc.setFontSize(10);
-    doc.text('PAY SLIP', col2Margin, i = spacer(i));
+    i = 0.4;
+    doc.setFontSize(4);
+    doc.text('CJI GENERAL SERVICES INC.', 0.12, i = spacer(i));
+    doc.setFontSize(5);
+    doc.text('PAY SLIP', 0.35, i = spacer(i));
+    i = spacer(i)
 
-    doc.setFontSize(7);
+    doc.setFontSize(3);
 
     doc.text('Payroll period:', mainMargin, i = spacer(i));
     doc.text(result.period, col2MarginWider, i);
@@ -143,7 +144,7 @@ function printText(doc, result, copy) {
     doc.text(result.modeOfPayment, col2MarginWider, i);
     underline(doc, col2MarginWider, i, 20);
 
-    doc.text("*************************************************", mainMargin, i = spacer(i));
+    doc.text("*******************************************************", mainMargin, i = spacer(i));
 
     doc.text('Basic Pay:', mainMargin, i = spacer(i));
     doc.text(result.regularHours + ' hrs', col2Margin, i);
@@ -203,7 +204,7 @@ function printText(doc, result, copy) {
 
     for (var key in result.exemptionDetails){
         if (result.exemptionDetails.hasOwnProperty(key)) {
-            if (key === '_TOTAL')
+            if (key === '_TOTAL' || key === '_TOTAL_BEFORE_TAX')
                 continue;
             doc.text(key, subEntryMargin, i = spacer(i));
             doc.text(result.exemptionDetails[key] + "", col3Margin, i);
@@ -233,12 +234,13 @@ function printText(doc, result, copy) {
     doc.text('Take Home Pay:', mainMargin, i = spacer(i));
     doc.text(result.takeHomePay + '', col3Margin, i);
     underline(doc, col3Margin, i, 7);
-    underline(doc, col3Margin, i+0.025, 7);
+    underline(doc, col3Margin, i+0.01, 7);
 
-    i = 5.5;
-    underline(doc, col3Margin-0.4, i+0.05, 15);
-    doc.text(new Date(Date.now()).toDateString(), mainMargin, i = spacer(i));
-    doc.text("Signature", col3Margin-0.2, i);
+    i = 2.5;
+    underline(doc, col3Margin-0.2, i+0.05, 15);
+
+    doc.text(new Date(($("#payslipDate").val() != '' ? $("#payslipDate").val() : Date.now())).toDateString(), mainMargin, i = spacer(i));
+    doc.text("Signature", col3Margin-0.12, i + 0.04);
 
 }
 
