@@ -275,6 +275,14 @@ class EmployeeController extends Controller
     }
 
 
+    public function getEmployeeJson($id) {
+
+        $employee = $this->employeeService->getEmployeeById($id);
+        return json_encode($employee);
+
+    }
+
+
     private function saveImageToStorage($file, $location, $filename) {
         // Resize amd crop image to square
         $resizedImg = Image::make($file);

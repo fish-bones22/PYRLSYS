@@ -37,6 +37,7 @@ Route::get('employees', 'EmployeeController@index');
 Route::get('employee/new', 'EmployeeController@show')->name('employee.new');
 Route::post('employee/deleteall', 'EmployeeController@deleteAll')->name('employee.deleteall');
 Route::get('employee/view/{id}', 'EmployeeController@view');
+Route::get('employee/get/{id}', 'EmployeeController@getEmployeeJson');
 Route::get('employee/download/{filename}', 'EmployeeController@downloadFile');
 Route::get('employee/{id}', 'EmployeeController@show');
 Route::post('employee/{id}', 'EmployeeController@update');

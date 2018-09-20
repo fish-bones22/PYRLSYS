@@ -42,14 +42,14 @@ function printAll(date) {
 
 function getJson(id, date, doc, mode, filename) {
 
-    var url = '/payroll/get/' + id + '/' + date;
+    var url = '/employee/get/' + id;
     $.ajax({
         url: url,
         contentType: 'text/plain',
         dataType:"json",
         success: function(result) {
-            print(result, doc, 'new', 'Employee', filename);
-            print(result, doc, mode, 'Company',filename);
+            print(result, doc, 'save', 'Employee', filename);
+            //print(result, doc, mode, 'Company',filename);
         }
     });
 
@@ -76,7 +76,7 @@ function print(result, doc, mode, copy, filename) {
         if (mode === 'save') {
             if (filename === null) {
 
-                filename = (result.employeeName + '-payslip-'+ getTimestamp()).toLowerCase().replaceAll(" ", "-").replaceAll("/", "-").replaceAll(".", "") + ".pdf";
+                filename = (result.employeeName + '-information-'+ getTimestamp()).toLowerCase().replaceAll(" ", "-").replaceAll("/", "-").replaceAll(".", "") + ".pdf";
             }
             doc.save(filename);
         } else {
