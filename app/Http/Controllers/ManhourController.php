@@ -188,7 +188,9 @@ class ManhourController extends Controller
             $records[] = $employeeRecord;
 
         }
-        return view('manhour.viewcollated', ['records' => $records, 'details' => $details]);
+
+        $departments = $this->categoryService->getCategories('department');
+        return view('manhour.viewcollated', ['records' => $records, 'details' => $details, 'departments' => $departments]);
     }
 
 

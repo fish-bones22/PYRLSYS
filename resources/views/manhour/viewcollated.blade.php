@@ -25,12 +25,12 @@ Manhour Records
                     </div>
                 </div>
             </div>
-            <div class="col-7 form-paper">
+            <div class="col-6 form-paper">
                 <form action="{{ action('ManhourController@setRecordDateCollated') }}" method="POST" id="setDateForm">
                     @csrf
                     @method('post')
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-4">
                             <div class="form-group">
                                 <label class="form-paper-label">Period</label><br />
                                 <div class="form-check-inline">
@@ -43,7 +43,7 @@ Manhour Records
                                 </div>
                             </div>
                         </div>
-                        <div class="col-7">
+                        <div class="col-8">
                             <div class="form-group">
                                 <label class="form-paper-label">Month and Year</label>
                                 <div class="input-group">
@@ -56,7 +56,18 @@ Manhour Records
                     </div>
                 </form>
             </div>
-            <div class="col-3 form-paper">
+            <div class="col-2 form-paper">
+                <div class="form-group">
+                    <label for="department" class="form-paper-label">Department</label>
+                    <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
+                        <option value="">All</option>
+                        @foreach ($departments as $dept)
+                            <option value="{{ $dept->value }}">{{ $dept->value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-2 form-paper">
                 <div class="form-group">
                     <label for="searchBox" class="form-paper-label">Search</label>
                     <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterTables()" />

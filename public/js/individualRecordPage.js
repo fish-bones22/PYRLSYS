@@ -37,6 +37,13 @@ $(function() {
     });
 });
 
+function filterDepartment() {
+    var term = $("#department").val();
+    table1.column(3).search(term);
+    table2.column(3).search(term);
+    table1.column(3).draw();
+    table2.column(3).draw();
+}
 
 function filterTables() {
     var term = $("#searchBox").val();
