@@ -22,7 +22,7 @@
         </div>
         <div class="col-sm-3 pb-2">
             <div class="current-image float-md-right mx-auto">
-                <img src="{{ $employee->currentPicture == null ? asset('img/anom.png') : asset('storage/'.$employee->currentPicture['location'].$employee->currentPicture['filename']) }}" class="img-fluid" />
+                <img id="primaryImage" src="{{ $employee->currentPicture == null ? asset('img/anom.png') : asset('storage/'.$employee->currentPicture['location'].$employee->currentPicture['filename']) }}" class="img-fluid" />
             </div>
         </div>
     </div>
@@ -175,7 +175,7 @@
             <div class="row">
                 <div class="col-6 form-paper">
                     <div class="form-group">
-                        <label for="phoneNumber" class="form-paper-label">Address</label>
+                        <label class="form-paper-label">Address</label>
                         <div class="form-paper-display">{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: 'No Address' }}</div>
                     </div>
                 </div>
@@ -405,7 +405,7 @@
                 <div class="float-right">
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a>
-                        <button class="btn btn-secondary" onclick="">Save as PDF</button>
+                        <button class="btn btn-secondary" onclick="printOne({{ $employee->id }})" type="button">Save as PDF</button>
                         <a class="btn btn-primary" href="{{ action('EmployeeController@show', $employee->id) }}">Edit</a>
                     </div>
                 </div>

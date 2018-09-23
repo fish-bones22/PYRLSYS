@@ -29,7 +29,7 @@
                 @else
                 <input form="employeeForm" type="file" class="form-control-file btn-change-image" accept="image/*" name="new_image_file" />
                 @endif
-                <img src="{{ $employee->currentPicture == null ? asset('img/anom.png') : asset('storage/'.$employee->currentPicture['location'].$employee->currentPicture['filename']) }}" class="img-fluid" />
+                <img id="primaryImage" src="{{ $employee->currentPicture == null ? asset('img/anom.png') : asset('storage/'.$employee->currentPicture['location'].$employee->currentPicture['filename']) }}" class="img-fluid" />
             </div>
         </div>
     </div>
