@@ -100,7 +100,7 @@ class PayrollService implements IPayrollService {
                 $allowance = $allowance/26;
             }
 
-            $hours = $manhour->regularHours != null ? $manhour->regularHours - $break : 0;
+            $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
             $regularHours += $hours;
             $basicPay += $hours * $hourlyRate;
 
