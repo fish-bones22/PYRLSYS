@@ -338,7 +338,7 @@ class EmployeeController extends Controller
         // Allowance
         $entity['allowance'] = $history['allowance'];
 
-        // Allowance
+        // Rate Basis
         $entity['ratebasis'] = isset($history['rate_basis']) ? $history['rate_basis'] : 'monthly';
 
         // Time In

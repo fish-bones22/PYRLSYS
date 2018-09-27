@@ -132,6 +132,19 @@ class PayrollService implements IPayrollService {
         $payroll->otDetails = $otDetails;
         $payroll->allowance = round($totalAllowance, 2);
 
+        // Exception of Fixed rate basis
+        if ($payroll->rateBasis === "fixed") {
+            $pay = $payroll->rate / 2;
+            $totalAllowance = isset($employee->current['allowance']) ? $employee->current['allowance'] / 2: 0;
+            $payroll->hourlyRate = 0;
+            $payroll->basicPay = round($basicPay, 2);
+            $payroll->otPay = 0;
+            $payroll->rotPay = 0;
+            $payroll->ndPay = 0;
+            $payroll->otDetails = null;
+            $payroll->allowance = round($totalAllowance, 2);
+        }
+
         $payroll->grossPay = round($basicPay + $otPay + $totalAllowance, 2);
 
         $payroll->regularHours = $regularHours;

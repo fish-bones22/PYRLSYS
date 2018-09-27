@@ -340,6 +340,10 @@
                                     <input id="monthlyBasis" type="radio" name="rate_basis" class="form-check-input" value="monthly" {{ $employee->id == 0 ? 'checked' : '' }} {{ $employee->current != null && isset($employee->current['ratebasis'])  && $employee->current['ratebasis'] == 'monthly' ? 'checked' : '' }} />
                                     <label for="monthlyBasis" class="form-paper-label">Monthly</label>
                                 </div>
+                                <div class="form-check">
+                                    <input id="fixedBasis" type="radio" name="rate_basis" class="form-check-input" value="fixed" {{ $employee->current != null && isset($employee->current['ratebasis'])  && $employee->current['ratebasis'] == 'fixed' ? 'checked' : '' }} />
+                                    <label for="fixedBasis" class="form-paper-label">Fixed</label>
+                                </div>
                             </div>
                         </div>
                         <div class="col-5">
@@ -694,6 +698,10 @@
                                     <div class="form-check">
                                         <input id="newMonthlyBasis" type="radio" name="rate_basis" class="form-check-input" value="monthly" checked />
                                         <label for="newMonthlyBasis" class="form-paper-label">Monthly</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input id="newFixedBasis" type="radio" name="rate_basis" class="form-check-input" value="fixed" checked />
+                                        <label for="newFixedBasis" class="form-paper-label">Fixed</label>
                                     </div>
                                 </div>
                             </div>
