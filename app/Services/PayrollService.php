@@ -137,7 +137,7 @@ class PayrollService implements IPayrollService {
             $pay = $payroll->rate / 2;
             $totalAllowance = isset($employee->current['allowance']) ? $employee->current['allowance'] / 2 : 0;
             $payroll->hourlyRate = 0;
-            $payroll->basicPay = round($basicPay, 2);
+            $payroll->basicPay = round($pay, 2);
             $payroll->otPay = 0;
             $payroll->rotPay = 0;
             $payroll->ndPay = 0;
