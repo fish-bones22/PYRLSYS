@@ -96,11 +96,11 @@ foreach ($records as $record) {
                         @foreach ($rcd as $key => $record)
                         <?php
                         $sssEmp += (isset($record['sss']) ? $record['sss']['employee'] : 0);
-                        $philhealthEmp += (isset($record['sss']) ? $record['philhealth']['employee'] : 0);
-                        $pagibigEmp += (isset($record['sss']) ? $record['pagibig']['employee'] : 0);
+                        $philhealthEmp += (isset($record['philhealth']) ? $record['philhealth']['employee'] : 0);
+                        $pagibigEmp += (isset($record['pagibig']) ? $record['pagibig']['employee'] : 0);
                         $sssEmr += (isset($record['sss']) ? $record['sss']['employer'] : 0);
-                        $philhealthEmr += (isset($record['sss']) ? $record['philhealth']['employer'] : 0);
-                        $pagibigEmr += (isset($record['sss']) ? $record['pagibig']['employer'] : 0);
+                        $philhealthEmr += (isset($record['philhealth']) ? $record['philhealth']['employer'] : 0);
+                        $pagibigEmr += (isset($record['pagibig']) ? $record['pagibig']['employer'] : 0);
                         ?>
                             <tr>
                                 <td>{{ $record['employeeId'] }}</td>
