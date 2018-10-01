@@ -79,7 +79,7 @@ class ManhourController extends Controller
         if ($period !== 'second')
             $day = '16';
 
-        return redirect()->action('ManhourController@viewRecord', ['year' => $year, 'month' => $month, 'day' => $day]);
+        return redirect()->action('ManhourController@viewRecord', ['id' => $id,'year' => $year, 'month' => $month, 'day' => $day]);
 
     }
 
