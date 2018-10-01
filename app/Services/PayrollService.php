@@ -135,6 +135,7 @@ class PayrollService implements IPayrollService {
         // Exception of Fixed rate basis
         if ($payroll->rateBasis === "fixed") {
             $pay = $payroll->rate / 2;
+            $basicPay = $pay;
             $totalAllowance = isset($employee->current['allowance']) ? $employee->current['allowance'] / 2 : 0;
             $payroll->hourlyRate = 0;
             $payroll->basicPay = round($pay, 2);
