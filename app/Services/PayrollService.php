@@ -30,6 +30,37 @@ class PayrollService implements IPayrollService {
 
     public function getPayroll($employeeId, $date) {
 
+        $payroll = $this->getBasicPay($employeeId, $date);
+
+        if ($payroll == null)
+            return null;
+
+        // Exemptions
+        $summary = $this->getDeductibles($employeeId, $date);
+        $payroll->exemptionDetails = $summary;
+        $payroll->exemption = $summary['_TOTAL'];
+
+        // Net before tax
+        $payroll->beforeTaxPay = $payroll->grossPay -  $summary['_TOTAL_BEFORE_TAX'];
+
+        // Adjustments
+        $summary = $this->getAdjustments($employeeId, $date);
+        $payroll->adjustmentsDetails = $summary;
+        $payroll->adjustments = $summary['_TOTAL'];
+
+        // Net
+        $payroll->netPay = $payroll->grossPay - $payroll->exemption;
+
+        // Take home
+        $payroll->takeHomePay = $payroll->netPay + $payroll->adjustments;
+
+        return $payroll;
+
+    }
+
+
+    public function getBasicPay($employeeId, $date) {
+
         $day = date_format($date, 'd');
         $monthYear  = date_format($date, 'Y-m');
         $endDate = 15;
@@ -152,25 +183,6 @@ class PayrollService implements IPayrollService {
         $payroll->otHours = $totalOtHours;
         $payroll->totalHours = $totalOtHours + $regularHours;
         $payroll->workDays = $workDays;
-
-        // Exemptions
-        $summary = $this->getDeductibles($employeeId, $date);
-        $payroll->exemptionDetails = $summary;
-        $payroll->exemption = $summary['_TOTAL'];
-
-        // Net before tax
-        $payroll->beforeTaxPay = $payroll->grossPay -  $summary['_TOTAL_BEFORE_TAX'];
-
-        // Adjustments
-        $summary = $this->getAdjustments($employeeId, $date);
-        $payroll->adjustmentsDetails = $summary;
-        $payroll->adjustments = $summary['_TOTAL'];
-
-        // Net
-        $payroll->netPay = $payroll->grossPay - $payroll->exemption;
-
-        // Take home
-        $payroll->takeHomePay = $payroll->netPay + $payroll->adjustments;
 
         return $payroll;
 
