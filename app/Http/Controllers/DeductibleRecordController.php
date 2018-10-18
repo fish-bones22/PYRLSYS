@@ -7,6 +7,7 @@ use App\Contracts\IDeductibleRecordService;
 use App\Contracts\IEmployeeService;
 use App\Contracts\IPayrollService;
 use App\Entities\DeductibleRecordEntity;
+use App\Services\Rules\SssRule;
 use Illuminate\Http\Request;
 
 class DeductibleRecordController extends Controller
@@ -167,6 +168,8 @@ class DeductibleRecordController extends Controller
             }
         }
 
+        $this->getRemittanceDeductible($id, $date);
+
         return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//
 
     }
@@ -302,6 +305,39 @@ class DeductibleRecordController extends Controller
         $key = $request->get('key');
 
         return redirect()->action('DeductibleRecordController@view', ['key' => $key, 'date' => $year.'-'.$month.'-'.$day]);
+
+    }
+
+    private function getRemittanceDeductible($employeeId, $date) {
+
+        $day = date_format(date_create($date),'d');
+        $year = date_format(date_create($date), 'Y');
+        $month = date_format(date_create($date), 'm');
+
+        $previousDate;
+        $isFirstPeriod = false;
+
+        if ($day < 16) {
+            $strPrevMonth = $month != 1 ? $month - 1 : '12';
+            $strPrevYear = $month != 1 ? $year : $year - 1;
+            $strPrevDay = '16';
+            $previousDate = date_create($strPrevYear.'-'.$strPrevMonth.'-'.$strPrevDay);
+        }
+        else {
+            $strPrevDay = '01';
+            $previousDate = date_create($year.'-'.$month.'-'.$strPrevDay);
+            $isFirstPeriod = true;
+        }
+        // If no basic pay (new hire etc..)
+        $previousBasicPay = $this->payrollService->getBasicPay($employeeId, $previousDate);
+
+        if ($previousBasicPay == null || $previousBasicPay <= 0) {
+            $isFirstPeriod = true;
+        }
+
+        $currentBasicPay = $this->payrollService->getBasicPay($employeeId, $date);
+
+        $sssRemmitance = SssRule::getAmount($currentBasicPay, $previousBasicPay, $isFirstPeriod);
 
     }
 }

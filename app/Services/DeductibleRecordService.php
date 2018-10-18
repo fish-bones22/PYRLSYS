@@ -72,11 +72,6 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
     }
 
 
-    public function getEmployeeRemittanceDeductionOnDate($employeeId, $date) {
-
-    }
-
-
     protected function mapToEntity($model, $entity) {
 
         $entity = parent::mapToEntity($model, $entity);

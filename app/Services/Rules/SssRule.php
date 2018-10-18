@@ -7,7 +7,7 @@ use App\Contracts\RuleContracts\IRule;
 class SssRule implements IRule {
 
     /// Get computed amount base on previous amount and period.
-    public function getAmount($baseAmount, $previousAmount, $isFirstPeriod) {
+    public static function getAmount($baseAmount, $previousAmount, $isFirstPeriod) {
 
         if ($baseAmount == null)
             return 0;
