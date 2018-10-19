@@ -66,14 +66,14 @@
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Basic Pay</strong></td>
                             <td></td>
-                            <td>{{ $payroll->regularHours.' hrs' }}</td>
-                            <td>{{ $payroll->basicPay }}</td>
+                            <td>{{ isset($payroll->regularHours) ? $payroll->regularHours .' hrs' : '0' }}</td>
+                            <td>{{ isset($payroll->basicPay) ? $payroll->basicPay : '0' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Overtime</strong></td>
                             <td></td>
-                            <td>{{  $payroll->otHours.' hrs' }}</td>
-                            <td>{{ $payroll->otPay }}</td>
+                            <td>{{  isset($payroll->otHours) ? $payroll->otHours.' hrs' : '0' }}</td>
+                            <td>{{ isset($payroll->otPay) ? $payroll->otPay : '0' }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;ROT</i></td>
@@ -115,13 +115,13 @@
                             <td><strong>Gross Pay</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->grossPay }}</td>
+                            <td>{{ isset($payroll->grossPay) ? $payroll->grossPay : '0' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Less: Deductions</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->exemption }}</td>
+                            <td>{{ isset($payroll->exemption) ? $payroll->exemption : '' }}</td>
                         </tr>
                         @foreach ($payroll->exemptionDetails as $key => $ex)
                         <?php if ($key == '_TOTAL' || $key == '_TOTAL_BEFORE_TAX') continue; ?>
@@ -136,7 +136,7 @@
                             <td><strong>Net Pay</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->netPay }}</td>
+                            <td>{{ isset($payroll->netPay) ? $payroll->netPay : '0' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Add: Allowance</strong></td>

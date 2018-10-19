@@ -168,7 +168,11 @@ class DeductibleRecordController extends Controller
             }
         }
 
-        $this->getRemittanceDeductible($id, $date);
+        $rem = $this->getRemittanceDeductible($id, $date);
+        if (!isset($models['sss']))
+            $models['sss'] = array();
+        $models['sss']['amount'] = $rem[0];
+        $models['sss']['subamount'] = $rem[1];
 
         return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//
 
@@ -331,13 +335,14 @@ class DeductibleRecordController extends Controller
         // If no basic pay (new hire etc..)
         $previousBasicPay = $this->payrollService->getBasicPay($employeeId, $previousDate);
 
-        if ($previousBasicPay == null || $previousBasicPay <= 0) {
+        if ($previousBasicPay == null || $previousBasicPay->basicPay <= 0) {
             $isFirstPeriod = true;
         }
 
-        $currentBasicPay = $this->payrollService->getBasicPay($employeeId, $date);
+        $currentBasicPay = $this->payrollService->getBasicPay($employeeId, date_create($date));
 
-        $sssRemmitance = SssRule::getAmount($currentBasicPay, $previousBasicPay, $isFirstPeriod);
+        $sssRemmitance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod);
 
+        return $sssRemmitance;
     }
 }

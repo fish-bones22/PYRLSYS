@@ -4,6 +4,6 @@ namespace App\Contracts\RuleContracts;
 
 interface IRule {
 
-    public function getAmount($baseAmount, $previousAmount);
+    public static function getAmount($baseAmount, $previousAmount, $isFirstPeriod);
 
 }
