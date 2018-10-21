@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="{{ asset('images/icons/logo.png') }}" rel="icon" />
     <link href="{{ asset('css/app.css') }}" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/dev.css') }}" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/form-paper.css') }}" media="all" rel="stylesheet" type="text/css" />
@@ -56,13 +57,16 @@
                         <a class="dropdown-item" href="{{ action('PayrollController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Payroll Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Benefits Records</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'companyloan', 'date' => date_format(now(), 'Y-m-d')]) }}">Company Loan Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'medicaldeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Medical Deductions Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'mealdeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Meal Deductions Summary</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'pagibig', 'date' => date_format(now(), 'Y-m-d')]) }}">PAGIBIG Remittance Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'philhealth', 'date' => date_format(now(), 'Y-m-d')]) }}">Philhealth Remittance Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittance Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'tin', 'date' => date_format(now(), 'Y-m-d')]) }}">Withholding Tax Summary</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Overall Deduction Summary</a>
                     </div>
                 </li>

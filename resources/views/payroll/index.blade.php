@@ -1,5 +1,8 @@
 @extends('layout.master')
 
+@section('title')
+Payroll Masterlist
+@endsection
 @section('content')
 
 <div class="row">
@@ -9,7 +12,7 @@
             <div class="col-12 form-paper section-divider"></div>
         </div>
         <div class="row">
-            <div class="col-12 form-paper">
+            <div class="col-9 form-paper">
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
@@ -28,6 +31,12 @@
                             <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="searchTable()" />
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-3 form-paper">
+                <div class="form-group">
+                    <label class="form-paper-label">Payslip Date</label>
+                    <input type="date" class="form-control form-control-sm" id="payslipDate" />
                 </div>
             </div>
         </div>
@@ -76,5 +85,5 @@
 
 @section('script')
 <script src="{{ asset('js/payrollMasterlist.js') }}"></script>
-<script src="{{ asset('js/printPayroll.js') }}"></script>
+<script src="{{ asset('js/printPayrollPage.js') }}"></script>
 @stop

@@ -11,6 +11,9 @@ use App\Contracts\IAdjustmentsRecordService;
 use App\Entities\ManhourSummaryEntity;
 use App\Entities\PayrollEntity;
 
+use App\Services\Rules\SssRule;
+use App\Utilities\DateUtility;
+
 class PayrollService implements IPayrollService {
 
     public $employeeService;
@@ -52,7 +55,7 @@ class PayrollService implements IPayrollService {
         $payroll->netPay = $payroll->grossPay - $payroll->exemption;
 
         // Take home
-        $payroll->takeHomePay = $payroll->netPay + $payroll->adjustments;
+        $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->allowance, 2);
 
         return $payroll;
 
@@ -177,7 +180,7 @@ class PayrollService implements IPayrollService {
             $payroll->allowance = round($totalAllowance, 2);
         }
 
-        $payroll->grossPay = round($basicPay + $otPay + $totalAllowance, 2);
+        $payroll->grossPay = round($basicPay + $otPay, 2);
 
         $payroll->regularHours = $regularHours;
         $payroll->otHours = $totalOtHours;
@@ -186,6 +189,30 @@ class PayrollService implements IPayrollService {
 
         return $payroll;
 
+    }
+
+    public function getRemittanceDeductible($employeeId, $date) {
+
+        $previousDate = DateUtility::getPreviousPeriod($date);
+
+        $isFirstPeriod = false;
+
+        if (date_format($previousDate, 'd') < 16) {
+            $isFirstPeriod = true;
+        }
+
+        // If no basic pay (new hire etc..)
+        $previousBasicPay = $this->getBasicPay($employeeId, $previousDate);
+
+        if ($previousBasicPay == null || $previousBasicPay->basicPay <= 0) {
+            $isFirstPeriod = true;
+        }
+
+        $currentBasicPay = $this->getBasicPay($employeeId, date_create($date));
+
+        $sssRemmitance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod);
+
+        return $sssRemmitance;
     }
 
     private function getOtMultiplier($manhour) {

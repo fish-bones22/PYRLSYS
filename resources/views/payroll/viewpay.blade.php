@@ -190,5 +190,5 @@
 @stop
 
 @section('script')
-<script src="{{ asset('js/printPayroll.js') }}"></script>
+<script src="{{ asset('js/printPayrollPage.js') }}"></script>
 @stop

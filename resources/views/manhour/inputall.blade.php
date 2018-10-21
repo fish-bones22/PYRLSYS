@@ -89,9 +89,9 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
                     ?>
                     @foreach ($records as $record)
                     <?php
-                        if ($record === null)
+                        //if ($record === null)
                     ?>
-                    <tr>
+                    <tr {{ $record != null && $record->regularHours != null ? "style=background-color:#efe;" : ''}} >
                         <td>
                             {{ $record != null ? $record->timecard : '' }}
                             <input type="hidden" name="time_card[{{$index}}]" value="{{  $record != null ? $record->timecard : ''}}" />

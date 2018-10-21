@@ -33,7 +33,7 @@ New OT Request
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label for="date" class="form-paper-label">Date</label>
-                        <input id="date" class="form-control" name="date" type="date" onchange="updateEmployeeRecords()" min="{{ date_format(now(), 'Y-m-d') }}" value="{{ old('date') }}" required />
+                        <input id="date" class="form-control" name="date" type="date" onchange="updateEmployeeRecords()" value="{{ old('date') }}" required />
                     </div>
                 </div>
                 <div class="col-6 form-paper">

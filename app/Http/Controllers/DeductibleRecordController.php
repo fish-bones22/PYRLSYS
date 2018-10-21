@@ -7,7 +7,6 @@ use App\Contracts\IDeductibleRecordService;
 use App\Contracts\IEmployeeService;
 use App\Contracts\IPayrollService;
 use App\Entities\DeductibleRecordEntity;
-use App\Services\Rules\SssRule;
 use Illuminate\Http\Request;
 
 class DeductibleRecordController extends Controller
@@ -31,7 +30,9 @@ class DeductibleRecordController extends Controller
 
         foreach ($req['models'] as $model) {
 
-            if (!isset($model['amount']) || $model['amount'] == '')
+            // if (!isset($model['amount']) )//|| $model['amount'] == '')
+            //     continue;
+            if (!isset($model['identifier']) )//|| $model['amount'] == '')
                 continue;
 
             $entity = $this->mapToEntity($id, $req['record_date'], $req['employee_name'], $model);
@@ -168,7 +169,7 @@ class DeductibleRecordController extends Controller
             }
         }
 
-        $rem = $this->getRemittanceDeductible($id, $date);
+        $rem = $this->payrollService->getRemittanceDeductible($id, $date);
         if (!isset($models['sss']))
             $models['sss'] = array();
         $models['sss']['amount'] = $rem[0];
@@ -202,7 +203,7 @@ class DeductibleRecordController extends Controller
         $entity->details = $viewModel['details'];
         $entity->key = $viewModel['key'];
 
-        $entity->amount = $viewModel['amount'] != null ? $viewModel['amount'] : 0;
+        $entity->amount = isset($viewModel['amount']) ? $viewModel['amount'] : null;
         $entity->subamount = isset($viewModel['subamount']) ?$viewModel['subamount'] : null;
         $entity->subamount2 = isset($viewModel['subamount2']) ?$viewModel['subamount2'] : null;
         $entity->remarks = isset($viewModel['remarks']) ?$viewModel['remarks'] : null;
@@ -312,37 +313,4 @@ class DeductibleRecordController extends Controller
 
     }
 
-    private function getRemittanceDeductible($employeeId, $date) {
-
-        $day = date_format(date_create($date),'d');
-        $year = date_format(date_create($date), 'Y');
-        $month = date_format(date_create($date), 'm');
-
-        $previousDate;
-        $isFirstPeriod = false;
-
-        if ($day < 16) {
-            $strPrevMonth = $month != 1 ? $month - 1 : '12';
-            $strPrevYear = $month != 1 ? $year : $year - 1;
-            $strPrevDay = '16';
-            $previousDate = date_create($strPrevYear.'-'.$strPrevMonth.'-'.$strPrevDay);
-        }
-        else {
-            $strPrevDay = '01';
-            $previousDate = date_create($year.'-'.$month.'-'.$strPrevDay);
-            $isFirstPeriod = true;
-        }
-        // If no basic pay (new hire etc..)
-        $previousBasicPay = $this->payrollService->getBasicPay($employeeId, $previousDate);
-
-        if ($previousBasicPay == null || $previousBasicPay->basicPay <= 0) {
-            $isFirstPeriod = true;
-        }
-
-        $currentBasicPay = $this->payrollService->getBasicPay($employeeId, date_create($date));
-
-        $sssRemmitance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod);
-
-        return $sssRemmitance;
-    }
 }
