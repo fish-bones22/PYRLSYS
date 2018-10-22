@@ -170,10 +170,26 @@ class DeductibleRecordController extends Controller
         }
 
         $rem = $this->payrollService->getRemittanceDeductible($id, $date);
-        if (!isset($models['sss']))
+        // SSS
+        if (!isset($models['sss'])) {
             $models['sss'] = array();
-        $models['sss']['amount'] = $rem[0];
-        $models['sss']['subamount'] = $rem[1];
+        }
+        if (!isset($models['sss']['amount']) && $models['sss']['amount'] != null) {
+            $models['sss']['amount'] = $rem['sss'][0];
+        }
+        if (!isset($models['sss']['subamount']) && $models['sss']['subamount'] != null) {
+            $models['sss']['subamount'] = $rem['sss'][1];
+        }
+        // Philhealth
+        if (!isset($models['philhealth'])) {
+            $models['philhealth'] = array();
+        }
+        if (!isset($models['philhealth']['amount']) && $models['philhealth']['amount'] != null) {
+            $models['philhealth']['amount'] = $rem['philhealth'][0];
+        }
+        if (!isset($models['philhealth']['subamount']) && $models['philhealth']['subamount'] != null) {
+            $models['philhealth']['subamount'] = $rem['philhealth'][1];
+        }
 
         return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//
 

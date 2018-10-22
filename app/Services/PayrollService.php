@@ -191,6 +191,38 @@ class PayrollService implements IPayrollService {
 
     }
 
+
+    public function getComputedMonthlyRate($employeeId, $date) {
+
+        $workDays = 26;
+
+        $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
+
+        if ($history == null)
+            return 0;
+
+        $rateBasis = 'monthly';
+        $rate = 0;
+        $monthlyRate = 0;
+
+        if ($history['rate'] != null)
+            $rate = $history['rate'];
+
+        if ($history['ratebasis'] != null)
+            $rateBasis = $history['ratebasis'];
+
+        if ($rateBasis == 'daily') {
+            $monthlyRate = $rate * $workDays;
+        }
+        else {
+            $monthlyRate = $rate;
+        }
+
+        return $monthlyRate;
+
+    }
+
+
     public function getRemittanceDeductible($employeeId, $date) {
 
         $previousDate = DateUtility::getPreviousPeriod($date);
@@ -201,6 +233,10 @@ class PayrollService implements IPayrollService {
             $isFirstPeriod = true;
         }
 
+
+        $rate = $this->getComputedMonthlyRate($employeeId, $date);
+        $previousRate = $this->getComputedMonthlyRate($employeeId, $previousDate);
+
         // If no basic pay (new hire etc..)
         $previousBasicPay = $this->getBasicPay($employeeId, $previousDate);
 
@@ -210,9 +246,14 @@ class PayrollService implements IPayrollService {
 
         $currentBasicPay = $this->getBasicPay($employeeId, date_create($date));
 
-        $sssRemmitance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod);
+        $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod);
 
-        return $sssRemmitance;
+        $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod);
+
+        return [
+            'sss' => $sssRemmittance,
+            'philhealth' => $philhealthRemittance
+        ];
     }
 
     private function getOtMultiplier($manhour) {
