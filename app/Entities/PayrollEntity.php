@@ -11,6 +11,8 @@ class PayrollEntity extends Entity {
     public $dateEnd;
     public $period;
 
+    public $employeeRemittances;
+
     public $modeOfPayment;
     public $rate;
     public $rateBasis;

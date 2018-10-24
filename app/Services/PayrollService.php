@@ -85,6 +85,8 @@ class PayrollService implements IPayrollService {
 
         $payroll = new PayrollEntity();
 
+        $payroll->employeeRemittances = $employee->deductibles;
+
         $payroll->employeeId = $employee->employeeId;
         $payroll->employeeName = $employee->fullName;
         $payroll->employeeDepartment = $employee->current['department']['displayName'];
@@ -250,20 +252,33 @@ class PayrollService implements IPayrollService {
         $currentBasicPay = $this->getBasicPay($employeeId, date_create($date));
         $basis = $currentBasicPay->rateBasis;
 
-        $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
 
-        $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
 
-        $pagibigRemittance = PagibigRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+        $taxablePay = $currentBasicPay != null ? $currentBasicPay->grossPay : 0;
 
-        $withholdingTax = WithholdingTaxRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, 0, $isFirstPeriod, $basis);
+        $value = array();
 
-        return [
-            'sss' => $sssRemmittance,
-            'philhealth' => $philhealthRemittance,
-            'pagibig' => $pagibigRemittance,
-            'tin' => $withholdingTax
-        ];
+        if (isset($currentBasicPay->employeeRemittances['sss'])) {
+            $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
+            $value['sss'] = $sssRemmittance;
+            $taxablePay -= $sssRemmittance[0];
+        }
+        if (isset($currentBasicPay->employeeRemittances['philhealth'])) {
+            $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+            $value['philhealth'] = $philhealthRemittance;
+            $taxablePay -= $philhealthRemittance[0];
+        }
+        if (isset($currentBasicPay->employeeRemittances['pagibig'])) {
+            $pagibigRemittance = PagibigRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+            $value['pagibig'] = $pagibigRemittance;
+            $taxablePay -= $pagibigRemittance[0];
+        }
+        if (isset($currentBasicPay->employeeRemittances['tin'])) {
+            $withholdingTax = WithholdingTaxRule::getAmount($taxablePay, 0, $isFirstPeriod, $basis);
+            $value['tin'] = $pagibigRemittance;
+        }
+
+        return $value;
     }
 
     private function getOtMultiplier($manhour) {
