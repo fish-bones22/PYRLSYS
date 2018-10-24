@@ -7,23 +7,23 @@ use App\Contracts\RuleContracts\IRule;
 class SssRule implements IRule {
 
     /// Get computed amount base on previous amount and period.
-    public static function getAmount($baseAmount, $previousAmount, $isFirstPeriod) {
+    public static function getAmount($baseAmount, $previousAmount, $isFirstPeriod, $basis) {
 
         if ($baseAmount == null)
             return [0, 0];
 
         if (!$isFirstPeriod && $previousAmount != null) {
-            $prevComputedAmount = SssRule::getAmount($previousAmount, 0, true);
-            $computedAmount = SssRule::_getAmount($baseAmount + $previousAmount);
+            $prevComputedAmount = SssRule::getAmount($previousAmount, 0, true, $basis);
+            $computedAmount = SssRule::_getAmount($baseAmount + $previousAmount, $basis);
 
             return [$computedAmount[0] - $prevComputedAmount[0], $computedAmount[1] - $prevComputedAmount[1]];
         }
 
-        return SssRule::_getAmount($baseAmount);
+        return SssRule::_getAmount($baseAmount, $basis);
 
     }
 
-    private static function _getAmount($baseAmount) {
+    private static function _getAmount($baseAmount, $basis) {
 
         $baseAmount = round($baseAmount, 2);
         $lowerLimit =   [1000,  1250,   1750,   2250,   2750,   3250,   3750,   4250,   4750,   5250,   5750,   6250,   6750,   7250,   7750,   8250,   8750,   9250,   9750,   10250,  10750,  11250,  11750,  12250,  12750,  13250,  13750,   14250,   14750,   15250,   15750];

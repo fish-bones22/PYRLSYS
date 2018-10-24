@@ -190,6 +190,23 @@ class DeductibleRecordController extends Controller
         if (!isset($models['philhealth']['subamount']) && $models['philhealth']['subamount'] != null) {
             $models['philhealth']['subamount'] = $rem['philhealth'][1];
         }
+        // PAGIBIG
+        if (!isset($models['pagibig'])) {
+            $models['pagibig'] = array();
+        }
+        if (!isset($models['pagibig']['amount']) && $models['pagibig']['amount'] != null) {
+            $models['pagibig']['amount'] = $rem['pagibig'][0];
+        }
+        if (!isset($models['pagibig']['subamount']) && $models['pagibig']['subamount'] != null) {
+            $models['pagibig']['subamount'] = $rem['pagibig'][1];
+        }
+        // Tax
+        if (!isset($models['tin'])) {
+            $models['tin'] = array();
+        }
+        if (!isset($models['tin']['amount']) && $models['tin']['amount'] != null) {
+            $models['tin']['amount'] = $rem['tin'][0];
+        }
 
         return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//
 

@@ -12,6 +12,9 @@ use App\Entities\ManhourSummaryEntity;
 use App\Entities\PayrollEntity;
 
 use App\Services\Rules\SssRule;
+use App\Services\Rules\PhilhealthRule;
+use App\Services\Rules\PagibigRule;
+use App\Services\Rules\WithholdingTaxRule;
 use App\Utilities\DateUtility;
 
 class PayrollService implements IPayrollService {
@@ -245,14 +248,21 @@ class PayrollService implements IPayrollService {
         }
 
         $currentBasicPay = $this->getBasicPay($employeeId, date_create($date));
+        $basis = $currentBasicPay->rateBasis;
 
-        $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod);
+        $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
 
-        $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod);
+        $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+
+        $pagibigRemittance = PagibigRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+
+        $withholdingTax = WithholdingTaxRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, 0, $isFirstPeriod, $basis);
 
         return [
             'sss' => $sssRemmittance,
-            'philhealth' => $philhealthRemittance
+            'philhealth' => $philhealthRemittance,
+            'pagibig' => $pagibigRemittance,
+            'tin' => $withholdingTax
         ];
     }
 
