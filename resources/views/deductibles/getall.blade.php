@@ -92,6 +92,7 @@ foreach ($records as $record) {
                         $sssEmr = 0;
                         $philhealthEmr = 0;
                         $pagibigEmr = 0;
+                        $tax = 0;
                         ?>
                         @foreach ($rcd as $key => $record)
                         <?php
@@ -101,6 +102,7 @@ foreach ($records as $record) {
                         $sssEmr += (isset($record['sss']) ? $record['sss']['employer'] : 0);
                         $philhealthEmr += (isset($record['philhealth']) ? $record['philhealth']['employer'] : 0);
                         $pagibigEmr += (isset($record['pagibig']) ? $record['pagibig']['employer'] : 0);
+                        $tax += (isset($record['tin']) ? $record['tin']['employee'] : 0);
                         ?>
                             <tr>
                                 <td>{{ $record['employeeId'] }}</td>
@@ -111,7 +113,7 @@ foreach ($records as $record) {
                                 <td>{{ isset($record['philhealth']) ? $record['philhealth']['employer'] : '' }}</td>
                                 <td>{{ isset($record['pagibig']) ? $record['pagibig']['employee'] : '' }}</td>
                                 <td>{{ isset($record['pagibig']) ? $record['pagibig']['employer'] : '' }}</td>
-                                <td></td>
+                                <td>{{ isset($record['tin']) ? $record['tin']['employee'] : 0 }}</td>
                             </tr>
                         @endforeach
                         <tr>
@@ -123,7 +125,7 @@ foreach ($records as $record) {
                             <td>{{ $philhealthEmr }}</td>
                             <td>{{ $pagibigEmp }}</td>
                             <td>{{ $pagibigEmr }}</td>
-                            <td></td>
+                            <td>{{ $tax }}</td>
                         </tr>
                     </tbody>
                 </table>
