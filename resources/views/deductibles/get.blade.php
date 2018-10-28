@@ -82,7 +82,7 @@
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employee's Share</label>
+                        <label class="form-paper-label">{!! isset($models['tin']['auto']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employee's Share</label>
                         <input type="number" class="form-control" name="models[tin][amount]" value="{{ isset($models['tin']['amount']) ? $models['tin']['amount'] : old('models["tin"]["amount"]') }}" />
                     </div>
                 </div>
@@ -113,13 +113,13 @@
                 </div>
                 <div class="col-2 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employee's Share</label>
+                        <label class="form-paper-label">{!! isset($models['sss']['auto']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employee's Share</label>
                         <input type="number" class="form-control" name="models[sss][amount]" value="{{ isset($models['sss']['amount']) ? $models['sss']['amount'] : old('models["sss"]["amount"]') }}" />
                     </div>
                 </div>
                 <div class="col-2 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employer's Share</label>
+                        <label class="form-paper-label">{!! isset($models['sss']['auto2']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employer's Share</label>
                         <input type="number" class="form-control" name="models[sss][subamount]" value="{{ isset($models['sss']['subamount']) ? $models['sss']['subamount'] : old('models["sss"]["subamount"]') }}" />
                     </div>
                 </div>
@@ -159,13 +159,13 @@
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employee's Share</label>
+                        <label class="form-paper-label">{!! isset($models['philhealth']['auto']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employee's Share</label>
                         <input type="number" class="form-control" name="models[philhealth][amount]" value="{{ isset($models['philhealth']['amount']) ? $models['philhealth']['amount'] : old('models["philhealth"]["amount"]') }}" />
                     </div>
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employer's Share</label>
+                        <label class="form-paper-label">{!! isset($models['philhealth']['auto2']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employer's Share</label>
                         <input type="number" class="form-control" name="models[philhealth][subamount]" value="{{ isset($models['philhealth']['subamount']) ? $models['philhealth']['subamount'] : old('models["philhealth"]["subamount"]') }}" />
                     </div>
                 </div>
@@ -191,13 +191,13 @@
                 </div>
                 <div class="col-3 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employee's Share</label>
+                        <label class="form-paper-label">{!! isset($models['pagibig']['auto2']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employee's Share</label>
                         <input type="number" class="form-control" name="models[pagibig][amount]" value="{{ isset($models['pagibig']['amount']) ? $models['pagibig']['amount'] : old('models["pagibig"]["amount"]') }}" />
                     </div>
                 </div>
                 <div class="col-3 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Employer's Share</label>
+                        <label class="form-paper-label">{!! isset($models['pagibig']['auto2']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Employer's Share</label>
                         <input type="number" class="form-control" name="models[pagibig][subamount]" value="{{ isset($models['pagibig']['subamount']) ? $models['pagibig']['subamount'] : old('models["pagibig"]["subamount"]') }}" />
                     </div>
                 </div>

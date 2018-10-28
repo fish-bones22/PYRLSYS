@@ -174,38 +174,52 @@ class DeductibleRecordController extends Controller
         if (!isset($models['sss'])) {
             $models['sss'] = array();
         }
-        if (!isset($models['sss']['amount']) && $models['sss']['amount'] != null) {
+        if (!isset($models['sss']['amount']) || $models['sss']['amount'] == null) {
             $models['sss']['amount'] = isset($rem['sss']) ? $rem['sss'][0] : 0;
+            if ($models['sss']['amount'] != 0)
+                $models['sss']['auto'] = true;
         }
-        if (!isset($models['sss']['subamount']) && $models['sss']['subamount'] != null) {
+        if (!isset($models['sss']['subamount']) || $models['sss']['subamount'] == null) {
             $models['sss']['subamount'] = isset($rem['sss']) ? $rem['sss'][1] : 0;
+            if ($models['sss']['subamount'] != 0)
+                $models['sss']['auto2'] = true;
         }
         // Philhealth
         if (!isset($models['philhealth'])) {
             $models['philhealth'] = array();
         }
-        if (!isset($models['philhealth']['amount']) && $models['philhealth']['amount'] != null) {
+        if (!isset($models['philhealth']['amount']) || $models['philhealth']['amount'] == null) {
             $models['philhealth']['amount'] =isset($rem['philhealth']) ? $rem['philhealth'][0] : 0;
+            if ($models['philhealth']['amount'] != 0)
+                $models['philhealth']['auto'] = true;
         }
-        if (!isset($models['philhealth']['subamount']) && $models['philhealth']['subamount'] != null) {
+        if (!isset($models['philhealth']['subamount']) || $models['philhealth']['subamount'] == null) {
             $models['philhealth']['subamount'] = isset($rem['philhealth']) ? $rem['philhealth'][1] : 0;
+            if ($models['philhealth']['subamount'] != 0)
+                $models['philhealth']['auto2'] = true;
         }
         // PAGIBIG
         if (!isset($models['pagibig'])) {
             $models['pagibig'] = array();
         }
-        if (!isset($models['pagibig']['amount']) && $models['pagibig']['amount'] != null) {
+        if (!isset($models['pagibig']['amount']) || $models['pagibig']['amount'] == null) {
             $models['pagibig']['amount'] = isset($rem['pagibig']) ? $rem['pagibig'][0] : 0;
+            if ($models['pagibig']['amount'] != 0)
+                $models['pagibig']['auto'] = true;
         }
-        if (!isset($models['pagibig']['subamount']) && $models['pagibig']['subamount'] != null) {
+        if (!isset($models['pagibig']['subamount']) || $models['pagibig']['subamount'] == null) {
             $models['pagibig']['subamount'] = isset($rem['pagibig']) ? $rem['pagibig'][1] : 0;
+            if ($models['pagibig']['subamount'] != 0)
+                $models['pagibig']['auto2'] = true;
         }
         // Tax
         if (!isset($models['tin'])) {
             $models['tin'] = array();
         }
-        if (!isset($models['tin']['amount']) && $models['tin']['amount'] != null) {
+        if (!isset($models['tin']['amount']) || $models['tin']['amount'] == null) {
             $models['tin']['amount'] = isset($rem['tin']) ? $rem['tin'][0] : 0;
+            if ($models['tin']['amount'] != 0)
+                $models['tin']['auto'] = true;
         }
 
         return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//

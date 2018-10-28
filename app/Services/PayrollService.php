@@ -239,7 +239,7 @@ class PayrollService implements IPayrollService {
         }
 
 
-        $rate = $this->getComputedMonthlyRate($employeeId, $date);
+        $rate = $this->getComputedMonthlyRate($employeeId, date_create($date));
         $previousRate = $this->getComputedMonthlyRate($employeeId, $previousDate);
 
         // If no basic pay (new hire etc..)
@@ -275,7 +275,7 @@ class PayrollService implements IPayrollService {
         }
         if (isset($currentBasicPay->employeeRemittances['tin'])) {
             $withholdingTax = WithholdingTaxRule::getAmount($taxablePay, 0, $isFirstPeriod, $basis);
-            $value['tin'] = $pagibigRemittance;
+            $value['tin'] = $withholdingTax;
         }
 
         return $value;

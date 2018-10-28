@@ -113,3 +113,8 @@ a:hover .btn-link {
     height: 100px;
     width: 100px;
 }
+
+.auto-tag {
+    font-size: 0.7em;
+    font-weight: 800;
+}

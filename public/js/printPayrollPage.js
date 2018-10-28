@@ -114,7 +114,7 @@ function print(result, doc, mode, copy, filename) {
             print(result, doc, mode, 'Company',filename);
         }
     }
-    logo.src = "/images/logo-small.jpg";
+    logo.src = "/images/logo-small-black.jpg";
 }
 
 function spacer(i) {

@@ -37,7 +37,7 @@ class WithholdingTaxRule implements IRule {
             )
             {
                 $diff = $baseAmount - $compenstationLevel[$i];
-                $tax = $prescribedMinimum[$i] + ($diff * $rate[$i]);
+                $tax = round($prescribedMinimum[$i] + ($diff * $rate[$i]), 2);
                 return [ $tax, 0 ];
             }
         }

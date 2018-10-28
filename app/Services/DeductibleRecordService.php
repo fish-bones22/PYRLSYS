@@ -44,9 +44,9 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $model->identifierDetails = $entity->identifier['details'];
         $model->details = $entity->details;
         $model->key = $entity->key;
-        $model->amount = $entity->amount == null ? $entity->amount : 0;
-        $model->subamount = $entity->subamount == null ? $entity->subamount : 0;
-        $model->subamount2 = $entity->subamount2 == null ? $entity->subamount2 : 0;
+        $model->amount = $entity->amount != null ? $entity->amount : 0;
+        $model->subamount = $entity->subamount != null ? $entity->subamount : 0;
+        $model->subamount2 = $entity->subamount2 != null ? $entity->subamount2 : 0;
         $model->remarks = $entity->remarks;
         $model->recordDate = $entity->recordDate;
         $model->dueDate = $entity->dueDate;
