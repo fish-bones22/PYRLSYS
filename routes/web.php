@@ -101,6 +101,7 @@ Route::get('deductibles/getalltodate', 'DeductibleRecordController@getAllOnDate'
 Route::get('deductibles/viewtodate', 'DeductibleRecordController@goToDateView');
 Route::get('deductibles/view/{key}/{date}', 'DeductibleRecordController@view');
 Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get')->name('deductible.get');
+Route::post('deductibles/autogenerate/{date}', 'DeductibleRecordController@autogenerate')->name('deductible.autogenerate');
 Route::post('deductibles/{id}', 'DeductibleRecordController@add');
 
 Route::get('adjustments/goto/{id}', 'AdjustmentsRecordController@goToDate');

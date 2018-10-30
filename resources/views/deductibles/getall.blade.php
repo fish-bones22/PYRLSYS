@@ -26,44 +26,56 @@ foreach ($records as $record) {
 ?>
 
 <div class="row">
-    <div class="col-md-8 offset-md-2">
-
+    <div class="col-md-10 offset-md-1">
         <div class="row">
             <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - Deductibles</div>
         </div>
         <div class="row">
-            <div class="col-12 form-paper">
-
-                <form id="setDateForm" action="{{ action('DeductibleRecordController@getAllOnDate') }}" method="get">
-                    @csrf
-                    @method('get')
-                    <div class="row">
-                        <div class="col-5">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-4 form-paper">
+                        <form action="{{ route('deductible.autogenerate', $details['date']) }}" method="POST">
                             <div class="form-group">
-                                <label class="form-paper-label">Period</label><br />
                                 <div class="form-check-inline">
-                                    <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
-                                    <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
+                                    <input id="overrideValues" class="form-check-input" type="checkbox" name="override_values" />
+                                    <label for="overrideValues" class="form-check-label small">Override Values</label>
                                 </div>
-                                <div class="form-check-inline">
-                                    <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
-                                    <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
-                                </div>
+                                <button type="submit" class="btn btn-light btn-sm" >Auto-generate Remittances</button>
                             </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="form-group">
-                                <label class="form-paper-label">Month and Year</label>
-                                <div class="input-group">
-                                    @include('layout.monthselect', ['form' => 'setDateForm', 'monthSelected' => ( isset($details['month']) ? $details['month'] : date_format(now(), 'm') ), 'name' => 'month' ])
-                                    <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($details['year']) ? $details['year'] : date_format(now(), 'Y') }}" />
-                                    <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-
+                    <div class="col-8 form-paper">
+                        <form id="setDateForm" action="{{ action('DeductibleRecordController@getAllOnDate') }}" method="get">
+                            @csrf
+                            @method('get')
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label class="form-paper-label">Period</label><br />
+                                        <div class="form-check-inline">
+                                            <input id="secondPeriod" type="radio" name="period" value="second" {{ isset($details['startday']) && $details['startday'] <= 15 ? 'checked' : '' }} />
+                                            <label for="secondPeriod" class="form-check-label small">Second (1-15)</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <input id="firstPeriod" type="radio" name="period" value="first" {{ isset($details['startday']) && $details['startday'] >= 16 ? 'checked' : '' }} />
+                                            <label for="firstPeriod" class="form-check-label small">First (16-EoM)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="form-group">
+                                        <label class="form-paper-label">Month and Year</label>
+                                        <div class="input-group">
+                                            @include('layout.monthselect', ['form' => 'setDateForm', 'monthSelected' => ( isset($details['month']) ? $details['month'] : date_format(now(), 'm') ), 'name' => 'month' ])
+                                            <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ isset($details['year']) ? $details['year'] : date_format(now(), 'Y') }}" />
+                                            <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="col-12 form-paper section-divider"></div>
         </div>

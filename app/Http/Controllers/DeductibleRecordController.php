@@ -184,7 +184,8 @@ class DeductibleRecordController extends Controller
             if ($models['sss']['subamount'] != 0)
                 $models['sss']['auto2'] = true;
         }
-        // Philhealth
+        // Philhealthg
+
         if (!isset($models['philhealth'])) {
             $models['philhealth'] = array();
         }
@@ -258,6 +259,90 @@ class DeductibleRecordController extends Controller
         return $entity;
     }
 
+    public function autogenerate(Request $request, $date) {
+
+        $year = date_format(date_create($date, 'Y'));
+        $month = date_format(date_create($date, 'm'));
+        $day = date_format(date_create($date, 'd'));
+
+        $day = ($day < 16) ? '1' : '16';
+        $date = $year.'-'.$month.'-'.$day;
+
+        $override = $request->get('override_values');
+        $override = $override != null ? true : false;
+
+        $employees = $this->employeeService->getAllEmployees();
+        foreach ($employees as $employee) {
+            $rem = $this->payrollService->getRemittanceDeductible($employee->id, $date);
+
+            $models = $this->getEmployeeDeductiblesOnDate($employee->id, $date);
+            if ($models == null) {
+                $models = array();
+            }
+            // SSS
+            if (isset($employee->deductibles['sss'])) {
+                if (!isset($models['sss'])) {
+                    $models['sss'] = array();
+                    $models['sss']['identifier'] = $employee->deductibles['sss'];
+                    $models['sss']['identifier_id'] = 'SS Number';
+                    $models['sss']['key'] = 'sss';
+                    $models['sss']['details'] = 'SSS';
+                }
+                if (!isset($models['sss']['amount']) || $override) {
+                    $models['sss']['amount'] = $rem['sss'][0];
+                }
+                if (!isset($models['sss']['subamount']) || $override) {
+                    $models['sss']['subamount'] = $rem['sss'][1];
+                }
+            }
+            // Philhealth
+            if (isset($employee->deductibles['philhealth'])) {
+                if (!isset($models['philhealth'])) {
+                    $models['philhealth'] = array();
+                    $models['philhealth']['identifier'] = $employee->deductibles['philhealth'];
+                    $models['philhealth']['identifier_id'] = 'PhilHealth Number';
+                    $models['philhealth']['key'] = 'philhealth';
+                    $models['philhealth']['details'] = 'Philhealth';
+                }
+                if (!isset($models['philhealth']['amount']) || $override) {
+                    $models['philhealth']['amount'] = $rem['philhealth'][0];
+                }
+                if (!isset($models['philhealth']['subamount']) || $override) {
+                    $models['philhealth']['subamount'] = $rem['philhealth'][1];
+                }
+            }
+            // PAGIBIG
+            if (isset($employee->deductibles['pagibig'])) {
+                if (!isset($models['pagibig'])) {
+                    $models['pagibig'] = array();
+                    $models['pagibig']['identifier'] = $employee->deductibles['pagibig'];
+                    $models['pagibig']['identifier_id'] = 'PAGIBIG Number';
+                    $models['pagibig']['key'] = 'pagibig';
+                    $models['pagibig']['details'] = 'PAGIBIG';
+                }
+                if (!isset($models['pagibig']['amount']) || $override) {
+                    $models['pagibig']['amount'] = $rem['pagibig'][0];
+                }
+                if (!isset($models['pagibig']['subamount']) || $override) {
+                    $models['pagibig']['subamount'] = $rem['pagibig'][1];
+                }
+            }
+            // TAX
+            if (isset($employee->deductibles['tin'])) {
+                if (!isset($models['tin'])) {
+                    $models['tin'] = array();
+                    $models['tin']['identifier'] = $employee->deductibles['tin'];
+                    $models['tin']['identifier_id'] = 'TIN';
+                    $models['tin']['key'] = 'tin';
+                    $models['tin']['details'] = 'Withholding Tax';
+                }
+                if (!isset($models['tin']['amount']) || $override) {
+                    $models['tin']['amount'] = $rem['tin'][0];
+                }
+            }
+        }
+
+    }
 
     public function getAll($date) {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
