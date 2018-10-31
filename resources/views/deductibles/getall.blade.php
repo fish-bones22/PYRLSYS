@@ -35,12 +35,14 @@ foreach ($records as $record) {
                 <div class="row">
                     <div class="col-4 form-paper">
                         <form action="{{ route('deductible.autogenerate', $details['date']) }}" method="POST">
+                            @csrf
+                            @method('post')
                             <div class="form-group">
                                 <div class="form-check-inline">
                                     <input id="overrideValues" class="form-check-input" type="checkbox" name="override_values" />
                                     <label for="overrideValues" class="form-check-label small">Override Values</label>
                                 </div>
-                                <button type="submit" class="btn btn-light btn-sm" disabled='disabled'>(Unstable) Auto-generate Remittances</button>
+                                <button type="submit" class="btn btn-light btn-sm">Auto-generate Remittances</button>
                             </div>
                         </form>
                     </div>

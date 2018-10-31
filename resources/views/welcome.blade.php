@@ -217,8 +217,8 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                         @endif
                         @if ($auth['payroll'])
                         <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Benefits Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Company Loan Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Show Payroll Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'companyloan', 'date' => date_format(now(), 'Y-m-d')]) }}">Company Loan Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'mealdeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Meal Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'medicaldeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Medical Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
@@ -226,7 +226,6 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'philhealth', 'date' => date_format(now(), 'Y-m-d')]) }}">Philhealth Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Witholding Tax Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Overall Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         @endif
                     </tbody>
                 </table>
