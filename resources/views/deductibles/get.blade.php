@@ -56,6 +56,9 @@
 
             </div>
             <div class="col-12 form-paper section-divider"></div>
+
+            <div class="col-12 form-paper"><span class="small">*Fields with </span><span class="auto-tag text-success">Auto</span><span class="small"> need to be saved first before being persisted to record.</span></div>
+            <div class="col-12 form-paper section-divider"></div>
         </div>
 
         <form action="{{ action('DeductibleRecordController@add', $employee->id) }}" method="POST">
