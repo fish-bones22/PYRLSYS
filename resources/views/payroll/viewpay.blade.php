@@ -121,7 +121,7 @@
                             <td><strong>Less: Deductions</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ isset($payroll->exemption) ? $payroll->exemption : '' }}</td>
+                            <td></td>
                         </tr>
                         @foreach ($payroll->exemptionDetails as $key => $ex)
                         <?php if ($key == '_TOTAL' || $key == '_TOTAL_BEFORE_TAX') continue; ?>
@@ -142,7 +142,7 @@
                             <td><strong>Add: Allowance</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->adjustments }}</td>
+                            <td></td>
                         </tr>
                         @if ($payroll->allowance != null && $payroll->allowance != 0)
                         <tr>
