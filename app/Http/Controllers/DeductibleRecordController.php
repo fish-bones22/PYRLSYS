@@ -460,11 +460,20 @@ class DeductibleRecordController extends Controller
         $month2 = date_format(date_create($date), 'm');
 
         if ($day > 15) {
-
+            $day = '16';
+            $day2 = '01';
+            $month2 = $month < 12 ? $month + 1 : '01';
+            $year2 = $month < 12 ? $year : $year + 1;
+        }
+        else {
+            $day = '16';
+            $day2 = '01';
+            $month = $month > 1 ? $month - 1 : '12';
+            $year = $month > 1 ? $year : $year - 1;
         }
 
-        $date = $year.'-'.$month.'-'.$startDay;
-        $date2 = $year.'-'.$month.'-'.$startDay2;
+        $date = $year.'-'.$month.'-'.$day;
+        $date2 = $year2.'-'.$month2.'-'.$day2;
 
         $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
         $records2 = $this->deductibleRecordService->getAllDeductiblesOnDate($date2);
