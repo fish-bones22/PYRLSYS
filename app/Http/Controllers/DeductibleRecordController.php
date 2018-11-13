@@ -455,8 +455,13 @@ class DeductibleRecordController extends Controller
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
 
-        $startDay = $day <= 15 ? '01' : '16';
-        $startDay2 = $day <= 15 ? '16' : '01';
+        $day2 = date_format(date_create($date),'d');
+        $year2 = date_format(date_create($date), 'Y');
+        $month2 = date_format(date_create($date), 'm');
+
+        if ($day > 15) {
+
+        }
 
         $date = $year.'-'.$month.'-'.$startDay;
         $date2 = $year.'-'.$month.'-'.$startDay2;
