@@ -63,7 +63,7 @@ foreach ($records2 as $record) {
     <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - {{ strtoupper($_key) }} Remittance</div>
+            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y').' - '.date_format(date_create($details['date2']), 'M Y') }} - {{ strtoupper($_key) }} Remittance</div>
         </div>
         <div class="row">
             <div class="col-12 form-paper">

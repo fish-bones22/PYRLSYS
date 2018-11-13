@@ -357,6 +357,7 @@ class DeductibleRecordController extends Controller
                 $entity->key = 'sss';
                 $entity->amount = isset($rem['sss']) ? $rem['sss'][0] : 0;
                 $entity->subamount = isset($rem['sss']) ? $rem['sss'][1] : 0;
+                $entity->subamount2 = isset($rem['sss']) ? $rem['sss'][2] : 0;
                 $result = $this->deductibleRecordService->addRecord($entity);
             }
             // Philhealth
@@ -480,10 +481,14 @@ class DeductibleRecordController extends Controller
         $departments = $this->categoryService->getCategories('department');
 
         $details = [
-            'date' => $year.'-'.$month.'-'.$startDay,
-            'startday' => $startDay,
+            'date' => $year.'-'.$month.'-'.$day,
+            'date2' => $year2.'-'.$month2.'-'.$day2,
+            'startday' => $day,
             'month' => $month,
             'year' => $year,
+            'startday2' => $day2,
+            'month2' => $month2,
+            'year2' => $year2,
             'key' => $key
         ];
 
@@ -523,8 +528,7 @@ class DeductibleRecordController extends Controller
 
         $month = $request->get('month');
         $year = $request->get('year');
-        $period = $request->get('period');
-        $day = $period === 'first' ? '16' : '01';
+        $day = '16';
         $key = $request->get('key');
 
         return redirect()->action('DeductibleRecordController@view', ['key' => $key, 'date' => $year.'-'.$month.'-'.$day]);
