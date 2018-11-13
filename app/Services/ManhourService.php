@@ -217,18 +217,18 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->departmentId = $history['department']['value'];
         $summary->break = isset($history['break']) && $history['break'] != null ? $history['break'] : 0;
 
-        $actualHours = 0;
+        $properHours = 0;
         $recordHours = 0;
         $otHours = 0;
         $ndHours = 0;
         $overtimeCounted = false;
         if ($record->timeIn != null && $record->timeOut != null) {
             // Get employee schedule
-            $scheduledTimeIn = key_exists('timein', $employee->current) ? date_create($employee->current['timein']) : null;
-            $scheduledTimeOut = key_exists('timeout', $employee->current) ? date_create($employee->current['timeout']) : null;
+            $scheduledTimeIn = isset($employee->current['timein']) ? date_create($employee->current['timein']) : null;
+            $scheduledTimeOut = isset($employee->current['timeout']) ? date_create($employee->current['timeout']) : null;
             // Get scheduled time in/out in Time object
-            $scheduledTimeIn_ = key_exists('timein', $employee->current) ? strtotime($employee->current['timein']) : null;
-            $scheduledTimeOut_ =  key_exists('timeout', $employee->current) ? strtotime($employee->current['timeout']) : null;
+            $scheduledTimeIn_ = isset($employee->current['timein']) ? strtotime($employee->current['timein']) : null;
+            $scheduledTimeOut_ = isset($employee->current['timeout']) ? strtotime($employee->current['timeout']) : null;
             // Get time in/out in Date object
             $timeIn = date_create($record->timeIn);
             $timeOut = date_create($record->timeOut);
@@ -236,17 +236,17 @@ class ManhourService extends EntityService implements IManhourService {
             $timeIn_ = strtotime($record->timeIn);
             $timeOut_ = strtotime($record->timeOut);
             // Get time to use (either scheduled or actual)
-            $actualTimeIn = $timeIn_;
-            $actualTimeOut = $timeOut_;
+            $properTimeIn = $timeIn_;
+            $properTimeOut = $timeOut_;
             if ($scheduledTimeIn_ != null && $timeIn_ <= $scheduledTimeIn_) {
-                $actualTimeIn = $scheduledTimeIn_;
+                $properTimeIn = $scheduledTimeIn_;
             }
             if ($timeIn_ < $timeOut_) {
                 if ($scheduledTimeOut_ != null && $timeOut_ >= $scheduledTimeOut_) {
-                    $actualTimeOut = $scheduledTimeOut_;
+                    $properTimeOut = $scheduledTimeOut_;
                 }
             } else {
-                $actualTimeOut = $scheduledTimeOut_;
+                $properTimeOut = $scheduledTimeOut_;
             }
 
             // Get time in/out recorded hour
@@ -260,9 +260,9 @@ class ManhourService extends EntityService implements IManhourService {
             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? (24 + $scheduledHour) : $scheduledHour;
 
             // Get actual hours
-            $x = ($actualTimeOut - $actualTimeIn) / 3600;
-            $actualHours = floor($x * 2) / 2;
-            $actualHours = $actualHours < 0 ? (24 + $actualHours) : $actualHours;
+            $x = ($properTimeOut - $properTimeIn) / 3600;
+            $properHours = floor($x * 2) / 2;
+            $properHours = $properHours < 0 ? (24 + $properHours) : $properHours;
 
             $summary->timeIn = date_format($timeIn, 'H:i');
             $summary->timeOut = date_format($timeOut, 'H:i');
@@ -303,28 +303,37 @@ class ManhourService extends EntityService implements IManhourService {
                 }
             }
 
-            $totalTimeIn = $actualTimeIn;
-            $totalTimeOut = $actualTimeOut;
+            $totalTimeIn = $properTimeIn;
+            $totalTimeOut = $properTimeOut;
             if ($overtimeCounted) {
                 $totalTimeOut = $otEndTime_;
             }
 
             // Check for Night Differential
+            $time10PM = strtotime('22:00:00');
+            $time4AM = strtotime('04:00:00');
             $ndTimeStart = 0;
             $ndTimeEnd = 0;
-            if (($totalTimeOut > strtotime('22:00:00') && $totalTimeOut <= strtotime('23:59:00'))
-            || ($totalTimeIn > strtotime('22:00:00') && $totalTimeIn <= strtotime('23:59:00'))
-            || ($totalTimeOut >= strtotime('00:00:00') && $totalTimeOut < strtotime('04:00:00'))) {
-
-                if ($totalTimeIn < strtotime('22:00:00')) {
-                    $ndTimeStart = strtotime('22:00:00');
+            if (
+               ($totalTimeOut >= $time10PM && $totalTimeOut <= strtotime('23:59:59')) // if time out is between 10:00pm - 11:59
+            || ($totalTimeIn >= $time10PM && $totalTimeIn <= strtotime('23:59:59')) // if time in is between 10:00pm - 11:59pm
+            || ($totalTimeOut >= strtotime('00:00:00') && $totalTimeOut < $time4AM) // if time out is between 12:00mn-4:00am
+            || ($totalTimeIn >= strtotime('00:00:00') && $totalTimeIn < $time4AM) // if time in is between 12:00mn-4:00am
+            || ($totalTimeIn < $time10PM && $properHours > $time10PM - $totalTimeIn) // if time in is near 10:00pm
+            )
+            {
+                // If time in is between 4:00am - 10:00pm, set ND start to 10:00pm
+                // otherwise set ND start as time in
+                if ($totalTimeIn > $time4AM && $totalTimeIn < $time10PM) {
+                    $ndTimeStart = $time10PM;
                 }
                 else {
                     $ndTimeStart = $totalTimeIn;
                 }
-
-                if ($totalTimeOut > strtotime('04:00:00')) {
-                    $ndTimeEnd = strtotime('04:00:00');
+                // If time out after 4:00am, set ND end to 4:00am
+                // otherwise set ND end as time out
+                if ($totalTimeOut > $time4AM && $totalTimeOut < $time10PM) {
+                    $ndTimeEnd = $time4AM;
                 }
                 else {
                     $ndTimeEnd = $totalTimeOut;
@@ -341,10 +350,10 @@ class ManhourService extends EntityService implements IManhourService {
             $summary->undertime = '';
         }
 
-        $actualHours = $actualHours > $summary->break ? $actualHours - $summary->break : $actualHours;
-        $summary->totalHours = $actualHours;
+        $properHours = $properHours > $summary->break ? $properHours - $summary->break : $properHours;
+        $summary->totalHours = $properHours;
         $summary->otHours = $otHours;
-        $summary->regularHours = $actualHours - $otHours;
+        $summary->regularHours = $properHours - $otHours;
         $summary->nd = $ndHours;
 
         $summary->rot = '';
