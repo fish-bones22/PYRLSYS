@@ -120,8 +120,6 @@ class EmployeeController extends Controller
         $employee->details = $this->detailsToEntity($req);
         $employee->current = $this->historyToEntity($req);
 
-        //$employee->employmentDetails = $this->employmentDetailsToEntity($req);
-
         $employee->deductibles = $this->deductiblesToEntity($req);
         $action = 'updated';
         // Update

@@ -176,6 +176,11 @@ class DeductibleRecordController extends Controller
             if ($models['sss']['subamount'] != 0)
                 $models['sss']['auto2'] = true;
         }
+        if (!isset($models['sss']['subamount2']) || $models['sss']['subamount2'] == null) {
+            $models['sss']['subamount2'] = isset($rem['sss']) ? $rem['sss'][2] : 0;
+            if ($models['sss']['subamount2'] != 0)
+                $models['sss']['auto3'] = true;
+        }
         // Philhealth
 
         if (!isset($models['philhealth'])) {
@@ -313,6 +318,7 @@ class DeductibleRecordController extends Controller
                     if ( $override) {
                         $entity->amount = isset($rem['sss']) ? $rem['sss'][0] : 0;
                         $entity->subamount = isset($rem['sss']) ? $rem['sss'][1] : 0;
+                        $entity->subamount2 = isset($rem['sss']) ? $rem['sss'][2] : 0;
                     }
                     $hasSSS = true;
                 }

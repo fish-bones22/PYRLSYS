@@ -97,6 +97,7 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $entity->employee['firstname'] = $model->employee->firstName;
         $entity->employee['middlename'] = $model->employee->middleName;
         $entity->employee['basicsalary'] = $model->employee->current[0]->rate != null ? $model->employee->current[0]->rate : 0;
+        $entity->employee['basis'] = $model->employee->current[0]->rateBasis != null ? $model->employee->current[0]->rateBasis : '';
         $entity->employee['department'] = $model->employee->current[0]->departmentDetails->value;
 
         $entity->identifier = array();

@@ -20,6 +20,7 @@ foreach ($records as $record) {
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
             'basicsalary' => $record->employee['basicsalary'],
+            'basis' => $record->employee['basis'],
             'department' => $record->employee['department']
         ];
     }
@@ -140,20 +141,27 @@ foreach ($records2 as $record) {
                         $subamount2 = 0;
                         $empTotal1 = 0;
                         $empTotal2 = 0;
-                        $total = 0;
+                        $empTotal = 0;
+                        $emrTotal = 0;
+                        $emcTotal = 0;
+                        $grandTotal = 0;
                         ?>
                         @foreach ($rcd as $key => $record)
                         <?php
-                        $emp1 += (isset($record[$_key]) ? $record[$_key]['employee'] : 0);
-                        $emr1 += (isset($record[$_key]) ? $record[$_key]['employer'] : 0);
-                        $emp2 += (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employee'] : 0);
-                        $emr2 += (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employer'] : 0);
-                        $subtotal1 = $emp1 + $emp2;
+                        $emp1 = (isset($record[$_key]) ? $record[$_key]['employee'] : 0);
+                        $emr1 = (isset($record[$_key]) ? $record[$_key]['employer'] : 0);
+                        $emp2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employee'] : 0);
+                        $emr2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employer'] : 0);
+                        $emp = $emp1 + $emp2;
                         $emr = $emr1 + $emr2;
-                        $empTotal1 += $subtotal1;
-                        $empTotal2 += $emr;
-                        $subamount2 += (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['subamount2'] : 0) + (isset($record[$_key]) ? $record[$_key]['subamount2'] : 0);
-                        $total += $empTotal1 + $empTotal2;
+                        $emc = (isset($record[$_key]) ? $record[$_key]['subamount2'] : '0') + (isset($rcd2[$key][$_key]['subamount2']) ? $rcd2[$key][$_key]['subamount2'] : '0');
+                        $total = $emp + $emc + $emr;
+                        $empTotal1 += $emp1;
+                        $empTotal2 += $emp2;
+                        $empTotal += $emp1 + $emp2;
+                        $emrTotal += $emr;
+                        $emcTotal += $emc;
+                        $grandTotal += $total;
                         ?>
                             <tr>
                                 <td>{{ $record['employeeId'] }}</td>
@@ -163,15 +171,15 @@ foreach ($records2 as $record) {
                                 <td>{{ $record['department'] }}</td>
                                 <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
                                 <td>{{ isset($details['date']) ? date_format(date_create($details['date']), 'M Y')  : '' }}</td>
-                                <td>{{ isset($record['basicsalary']) ? $record['basicsalary'] : '' }}</td>
-                                <td>{{ isset($rcd2[$key][$_key]['employee']) ? $rcd2[$key][$_key]['employee']  : '0' }}</td>
-                                <td>{{ isset($record[$_key]) ? $record[$_key]['employee'] : '0' }}</td>
-                                <td>{{ $subtotal1 }}</td>
-                                <td>{{ $emr }}</td>
+                                {{-- Basic Salary --}}<td>{{ isset($record['basicsalary']) ? $record['basicsalary'].' '.$record['basis'] : '' }}</td>
+                                {{-- Emp 16-EoM --}}<td>{{ $emp1 }}</td>
+                                {{-- Emp 1-16 --}}<td>{{ $emp2 }}</td>
+                                {{-- Emp Total --}}<td>{{ $emp }}</td>
+                                {{-- Emr --}}<td>{{ $emr }}</td>
                                 @if ($_key === 'sss')
-                                <td>{{ (isset($record[$_key]) ? $record[$_key]['subamount2'] : '0') + (isset($rcd2[$key][$_key]['subamount2']) ? $rcd2[$key][$_key]['subamount2'] : '0') }}</td>
+                                {{-- Emr EC --}}<td>{{ $emc }}</td>
                                 @endif
-                                <td>{{ $subtotal1 + $emr }}</td>
+                                {{-- Total --}}<td>{{ $total }}</td>
                                 <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
                             </tr>
                         @endforeach
@@ -185,14 +193,14 @@ foreach ($records2 as $record) {
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $emp1 }}</td>
-                            <td>{{ $emp2 }}</td>
                             <td>{{ $empTotal1 }}</td>
-                            <td>{{ $emr }}</td>
+                            <td>{{ $empTotal2 }}</td>
+                            <td>{{ $empTotal }}</td>
+                            <td>{{ $emrTotal }}</td>
                             @if ($_key === 'sss')
-                            <td>{{ $subamount2 }}</td>
+                            <td>{{ $emcTotal }}</td>
                             @endif
-                            <td>{{ $total }}</td>
+                            <td>{{ $grandTotal }}</td>
                             <td></td>
                         </tr>
                         @endif

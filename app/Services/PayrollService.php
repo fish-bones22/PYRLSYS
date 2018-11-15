@@ -253,13 +253,22 @@ class PayrollService implements IPayrollService {
         $basis = $currentBasicPay->rateBasis;
 
 
-
-        $taxablePay = $currentBasicPay != null ? $currentBasicPay->grossPay : 0;
+        $taxablePay = 0;
+        if ($basis === 'fixed') {
+            $taxablePay = $rate;
+        } else {
+            $taxablePay = $currentBasicPay != null ? $currentBasicPay->grossPay : 0;
+        }
 
         $value = array();
 
         if (isset($currentBasicPay->employeeRemittances['sss'])) {
-            $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
+            $sssRemmittance = 0;
+            if ($basis === 'fixed') {
+                $sssRemmittance = SssRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+            } else {
+                $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
+            }
             $value['sss'] = $sssRemmittance;
             $taxablePay -= $sssRemmittance[0];
         }

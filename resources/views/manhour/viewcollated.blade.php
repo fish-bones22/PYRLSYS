@@ -143,9 +143,9 @@ Manhour Records
                                     <td width="25px" style="border-right:1px solid lightgray;"></td>
                                     @else
                                     <?php
-                                    $total = isset($empRecord[$i]) ? $total + $empRecord[$i]->totalHours : $total;
+                                    $total = isset($empRecord[$i]) ? $total + $empRecord[$i]->regularHours : $total;
                                     ?>
-                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($empRecord[$i]) ? $empRecord[$i]->totalHours : '' }}</td>
+                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($empRecord[$i]) ? $empRecord[$i]->regularHours : '' }}</td>
                                     @endif
                                     @endfor
                                     <td>{{ $total }}</td>

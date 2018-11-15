@@ -121,9 +121,9 @@ Employee Record
                                     <td width="25px" style="border-right:1px solid lightgray;"></td>
                                     @else
                                     <?php
-                                    $total = isset($records[$i]) ? $total + $records[$i]->totalHours : $total;
+                                    $total = isset($records[$i]) ? $total + $records[$i]->regularHours : $total;
                                     ?>
-                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($records[$i]) ? $records[$i]->totalHours : '' }}</td>
+                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($records[$i]) ? $records[$i]->regularHours : '' }}</td>
                                     @endif
                                     @endfor
                                     <td>{{ $total }}</td>

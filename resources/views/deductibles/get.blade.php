@@ -128,7 +128,7 @@
                 </div>
                 <div class="col-2 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Emergency Contrib.</label>
+                        <label class="form-paper-label">{!! isset($models['sss']['auto2']) ? '<span class="auto-tag text-success">AUTO</span> ' : '' !!}Emergency Contrib.</label>
                         <input type="number" class="form-control" name="models[sss][subamount2]" value="{{ isset($models['sss']['subamount2']) ? $models['sss']['subamount2'] : old('models["sss"]["subamount2"]') }}" />
                     </div>
                 </div>

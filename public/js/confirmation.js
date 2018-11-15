@@ -61,5 +61,6 @@ function dialog(message, yesCallback, noCallback) {
         $(this).attr('disabled', 'disabled');
         $('#confirmationModal').modal("hide");
         yesCallback();
+        $(this).removeAttr('disabled');
     });
 }

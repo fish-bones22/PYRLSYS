@@ -351,9 +351,9 @@ class ManhourService extends EntityService implements IManhourService {
         }
 
         $properHours = $properHours > $summary->break ? $properHours - $summary->break : $properHours;
-        $summary->totalHours = $properHours;
+        $summary->regularHours = $properHours;
+        $summary->totalHours = $properHours + $otHours;
         $summary->otHours = $otHours;
-        $summary->regularHours = $properHours - $otHours;
         $summary->nd = $ndHours;
 
         $summary->rot = '';
