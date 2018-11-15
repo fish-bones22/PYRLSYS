@@ -190,6 +190,7 @@ class ManhourService extends EntityService implements IManhourService {
         return $recordsSummary;
     }
 
+
     private function formatSummary($record, EmployeeEntity $employee = null) {
 
         $summary = new ManhourSummaryEntity();
@@ -228,18 +229,28 @@ class ManhourService extends EntityService implements IManhourService {
         $ndHours = 0;
         $overtimeCounted = false;
         if ($record->timeIn != null && $record->timeOut != null) {
+
             // Get employee schedule
             $scheduledTimeIn = isset($employee->current['timein']) ? date_create($employee->current['timein']) : null;
             $scheduledTimeOut = isset($employee->current['timeout']) ? date_create($employee->current['timeout']) : null;
+            // Format to datetime
+            $formattedDateTime = $this->appendDateToTime($record->date, $scheduledTimeIn, $scheduledTimeOut);
+            $scheduledTimeIn = $formattedDateTime[0];
+            $scheduledTimeOut = $formattedDateTime[1];
+
             // Get scheduled time in/out in Time object
-            $scheduledTimeIn_ = isset($employee->current['timein']) ? strtotime($employee->current['timein']) : null;
-            $scheduledTimeOut_ = isset($employee->current['timeout']) ? strtotime($employee->current['timeout']) : null;
-            // Get time in/out in Date object
-            $timeIn = date_create($record->timeIn);
-            $timeOut = date_create($record->timeOut);
+            $scheduledTimeIn_ = $scheduledTimeIn != null ? strtotime($scheduledTimeIn) : null;
+            $scheduledTimeOut_ = $scheduledTimeOut != null ? strtotime($scheduledTimeOut) : null;
+
+            // Format to datetime
+            $formattedDateTime = $this->appendDateToTime($record->date, $record->timeIn, $record->timeOut);
+            $timeIn_ = $formattedDateTime[0];
+            $timeOut_ = $formattedDateTime[1];
+
             // Get time in/out in Time object
-            $timeIn_ = strtotime($record->timeIn);
-            $timeOut_ = strtotime($record->timeOut);
+            $timeIn_ = strtotime($timeIn_);
+            $timeOut_ = strtotime($timeOut_);
+
             // Get time to use (either scheduled or actual)
             $properTimeIn = $timeIn_;
             $properTimeOut = $timeOut_;
@@ -269,6 +280,10 @@ class ManhourService extends EntityService implements IManhourService {
             $properHours = floor($x * 2) / 2;
             $properHours = $properHours < 0 ? (24 + $properHours) : $properHours;
 
+            // Get time in/out in Date object
+            $timeIn = date_create($record->timeIn);
+            $timeOut = date_create($record->timeOut);
+
             $summary->timeIn = date_format($timeIn, 'H:i');
             $summary->timeOut = date_format($timeOut, 'H:i');
             $summary->undertime = '';
@@ -286,13 +301,19 @@ class ManhourService extends EntityService implements IManhourService {
             // Check if OT is counted
             if($otRequest != null) {
 
+                // Format to datetime
+                $formattedDateTime = $this->appendDateToTime($record->date, $otRequest[0]->startTime, $otRequest[0]->endTime);
+                $otStartTime_ = $formattedDateTime[0];
+                $otEndTime_ = $formattedDateTime[1];
                 // Get OT start and end time
-                $otStartTime_ = strtotime($otRequest[0]->startTime);
-                $otEndTime_ = strtotime($otRequest[0]->endTime);
+                $otStartTime_ = strtotime($otStartTime_);
+                $otEndTime_ = strtotime($otEndTime_);
 
-
-                if (($timeOut_ > $scheduledTimeOut_ && $otStartTime_ < $timeOut_ && $timeIn_ < $timeOut_)
+                // If scheduled time out is earlier, and actual time out is earlier than OT start time, and actual time in is earlier than actual time out
+                // or actual time out is earlier than OT start time, and time out is the next day today
+                if (($timeOut_ > $scheduledTimeOut_ && $otStartTime_ <= $timeOut_ && $timeIn_ < $timeOut_)
                 || ($otStartTime_ > $timeOut_ && $timeIn_ > $timeOut_)) {
+
                     $overtimeCounted = true;
                     $otHours =  $otRequest[0]->allowedHours;
 
@@ -314,40 +335,66 @@ class ManhourService extends EntityService implements IManhourService {
                 $totalTimeOut = $otEndTime_;
             }
 
+            // Format to datetime
+            $formattedDateTime = $this->appendDateToTime($record->date, '22:00:00', '04:00:00');
+            $time10PM = $formattedDateTime[0];
+            $time4AM = $formattedDateTime[1];
             // Check for Night Differential
-            $time10PM = strtotime('22:00:00');
-            $time4AM = strtotime('04:00:00');
+            $time10PM = strtotime($time10PM);
+            $time4AM = strtotime($time4AM);
             $ndTimeStart = 0;
             $ndTimeEnd = 0;
-            if (
-               ($totalTimeOut >= $time10PM && $totalTimeOut <= strtotime('23:59:59')) // if time out is between 10:00pm - 11:59
-            || ($totalTimeIn >= $time10PM && $totalTimeIn <= strtotime('23:59:59')) // if time in is between 10:00pm - 11:59pm
-            || ($totalTimeOut >= strtotime('00:00:00') && $totalTimeOut < $time4AM) // if time out is between 12:00mn-4:00am
-            || ($totalTimeIn >= strtotime('00:00:00') && $totalTimeIn < $time4AM) // if time in is between 12:00mn-4:00am
-            || ($totalTimeIn < $time10PM && $properHours > $time10PM - $totalTimeIn) // if time in is near 10:00pm
-            )
-            {
-                // If time in is between 4:00am - 10:00pm, set ND start to 10:00pm
-                // otherwise set ND start as time in
-                if ($totalTimeIn > $time4AM && $totalTimeIn < $time10PM) {
-                    $ndTimeStart = $time10PM;
-                }
-                else {
-                    $ndTimeStart = $totalTimeIn;
-                }
-                // If time out after 4:00am, set ND end to 4:00am
-                // otherwise set ND end as time out
-                if ($totalTimeOut > $time4AM && $totalTimeOut < $time10PM) {
-                    $ndTimeEnd = $time4AM;
-                }
-                else {
-                    $ndTimeEnd = $totalTimeOut;
-                }
-                 // Get ND hours
-                $x = ($ndTimeEnd - $ndTimeStart) / 3600;
-                $ndHours = floor($x * 2) / 2;
-                $ndHours = $ndHours < 0 ? (24 + $ndHours) : $ndHours;
+
+            if ($totalTimeIn <= $time10PM && $totalTimeOut >= $time4AM) {
+                $ndTimeStart = $time10PM;
+                $ndTimeEnd = $time4AM;
             }
+            else if ($time10PM <= $totalTimeIn && $totalTimeOut >= $time4AM) {
+                $ndTimeStart = $totalTimeIn;
+                $ndTimeEnd = $time4AM;
+            }
+            else if ($time10PM <= $totalTimeIn && $totalTimeOut <= $time4AM) {
+                $ndTimeStart = $totalTimeIn;
+                $ndTimeEnd = $totalTimeOut;
+            }
+            else if ($time10PM >= $totalTimeIn && $totalTimeOut <= $time4AM) {
+                $ndTimeStart = $time10PM;
+                $ndTimeEnd = $totalTimeOut;
+            }
+            // Get ND hours
+            $x = ($ndTimeEnd - $ndTimeStart) / 3600;
+            $ndHours = floor($x * 2) / 2;
+            $ndHours = $ndHours < 0 ? (24 + $ndHours) : $ndHours;
+
+            // if (
+            //    ($totalTimeOut >= $time10PM && $totalTimeOut <= strtotime('23:59:59')) // if time out is between 10:00pm - 11:59
+            // || ($totalTimeIn >= $time10PM && $totalTimeIn <= strtotime('23:59:59')) // if time in is between 10:00pm - 11:59pm
+            // || ($totalTimeOut >= strtotime('00:00:00') && $totalTimeOut < $time4AM) // if time out is between 12:00mn-4:00am
+            // || ($totalTimeIn >= strtotime('00:00:00') && $totalTimeIn < $time4AM) // if time in is between 12:00mn-4:00am
+            // || ($totalTimeIn < $time10PM && $properHours > $time10PM - $totalTimeIn) // if time in is near 10:00pm
+            // )
+            // {
+            //     // If time in is between 4:00am - 10:00pm, set ND start to 10:00pm
+            //     // otherwise set ND start as time in
+            //     if ($totalTimeIn > $time4AM && $totalTimeIn < $time10PM) {
+            //         $ndTimeStart = $time10PM;
+            //     }
+            //     else {
+            //         $ndTimeStart = $totalTimeIn;
+            //     }
+            //     // If time out after 4:00am, set ND end to 4:00am
+            //     // otherwise set ND end as time out
+            //     if ($totalTimeOut > $time4AM && $totalTimeOut < $time10PM) {
+            //         $ndTimeEnd = $time4AM;
+            //     }
+            //     else {
+            //         $ndTimeEnd = $totalTimeOut;
+            //     }
+            //      // Get ND hours
+            //     $x = ($ndTimeEnd - $ndTimeStart) / 3600;
+            //     $ndHours = floor($x * 2) / 2;
+            //     $ndHours = $ndHours < 0 ? (24 + $ndHours) : $ndHours;
+            // }
         }
         else {
             $summary->timeIn = 'A';
@@ -395,4 +442,33 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->authorized = $record->authorized;
         return $summary;
     }
+
+
+    private function appendDateToTime($date, $time1, $time2) {
+
+        if ($time1 === null || $time2 === null)
+            return [null, null];
+
+        $dateFormatted = Carbon::parse($date);
+
+        if ($date === null)
+            return [null, null];
+
+        $returnDateTime1 = '';
+        $returnDateTime2 = '';
+
+        $dateFormatted->addDay();
+        $dateTomorrow = $dateFormatted->format('Y-m-d');
+
+        $time1Formatted = strtotime($time1);
+        $time2Formatted = strtotime($time2);
+
+        if ($time1Formatted > $time2Formatted) {
+            return [ $date.' '.$time1, $dateTomorrow.' '.$time2 ];
+        }
+
+        return [ $date.' '.$time1, $date.' '.$time2 ];
+
+    }
+
 }
