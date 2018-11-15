@@ -273,7 +273,6 @@ class DeductibleRecordController extends Controller
             $id = $employee->id;
             $rem = $this->payrollService->getRemittanceDeductible($id, $date);
             $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($id, $date);
-            $rem = $this->payrollService->getRemittanceDeductible($id, $date);
 
             $hasSSS = false;
             $hasPagibig = false;

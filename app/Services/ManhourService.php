@@ -73,8 +73,6 @@ class ManhourService extends EntityService implements IManhourService {
 
         $record->timeIn = $entity->timeIn;
         $record->timeOut = $entity->timeOut;
-        $record->dateTimeIn = $entity->dateTimeIn;
-        $record->dateTimeOut = $entity->dateTimeOut;
 
         $record->employeeName = $entity->employeeName;
         $record->timeCard = $entity->timeCard;
@@ -106,8 +104,6 @@ class ManhourService extends EntityService implements IManhourService {
         $entity->date = $model->recordDate;
         $entity->timeIn = $model->timeIn;
         $entity->timeOut = $model->timeOut;
-        $entity->dateTimeIn = $model->dateTimeIn;
-        $entity->dateTimeOut = $model->dateTimeOut;
 
         $entity->employeeId = $model->employee_id;
         $entity->employeeName = $model->employeeName;

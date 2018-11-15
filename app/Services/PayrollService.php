@@ -120,6 +120,7 @@ class PayrollService implements IPayrollService {
             $rateBasis = 'monthly';
             $rate = 0;
             $allowance = 0;
+            $hourlyAllowance = 0;
             $break = isset($history['break']) && $history['break'] != null ? $history['break'] : 0;
 
             if ($history['rate'] != null)
@@ -133,9 +134,11 @@ class PayrollService implements IPayrollService {
 
             if ($rateBasis == 'daily') {
                 $hourlyRate = $rate/$this->hoursPerDay;
+                $hourlyAllowance = $allowance/$this->hoursPerDay;
             }
             else if ($rateBasis == 'monthly') {
                 $hourlyRate = $rate/(26*$this->hoursPerDay);
+                $hourlyAllowance = $allowance/(26*$this->hoursPerDay);
                 $allowance = $allowance/26;
             }
 
@@ -143,7 +146,7 @@ class PayrollService implements IPayrollService {
             $regularHours += $hours;
             $basicPay += $hours * $hourlyRate;
 
-            $totalAllowance += $allowance;
+            $totalAllowance += $hourlyAllowance * $hours;
 
             $workDays++;
 

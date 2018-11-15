@@ -64,7 +64,7 @@ foreach ($records2 as $record) {
     <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} -  {{$name}}</div>
+            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y').' to '.date_format(date_create($details['date2']), 'M Y') }} -  {{$name}}</div>
         </div>
         <div class="row">
             <div class="col-12 form-paper">
@@ -146,7 +146,7 @@ foreach ($records2 as $record) {
                                 <td>{{ $remarks }}</td>
                             </tr>
                         @endforeach
-                        @if (sizeof($rcd) > 0 && sizeof($rcd2) > 0 && $totalLoanAmount > 0)
+                        @if (sizeof($rcd) > 0 || sizeof($rcd2) > 0 && $totalLoanAmount > 0)
                         <tr>
                             <td>TOTAL</td>
                             <td></td>

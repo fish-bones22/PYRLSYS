@@ -7,8 +7,6 @@ class ManhourEntity extends Entity {
     public $date;
     public $timeIn;
     public $timeOut;
-    public $dateTimeIn;
-    public $dateTimeOut;
 
     public $employee_id;
     public $employeeId;

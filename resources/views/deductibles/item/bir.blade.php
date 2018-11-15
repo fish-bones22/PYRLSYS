@@ -63,7 +63,7 @@ foreach ($records2 as $record) {
     <div class="col-md-12">
 
         <div class="row">
-            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y') }} - Withholding Tax</div>
+            <div class="col-12 form-paper section-title" id="title">{{ date_format(date_create($details['date']), 'M Y').' to '.date_format(date_create($details['date2']), 'M Y') }} - Withholding Tax</div>
         </div>
         <div class="row">
             <div class="col-12 form-paper">
@@ -136,6 +136,7 @@ foreach ($records2 as $record) {
                         @foreach ($rcd as $key => $record)
                         <?php
 
+
                         $gp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->grossPay : 0;
                         $gp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->grossPay : 0;
                         $np1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->netPay : 0;
@@ -150,6 +151,10 @@ foreach ($records2 as $record) {
                         $pbt2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->beforeTaxPay : 0;
                         $ex1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
                         $ex2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
+
+                        if ($td1 + $td2 == 0) {
+                            continue;
+                        }
 
                         $taxDueTotal += $td1 + $td2;
                         ?>
@@ -171,7 +176,7 @@ foreach ($records2 as $record) {
                                 <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
                             </tr>
                         @endforeach
-                        @if (sizeof($rcd) > 0 && sizeof($rcd2) > 0)
+                        @if ($taxDueTotal != 0 && sizeof($rcd) > 0 || sizeof($rcd2) > 0)
                         <tr>
                             <td>TOTAL</td>
                             <td></td>
