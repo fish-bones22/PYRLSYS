@@ -58,7 +58,7 @@ function printAll(date) {
 function getJson(id, date, doc, mode, filename) {
 
     slider = 0.5;
-    counter = 0;
+    //counter = 0;
     isDone = false;
     currPage = 0;
 
@@ -69,7 +69,11 @@ function getJson(id, date, doc, mode, filename) {
         dataType:"json",
         async: false,
         success: function(result) {
-            print(result, doc, mode, 'Employee', filename);
+            if (result['basicPay'] != undefined && result['basicPay'] != null && result['basicPay'] != 0) {
+                print(result, doc, mode, 'Employee', filename);
+            } else {
+                counter += 2;
+            }
         }
     });
 
@@ -199,28 +203,28 @@ function printText(doc, result, copy) {
 
     doc.text('ROT', subEntryMargin, i = spacer(i));
     doc.text('1.25', col2Margin, i);
-    doc.text('rot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text('rotrate' in result.otDetails ? result.otDetails.rotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'rot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null &&'rotrate' in result.otDetails ? result.otDetails.rotrate + '' : '0', col3Margin, i);
 
     doc.text('SOT/SPH', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
-    doc.text('sot' in result.otDetails ? result.otDetails.sot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text('sotrate' in result.otDetails ? result.otDetails.sotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'sot' in result.otDetails ? result.otDetails.sot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null && 'sotrate' in result.otDetails ? result.otDetails.sotrate + '' : '0', col3Margin, i);
 
     doc.text('XSOT', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
-    doc.text('xsot' in result.otDetails ? result.otDetails.xsot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text('xsotrate' in result.otDetails ? result.otDetails.xsotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'xsot' in result.otDetails ? result.otDetails.xsot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null && 'xsotrate' in result.otDetails ? result.otDetails.xsotrate + '' : '0', col3Margin, i);
 
     doc.text('LHOT', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
-    doc.text('lhot' in result.otDetails ? result.otDetails.lhot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text('lhotrate' in result.otDetails ? result.otDetails.lhotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'lhot' in result.otDetails ? result.otDetails.lhot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null && 'lhotrate' in result.otDetails ? result.otDetails.lhotrate + '' : '0', col3Margin, i);
 
     doc.text('XLHOT', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
-    doc.text('xlhot' in result.otDetails ? result.otDetails.xlhot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text('xlhotrate' in result.otDetails ? result.otDetails.xlhotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'xlhot' in result.otDetails ? result.otDetails.xlhot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null && 'xlhotrate' in result.otDetails ? result.otDetails.xlhotrate + '' : '0', col3Margin, i);
     underline(doc, col3Margin, i, 7);
 
     doc.text('Gross Pay:', mainMargin, i = spacer(i));

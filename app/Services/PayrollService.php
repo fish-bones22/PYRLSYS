@@ -377,12 +377,12 @@ class PayrollService implements IPayrollService {
         $details['xlhot'] += ($model->xlhot != null ? $model->xlhot : 0);
         $details['nd'] += ($model->nd != null ? $model->nd : 0);
 
-        $details['rotrate']  += ($model->rot != null ? $model->rot*$rate*1.25 : 0);
-        $details['sotrate']  += ($model->sot != null ? $model->sot*$rate*1.3 : 0);
-        $details['xsotrate']  += ($model->xsot != null ? $model->xsot*$rate*1.69 : 0);
-        $details['lhotrate'] += ($model->lhot != null ? $model->lhot*$rate*2 : 0);
-        $details['xlhotrate'] += ($model->xlhot != null ? $model->xlhot*$rate*2.69 : 0);
-        $details['ndrate'] += ($model->nd != null ? $model->nd*$rate*0.1 : 0);
+        $details['rotrate']  += ($model->rot != null ? round($model->rot*$rate*1.25, 2) : 0);
+        $details['sotrate']  += ($model->sot != null ? round($model->sot*$rate*1.3, 2) : 0);
+        $details['xsotrate']  += ($model->xsot != null ? round($model->xsot*$rate*1.69, 2) : 0);
+        $details['lhotrate'] += ($model->lhot != null ? round($model->lhot*$rate*2, 2) : 0);
+        $details['xlhotrate'] += ($model->xlhot != null ? round($model->xlhot*$rate*2.69, 2) : 0);
+        $details['ndrate'] += ($model->nd != null ? round($model->nd*$rate*0.1, 2) : 0);
         return $details;
     }
 

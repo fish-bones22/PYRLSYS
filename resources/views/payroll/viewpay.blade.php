@@ -181,8 +181,7 @@
     <div class="float-right">
         <div class="btn-group">
             <a class="btn btn-light" href="{{ action('PayrollController@index') }}">Back to List</a>
-            <button type="button" class="btn btn-primary" onclick="printOne({{$employee->id}}, '{{$details['date']}}')">Save as PDF</button>
-            {{-- <button type="button" class="btn btn-primary" onclick="saveAsExcel()">Save as Excel</button> --}}
+            <button type="button" class="btn btn-primary" onclick="printOne({{$employee->id}}, '{{$details['date']}}')" {!! (!isset($payroll->basicPay) || $payroll->basicPay == null || $payroll->basicPay == 0) && (!isset($payroll->takeHomePay) || $payroll->takeHomePay == null || $payroll->takeHomePay == 0) ? 'disabled' : '' !!}>Save as PDF</button>
         </div>
     </div>
 </div>
