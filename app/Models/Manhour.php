@@ -8,7 +8,7 @@ class Manhour extends Model
 {
     //
     protected $fillable = [
-        'recordDate', 'timeIn', 'timeOut', 'employee_id', 'employeeName', 'timecard', 'department', 'outlier', 'remarks'
+        'recordDate', 'timeIn', 'timeOut', 'dateTimeIn', 'dateTimeOut', 'employee_id', 'employeeName', 'timecard', 'department', 'outlier', 'remarks'
     ];
 
     public function employee() {

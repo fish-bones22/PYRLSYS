@@ -72,6 +72,8 @@ class ManhourService extends EntityService implements IManhourService {
 
         $record->timeIn = $entity->timeIn;
         $record->timeOut = $entity->timeOut;
+        $record->dateTimeIn = $entity->dateTimeIn;
+        $record->dateTimeOut = $entity->dateTimeOut;
 
         $record->employeeName = $entity->employeeName;
         $record->timeCard = $entity->timeCard;
@@ -103,6 +105,8 @@ class ManhourService extends EntityService implements IManhourService {
         $entity->date = $model->recordDate;
         $entity->timeIn = $model->timeIn;
         $entity->timeOut = $model->timeOut;
+        $entity->dateTimeIn = $model->dateTimeIn;
+        $entity->dateTimeOut = $model->dateTimeOut;
 
         $entity->employeeId = $model->employee_id;
         $entity->employeeName = $model->employeeName;
@@ -219,6 +223,7 @@ class ManhourService extends EntityService implements IManhourService {
 
         $properHours = 0;
         $recordHours = 0;
+        $scheduledHour = 0;
         $otHours = 0;
         $ndHours = 0;
         $overtimeCounted = false;
@@ -350,7 +355,13 @@ class ManhourService extends EntityService implements IManhourService {
             $summary->undertime = '';
         }
 
-        $properHours = $properHours > $summary->break ? $properHours - $summary->break : $properHours;
+        $break = $summary->break;
+        // If work hours is less than or half the required work hours,
+        // Do not count breaks
+        if ($properHours <= $scheduledHour/2) {
+            $break = 0;
+        }
+        $properHours = $properHours > $break ? $properHours - $break : $properHours;
         $summary->regularHours = $properHours;
         $summary->totalHours = $properHours + $otHours;
         $summary->otHours = $otHours;
