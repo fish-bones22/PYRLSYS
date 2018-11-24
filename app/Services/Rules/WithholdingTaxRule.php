@@ -12,9 +12,9 @@ class WithholdingTaxRule implements IRule {
         if ($baseAmount == null)
             return [0, 0];
 
-        if (!$isFirstPeriod && $previousAmount != null && $previousAmount != 0) {
-            return [0, 0];
-        }
+        // if (!$isFirstPeriod && $previousAmount != null && $previousAmount != 0) {
+        //     return [0, 0];
+        // }
 
         return WithholdingTaxRule::_getAmount($baseAmount, $basis);
 

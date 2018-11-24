@@ -25,6 +25,7 @@ class PayrollService implements IPayrollService {
     public $adjustmentsRecordService;
 
     private $hoursPerDay = 8;
+    private $workDays = 26;
 
     public function __construct (IEmployeeService $employeeService, IManhourService $manhourService, IDeductibleRecordService $deductibleRecordService, IAdjustmentsRecordService $adjustmentsRecordService ) {
         $this->employeeService = $employeeService;
@@ -35,6 +36,12 @@ class PayrollService implements IPayrollService {
 
 
     public function getPayroll($employeeId, $date) {
+
+        $year = date_format($date, 'Y');
+        $month = date_format($date, 'm');
+
+        $daysOfMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $this->workDays = $daysOfMonth;
 
         $payroll = $this->getBasicPay($employeeId, $date);
 
@@ -104,7 +111,7 @@ class PayrollService implements IPayrollService {
         $totalAllowance = 0;
         $regularHours = 0;
         $totalOtHours = 0;
-        $workDays = 0;
+        $workingDays = 0;
         $hourlyRate = 0;
         $otDetails = array();
         for ($i = $day; $i <= $endDate; $i++) {
@@ -137,9 +144,9 @@ class PayrollService implements IPayrollService {
                 $hourlyAllowance = $allowance/$this->hoursPerDay;
             }
             else if ($rateBasis == 'monthly') {
-                $hourlyRate = $rate/(26*$this->hoursPerDay);
-                $hourlyAllowance = $allowance/(26*$this->hoursPerDay);
-                $allowance = $allowance/26;
+                $hourlyRate = $rate/($this->workDays*$this->hoursPerDay);
+                $hourlyAllowance = $allowance/($this->workDays*$this->hoursPerDay);
+                $allowance = $allowance/$this->workDays;
             }
 
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
@@ -148,7 +155,7 @@ class PayrollService implements IPayrollService {
 
             $totalAllowance += $hourlyAllowance * $hours;
 
-            $workDays++;
+            $workingDays++;
 
             // OT
             $otMultiplier = $this->getOtMultiplier($manhour);
@@ -193,7 +200,7 @@ class PayrollService implements IPayrollService {
         $payroll->regularHours = $regularHours;
         $payroll->otHours = $totalOtHours;
         $payroll->totalHours = $totalOtHours + $regularHours;
-        $payroll->workDays = $workDays;
+        $payroll->workDays = $workingDays;
 
         return $payroll;
 
@@ -201,8 +208,6 @@ class PayrollService implements IPayrollService {
 
 
     public function getComputedMonthlyRate($employeeId, $date) {
-
-        $workDays = 26;
 
         $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
 
@@ -220,7 +225,7 @@ class PayrollService implements IPayrollService {
             $rateBasis = $history['ratebasis'];
 
         if ($rateBasis == 'daily') {
-            $monthlyRate = $rate * $workDays;
+            $monthlyRate = $rate * $this->workDays;
         }
         else {
             $monthlyRate = $rate;

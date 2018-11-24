@@ -72,8 +72,8 @@
                         <tr>
                             <td><strong>Overtime</strong></td>
                             <td></td>
-                            <td>{{  isset($payroll->otHours) ? $payroll->otHours.' hrs' : '0' }}</td>
-                            <td>{{ isset($payroll->otPay) ? $payroll->otPay : '0' }}</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td><i>&emsp;ROT</i></td>
