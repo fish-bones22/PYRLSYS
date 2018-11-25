@@ -165,27 +165,33 @@ foreach ($records2 as $record) {
                         $sssEmr += $sssEmr1 + $sssEmr2;
                         $sssEmc += $sssEmc1 + $sssEmc2;
 
-
                         $sss += $sssEmp + $sssEmr + $sssEmc;
 
-                        $philhealth1 = isset($record[$_keyPH]['employee']) ? $record[$_keyPH]['employee']  : '0';
-                        $philhealth2 = isset($rcd2[$key][$_keyPH]['employee']) ? $rcd2[$key][$_keyPH]['employee']  : '0';
+                        $philhealthEmp1 = isset($record[$_keyPH]['employee']) ? $record[$_keyPH]['employee']  : '0';
+                        $philhealthEmp2 = isset($rcd2[$key][$_keyPH]['employee']) ? $rcd2[$key][$_keyPH]['employee']  : '0';
 
-                        $philhealthEmp += $philhealth1;
-                        $philhealthEmr += $philhealth2;
+                        $philhealthEmr1 = isset($record[$_keyPH]['employer']) ? $record[$_keyPH]['employer']  : '0';
+                        $philhealthEmr2 = isset($rcd2[$key][$_keyPH]['employer']) ? $rcd2[$key][$_keyPH]['employer']  : '0';
 
-                        $pagibig1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
-                        $pagibig2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
+                        $philhealthEmp += $philhealthEmp1 + $philhealthEmp2;
+                        $philhealthEmr += $philhealthEmr1 + $philhealthEmr2;
+
+                        $philhealth += $philhealthEmp + $philhealthEmr;
+
+                        $pagibigEmp1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
+                        $pagibigEmp2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
+
+                        $pagibigEmr1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
+                        $pagibigEmr2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
+
+                        $pagibigEmp += $pagibigEmp1 + $pagibigEmp2;
+                        $pagibigEmr += $pagibigEmr1 + $pagibigEmr2;
+                        $pagibig += $pagibigEmp + $pagibigEmr;
 
                         $tax1 = isset($record[$_keyWT]['employee']) ? $record[$_keyWT]['employee']  : '0';
                         $tax2 = isset($rcd2[$key][$_keyWT]['employee']) ? $rcd2[$key][$_keyWT]['employee']  : '0';
 
 
-                        $pagibigEmp += $pagibig1;
-                        $pagibigEmr += $pagibig2;
-
-                        $philhealth += $philhealth1 + $philhealth2;
-                        $pagibig += $pagibig1 + $pagibig2;
                         $tax += $tax1 + $tax2;
 
                         ?>
@@ -198,13 +204,13 @@ foreach ($records2 as $record) {
                                 <td>{{ $sssEmp1 + $sssEmp2 }}</td>
                                 <td>{{ $sssEmr1 + $sssEmr2 }}</td>
                                 <td>{{ $sssEmc1 + $sssEmc2 }}</td>
-                                <td>{{ $sssEmp + $sssEmr }}</td>
-                                <td>{{ $philhealth1 }}</td>
-                                <td>{{ $philhealth2 }}</td>
-                                <td>{{ $philhealth1 + $philhealth2 }}</td>
-                                <td>{{ $pagibig1 }}</td>
-                                <td>{{ $pagibig2 }}</td>
-                                <td>{{ $pagibig1 + $pagibig2 }}</td>
+                                <td>{{ $sssEmp1 + $sssEmp2 + $sssEmr1 + $sssEmr2 + $sssEmc1 + $sssEmc2 }}</td>
+                                <td>{{ $philhealthEmp1 + $philhealthEmp2 }}</td>
+                                <td>{{ $philhealthEmr1 + $philhealthEmr2 }}</td>
+                                <td>{{ $philhealthEmp1 + $philhealthEmr1 + $philhealthEmp2 + $philhealthEmr2 }}</td>
+                                <td>{{ $pagibigEmp1 + $pagibigEmp2 }}</td>
+                                <td>{{ $pagibigEmr1 + $pagibigEmr2 }}</td>
+                                <td>{{ $pagibigEmp1 + $pagibigEmp2 + $pagibigEmr1 + $pagibigEmr2  }}</td>
                                 <td>{{ $tax1 + $tax2 }}</td>
                             </tr>
                         @endforeach
