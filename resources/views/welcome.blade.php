@@ -218,7 +218,8 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                         @if ($auth['payroll'])
                         <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Show Payroll Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Semi-monthly Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'all', 'date' => date_format(now(), 'Y-m-d')]) }}">Show Monthly Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'companyloan', 'date' => date_format(now(), 'Y-m-d')]) }}">Company Loan Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'mealdeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Meal Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'medicaldeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Medical Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>

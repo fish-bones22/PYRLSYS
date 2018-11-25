@@ -67,7 +67,8 @@
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittance Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'tin', 'date' => date_format(now(), 'Y-m-d')]) }}">Withholding Tax Summary</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Overall Deduction Summary</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Semi-monthly Deduction Summary</a>
+                        <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'all', 'date' => date_format(now(), 'Y-m-d')]) }}">Monthly Deduction Summary</a>
                     </div>
                 </li>
                 @endif

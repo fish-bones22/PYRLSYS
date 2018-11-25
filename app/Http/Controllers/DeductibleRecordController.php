@@ -497,6 +497,9 @@ class DeductibleRecordController extends Controller
             'key' => $key
         ];
 
+        if ($key == 'all') {
+            return view('deductibles.item.overall', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
+        }
         if ($key == 'tin') {
             $payrollRecord1 = array();
             $payrollRecord2 = array();
