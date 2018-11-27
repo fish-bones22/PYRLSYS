@@ -40,8 +40,24 @@ class PayrollService implements IPayrollService {
         $year = date_format($date, 'Y');
         $month = date_format($date, 'm');
 
+        $day = date_format($date, 'd');
+        $monthYear  = date_format($date, 'Y-m');
+        $endDate = 15;
+        
         $daysOfMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $this->workDays = $daysOfMonth;
+        $daysOfPeriod = 15; 
+
+        // Get proper date start
+        if ($day <= 15) {
+            $day = 1;
+        }
+        else {
+            $day = 16;
+            $endDate = date_format($date, 't');
+            $daysOfPeriod = $daysOfMonth - 15;
+        }
+
+        $workDays = $daysOfPeriod - $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
 
         $payroll = $this->getBasicPay($employeeId, $date);
 
@@ -74,9 +90,17 @@ class PayrollService implements IPayrollService {
 
     public function getBasicPay($employeeId, $date) {
 
+        
+        $year = date_format($date, 'Y');
+        $month = date_format($date, 'm');
+
         $day = date_format($date, 'd');
         $monthYear  = date_format($date, 'Y-m');
         $endDate = 15;
+        
+        $daysOfMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $daysOfPeriod = 15; 
+
         // Get proper date start
         if ($day <= 15) {
             $day = 1;
@@ -84,7 +108,10 @@ class PayrollService implements IPayrollService {
         else {
             $day = 16;
             $endDate = date_format($date, 't');
+            $daysOfPeriod = $daysOfMonth - 15;
         }
+
+        $workDays = $daysOfPeriod - $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
 
         $employee = $this->employeeService->getEmployeeById($employeeId);
         if ($employee == null)
@@ -144,9 +171,9 @@ class PayrollService implements IPayrollService {
                 $hourlyAllowance = $allowance/$this->hoursPerDay;
             }
             else if ($rateBasis == 'monthly') {
-                $hourlyRate = $rate/($this->workDays*$this->hoursPerDay);
-                $hourlyAllowance = $allowance/($this->workDays*$this->hoursPerDay);
-                $allowance = $allowance/$this->workDays;
+                $hourlyRate = ($rate/2)/($workDays*$this->hoursPerDay);
+                $hourlyAllowance = ($allowance/2)/($workDays*$this->hoursPerDay);
+                $allowance = ($allowance/2)/$workDays;
             }
 
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
@@ -225,7 +252,7 @@ class PayrollService implements IPayrollService {
             $rateBasis = $history['ratebasis'];
 
         if ($rateBasis == 'daily') {
-            $monthlyRate = $rate * $this->workDays;
+            $monthlyRate = $rate * $workDays;
         }
         else {
             $monthlyRate = $rate;
@@ -251,13 +278,13 @@ class PayrollService implements IPayrollService {
         $previousRate = $this->getComputedMonthlyRate($employeeId, $previousDate);
 
         // If no basic pay (new hire etc..)
-        $previousBasicPay = $this->getBasicPay($employeeId, $previousDate);
+        $previousBasicPay = $this->getPayroll($employeeId, $previousDate);
 
         if ($previousBasicPay == null || $previousBasicPay->basicPay <= 0) {
             $isFirstPeriod = true;
         }
 
-        $currentBasicPay = $this->getBasicPay($employeeId, date_create($date));
+        $currentBasicPay = $this->getPayroll($employeeId, date_create($date));
         $basis = $currentBasicPay->rateBasis;
 
 
@@ -278,17 +305,17 @@ class PayrollService implements IPayrollService {
                 $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
             }
             $value['sss'] = $sssRemmittance;
-            $taxablePay -= $sssRemmittance[0];
+            //$taxablePay -= $sssRemmittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['philhealth'])) {
             $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
             $value['philhealth'] = $philhealthRemittance;
-            $taxablePay -= $philhealthRemittance[0];
+            //$taxablePay -= $philhealthRemittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['pagibig'])) {
             $pagibigRemittance = PagibigRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
             $value['pagibig'] = $pagibigRemittance;
-            $taxablePay -= $pagibigRemittance[0];
+            //$taxablePay -= $pagibigRemittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['tin'])) {
             $withholdingTax = WithholdingTaxRule::getAmount($taxablePay, 0, $isFirstPeriod, $basis);
@@ -311,7 +338,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->sot != ''){
             return [
-                'multiplier' => 1.3,
+                'multiplier' => 0.3,
                 'value' => $manhour->sot
             ];
         }
@@ -325,7 +352,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->lhot != ''){
             return [
-                'multiplier' => 2,
+                'multiplier' => 1,
                 'value' => $manhour->lhot
             ];
         }
@@ -428,5 +455,15 @@ class PayrollService implements IPayrollService {
         $summary['_TOTAL'] = $total;
 
         return $summary;
+    }
+
+
+    private function countSundays($startDate, $endDate) {
+
+        $days = $startDate->diff($endDate, true)->days;
+        $sundays = floor($days/7) + ($startDate->format('N') + $days % 7 >= 7);
+
+        return $sundays;
+
     }
 }

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $("input[type='time']").not("[readonly]").timepicki();
+    //$("input[type='time']").not("[readonly]").timepicki();
 
 });
 

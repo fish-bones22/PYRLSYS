@@ -33,7 +33,7 @@ class SssRule implements IRule {
         $limitInterval = 0.01;
 
         if ($baseAmount < $lowerLimit[0]) {
-            return [0, 0];
+            return [0, 0, 0];
         }
 
         for ($i = 0; $i < sizeof($lowerLimit); $i++) {
