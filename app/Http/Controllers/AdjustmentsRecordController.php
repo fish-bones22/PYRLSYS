@@ -85,6 +85,7 @@ class AdjustmentsRecordController extends Controller
             $model['employee_name'] = $record->employee['name'];
 
             $model['details'] = $record->details;
+            $model['key'] = $record->key;
 
             $model['amount'] = $record->amount;
             $model['remarks'] = $record->remarks;
@@ -111,6 +112,7 @@ class AdjustmentsRecordController extends Controller
         $entity->recordDate = $date;
 
         $entity->details = $viewModel['details'];
+        $entity->key = $viewModel['details'] != null ? strtolower(str_replace(' ', '', $viewModel['details'])) : null;
 
         $entity->amount = $viewModel['amount'] != null ? $viewModel['amount'] : 0;
         $entity->remarks = isset($viewModel['remarks']) ?$viewModel['remarks'] : null;

@@ -27,6 +27,7 @@ class AdjustmentsRecordService extends EntityService implements IAdjustmentsReco
         $model->employee_id = $entity->employee['id'];
         $model->employeeName = $entity->employee['name'];
         $model->details = $entity->details;
+        $model->key = $entity->key;
         $model->amount = $entity->amount;
         $model->remarks = $entity->remarks;
         $model->recordDate = $entity->recordDate;
@@ -58,7 +59,7 @@ class AdjustmentsRecordService extends EntityService implements IAdjustmentsReco
         $recordEntities = array();
 
         foreach ($records as $record) {
-            $recordEntities[$record->details] = $this->mapToEntity($record, new AdjustmentsRecordEntity());
+            $recordEntities[$record->key] = $this->mapToEntity($record, new AdjustmentsRecordEntity());
         }
 
         return $recordEntities;
@@ -77,6 +78,7 @@ class AdjustmentsRecordService extends EntityService implements IAdjustmentsReco
 
         $entity->adjustments = array();
         $entity->details = $model->details;
+        $entity->key = $model->key;
 
         $entity->amount = $model->amount;
         $entity->remarks = $model->remarks;

@@ -69,6 +69,14 @@
                             <td>{{ isset($payroll->regularHours) ? $payroll->regularHours .' hrs' : '0' }}</td>
                             <td>{{ isset($payroll->basicPay) ? $payroll->basicPay : '0' }}</td>
                         </tr>
+                        @if (isset($payroll->adjustmentsDetails['basicadjustment']))
+                        <tr>
+                            <td><strong>Basic Adjustment</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $payroll->adjustmentsDetails['basicadjustment'] }}</td>
+                        </tr>
+                        @endif
                         <tr>
                             <td><strong>Overtime</strong></td>
                             <td></td>
@@ -111,6 +119,14 @@
                             <td>{{ isset($payroll->otDetails['nd']) ? $payroll->otDetails['nd'] : 0  }} hrs</td>
                             <td>{{ isset($payroll->otDetails['ndrate']) ? $payroll->otDetails['ndrate'] : 0  }}</td>
                         </tr>
+                        @if (isset($payroll->adjustmentsDetails['overtimeadjustment']))
+                        <tr>
+                            <td><strong>Overtime Adjustment</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $payroll->adjustmentsDetails['overtimeadjustment'] }}</td>
+                        </tr>
+                        @endif
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Gross Pay</strong></td>
                             <td></td>
@@ -153,7 +169,7 @@
                         </tr>
                         @endif
                         @foreach ($payroll->adjustmentsDetails as $key => $ex)
-                        <?php if ($key == '_TOTAL') continue; ?>
+                        <?php if ($key == '_TOTAL' || $key == '_OTHER_ADJUSTMENTS' || $key == 'basicadjustment' || $key == 'overtimeadjustment') continue; ?>
                         <tr>
                             <td>&emsp;{{ $key }}</td>
                             <td></td>

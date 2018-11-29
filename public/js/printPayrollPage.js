@@ -199,6 +199,9 @@ function printText(doc, result, copy) {
     doc.text(result.regularHours + ' hrs', col2MarginWider, i);
     doc.text(result.basicPay + '', col3Margin, i);
 
+    doc.text('Basic Adj:', mainMargin, i = spacer(i));
+    doc.text(result.adjustmentsDetails.hasOwnProperty('basicadjustment') ? result.adjustmentsDetails['basicadjustment'] : '' + '', col3Margin, i);
+
     doc.text('Overtime', mainMargin, i = spacer(i));
 
     doc.text('ROT', subEntryMargin, i = spacer(i));
@@ -226,6 +229,9 @@ function printText(doc, result, copy) {
     doc.text(result.otDetails != null && 'xlhot' in result.otDetails ? result.otDetails.xlhot + ' hrs' : '0', 1.05 + slider, i);
     doc.text(result.otDetails != null && 'xlhotrate' in result.otDetails ? result.otDetails.xlhotrate + '' : '0', col3Margin, i);
     underline(doc, col3Margin, i, 7);
+
+    doc.text('Overtime Adj:', mainMargin, i = spacer(i));
+    doc.text(result.adjustmentsDetails.hasOwnProperty('overtimeadjustment') ? result.adjustmentsDetails['overtimeadjustment'] : '' + '', col3Margin, i);
 
     doc.text('Gross Pay:', mainMargin, i = spacer(i));
     doc.text(result.grossPay + '', col3Margin, i);
@@ -271,7 +277,7 @@ function printText(doc, result, copy) {
 
     for (var key in result.adjustmentsDetails){
         if (result.adjustmentsDetails.hasOwnProperty(key)) {
-            if (key === '_TOTAL')
+            if (key === '_TOTAL' || key === '_OTHER_ADJUSTMENTS' || key === 'basicadjustment' || key === 'overtimeadjustment')
                 continue;
             doc.text(key, subEntryMargin, i = spacer(i));
             doc.text(result.adjustmentsDetails[key] + "", col3Margin, i);

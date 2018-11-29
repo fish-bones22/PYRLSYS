@@ -43,9 +43,9 @@ class PayrollService implements IPayrollService {
         $day = date_format($date, 'd');
         $monthYear  = date_format($date, 'Y-m');
         $endDate = 15;
-        
+
         $daysOfMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $daysOfPeriod = 15; 
+        $daysOfPeriod = 15;
 
         // Get proper date start
         if ($day <= 15) {
@@ -71,12 +71,7 @@ class PayrollService implements IPayrollService {
         $payroll->exemption = $summary['_TOTAL'];
 
         // Net before tax
-        $payroll->beforeTaxPay = $payroll->grossPay -  $summary['_TOTAL_BEFORE_TAX'];
-
-        // Adjustments
-        $summary = $this->getAdjustments($employeeId, $date);
-        $payroll->adjustmentsDetails = $summary;
-        $payroll->adjustments = $summary['_TOTAL'];
+        $payroll->beforeTaxPay = $payroll->grossPay;
 
         // Net
         $payroll->netPay = $payroll->grossPay - $payroll->exemption;
@@ -91,16 +86,16 @@ class PayrollService implements IPayrollService {
 
     public function getBasicPay($employeeId, $date) {
 
-        
+
         $year = date_format($date, 'Y');
         $month = date_format($date, 'm');
 
         $day = date_format($date, 'd');
         $monthYear  = date_format($date, 'Y-m');
         $endDate = 15;
-        
+
         $daysOfMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $daysOfPeriod = 15; 
+        $daysOfPeriod = 15;
 
         // Get proper date start
         if ($day <= 15) {
@@ -113,7 +108,7 @@ class PayrollService implements IPayrollService {
         }
 
         $sundays = $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
-        $workDays = $daysOfPeriod; //- 
+        $workDays = $daysOfPeriod; //-
 
         $employee = $this->employeeService->getEmployeeById($employeeId);
         if ($employee == null)
@@ -201,9 +196,21 @@ class PayrollService implements IPayrollService {
             $totalOtHours += $otMultiplier['value'];
 
         }
+
+        // Basic adjustments
+        $summary = $this->getAdjustments($employeeId, $date);
+        $basicAdj = isset($summary['basicadjustment']) ? $summary['basicadjustment'] : 0;
+        $otAdj = isset($summary['overtimeadjustment']) ? $summary['overtimeadjustment'] : 0;
+
+
+        $basicPay += $basicAdj;
+        $payroll->otherAdjustments = $summary['_OTHER_ADJUSTMENTS'];
+        $payroll->adjustmentsDetails = $summary;
+
         if ($payroll->rateBasis == 'monthly') {
             $basicPay += ($hourlyRate*$this->hoursPerDay*$sundays);
         }
+
         $payroll->hourlyRate = $hourlyRate;
         $payroll->basicPay = round($basicPay, 2);
         $payroll->otPay = round($otPay, 2);
@@ -226,7 +233,7 @@ class PayrollService implements IPayrollService {
             $payroll->allowance = round($totalAllowance, 2);
         }
 
-        $payroll->grossPay = round($basicPay + $otPay, 2);
+        $payroll->grossPay = round($basicPay + $otPay + $otAdj, 2);
 
         $payroll->regularHours = $regularHours;
         $payroll->otHours = $totalOtHours;
@@ -456,10 +463,19 @@ class PayrollService implements IPayrollService {
         $records = $this->adjustmentsRecordService->getEmployeeAdjustmentsOnDate($employeeId, $monthYear.'-'.$startDay);
         $summary = array();
         $total = 0;
+        $otherAdjustments = 0;
         foreach ($records as $key => $record) {
             $summary[$key] = $record->amount;
             $total += $record->amount;
+
+            if ($key == 'basicadjustment' || $key == 'overtimeadjustment') {
+                continue;
+            }
+
+            $otherAdjustments += $record->amount;
+
         }
+        $summary['_OTHER_ADJUSTMENTS'] = $otherAdjustments;
         $summary['_TOTAL'] = $total;
 
         return $summary;
