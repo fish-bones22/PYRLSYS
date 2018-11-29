@@ -251,7 +251,7 @@ class PayrollService implements IPayrollService {
         $year = date_format($date, 'Y');
 
         $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
-        $workDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $workDays = 26;
 
         if ($history == null)
             return 0;
