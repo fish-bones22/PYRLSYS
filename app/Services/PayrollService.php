@@ -25,7 +25,7 @@ class PayrollService implements IPayrollService {
     public $adjustmentsRecordService;
 
     private $hoursPerDay = 8;
-    private $workDays = 26;
+    private $workDays = 13;
 
     public function __construct (IEmployeeService $employeeService, IManhourService $manhourService, IDeductibleRecordService $deductibleRecordService, IAdjustmentsRecordService $adjustmentsRecordService ) {
         $this->employeeService = $employeeService;
@@ -58,7 +58,7 @@ class PayrollService implements IPayrollService {
         }
 
         $sundays = $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
-        $workDays = $daysOfPeriod;
+        $this->workDays = $daysOfPeriod - $sundays;
 
         $payroll = $this->getBasicPay($employeeId, $date);
 
@@ -108,7 +108,7 @@ class PayrollService implements IPayrollService {
         }
 
         $sundays = $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
-        $workDays = $daysOfPeriod; //-
+        $this->workDays = $daysOfPeriod - $sundays;
 
         $employee = $this->employeeService->getEmployeeById($employeeId);
         if ($employee == null)
@@ -168,9 +168,9 @@ class PayrollService implements IPayrollService {
                 $hourlyAllowance = $allowance/$this->hoursPerDay;
             }
             else if ($rateBasis == 'monthly') {
-                $hourlyRate = ($rate/2)/($workDays*$this->hoursPerDay);
-                $hourlyAllowance = ($allowance/2)/($workDays*$this->hoursPerDay);
-                $allowance = ($allowance/2)/$workDays;
+                $hourlyRate = ($rate/2)/($this->workDays*$this->hoursPerDay);
+                $hourlyAllowance = ($allowance/2)/($this->workDays*$this->hoursPerDay);
+                $allowance = ($allowance/2)/$this->workDays;
             }
 
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
@@ -202,14 +202,14 @@ class PayrollService implements IPayrollService {
         $basicAdj = isset($summary['basicadjustment']) ? $summary['basicadjustment'] : 0;
         $otAdj = isset($summary['overtimeadjustment']) ? $summary['overtimeadjustment'] : 0;
 
-
+        $basicPay = $basicPay > getComputedMonthlyRate($employeeId, $date)/2 ? getComputedMonthlyRate($employeeId, $date)/2 : $basicPay;
         $basicPay += $basicAdj;
         $payroll->otherAdjustments = $summary['_OTHER_ADJUSTMENTS'];
         $payroll->adjustmentsDetails = $summary;
 
-        if ($payroll->rateBasis == 'monthly') {
-            $basicPay += ($hourlyRate*$this->hoursPerDay*$sundays);
-        }
+        // if ($payroll->rateBasis == 'monthly') {
+        //     $basicPay += ($hourlyRate*$this->hoursPerDay*$sundays);
+        // }
 
         $payroll->hourlyRate = $hourlyRate;
         $payroll->basicPay = round($basicPay, 2);
@@ -320,17 +320,17 @@ class PayrollService implements IPayrollService {
                 $sssRemmittance = SssRule::getAmount($currentBasicPay != null ? $currentBasicPay->basicPay : 0, $previousBasicPay != null ? $previousBasicPay->basicPay : 0, $isFirstPeriod, $basis);
             }
             $value['sss'] = $sssRemmittance;
-            //$taxablePay -= $sssRemmittance[0];
+            $taxablePay -= $sssRemmittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['philhealth'])) {
             $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
             $value['philhealth'] = $philhealthRemittance;
-            //$taxablePay -= $philhealthRemittance[0];
+            $taxablePay -= $philhealthRemittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['pagibig'])) {
             $pagibigRemittance = PagibigRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
             $value['pagibig'] = $pagibigRemittance;
-            //$taxablePay -= $pagibigRemittance[0];
+            $taxablePay -= $pagibigRemittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['tin'])) {
             $withholdingTax = WithholdingTaxRule::getAmount($taxablePay, 0, $isFirstPeriod, $basis);
@@ -353,7 +353,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->sot != ''){
             return [
-                'multiplier' => 0.3,
+                'multiplier' => 1.3,
                 'value' => $manhour->sot
             ];
         }
@@ -367,7 +367,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->lhot != ''){
             return [
-                'multiplier' => 1,
+                'multiplier' => 2,
                 'value' => $manhour->lhot
             ];
         }
