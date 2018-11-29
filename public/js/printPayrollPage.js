@@ -291,7 +291,7 @@ function printText(doc, result, copy) {
     underline(doc, col3Margin, i, 7);
     underline(doc, col3Margin, i+0.025, 7);
 
-    i = 5.8;
+    i = 6;
     underline(doc, col3Margin-0.4, i+0.05, 15);
 
     doc.text(new Date(($("#payslipDate").length != 0 && $("#payslipDate").val() != '' ? $("#payslipDate").val() : Date.now())).toDateString(), mainMargin, i = spacer(i));
