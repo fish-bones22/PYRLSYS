@@ -67,7 +67,29 @@
 
             <input type="hidden" name="employee_name" value="{{ $employee->fullName }}" />
             <input type="hidden" name="record_date" value="{{ $details['year'].'-'.$details['month'].'-'.$details['startday'] }}" />
-
+            <div class="row">
+                <div class="col-12 form-paper section-title">Details</div>
+                <div class="col-12 form-paper section-divider"></div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">Rate ({{ $details['basis'] }})</label>
+                        <div class="form-paper-display">{{ $details['rate'] }}</div>
+                    </div>
+                </div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">Basic Salary</label>
+                        <div class="form-paper-display">{{ $details['basic'] }}</div>
+                    </div>
+                </div>
+                <div class="col-4 form-paper">
+                    <div class="form-group">
+                        <label class="form-paper-label">Gross Salary</label>
+                        <div class="form-paper-display">{{ $details['gross'] }}</div>
+                    </div>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
+            </div>
             @if (isset($employee->deductibles['tin']))
             <div class="row">
                 <div class="col-12 form-paper section-title">Withholding Tax</div>

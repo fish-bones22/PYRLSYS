@@ -57,7 +57,8 @@ class PayrollService implements IPayrollService {
             $daysOfPeriod = $daysOfMonth - 15;
         }
 
-        $workDays = $daysOfPeriod - $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
+        $sundays = $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
+        $workDays = $daysOfPeriod;
 
         $payroll = $this->getBasicPay($employeeId, $date);
 
@@ -111,7 +112,8 @@ class PayrollService implements IPayrollService {
             $daysOfPeriod = $daysOfMonth - 15;
         }
 
-        $workDays = $daysOfPeriod - $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
+        $sundays = $this->countSundays(date_create($monthYear.'-'.$day), date_create($monthYear.'-'.$endDate));
+        $workDays = $daysOfPeriod; //- 
 
         $employee = $this->employeeService->getEmployeeById($employeeId);
         if ($employee == null)
@@ -199,7 +201,9 @@ class PayrollService implements IPayrollService {
             $totalOtHours += $otMultiplier['value'];
 
         }
-
+        if ($payroll->rateBasis == 'monthly') {
+            $basicPay += ($hourlyRate*$this->hoursPerDay*$sundays);
+        }
         $payroll->hourlyRate = $hourlyRate;
         $payroll->basicPay = round($basicPay, 2);
         $payroll->otPay = round($otPay, 2);
@@ -236,7 +240,11 @@ class PayrollService implements IPayrollService {
 
     public function getComputedMonthlyRate($employeeId, $date) {
 
+        $month = date_format($date, 'm');
+        $year = date_format($date, 'Y');
+
         $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
+        $workDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
         if ($history == null)
             return 0;
@@ -290,7 +298,7 @@ class PayrollService implements IPayrollService {
 
         $taxablePay = 0;
         if ($basis === 'fixed') {
-            $taxablePay = $rate;
+            $taxablePay = $rate/2;
         } else {
             $taxablePay = $currentBasicPay != null ? $currentBasicPay->grossPay : 0;
         }

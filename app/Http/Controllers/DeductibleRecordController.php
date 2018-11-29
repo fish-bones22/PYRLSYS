@@ -131,6 +131,13 @@ class DeductibleRecordController extends Controller
         $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($id, $properDate);
         $employee = $this->employeeService->getEmployeeById($id);
         $categories = $this->categoryService->getCategories('deductible');
+        $payroll = $this->payrollService->getBasicPay($id, date_create($properDate));
+
+
+        $details['basic'] = $payroll->basicPay;
+        $details['rate'] = $payroll->rate;
+        $details['gross'] = $payroll->grossPay;
+        $details['basis'] = $payroll->rateBasis;
 
         $models = array();
         $otherModels = array();
