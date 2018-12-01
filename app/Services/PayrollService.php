@@ -202,8 +202,10 @@ class PayrollService implements IPayrollService {
         $basicAdj = isset($summary['basicadjustment']) ? $summary['basicadjustment'] : 0;
         $otAdj = isset($summary['overtimeadjustment']) ? $summary['overtimeadjustment'] : 0;
 
-        $basicPay = $basicPay > getComputedMonthlyRate($employeeId, $date)/2 ? getComputedMonthlyRate($employeeId, $date)/2 : $basicPay;
+        $basicPay = $basicPay > $this->getComputedMonthlyRate($employeeId, $date)/2 ? $this->getComputedMonthlyRate($employeeId, $date)/2 : $basicPay;
+        $payroll->basicPayBase = $basicPay;
         $basicPay += $basicAdj;
+
         $payroll->otherAdjustments = $summary['_OTHER_ADJUSTMENTS'];
         $payroll->adjustmentsDetails = $summary;
 
@@ -222,7 +224,7 @@ class PayrollService implements IPayrollService {
         // Exception of Fixed rate basis
         if ($payroll->rateBasis === "fixed") {
             $pay = $payroll->rate / 2;
-            $basicPay = $pay;
+            $basicPay = $pay + $basicAdj;
             $totalAllowance = isset($employee->current['allowance']) ? $employee->current['allowance'] / 2 : 0;
             $payroll->hourlyRate = 0;
             $payroll->basicPay = round($pay, 2);

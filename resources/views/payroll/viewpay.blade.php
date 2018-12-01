@@ -67,7 +67,7 @@
                             <td><strong>Basic Pay</strong></td>
                             <td></td>
                             <td>{{ isset($payroll->regularHours) ? $payroll->regularHours .' hrs' : '0' }}</td>
-                            <td>{{ isset($payroll->basicPay) ? $payroll->basicPay : '0' }}</td>
+                            <td>{{ isset($payroll->basicPayBase) ? $payroll->basicPayBase : '0' }}</td>
                         </tr>
                         @if (isset($payroll->adjustmentsDetails['basicadjustment']))
                         <tr>

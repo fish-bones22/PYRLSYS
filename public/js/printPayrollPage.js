@@ -197,7 +197,7 @@ function printText(doc, result, copy) {
 
     doc.text('Basic Pay:', mainMargin, i = spacer(i));
     doc.text(result.regularHours + ' hrs', col2MarginWider, i);
-    doc.text(result.basicPay + '', col3Margin, i);
+    doc.text(result.basicPayBase + '', col3Margin, i);
 
     doc.text('Basic Adj:', mainMargin, i = spacer(i));
     doc.text(result.adjustmentsDetails.hasOwnProperty('basicadjustment') ? result.adjustmentsDetails['basicadjustment'] : '' + '', col3Margin, i);
@@ -240,26 +240,27 @@ function printText(doc, result, copy) {
 
     doc.text('Withholding Tax', subEntryMargin, i = spacer(i));
     doc.text('Withholding Tax' in result.exemptionDetails ? result.exemptionDetails["Withholding Tax"] : '0', col3Margin, i);
-    delete result.exemptionDetails["Withholding Tax"];
+    //delete result.exemptionDetails["Withholding Tax"];
     doc.text('SSS', subEntryMargin, i = spacer(i));
     doc.text('SSS' in result.exemptionDetails ? result.exemptionDetails["SSS"] : '0', col3Margin, i);
-    delete result.exemptionDetails["SSS"];
+    //delete result.exemptionDetails["SSS"];
     doc.text('PhilHealth', subEntryMargin, i = spacer(i));
     doc.text('PhilHealth' in result.exemptionDetails ? result.exemptionDetails["PhilHealth"] : '0', col3Margin, i);
-    delete result.exemptionDetails["PhilHealth"];
+    //delete result.exemptionDetails["PhilHealth"];
     doc.text('PAGIBIG', subEntryMargin, i = spacer(i));
     doc.text('PAGIBIG' in result.exemptionDetails ? result.exemptionDetails["PAGIBIG"] : '0', col3Margin, i);
-    delete result.exemptionDetails["PAGIBIG"];
+    //delete result.exemptionDetails["PAGIBIG"];
     doc.text('SSS Loan', subEntryMargin, i = spacer(i));
     doc.text('SSS Loan' in result.exemptionDetails ? result.exemptionDetails["SSS Loan"] : '0', col3Margin, i);
-    delete result.exemptionDetails["SSS Loan"];
+    //delete result.exemptionDetails["SSS Loan"];
     doc.text('PAGIBIG Loan', subEntryMargin, i = spacer(i));
     doc.text('PAGIBIG Loan' in result.exemptionDetails ? result.exemptionDetails["PAGIBIG Loan"] : '0', col3Margin, i);
-    delete result.exemptionDetails["PAGIBIG Loan"];
+    //delete result.exemptionDetails["PAGIBIG Loan"];
 
     for (var key in result.exemptionDetails){
         if (result.exemptionDetails.hasOwnProperty(key)) {
-            if (key === '_TOTAL' || key === '_TOTAL_BEFORE_TAX')
+            if (key === '_TOTAL' || key === '_TOTAL_BEFORE_TAX'
+            || 'Withholding Tax' || 'SSS' || 'PhilHealth' || 'PAGIBIG' || 'SSS Loan' || 'PAGIBIIG Loan')
                 continue;
             doc.text(key, subEntryMargin, i = spacer(i));
             doc.text(result.exemptionDetails[key] + "", col3Margin, i);

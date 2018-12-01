@@ -331,11 +331,22 @@ class ManhourService extends EntityService implements IManhourService {
 
                 // If scheduled time out is earlier, and actual time out is earlier than OT start time, and actual time in is earlier than actual time out
                 // or actual time out is earlier than OT start time, and time out is the next day today
-                if (($timeOut_ > $scheduledTimeOut_ && $otStartTime_ <= $timeOut_ && $timeIn_ < $timeOut_)
-                || ($otStartTime_ > $timeOut_ && $timeIn_ > $timeOut_)) {
+                // if (($timeOut_ > $scheduledTimeOut_ && $otStartTime_ <= $timeOut_ && $timeIn_ < $timeOut_)
+                // || ($otStartTime_ > $timeOut_ && $timeIn_ > $timeOut_)) {
+                if ($timeIn_ <= $otStartTime_ && $timeOut_ >= $otEndTime_
+                   || $timeIn_ >= $otStartTime_ && $timeOut_ >= $otEndTime_ && $timeIn_ < $otEndTime_
+                   || $timeIn_ <= $otStartTime_ && $timeOut_ <= $otEndTime_ && $timeOut > $otStartTime_) {
 
                     $overtimeCounted = true;
                     $otHours =  $otRequest[0]->allowedHours;
+
+                    if ($timeIn_ > $otStartTime_) {
+                        $otStartTime_ = $timeIn_;
+                    }
+
+                    if ($timeOut_ < $otEndTime_) {
+                        $otEndTime_ = $timeOut_;
+                    }
 
                     // Get actual hours in OT
                     // $otActualHours = ($timeOut_ - $otStartTime_) / 3600;
@@ -420,6 +431,12 @@ class ManhourService extends EntityService implements IManhourService {
         if ($properHours <= $scheduledHour/2) {
             $break = 0;
         }
+
+        // If sunday
+        if (date('N', strtotime($record->date)) > 6) {
+            $properHours = 0;
+        }
+
         $properHours = $properHours > $break ? $properHours - $break : $properHours;
         $summary->regularHours = $properHours;
         $summary->totalHours = $properHours + $otHours;

@@ -110,8 +110,8 @@ Payroll Summary
                                 <td>{{ $employee->firstName }}</td>
                                 <td>{{ $employee->middleName }}</td>
                                 <td>{{ $employee->current['department']['displayName'] }}</td>
-                                <td>{{ $summary[$employee->id]->basicPay }}</td>
-                                <td>0</td>
+                                <td>{{ $summary[$employee->id]->basicPayBase }}</td>
+                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['basicadjustment']) ? $summary[$employee->id]->adjustmentsDetails['basicadjustment'] : '0' }}</td>
                                 <td>{{ $summary[$employee->id]->rotPay }}</td>
                                 <td>{{ $summary[$employee->id]->otPay - $summary[$employee->id]->rotPay }}</td>
                                 <td>{{ isset($summary[$employee->id]->otDetails['ndrate']) ? $summary[$employee->id]->otDetails['ndrate'] : '' }}</td>
@@ -123,11 +123,11 @@ Payroll Summary
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['SSS Loan']) ? $summary[$employee->id]->exemptionDetails['SSS Loan'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['PAGIBIG Loan']) ? $summary[$employee->id]->exemptionDetails['PAGIBIG Loan'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
-                                <td>{{ 0 }}</td>
+                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['overtimeadjustment']) ? $summary[$employee->id]->adjustmentsDetails['overtimeadjustment'] : '' }}</td>
                                 <td>{{ $summary[$employee->id]->netPay }}</td>
                                 <td>{{ isset($summary[$employee->id]->allowance) ? $summary[$employee->id]->allowance : '0' }}</td>
                                 {{-- <td>{{ isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : '0' }}</td> --}}
-                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['Meal Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Meal Allowance'] : '0' }}</td>
+                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['mealallowance']) ? $summary[$employee->id]->adjustmentsDetails['mealallowance'] : '0' }}</td>
                                 <td>0</td>
                                 <td>{{ $summary[$employee->id]->takeHomePay }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Meal Deduction']) ? $summary[$employee->id]->exemptionDetails['Meal Deduction'] : '0' }}</td>

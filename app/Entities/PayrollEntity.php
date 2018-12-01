@@ -24,6 +24,7 @@ class PayrollEntity extends Entity {
     public $totalHours;
 
     public $basicPay;
+    public $basicPayAdjusted;
     public $otPay;
     public $rotPay;
     public $ndPay;
