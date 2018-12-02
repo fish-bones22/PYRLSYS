@@ -300,6 +300,11 @@ class ManhourService extends EntityService implements IManhourService {
             $properHours = $this->getTotalHours($x);
             $properHours = $properHours < 0 ? 0 : $properHours;
 
+
+            if (isset($record->outlier['details']) && $record->outlier['details'] === 'payable') {
+                $properHours = 8;
+            }
+
             // Get time in/out in Date object
             $timeIn = date_create($record->timeIn);
             $timeOut = date_create($record->timeOut);
