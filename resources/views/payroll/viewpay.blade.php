@@ -66,15 +66,15 @@
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Basic Pay</strong></td>
                             <td></td>
-                            <td>{{ isset($payroll->regularHours) ? $payroll->regularHours .' hrs' : '0' }}</td>
-                            <td>{{ isset($payroll->basicPayBase) ? $payroll->basicPayBase : '0' }}</td>
+                            <td>{{ isset($payroll->regularHours) ? number_format($payroll->regularHours, 2) .' hrs' : '0' }}</td>
+                            <td>{{ isset($payroll->basicPayBase) ? number_format($payroll->basicPayBase, 2) : '0' }}</td>
                         </tr>
                         @if (isset($payroll->adjustmentsDetails['basicadjustment']))
                         <tr>
                             <td><strong>Basic Adjustment</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->adjustmentsDetails['basicadjustment'] }}</td>
+                            <td>{{ number_format($payroll->adjustmentsDetails['basicadjustment'], 2) }}</td>
                         </tr>
                         @endif
                         <tr>
@@ -124,14 +124,14 @@
                             <td><strong>Overtime Adjustment</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->adjustmentsDetails['overtimeadjustment'] }}</td>
+                            <td>{{ number_format($payroll->adjustmentsDetails['overtimeadjustment'], 2) }}</td>
                         </tr>
                         @endif
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Gross Pay</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ isset($payroll->grossPay) ? $payroll->grossPay : '0' }}</td>
+                            <td>{{ isset($payroll->grossPay) ? number_format($payroll->grossPay, 2) : '0' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Less: Deductions</strong></td>
@@ -145,14 +145,14 @@
                             <td>&emsp;{{ $key }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ $ex }}</td>
+                            <td>{{ number_format($ex, 2) }}</td>
                         </tr>
                         @endforeach
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Net Pay</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ isset($payroll->netPay) ? $payroll->netPay : '0' }}</td>
+                            <td>{{ isset($payroll->netPay) ? number_format($payroll->netPay, 2) : '0' }}</td>
                         </tr>
                         <tr>
                             <td><strong>Add: Allowance</strong></td>
@@ -165,7 +165,7 @@
                             <td>&emsp;Allowance</td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->allowance }}</td>
+                            <td>{{ number_format($payroll->allowance, 2) }}</td>
                         </tr>
                         @endif
                         @foreach ($payroll->adjustmentsDetails as $key => $ex)
@@ -174,14 +174,14 @@
                             <td>&emsp;{{ $key }}</td>
                             <td></td>
                             <td></td>
-                            <td>{{ $ex }}</td>
+                            <td>{{ number_format($ex, 2) }}</td>
                         </tr>
                         @endforeach
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Take Home Pay</strong></td>
                             <td></td>
                             <td></td>
-                            <td>{{ $payroll->takeHomePay }}</td>
+                            <td>{{ number_format($payroll->takeHomePay, 2) }}</td>
                         </tr>
                     </tbody>
                 </table>

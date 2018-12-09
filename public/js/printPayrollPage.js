@@ -110,7 +110,7 @@ function print(result, doc, mode, copy, filename) {
                 slider = 0.5;
             }
             else {
-                slider += 2.5;
+                slider += 2.1;
             }
         }
 
@@ -150,15 +150,11 @@ function printText(doc, result, copy) {
     var headerMargin = headerMarginRef + slider;
     var endMargin = endMarginRef + slider;
 
+    addBorders();
+
     var i = 0.6;
 
-    doc.setFontSize(10);
     //doc.text("+", mainMargin-0.2, i-0.1);
-    doc.text("|", mainMargin-0.17, i-0.05);
-    doc.text("_", mainMargin-0.155, i-0.174);
-    doc.text("|", endMargin-0.17, i-0.05);
-    doc.text("_", endMargin-0.225, i-0.174);
-    doc.setFontSize(5);
     doc.text(copy + "'s copy", mainMargin, i);
 
     i = 1.05;
@@ -197,64 +193,64 @@ function printText(doc, result, copy) {
 
     doc.text('Basic Pay:', mainMargin, i = spacer(i));
     doc.text(result.regularHours + ' hrs', col2MarginWider, i);
-    doc.text(result.basicPayBase + '', col3Margin, i);
+    doc.text(addCommas(result.basicPayBase) + '', col3Margin, i);
 
     doc.text('Basic Adj:', mainMargin, i = spacer(i));
-    doc.text(result.adjustmentsDetails.hasOwnProperty('basicadjustment') ? result.adjustmentsDetails['basicadjustment'] : '' + '', col3Margin, i);
+    doc.text(result.adjustmentsDetails.hasOwnProperty('basicadjustment') ? addCommas(result.adjustmentsDetails['basicadjustment']) : '' + '', col3Margin, i);
 
     doc.text('Overtime', mainMargin, i = spacer(i));
 
     doc.text('ROT', subEntryMargin, i = spacer(i));
     doc.text('1.25', col2Margin, i);
     doc.text(result.otDetails != null && 'rot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null &&'rotrate' in result.otDetails ? result.otDetails.rotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null &&'rotrate' in result.otDetails ? addCommas(result.otDetails.rotrate) + '' : '0', col3Margin, i);
 
     doc.text('SOT/SPH', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
     doc.text(result.otDetails != null && 'sot' in result.otDetails ? result.otDetails.sot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'sotrate' in result.otDetails ? result.otDetails.sotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'sotrate' in result.otDetails ? addCommas(result.otDetails.sotrate) + '' : '0', col3Margin, i);
 
     doc.text('XSOT', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
     doc.text(result.otDetails != null && 'xsot' in result.otDetails ? result.otDetails.xsot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'xsotrate' in result.otDetails ? result.otDetails.xsotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'xsotrate' in result.otDetails ? addCommas(result.otDetails.xsotrate) + '' : '0', col3Margin, i);
 
     doc.text('LHOT', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
     doc.text(result.otDetails != null && 'lhot' in result.otDetails ? result.otDetails.lhot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'lhotrate' in result.otDetails ? result.otDetails.lhotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'lhotrate' in result.otDetails ? addCommas(result.otDetails.lhotrate) + '' : '0', col3Margin, i);
 
     doc.text('XLHOT', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
     doc.text(result.otDetails != null && 'xlhot' in result.otDetails ? result.otDetails.xlhot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'xlhotrate' in result.otDetails ? result.otDetails.xlhotrate + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'xlhotrate' in result.otDetails ? addCommas(result.otDetails.xlhotrate) + '' : '0', col3Margin, i);
     underline(doc, col3Margin, i, 7);
 
     doc.text('Overtime Adj:', mainMargin, i = spacer(i));
-    doc.text(result.adjustmentsDetails.hasOwnProperty('overtimeadjustment') ? result.adjustmentsDetails['overtimeadjustment'] : '' + '', col3Margin, i);
+    doc.text(result.adjustmentsDetails.hasOwnProperty('overtimeadjustment') ? addCommas(result.adjustmentsDetails['overtimeadjustment']) : '' + '', col3Margin, i);
 
     doc.text('Gross Pay:', mainMargin, i = spacer(i));
-    doc.text(result.grossPay + '', col3Margin, i);
+    doc.text(addCommas(result.grossPay) + '', col3Margin, i);
 
     doc.text('Less: Deductions', mainMargin, i = spacer(i));
 
     doc.text('Withholding Tax', subEntryMargin, i = spacer(i));
-    doc.text('Withholding Tax' in result.exemptionDetails ? result.exemptionDetails["Withholding Tax"] : '0', col3Margin, i);
+    doc.text('Withholding Tax' in result.exemptionDetails ? addCommas(result.exemptionDetails["Withholding Tax"]) : '0', col3Margin, i);
     //delete result.exemptionDetails["Withholding Tax"];
     doc.text('SSS', subEntryMargin, i = spacer(i));
-    doc.text('SSS' in result.exemptionDetails ? result.exemptionDetails["SSS"] : '0', col3Margin, i);
+    doc.text('SSS' in result.exemptionDetails ? addCommas(result.exemptionDetails["SSS"]) : '0', col3Margin, i);
     //delete result.exemptionDetails["SSS"];
     doc.text('PhilHealth', subEntryMargin, i = spacer(i));
-    doc.text('PhilHealth' in result.exemptionDetails ? result.exemptionDetails["PhilHealth"] : '0', col3Margin, i);
+    doc.text('PhilHealth' in result.exemptionDetails ? addCommas(result.exemptionDetails["PhilHealth"]) : '0', col3Margin, i);
     //delete result.exemptionDetails["PhilHealth"];
     doc.text('PAGIBIG', subEntryMargin, i = spacer(i));
-    doc.text('PAGIBIG' in result.exemptionDetails ? result.exemptionDetails["PAGIBIG"] : '0', col3Margin, i);
+    doc.text('PAGIBIG' in result.exemptionDetails ? addCommas(result.exemptionDetails["PAGIBIG"]) : '0', col3Margin, i);
     //delete result.exemptionDetails["PAGIBIG"];
     doc.text('SSS Loan', subEntryMargin, i = spacer(i));
-    doc.text('SSS Loan' in result.exemptionDetails ? result.exemptionDetails["SSS Loan"] : '0', col3Margin, i);
+    doc.text('SSS Loan' in result.exemptionDetails ? addCommas(result.exemptionDetails["SSS Loan"]) : '0', col3Margin, i);
     //delete result.exemptionDetails["SSS Loan"];
     doc.text('PAGIBIG Loan', subEntryMargin, i = spacer(i));
-    doc.text('PAGIBIG Loan' in result.exemptionDetails ? result.exemptionDetails["PAGIBIG Loan"] : '0', col3Margin, i);
+    doc.text('PAGIBIG Loan' in result.exemptionDetails ? addCommas(result.exemptionDetails["PAGIBIG Loan"]) : '0', col3Margin, i);
     //delete result.exemptionDetails["PAGIBIG Loan"];
 
     for (var key in result.exemptionDetails){
@@ -263,32 +259,32 @@ function printText(doc, result, copy) {
             || 'Withholding Tax' || 'SSS' || 'PhilHealth' || 'PAGIBIG' || 'SSS Loan' || 'PAGIBIIG Loan')
                 continue;
             doc.text(key, subEntryMargin, i = spacer(i));
-            doc.text(result.exemptionDetails[key] + "", col3Margin, i);
+            doc.text(addCommas(result.exemptionDetails[key]) + "", col3Margin, i);
         }
     }
 
     underline(doc, col3Margin, i, 7);
 
     doc.text('Net Pay:', mainMargin, i = spacer(i));
-    doc.text(result.netPay + '', col3Margin, i);
+    doc.text(addCommas(result.netPay) + '', col3Margin, i);
 
     doc.text('Add:', mainMargin, i = spacer(i));
     doc.text("Allowance", subEntryMargin, i = spacer(i));
-    doc.text(result.allowance + "", col3Margin, i);
+    doc.text(addCommas(result.allowance) + "", col3Margin, i);
 
     for (var key in result.adjustmentsDetails){
         if (result.adjustmentsDetails.hasOwnProperty(key)) {
             if (key === '_TOTAL' || key === '_OTHER_ADJUSTMENTS' || key === 'basicadjustment' || key === 'overtimeadjustment')
                 continue;
             doc.text(key, subEntryMargin, i = spacer(i));
-            doc.text(result.adjustmentsDetails[key] + "", col3Margin, i);
+            doc.text(addCommas(result.adjustmentsDetails[key]) + "", col3Margin, i);
         }
     }
 
     underline(doc, col3Margin, i, 7);
 
     doc.text('Take Home Pay:', mainMargin, i = spacer(i));
-    doc.text(result.takeHomePay + '', col3Margin, i);
+    doc.text(addCommas(result.takeHomePay) + '', col3Margin, i);
     underline(doc, col3Margin, i, 7);
     underline(doc, col3Margin, i+0.025, 7);
 
@@ -311,4 +307,51 @@ function getTimestamp() {
     var sec = now.getSeconds();
     var mill = now.getMilliseconds();
     return year + "" + month + "" + day + "" + hour + "" + minutes + "" + sec + "" + mill;
+}
+
+function addCommas(nStr) {
+    nStr = (nStr*1).toFixed(2);
+    nStr += '';
+    var x = nStr.split('.');
+    var x1 = x[0];
+    var x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return (x1 + x2);
+}
+
+function addBorders() {
+
+    var i = 0.6;
+    var mainMargin = mainMarginRef + slider;
+    var subEntryMargin = subEntryMarginRef + slider;
+    var col2Margin = col2MarginRef + slider;
+    var col2MarginWider = col2MarginWiderRef + slider;
+    var col3Margin = col3MarginRef + slider;
+    var headerMargin = headerMarginRef + slider;
+    var endMargin = endMarginRef + slider;
+
+    doc.setFontSize(10);
+    doc.text("|", mainMargin-0.17, i-0.05);
+    doc.text("_", mainMargin-0.155, i-0.174);
+    doc.text("|", endMargin-0.17, i-0.05);
+    doc.text("_", endMargin-0.225, i-0.174);
+
+    for (var x = 0; x <= 2.09; x += 0.08) {
+        doc.text("_", mainMargin-0.155+x, i-0.174);
+    }
+
+    for (; i < 6.5; i += 0.08) {
+        doc.text("|", mainMargin-0.17, i);
+        doc.text("|", endMargin-0.17, i);
+    }
+
+    for (var x = 0; x <= 2.08; x += 0.08) {
+        doc.text("_", mainMargin-0.155+x, i-0.08);
+    }
+
+    doc.setFontSize(5);
+
 }
