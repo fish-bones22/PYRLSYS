@@ -23,6 +23,24 @@ function printOne(id, date) {
 
 function printAll(date) {
 
+    mainMarginRef = 0.1;
+    subEntryMarginRef = 0.2;
+    col2MarginRef = 0.7;
+    col2MarginWiderRef = 0.8;
+    col3MarginRef = 1.5;
+    headerMarginRef = 0.4;
+    endMarginRef = 2.2;
+
+    isDone = false;
+    currPage = 0;
+
+    slider = 0.5;
+    counter = 0;
+    size = 0;
+
+    date =  $("#payslipDate").length != 0 && $("#payslipDate").val() != '' ? $("#payslipDate").val() : date;
+    console.log(date);
+
     var emp;
     console.log('printingall');
 
