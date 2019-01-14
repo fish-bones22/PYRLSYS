@@ -362,6 +362,10 @@ class ManhourController extends Controller
 
         for ($i = 0; $i < sizeof($req['time_in']); $i++) {
 
+            if (!isset($req['time_in'][$i])) {
+                continue;
+            }
+
             $manhourEntity = new ManhourEntity();
 
             $manhourEntity->date = $req['date'];
