@@ -254,6 +254,34 @@ class ManhourController extends Controller
         return redirect()->action('ManhourController@input', ['id' => $newId]);
     }
 
+    public function getPrev($id) {
+
+        $employees = $this->employeeService->getAllEmployees('lastName');
+        $newId = null;
+
+        if ($employees == null || sizeof($employees) === 0) {
+            return redirect()->action('ManhourController@index');
+        }
+
+        for ($i = sizeof($employees)-1; $i >= 0; $i--) {
+
+            if ($employees[$i]->id != $id)
+                continue;
+
+            if ($i == 0)
+                break;
+
+            $newId = $employees[$i-1]->id;
+
+            break;
+        }
+
+        if ($newId == null)
+            $newId = $employees[sizeof($employees)-1]->id;
+
+        return redirect()->action('ManhourController@input', ['id' => $newId]);
+    }
+
 
     public function input($id = null) {
 

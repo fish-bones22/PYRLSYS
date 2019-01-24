@@ -158,6 +158,7 @@ Manhour Input
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('ManhourController@index') }}">Back to List</a>
                         <a class="btn btn-secondary" href="{{ action('ManhourController@inputAll', date_format(now(), 'Y-m-d')) }}">Batch Input</a>
+                        <a class="btn btn-secondary" href="{{ action('ManhourController@getPrev', $employee->id) }}">Back</a>
                         <a class="btn btn-secondary" href="{{ action('ManhourController@getNext', $employee->id) }}">Next</a>
                         <input type="submit" class="btn btn-primary" value="Save"/>
                     </div>

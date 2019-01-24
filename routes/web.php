@@ -63,6 +63,7 @@ Route::post('manhour/inputall', 'ManhourController@recordAll');
 Route::post('manhour/inputallfilter', 'ManhourController@filterDateAll')->name('manhour.filterdateall');
 Route::get('manhour/input', 'ManhourController@input')->name('manhour.input');
 Route::get('manhour/input/{id}', 'ManhourController@input');
+Route::get('manhour/getPrev/{id}', 'ManhourController@getPrev');
 Route::get('manhour/getNext/{id}', 'ManhourController@getNext');
 Route::post('manhour/record/{id}', 'ManhourController@record');
 Route::get('manhour/getrecord/{id}/{date}', 'ManhourController@getRecord');
