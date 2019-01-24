@@ -47,6 +47,23 @@ function setHour() {
     $("#hour").val(hours);
 }
 
+function setTimeOutByHour() {
+    var hoursSt = $("#hour").val();
+    var timeInSt = $("#timeIn").val();
+
+    if (hoursSt === '' || timeInSt === '') {
+        return;
+    }
+
+    var timeIn = moment(timeInSt, "hh:mm tt");
+
+    var timeout = timeIn.add(hoursSt*1, 'hours');
+    var timeoutSt = timeout.format("HH:mm");
+
+    $("#timeOut").val(timeoutSt);
+
+}
+
 function resetOutliers() {
     $('input[type=\'radio\']').prop('checked', false);
 }

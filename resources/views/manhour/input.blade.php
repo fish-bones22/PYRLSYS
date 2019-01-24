@@ -96,7 +96,7 @@ Manhour Input
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="hour" class="form-paper-label">Hours</label>
-                                <input type="number" id="hour" name="hours" class="form-control" readonly/>
+                                <input type="number" id="hour" name="hours" class="form-control" onkeyup="setTimeOutByHour()" />
                             </div>
                         </div>
                     </div>
