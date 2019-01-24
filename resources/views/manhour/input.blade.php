@@ -22,6 +22,23 @@ Manhour Input
 <div class="row">
     <div class="col-lg-10 offset-lg-1 col-12">
 
+        <form action="{{ action('ManhourController@search', $employee->id) }}" method="GET">
+            <div class="row">
+                <div class="form-paper col-12">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 offset-sm-6 offset-md-8">
+                            <div class="form-group float-right">
+                                <label class="form-paper-label">Search</label>
+                                <div class="input-group">
+                                    <input type="search" name="search" class="form-control form-control-sm" />
+                                    <button type="submit" class="btn btn-sm btn-secondary">Go</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
         <form action="{{ action('ManhourController@record', $employee->id) }}" method="POST">
             @csrf
             @method('post')
