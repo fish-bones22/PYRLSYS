@@ -224,6 +224,7 @@ class ManhourService extends EntityService implements IManhourService {
         $scheduledHour = 0;
         $otHours = 0;
         $ndHours = 0;
+        $isLate = false;
         $overtimeCounted = false;
         if ($record->timeIn != null && $record->timeOut != null) {
 
@@ -292,15 +293,24 @@ class ManhourService extends EntityService implements IManhourService {
             $scheduledHour = $x != null ? $this->getTotalHours($x) : null;
             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? 0 : $scheduledHour;
 
+            //Check if late
+            $minPassed = $timeIn_->diff($scheduledTimeIn_);
+            if ($this->getTotalHoursNotFloored($minPassed) > 0.25) {
+                $isLate = true;
+            }
+
             // Get actual hours
             // $x = ($properTimeOut - $properTimeIn) / 3600;
             // $properHours = floor($x * 2) / 2;
             // $properHours = $properHours < 0 ? 0 : $properHours;
             $x = $properTimeOut->diff($properTimeIn);
+            if (!$isLate) {
+                $x = $properTimeOut->diff($scheduledTimeIn_);
+            }
             $properHours = $this->getTotalHours($x);
             $properHours = $properHours < 0 ? 0 : $properHours;
 
-
+            // If leave
             if (isset($record->outlier['details']) && $record->outlier['details'] === 'payable') {
                 $properHours = 8;
             }
@@ -510,6 +520,13 @@ class ManhourService extends EntityService implements IManhourService {
 
         $hours = ($int->d * 24) + $int->h + $int->i / 60;
         return floor($hours * 2) / 2;
+
+    }
+
+    private function getTotalHoursNotFloored(\DateInterval $int){
+
+        $hours = ($int->d * 24) + $int->h + $int->i / 60;
+        return $hours;
 
     }
 }

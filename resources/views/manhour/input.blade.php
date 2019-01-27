@@ -76,11 +76,13 @@ Manhour Input
             <?php
 
             $scheduledTimeInStr = key_exists('timein', $employee->current) ? $employee->current['timein'] : '';
-            $scheduledTimeIn = $scheduledTimeInStr != '' ? date_create($scheduledTimeInStr) : null;
-            $scheduledTimeIn = $scheduledTimeIn != null ? date_format($scheduledTimeIn, 'h:i A') : '';
+            $scheduledTimeIn_ = $scheduledTimeInStr != '' ? date_create($scheduledTimeInStr) : null;
+            $scheduledTimeIn = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'h:i A') : '';
+            $scheduledTimeInUnformatted = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'H:i') : '';
             $scheduledTimeOutStr = key_exists('timeout', $employee->current) ? $employee->current['timeout'] : '';
-            $scheduledTimeOut = $scheduledTimeOutStr != '' ? date_create($scheduledTimeOutStr) : null;
-            $scheduledTimeOut = $scheduledTimeOut != null ? date_format($scheduledTimeOut, 'h:i A') : '';
+            $scheduledTimeOut_ = $scheduledTimeOutStr != '' ? date_create($scheduledTimeOutStr) : null;
+            $scheduledTimeOut = $scheduledTimeOut_ != null ? date_format($scheduledTimeOut_, 'h:i A') : '';
+            $scheduledTimeOutUnformatted = $scheduledTimeOut_ != null ? date_format($scheduledTimeOut_, 'H:i') : '';
 
             ?>
             <div class="row">
@@ -91,7 +93,7 @@ Manhour Input
                                 <label class="form-paper-label">Date</label>
                                 <input type="text" id="dateDisplay" class="form-control" readonly required />
                                 <input type="hidden" id="date" name="date" class="form-control" required />
-                                <i class="text-muted small">Select date on calendar</i>
+                                <i class="text-danger small" id="warningText">Select date on calendar</i>
                             </div>
                         </div>
                         <div class="col-sm-7">
@@ -100,6 +102,7 @@ Manhour Input
                         </div>
                         <div class="col-sm-5">
                             <label for="timeIn" class="form-paper-label">Scheduled In</label>
+                            <input type="hidden" id="scheduledTimeInHidden" value="{{ $scheduledTimeInUnformatted }}" />
                             <div id="scheduledTimeIn" class="form-paper-display">{{ $scheduledTimeIn }}</div>
                         </div>
                         <div class="col-sm-7">
@@ -108,12 +111,19 @@ Manhour Input
                         </div>
                         <div class="col-sm-5">
                             <label for="timeOut" class="form-paper-label">Scheduled Out</label>
+                            <input type="hidden" id="scheduledTimeOutHidden" value="{{ $scheduledTimeOutUnformatted }}" />
                             <div id="scheduledTimeOut" class="form-paper-display">{{ $scheduledTimeOut }}</div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <div class="form-group">
                                 <label for="hour" class="form-paper-label">Hours</label>
-                                <input type="number" id="hour" name="hours" class="form-control" onkeyup="setTimeOutByHour()" />
+                                <input type="number" id="hour" name="hours" class="form-control" tabindex="-1" onkeyup="setTimeOutByHour()" step="0.01" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="hour" class="form-paper-label">Counted Hours</label>
+                                <input type="number" id="counted-hour" class="form-control" readonly />
                             </div>
                         </div>
                     </div>
