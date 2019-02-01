@@ -74,6 +74,28 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
+
+    public function getEmployeeByName($name) {
+
+        $employees = $this->getAllEmployees();
+        $emp = null;
+
+        if ($employees == null)
+            return null;
+
+        foreach ($employees as $employee) {
+            if (\strpos(strtolower($employee->fullName), strtolower($name)) !== false) {
+                $emp = $employee;
+            }
+            else if (\strpos(strtolower($employee->firstName.' '.$employee->lastName), strtolower($name)) !== false) {
+                $emp = $employee;
+            }
+        }
+
+        return $emp;
+    }
+
+
     public function getEmployeeByIdWithStateOnDate($id, $date) {
 
         $employee = $this->getEmployeeById($id);

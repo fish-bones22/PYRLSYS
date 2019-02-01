@@ -226,6 +226,20 @@ class ManhourController extends Controller
     }
 
 
+    public function search(Request $request, $id) {
+        $req = $request->all();
+
+        if (isset($req["search"]) && $req["search"] != '') {
+            $employees = $this->employeeService->getEmployeeByName($req["search"]);
+            if ($employees != null) {
+                $id = $employees->id;
+            }
+        }
+
+        return redirect()->action('ManhourController@input', ['id' => $id]);
+    }
+
+
     public function getNext($id) {
 
         $employees = $this->employeeService->getAllEmployees('lastName');
@@ -250,6 +264,34 @@ class ManhourController extends Controller
 
         if ($newId == null)
             $newId = $employees[0]->id;
+
+        return redirect()->action('ManhourController@input', ['id' => $newId]);
+    }
+
+    public function getPrev($id) {
+
+        $employees = $this->employeeService->getAllEmployees('lastName');
+        $newId = null;
+
+        if ($employees == null || sizeof($employees) === 0) {
+            return redirect()->action('ManhourController@index');
+        }
+
+        for ($i = sizeof($employees)-1; $i >= 0; $i--) {
+
+            if ($employees[$i]->id != $id)
+                continue;
+
+            if ($i == 0)
+                break;
+
+            $newId = $employees[$i-1]->id;
+
+            break;
+        }
+
+        if ($newId == null)
+            $newId = $employees[sizeof($employees)-1]->id;
 
         return redirect()->action('ManhourController@input', ['id' => $newId]);
     }
@@ -360,11 +402,11 @@ class ManhourController extends Controller
 
         $req = $request->all();
 
-        for ($i = 0; $i < sizeof($req['time_in']); $i++) {
-
-            if (!isset($req['time_in'][$i])) {
-                continue;
-            }
+        //for ($i = 0; $i < sizeof($req['time_in']); $i++) {
+        foreach ($req['time_in'] as $i => $value) {
+            // if (!isset($req['time_in'][$i])) {
+            //     continue;
+            // }
 
             $manhourEntity = new ManhourEntity();
 
