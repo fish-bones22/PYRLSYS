@@ -9,6 +9,7 @@
     <link href="{{ asset('css/app.css') }}" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/dev.css') }}" media="all" rel="stylesheet" type="text/css" />
     <link href="{{ asset('css/form-paper.css') }}" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/datatable.bootstrap4.min.css') }}" media="all" rel="stylesheet" type="text/css" />
     @yield('style')
     <title>@yield('title')</title>
 </head>

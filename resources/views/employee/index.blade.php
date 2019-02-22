@@ -7,14 +7,14 @@ Employees
 @section('content')
 
 <div class="row">
-    <div class="col-md-6 offset-md-3 form-paper section-title">Employees</div>
-    <div class="col-md-6 offset-md-3 form-paper section-divider"></div>
-    <div class="col-md-2 offset-md-3 form-paper">
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-title">Employees</div>
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
+    <div class="col-lg-2 offset-lg-2 col-md-3 offset-md-1 form-paper">
         <div class="form-group mt-3">
             <a role="button" href="employee/new" class="btn btn-sm btn-block btn-light">New Employee</a>
         </div>
     </div>
-    <div class="col-md-2 form-paper">
+    <div class="col-lg-3 col-md-3 col-sm-6 form-paper">
         <div class="form-group">
             <label for="department" class="form-paper-label">Department</label>
             <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
@@ -25,14 +25,14 @@ Employees
             </select>
         </div>
     </div>
-    <div class="col-md-2 form-paper">
+    <div class="col-lg-3 col-md-4 col-sm-6 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" class="form-control form-control-sm" type="search" onkeyup="filterEmployees()" />
         </div>
     </div>
-    <div class="col-md-6 offset-md-3 form-paper section-divider"></div>
-    <div class="col-md-6 offset-md-3 form-paper">
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper">
         <table class="table table-sm" id="employeesTable">
             <thead>
                 <tr>

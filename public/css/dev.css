@@ -118,3 +118,38 @@ a:hover .btn-link {
     font-size: 0.7em;
     font-weight: 800;
 }
+
+tbody td {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media only screen and (max-width: 575px) {
+    tbody td {
+        overflow: unset;
+        text-overflow: unset;
+        white-space: unset;
+    }
+}
+
+.dataTables_length label {
+    display: flex;
+    font-size: 10px;
+}
+.dataTables_length select {
+    border: none;
+    font-size: 12px;
+    height: 1rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.page-item.active .page-link {
+    background-color: darkorange;
+    border-color: darkorange;
+}
+.page-link {
+    color: darkorange;
+}

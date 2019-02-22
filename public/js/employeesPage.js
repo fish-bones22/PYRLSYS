@@ -3,9 +3,10 @@ var table2;
 $(function() {
 
     table = $("#employeesTable").DataTable({
-        "lengthChange": false,
         "info": false,
-        "dom": "<t<'float-right'p>>"
+        "ordering": true,
+        "pageLength": 50,
+        "dom": "<t<'float-left'l><'float-right'p>>"
     });
     table2 = $("#employeesSummaryTable").DataTable({
         "lengthChange": false,
