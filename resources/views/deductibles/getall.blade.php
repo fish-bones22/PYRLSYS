@@ -40,7 +40,7 @@ foreach ($records as $record) {
                             <div class="form-group">
                                 <div class="form-check-inline">
                                     <input id="overrideValues" class="form-check-input" type="checkbox" name="override_values" />
-                                    <label for="overrideValues" class="form-check-label small">Override Values</label>
+                                    <label for="overrideValues" class="form-check-label small">Override Values <span class="small"></span></label>
                                 </div>
                                 <button type="submit" class="btn btn-light btn-sm">Auto-generate Remittances</button>
                             </div>

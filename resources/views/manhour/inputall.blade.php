@@ -57,85 +57,87 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
     @method('post')
     <div class="row">
         <div class="col form-paper">
-            <input type="hidden" name="date" value="{{$details['date']}}" />
-            <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.75em;">
-                <thead>
-                    <tr class="text-center">
-                        <th rowspan="2">Timecard</th>
-                        <th rowspan="2">Employee Name</th>
-                        <th rowspan="2">Project/Department</th>
-                        <th colspan="2">Regular Time</th>
-                        <th rowspan="2">Undertime</th>
-                        <th rowspan="2">Outlier</th>
-                        <th rowspan="2">Authorized</th>
-                        <th rowspan="2">Total <br />Regular <br />Hours</th>
-                        <th colspan="5">Overtime</th>
-                        <th rowspan="2">ND</th>
-                        <th rowspan="2">Remarks/Comments</th>
-                    </tr>
-                    <tr>
-                        <th>In</th>
-                        <th>Out</th>
-                        <th>ROT</th>
-                        <th>SOT</th>
-                        <th>XSOT</th>
-                        <th>LHOT</th>
-                        <th>XLOT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        $index = 0;
-                    ?>
-                    @foreach ($records as $record)
-                    <?php
-                        //if ($record === null)
-                    ?>
-                    <tr {{ $record != null && $record->regularHours != null ? "style=background-color:#efe;" : ''}} >
-                        <td>
-                            {{ $record != null ? $record->timecard : '' }}
-                            <input type="hidden" name="time_card[{{$index}}]" value="{{  $record != null ? $record->timecard : ''}}" />
-                        </td>
-                        <td>
-                            {{  $record != null ? $record->employeeName : ''}}
-                            <input type="hidden" name="employee_id[{{$index}}]" value="{{  $record != null ? $record->employee_id : ''}}" />
-                            <input type="hidden" name="employee_name[{{$index}}]" value="{{  $record != null ? $record->employeeName : ''}}" />
-                        </td>
-                        <td>
-                            {{  $record != null ? $record->departmentName : ''}}
-                            <input type="hidden" name="department[{{$index}}]" value="{{ $record != null ?  $record->departmentId : '' }}" />
-                        </td>
-                        <td><input type="time" class="form-control form-control-sm" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" /></td>
-                        <td><input type="time" class="form-control form-control-sm" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" /></td>
-                        <td><input type="time" class="form-control form-control-sm" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" /></td>
-                        <td>
-                            <select class="form-control form-control-sm" name="outlier[{{$index}}]">
-                                <option></option>
-                                @foreach ($outliers as $outlier)
-                                <option value="{{ $outlier->id }}" {{  $record != null && $outlier->id == $record->outlierId ? 'selected' : '' }}>{{ $outlier->value }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <label class="form-label">
-                                <input type="checkbox" name="authorized[{{$index}}]" {{ $record->authorized != null ? 'checked' : '' }} /> Yes
-                            </label>
-                        </td>
-                        <td>{{ $record != null ? $record->regularHours : '' }}</td>
-                        <td>{{ $record != null ? $record->rot : ''}}</td>
-                        <td>{{ $record != null ? $record->sot : ''}}</td>
-                        <td>{{ $record != null ? $record->xsot : ''}}</td>
-                        <td>{{ $record != null ? $record->lhot : ''}}</td>
-                        <td>{{ $record != null ?  $record->xlhot : '' }}</td>
-                        <td>{{ $record != null ? $record->nd : '' }}</td>
-                        <td><input type="text" name="remarks[{{$index}}]" class="form-control form-control-sm" value="{{ $record != null ? $record->remarks : '' }}" /></td>
-                    </tr>
-                    <?php
-                    $index++;
-                    ?>
-                    @endforeach
-                </tbody>
-            </table>
+            <div style="overflow-x:auto">
+                <input type="hidden" name="date" value="{{$details['date']}}" />
+                <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.75em;">
+                    <thead>
+                        <tr class="text-center">
+                            <th rowspan="2">Timecard</th>
+                            <th rowspan="2">Employee Name</th>
+                            <th rowspan="2">Project/Department</th>
+                            <th colspan="2">Regular Time</th>
+                            <th rowspan="2">Undertime</th>
+                            <th rowspan="2">Outlier</th>
+                            <th rowspan="2">Authorized</th>
+                            <th rowspan="2">Total <br />Regular <br />Hours</th>
+                            <th colspan="5">Overtime</th>
+                            <th rowspan="2">ND</th>
+                            <th rowspan="2">Remarks/Comments</th>
+                        </tr>
+                        <tr>
+                            <th>In</th>
+                            <th>Out</th>
+                            <th>ROT</th>
+                            <th>SOT</th>
+                            <th>XSOT</th>
+                            <th>LHOT</th>
+                            <th>XLOT</th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                        <?php
+                            $index = 0;
+                        ?>
+                        @foreach ($records as $record)
+                        <?php
+                            //if ($record === null)
+                        ?>
+                        <tr {{ $record != null && $record->regularHours != null ? "style=background-color:#efe;" : ''}} >
+                            <td>
+                                {{ $record != null ? $record->timecard : '' }}
+                                <input type="hidden" name="time_card[{{$index}}]" value="{{  $record != null ? $record->timecard : ''}}" />
+                            </td>
+                            <td>
+                                {{  $record != null ? $record->employeeName : ''}}
+                                <input type="hidden" name="employee_id[{{$index}}]" value="{{  $record != null ? $record->employee_id : ''}}" />
+                                <input type="hidden" name="employee_name[{{$index}}]" value="{{  $record != null ? $record->employeeName : ''}}" />
+                            </td>
+                            <td>
+                                {{  $record != null ? $record->departmentName : ''}}
+                                <input type="hidden" name="department[{{$index}}]" value="{{ $record != null ?  $record->departmentId : '' }}" />
+                            </td>
+                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" tabindex="1" /></td>
+                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" tabindex="1" /></td>
+                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" tabindex="-1" /></td>
+                            <td>
+                                <select class="form-control form-control-sm" name="outlier[{{$index}}]" tabindex="-1">
+                                    <option></option>
+                                    @foreach ($outliers as $outlier)
+                                    <option value="{{ $outlier->id }}" {{  $record != null && $outlier->id == $record->outlierId ? 'selected' : '' }}>{{ $outlier->value }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <label class="form-label">
+                                    <input type="checkbox" name="authorized[{{$index}}]" {{ $record->authorized != null ? 'checked' : '' }} tabindex="-1" /> Yes
+                                </label>
+                            </td>
+                            <td>{{ $record != null ? $record->regularHours : '' }}</td>
+                            <td>{{ $record != null ? $record->rot : ''}}</td>
+                            <td>{{ $record != null ? $record->sot : ''}}</td>
+                            <td>{{ $record != null ? $record->xsot : ''}}</td>
+                            <td>{{ $record != null ? $record->lhot : ''}}</td>
+                            <td>{{ $record != null ?  $record->xlhot : '' }}</td>
+                            <td>{{ $record != null ? $record->nd : '' }}</td>
+                            <td><input type="text" name="remarks[{{$index}}]" class="form-control form-control-sm" value="{{ $record != null ? $record->remarks : '' }}" tabindex="-1" /></td>
+                        </tr>
+                        <?php
+                        $index++;
+                        ?>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div class="m-4">&nbsp;</div>

@@ -2,6 +2,7 @@ var table1, table2;
 
 $(function() {
     table1 = $("#recordSummaryTable").DataTable({
+        "ordering": false,
         "lengthChange": false,
         "info": false,
         "dom": "<t<'float-right'p>>",

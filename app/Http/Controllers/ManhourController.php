@@ -108,7 +108,7 @@ class ManhourController extends Controller
         }
         else {
             $startDay = 16;
-            $endDay = date_format(date_create($year.'-'.$month.'-'.$endDay), 't'); // End of month
+            $endDay = date_format(date_create($year.'-'.$month.'-'.$startDay), 't'); // End of month
         }
         $datefrom = date_create($year.'-'.$month.'-'.$startDay);
         $dateto = date_create($year.'-'.$month.'-'.$endDay);

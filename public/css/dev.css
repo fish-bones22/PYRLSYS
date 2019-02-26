@@ -10,6 +10,12 @@ a:hover .btn-link {
     color: seagreen;
 }
 
+/* Form Controls */
+.form-control-sh {
+    max-width: 80px;
+}
+
+/* Buttons */
 .btn-primary {
     background-color: mediumseagreen;
     border-color: mediumseagreen;
@@ -124,6 +130,13 @@ tbody td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+tbody.extended-display td {
+    max-width: unset;
+    overflow: unset;
+    text-overflow: unset;
+    white-space: unset;
 }
 
 @media only screen and (max-width: 575px) {

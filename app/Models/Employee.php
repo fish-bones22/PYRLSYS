@@ -32,7 +32,8 @@ class Employee extends Model
     public function fullName() {
         $middleInitial = $this->middleName != '' ? substr($this->middleName, 0, 1).'.' : '';
 
-        return $this->firstName.' '.$middleInitial.' '.$this->lastName;
+        // return $this->firstName.' '.$middleInitial.' '.$this->lastName;
+        return $this->lastName.', '.$this->firstName.' '.$middleInitial;
     }
 
 
