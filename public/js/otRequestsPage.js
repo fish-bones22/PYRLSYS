@@ -3,7 +3,11 @@ $(document).ready(function() {
     table = $("#otRequestTable").DataTable({
         "lengthChange": false,
         "info": false,
-        "dom": "<t<'float-right'p>>"
+        "dom": "<t<'float-right'p>>",
+        "columnDefs": [{
+            "targets":7,
+            "orderable": false
+        }]
     });
 });
 

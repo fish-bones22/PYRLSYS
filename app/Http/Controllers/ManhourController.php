@@ -365,7 +365,8 @@ class ManhourController extends Controller
         }
 
         session()->put('success', 'Manhour record is successfully added');
-        return redirect()->action('ManhourController@getNext', $id);
+        //return redirect()->action('ManhourController@getNext', $id);
+        return redirect()->back();
     }
 
 
