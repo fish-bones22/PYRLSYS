@@ -22,6 +22,7 @@ New User
                 <div class="col-12 form-paper text-center"><div class="display-4">New User</div></div>
             </div>
             <div class="row">
+                <div class="col-12 form-paper section-divider"></div>
                 <div class="col-12 form-paper section-title">Credentials</div>
                 <div class="col-12 form-paper">
                     <div class="form-group">
@@ -47,42 +48,51 @@ New User
                 </div>
             </div>
             <div class="row">
+                <div class="col-12 form-paper section-divider"></div>
                 <div class="col-12 form-paper section-title">User Access</div>
 
                 <div class="col-12 form-paper">
                     <div class="form-check mt-2">
-                        <input type="checkbox" id="isAdmin" class="form-check-input" name="admin" {{ old('admin') != null ? 'checked' : '' }} />
+                        <input type="checkbox" id="cb-user-access-all" class="form-check-input" />
+                        <label for="cb-user-access-all"><em>Select All</em></label>
+                    </div>
+                </div>
+                <div class="col-12 form-paper">
+                    <div class="form-check mt-2">
+                        <input type="checkbox" id="isAdmin" class="form-check-input cb-user-access" name="admin" {{ old('admin') != null ? 'checked' : '' }} />
                         <label for="isAdmin">Admin</label>
                     </div>
                 </div>
-
                 <div class="col-12 form-paper">
                     <div class="form-group">
-
                         @for ($i = 0; $i < sizeof($roles); $i++)
                         <div class="form-check">
                             <input type="hidden" name="user_accesses[{{ $i }}][id]" value="{{ $roles[$i]->id }}" />
-                            <input type="checkbox" id="{{ $roles[$i]->roleKey }}" class="form-check-input" name="user_accesses[{{ $i }}][key]" />
+                            <input type="checkbox" id="{{ $roles[$i]->roleKey }}" class="form-check-input cb-user-access" name="user_accesses[{{ $i }}][key]" />
                             <label for="{{ $roles[$i]->roleKey }}">{{ $roles[$i]->roleName }}</label>
                         </div>
                         @endfor
-
                     </div>
                 </div>
 
-
+                <div class="col-12 form-paper section-divider"></div>
                 <div class="col-12 form-paper section-title">Department Access</div>
                 <div class="col-12 form-paper">
-                    <div class="form-group">
+                    <div class="form-check mt-2">
+                        <input type="checkbox" id="cb-department-access-all" class="form-check-input" />
+                        <label for="cb-department-access-all"><em>Select All</em></label>
+                    </div>
+                </div>
 
+                <div class="col-12 form-paper">
+                    <div class="form-group">
                         @for ($i = 0; $i < sizeof($categories); $i++)
                         <div class="form-check">
                             <input type="hidden" name="department_accesses[{{ $i }}][id]" value="{{ $categories[$i]->id }}" />
-                            <input type="checkbox" id="{{ $categories[$i]->value }}" class="form-check-input" name="department_accesses[{{ $i }}][key]" />
+                            <input type="checkbox" id="{{ $categories[$i]->value }}" class="form-check-input cb-department-access" name="department_accesses[{{ $i }}][key]" />
                             <label for="{{ $categories[$i]->value }}">{{ $categories[$i]->value }}</label>
                         </div>
                         @endfor
-
                     </div>
                 </div>
 
@@ -102,4 +112,8 @@ New User
     </div>
 </div>
 
+@stop
+
+@section('script')
+<script src="{{ asset('js/registerUser.js') }}"></script>
 @stop
