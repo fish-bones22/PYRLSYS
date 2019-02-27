@@ -4,8 +4,11 @@ $(function() {
     table = $("#masterListTable").DataTable({
         "lengthChange": false,
         "info": false,
-        "ordering": false,
-        "dom": "<t<'float-right'p>>"
+        "ordering": true,
+        "dom": "<t<'float-right'p>>",
+        "columnDefs": [
+            {"targets": 3, "orderable": false}
+        ]
     });
 });
 
