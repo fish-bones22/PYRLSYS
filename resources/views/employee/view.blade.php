@@ -38,7 +38,7 @@
                 <div class="col-12 form-paper section-divider"></div>
             </div>
             <div class="row">
-                <div class="col-md-6 form-paper">
+                <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="employeeId" class="form-paper-label">Employee ID:</label>
                         <div class="form-paper-display">{{ $employee->employeeId }}</div>
@@ -54,6 +54,12 @@
                     <div class="form-group">
                         <label for="civilStatus" class="form-paper-label">Civil Status:</label>
                         <div class="form-paper-display">{{ key_exists('civilstatus', $employee->details) ? $employee->details['civilstatus']['value'] : '' }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 form-paper">
+                    <div class="form-group">
+                        <label for="birthday" class="form-paper-label">Birthday:</label>
+                        <div class="form-paper-display">{{ key_exists('birthday', $employee->details) ? $employee->details['birthday']['value'] : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-md-12 form-paper">
@@ -338,25 +344,25 @@
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="tin" class="form-paper-label">TIN</label>
-                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['tin']) ?  $employee->deductibles['tin'] : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['tin']) ?  $employee->deductibles['tin']['value'] : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="ssn" class="form-paper-label">SS #</label>
-                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['sss']) ?  $employee->deductibles['sss'] : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['sss']) ?  $employee->deductibles['sss']['value'] : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="philhealth" class="form-paper-label">PhilHealth</label>
-                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['philhealth']) ?  $employee->deductibles['philhealth'] : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['philhealth']) ?  $employee->deductibles['philhealth']['value'] : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="pagibig" class="form-paper-label">PAGIBIG</label>
-                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['pagibig']) ?  $employee->deductibles['pagibig'] : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->deductibles != null && isset($employee->deductibles['pagibig']) ?  $employee->deductibles['pagibig']['value'] : 'None' }}</div>
                     </div>
                 </div>
             </div>

@@ -45,7 +45,7 @@
                 <div class="col-12 form-paper section-divider"></div>
             </div>
             <div class="row">
-                <div class="col-md-6 form-paper">
+                <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="employeeId" class="form-paper-label">Employee ID:</label>
                         <input id="employeeId" name="employee_id" type="text" class="form-control" value="{{ $employee->employeeId }}" required/>
@@ -69,6 +69,12 @@
                             <option value="widow" {{ key_exists('civilstatus', $employee->details) && $employee->details['civilstatus']['value'] == 'widow' ? 'selected' : ''}} >Widow</option>
                             <option value="separated"  {{ key_exists('civilstatus', $employee->details) && $employee->details['civilstatus']['value'] == 'separated' ? 'selected' : ''}} >Legally Separated</option>
                         </select>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6 form-paper">
+                    <div class="form-group">
+                        <label for="birthday" class="form-paper-label">Birthday:</label>
+                        <input type="date" name="birthday" class="form-control" id="birthday" value="{{ key_exists('birthday', $employee->details) ? $employee->details['birthday']['value'] : '' }}" required />
                     </div>
                 </div>
                 <div class="col-md-12 form-paper">
@@ -406,25 +412,25 @@
                     <div class="form-group">
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="tin" {{ key_exists('tin', $employee->deductibles) ? 'checked' : '' }} />
+                                <input class="form-check-input" type="checkbox" name="tin" {{ key_exists('tin', $employee->deductibles) && $employee->deductibles['tin']['isset'] ? 'checked' : '' }} />
                                 TIN
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="sss" {{ key_exists('sss', $employee->deductibles) ? 'checked' : '' }} />
+                                <input class="form-check-input" type="checkbox" name="sss" {{ key_exists('sss', $employee->deductibles) && $employee->deductibles['sss']['isset'] ? 'checked' : '' }} />
                                 SSS
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="philhealth" {{ key_exists('philhealth', $employee->deductibles) ? 'checked' : '' }} />
+                                <input class="form-check-input" type="checkbox" name="philhealth" {{ key_exists('philhealth', $employee->deductibles) && $employee->deductibles['philhealth']['isset'] ? 'checked' : '' }} />
                                 PhilHealth
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="pagibig" {{ key_exists('pagibig', $employee->deductibles) ? 'checked' : '' }} />
+                                <input class="form-check-input" type="checkbox" name="pagibig" {{ key_exists('pagibig', $employee->deductibles) && $employee->deductibles['pagibig']['isset'] ? 'checked' : '' }} />
                                 PAGIBIG
                             </label>
                         </div>
@@ -436,25 +442,25 @@
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="tin" class="form-paper-label">TIN</label>
-                        <input id="tin" type="text" class="form-control" name="tinnumber" value="{{ key_exists('tin', $employee->deductibles) ? $employee->deductibles['tin'] : '' }}" />
+                        <input id="tin" type="text" class="form-control" name="tinnumber" value="{{ key_exists('tin', $employee->deductibles) ? $employee->deductibles['tin']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="ssn" class="form-paper-label">SS #</label>
-                        <input id="ssn" type="text" class="form-control" name="ssnumber" value="{{ key_exists('sss', $employee->deductibles) ? $employee->deductibles['sss'] : '' }}" />
+                        <input id="ssn" type="text" class="form-control" name="ssnumber" value="{{ key_exists('sss', $employee->deductibles) ? $employee->deductibles['sss']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="philhealth" class="form-paper-label">PhilHealth</label>
-                        <input id="philhealth" type="text" class="form-control" name="philhealthnumber" value="{{ key_exists('philhealth', $employee->deductibles) ? $employee->deductibles['philhealth'] : '' }}" />
+                        <input id="philhealth" type="text" class="form-control" name="philhealthnumber" value="{{ key_exists('philhealth', $employee->deductibles) ? $employee->deductibles['philhealth']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md form-paper">
                     <div class="form-group">
                         <label for="pagibig" class="form-paper-label">PAGIBIG</label>
-                        <input id="pagibig" type="text" class="form-control" name="pagibignumber" value="{{ key_exists('pagibig', $employee->deductibles) ? $employee->deductibles['pagibig'] : '' }}" />
+                        <input id="pagibig" type="text" class="form-control" name="pagibignumber" value="{{ key_exists('pagibig', $employee->deductibles) ? $employee->deductibles['pagibig']['value'] : '' }}" />
                     </div>
                 </div>
             </div>

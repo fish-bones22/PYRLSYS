@@ -130,6 +130,7 @@ foreach ($records as $record) {
                                 <td>{{ isset($record['tin']) ? $record['tin']['employee'] : 0 }}</td>
                             </tr>
                         @endforeach
+                        @if ($sssEmp + $sssEmr + $philhealthEmp + $philhealthEmr + $pagibigEmp + $pagibigEmr + $tax > 0)
                         <tr>
                             <td>TOTAL</td>
                             <td></td>
@@ -141,6 +142,7 @@ foreach ($records as $record) {
                             <td>{{ $pagibigEmr }}</td>
                             <td>{{ $tax }}</td>
                         </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>

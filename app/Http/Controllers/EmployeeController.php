@@ -394,6 +394,13 @@ class EmployeeController extends Controller
             'displayName' => 'Civil Status'
         ];
 
+        // Birthday
+        $entity['birthday'] = [
+            'key' => 'birthday',
+            'value' => $details['birthday'],
+            'displayName' => 'Birthday'
+        ];
+
         // Spouse
         $entity['spouse'] = array();
         for ($i = 0; $i < sizeof($details['spouse_last_name']); $i++) {
@@ -551,20 +558,46 @@ class EmployeeController extends Controller
 
         $entity = array();
 
+        $entity['tin'] = array();
+        $entity['sss'] = array();
+        $entity['philhealth'] = array();
+        $entity['pagibig'] = array();
+
+        $entity['tin']['isset'] = false;
+        $entity['sss']['isset'] = false;
+        $entity['philhealth']['isset'] = false;
+        $entity['pagibig']['isset'] = false;
+
+        // TIN
+        if (isset($details['tinnumber'])) {
+            $entity['tin']['value'] = $details['tinnumber'];
+        }
         if (isset($details['tin'])) {
-            $entity['tin'] = $details['tinnumber'];
+            $entity['tin']['isset'] = true;
         }
 
+        // SSS
+        if (isset($details['ssnumber'])) {
+            $entity['sss']['value'] = $details['ssnumber'];
+        }
         if (isset($details['sss'])) {
-            $entity['sss'] = $details['ssnumber'];
+            $entity['sss']['isset'] = true;
         }
 
+        // Philhealth
+        if (isset($details['philhealthnumber'])) {
+            $entity['philhealth']['value'] = $details['philhealthnumber'];
+        }
         if (isset($details['philhealth'])) {
-            $entity['philhealth'] = $details['philhealthnumber'];
+            $entity['philhealth']['isset'] = true;
         }
 
+        // PAGIBIG
+        if (isset($details['pagibignumber'])) {
+            $entity['pagibig']['value'] = $details['pagibignumber'];
+        }
         if (isset($details['pagibig'])) {
-            $entity['pagibig'] = $details['pagibignumber'];
+            $entity['pagibig']['isset'] = true;
         }
 
         return $entity;

@@ -728,9 +728,14 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
         foreach ($deductibles as $key => $deductible) {
 
+            if (!isset($deductible['value'])) {
+                continue;
+            }
+
             $ded = new EmployeeDeductible();
             $ded->key = $key;
-            $ded->value = $deductible;
+            $ded->value = $deductible['value'];
+            $ded->isset = $deductible['isset'];
             $ded->employee_id = $id;
 
             try {
@@ -755,7 +760,9 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $deductibles = array();
 
         foreach ($deductiblesModel as $deductibleModel) {
-            $deductibles[$deductibleModel->key] = $deductibleModel->value;
+            $deductibles[$deductibleModel->key] = array();
+            $deductibles[$deductibleModel->key]['value'] = $deductibleModel->value;
+            $deductibles[$deductibleModel->key]['isset'] = $deductibleModel->isset;
         }
 
         return $deductibles;

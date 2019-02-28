@@ -8,7 +8,7 @@ class EmployeeDeductible extends Model
 {
     //
     protected $fillable = [
-        'key', 'employee_id', 'value'
+        'key', 'employee_id', 'value', 'isset'
     ];
 
     public function details() {

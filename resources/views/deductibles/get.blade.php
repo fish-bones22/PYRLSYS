@@ -90,15 +90,15 @@
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
-            @if (isset($employee->deductibles['tin']))
+            @if (isset($employee->deductibles['tin']) && $employee->deductibles['tin']['isset'])
             <div class="row">
                 <div class="col-12 form-paper section-title">Withholding Tax</div>
                 <div class="col-12 form-paper section-divider"></div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">TIN</label>
-                        <div class="form-paper-display">{{ $employee->deductibles['tin'] }}</div>
-                        <input type="hidden" name="models[tin][identifier]" value="{{ isset($employee->deductibles['tin']) ? $employee->deductibles['tin'] : old('models["tin"]["identifier"]') }}" />
+                        <div class="form-paper-display">{{ $employee->deductibles['tin']['value'] }}</div>
+                        <input type="hidden" name="models[tin][identifier]" value="{{ isset($employee->deductibles['tin']['value']) ? $employee->deductibles['tin']['value'] : old('models["tin"]["identifier"]') }}" />
                         <input type="hidden" name="models[tin][identifier_details]" value="TIN" />
                         <input type="hidden" name="models[tin][key]" value="tin" />
                         <input type="hidden" name="models[tin][details]" value="Withholding Tax" />
@@ -121,15 +121,15 @@
             </div>
             @endif
 
-            @if (isset($employee->deductibles['sss']))
+            @if (isset($employee->deductibles['sss']) && $employee->deductibles['sss']['isset'])
             <div class="row">
                 <div class="col-12 form-paper section-title">SSS</div>
                 <div class="col-12 form-paper section-divider"></div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">SS Number</label>
-                        <div class="form-paper-display">{{ $employee->deductibles['sss'] }}</div>
-                        <input type="hidden" name="models[sss][identifier]" value="{{ isset($employee->deductibles['sss']) ? $employee->deductibles['sss'] : old('models["sss"]["identifier"]') }}" />
+                        <div class="form-paper-display">{{ $employee->deductibles['sss']['value'] }}</div>
+                        <input type="hidden" name="models[sss][identifier]" value="{{ isset($employee->deductibles['sss']['value']) ? $employee->deductibles['sss']['value'] : old('models["sss"]["identifier"]') }}" />
                         <input type="hidden" name="models[sss][identifier_details]" value="SS Number" />
                         <input type="hidden" name="models[sss][key]" value="sss" />
                         <input type="hidden" name="models[sss][details]" value="SSS" />
@@ -167,15 +167,15 @@
             @endif
 
 
-            @if (isset($employee->deductibles['philhealth']))
+            @if (isset($employee->deductibles['philhealth']) && $employee->deductibles['philhealth']['isset'])
             <div class="row">
                 <div class="col-12 form-paper section-title">PhilHealth</div>
                 <div class="col-12 form-paper section-divider"></div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">PhilHealth ID Number</label>
-                        <div class="form-paper-display">{{ $employee->deductibles['philhealth'] }}</div>
-                        <input type="hidden" name="models[philhealth][identifier]" value="{{ isset($employee->deductibles['philhealth']) ? $employee->deductibles['philhealth'] : old('models["philhealth"]["identifier"]') }}" />
+                        <div class="form-paper-display">{{ $employee->deductibles['philhealth']['value'] }}</div>
+                        <input type="hidden" name="models[philhealth][identifier]" value="{{ isset($employee->deductibles['philhealth']['value']) ? $employee->deductibles['philhealth']['value'] : old('models["philhealth"]["identifier"]') }}" />
                         <input type="hidden" name="models[philhealth][identifier_details]" value="PhilHealth Number" />
                         <input type="hidden" name="models[philhealth][key]" value="philhealth" />
                         <input type="hidden" name="models[philhealth][details]" value="PhilHealth" />
@@ -199,15 +199,15 @@
             @endif
 
 
-            @if (isset($employee->deductibles['pagibig']))
+            @if (isset($employee->deductibles['pagibig']) && $employee->deductibles['pagibig']['isset'])
             <div class="row">
                 <div class="col-12 form-paper section-title">PAGIBIG</div>
                 <div class="col-12 form-paper section-divider"></div>
                 <div class="col-3 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">PAGIBIG Number</label>
-                        <div class="form-paper-display">{{ $employee->deductibles['pagibig'] }}</div>
-                        <input type="hidden" name="models[pagibig][identifier]" value="{{ isset($employee->deductibles['pagibig']) ? $employee->deductibles['pagibig'] : old('models["pagibig"]["identifier"]') }}" />
+                        <div class="form-paper-display">{{ $employee->deductibles['pagibig']['value'] }}</div>
+                        <input type="hidden" name="models[pagibig][identifier]" value="{{ isset($employee->deductibles['pagibig']['value']) ? $employee->deductibles['pagibig']['value'] : old('models["pagibig"]["identifier"]') }}" />
                         <input type="hidden" name="models[pagibig][identifier_details]" value="PAGIBIG Number" />
                         <input type="hidden" name="models[pagibig][key]" value="pagibig" />
                         <input type="hidden" name="models[pagibig][details]" value="PAGIBIG" />

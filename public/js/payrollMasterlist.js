@@ -3,6 +3,10 @@ $(function() {
     table = $("#payrollMasterTable").DataTable({
         "lengthChange": false,
         "info": false,
+        "columnDefs": [{
+            "targets": 2,
+            "orderable": false
+        }],
         "dom": "<t<'float-right'p>>",
         "buttons": [
             {

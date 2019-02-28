@@ -6,6 +6,10 @@ $(function() {
         "info": false,
         "ordering": true,
         "pageLength": 50,
+        "columnDefs":[{
+            "targets":3,
+            "orderable": false
+        }],
         "dom": "<t<'float-left'l><'float-right'p>>"
     });
     table2 = $("#employeesSummaryTable").DataTable({

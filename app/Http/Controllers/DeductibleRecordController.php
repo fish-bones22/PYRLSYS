@@ -355,13 +355,13 @@ class DeductibleRecordController extends Controller
             }
             // Set records if not existing yet
             // SSS
-            if (isset($employee->deductibles['sss']) && !$hasSSS) {
+            if (isset($employee->deductibles['sss']) && $employee->deductibles['sss']['isset'] && !$hasSSS) {
                 $entity = new DeductibleRecordEntity();
                 $entity->employee = array();
                 $entity->employee['id'] = $employee->id;
                 $entity->employee['name'] = $employee->fullName;;
                 $entity->identifier = array();
-                $entity->identifier['value'] = $employee->deductibles['sss'];
+                $entity->identifier['value'] = $employee->deductibles['sss']['value'];
                 $entity->identifier['details'] = 'SS Number';
                 $entity->recordDate = $date;
                 $entity->deductible = array();
@@ -373,13 +373,13 @@ class DeductibleRecordController extends Controller
                 $result = $this->deductibleRecordService->addRecord($entity);
             }
             // Philhealth
-            if (isset($employee->deductibles['philhealth']) && !$hasPhilhealth) {
+            if (isset($employee->deductibles['philhealth']) && $employee->deductibles['philhealth']['isset'] && !$hasPhilhealth) {
                 $entity = new DeductibleRecordEntity();
                 $entity->employee = array();
                 $entity->employee['id'] = $employee->id;
                 $entity->employee['name'] = $employee->fullName;;
                 $entity->identifier = array();
-                $entity->identifier['value'] = $employee->deductibles['philhealth'];
+                $entity->identifier['value'] = $employee->deductibles['philhealth']['value'];
                 $entity->identifier['details'] = 'PhilHealth Number';
                 $entity->recordDate = $date;
                 $entity->deductible = array();
@@ -390,13 +390,13 @@ class DeductibleRecordController extends Controller
                 $result = $this->deductibleRecordService->addRecord($entity);
             }
             // PAGIBIG
-            if (isset($employee->deductibles['pagibig']) && !$hasPagibig) {
+            if (isset($employee->deductibles['pagibig']) && $employee->deductibles['pagibig']['isset'] && !$hasPagibig) {
                 $entity = new DeductibleRecordEntity();
                 $entity->employee = array();
                 $entity->employee['id'] = $employee->id;
                 $entity->employee['name'] = $employee->fullName;;
                 $entity->identifier = array();
-                $entity->identifier['value'] = $employee->deductibles['pagibig'];
+                $entity->identifier['value'] = $employee->deductibles['pagibig']['value'];
                 $entity->identifier['details'] = 'PAGIBIG Number';
                 $entity->recordDate = $date;
                 $entity->deductible = array();
@@ -407,13 +407,13 @@ class DeductibleRecordController extends Controller
                 $result = $this->deductibleRecordService->addRecord($entity);
             }
             // Tax
-            if (isset($employee->deductibles['tin']) && !$hasTax) {
+            if (isset($employee->deductibles['tin']) && $employee->deductibles['tin']['isset'] && !$hasTax) {
                 $entity = new DeductibleRecordEntity();
                 $entity->employee = array();
                 $entity->employee['id'] = $employee->id;
                 $entity->employee['name'] = $employee->fullName;;
                 $entity->identifier = array();
-                $entity->identifier['value'] = $employee->deductibles['tin'];
+                $entity->identifier['value'] = $employee->deductibles['tin']['value'];
                 $entity->identifier['details'] = 'TIN';
                 $entity->recordDate = $date;
                 $entity->deductible = array();
