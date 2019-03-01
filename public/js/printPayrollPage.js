@@ -192,11 +192,23 @@ function printText(doc, result, copy) {
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Name:', mainMargin, i = spacer(i));
-    doc.text(result.employeeName, col2MarginWider, i);
+    if (result.employeeName.length >= 18) {
+        doc.setFontSize(6);
+        doc.text(result.employeeName, col2MarginWider, i);
+        doc.setFontSize(7);
+    } else {
+        doc.text(result.employeeName, col2MarginWider, i);
+    }
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Department:', mainMargin, i = spacer(i));
-    doc.text(result.employeeDepartment, col2MarginWider, i);
+    if (result.employeeDepartment.length >= 18) {
+        doc.setFontSize(6);
+        doc.text(result.employeeDepartment, col2MarginWider, i);
+        doc.setFontSize(7);
+    } else {
+        doc.text(result.employeeDepartment, col2MarginWider, i);
+    }
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Rate:', mainMargin, i = spacer(i));

@@ -459,8 +459,8 @@ class ManhourController extends Controller
         $empDetails = $this->employeeService->getEmployeeHistoryOnDate($id, date_create($date));
 
         return response()->json([
-            'timeIn' => $record != null ? $record->timeIn : null,
-            'timeOut' => $record != null ? $record->timeOut : null,
+            'timeIn' => $record != null ? date_format(date_create($record->timeIn), 'H:i') : null,
+            'timeOut' => $record != null ?date_format(date_create($record->timeOut), 'H:i') : null,
             'outlier' => $record != null && $record->outlier != null ? $record->outlier['value'] : null,
             'remarks'  => $record != null ? $record->remarks : null,
             'authorized' => $record != null ? $record->authorized : null,

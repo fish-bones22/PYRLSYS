@@ -102,30 +102,52 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
         if ($employee == null) return null;
 
+        // Get current state
         $current = $employee->current;
 
+        // Transform given date to time format
+        $date_ = strtotime(date_format($date,'Y-m-d'));
+
+        $earliest = null;
+        $earliestHistory = null;
+
+        // Iterate through employee's past states and present
         foreach ($employee->history as $history) {
+            // Skip if this state has no datestarted value
             if (!isset($history['datestarted'])) {
                 continue;
             }
 
-            $start = strtotime($history['datestarted']);
-            $end = $history['datestarted'] != null ? strtotime($history['datestarted']) : null;
-            $date_ = strtotime(date_format($date,'Y-m-d'));
+            $start = isset($history['datestarted']) && $history['datestarted'] != null ? strtotime($history['datestarted']) : null;
+            $end = isset($history['datetransfered']) && $history['datetransfered'] != null ? strtotime($history['datetransfered']) : null;
 
-            //
+            // Get earliest date from the collection
+            if ($earliest == null || $start <= $earliest) {
+                $earliest = $start;
+                $earliestHistory = $history;
+            }
+
+            // If no datetransfered (most likely, this is the current state)
             if ($end == null) {
+                // If start date is earlier than given date,
+                // Set this state as current
                 if ($start <= $date_) {
                     $current = $history;
                     break;
                 }
             }
             else {
+                // date given is within the state's start and end date
+                // set this state as current
                 if ($start <= $date_ && $end > $date_) {
                     $current = $history;
                     break;
                 }
             }
+        }
+
+        if ($date_ <= $earliest && $current == null) {
+            $current = $earliestHistory;
         }
 
         $employee->current = $current;
@@ -218,6 +240,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
         if ($histories == null)
             return null;
 
+        $dateStr = date_format($date, 'Y-m-d');
+        $date_ = strtotime($dateStr);
+
+        $earliest = null;
+        $earliestHistory = null;
+
         foreach ($histories as $history) {
 
             if ($history->dateStarted == null) {
@@ -230,8 +258,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
             $startStr = $history->dateStarted;
             $start = strtotime($startStr);
             $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
-            $dateStr = date_format($date, 'Y-m-d');
-            $date_ = strtotime($dateStr);
+
+            // Get earliest date from the collection
+            if ($earliest == null || $start <= $earliest) {
+                $earliest = $start;
+                $earliestHistory = $history;
+            }
 
             if ($end == null) {
                 if ($start <= $date_) {
@@ -245,6 +277,10 @@ class EmployeeService extends EntityService implements IEmployeeService {
                     break;
                 }
             }
+        }
+
+        if ($date_ <= $earliest && $current == null) {
+            $current = $earliestHistory;
         }
 
         return $this->getHistoryDetails($current);

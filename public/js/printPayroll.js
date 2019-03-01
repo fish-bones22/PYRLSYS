@@ -127,13 +127,25 @@ function printText(doc, result, copy) {
     doc.text(result.employeeId, col2MarginWider, i);
     underline(doc, col2MarginWider, i, 20);
 
+    if (result.employeeName.length >= 18) {
+        doc.setFontSize(2.5);
+    }
     doc.text('Name:', mainMargin, i = spacer(i));
     doc.text(result.employeeName, col2MarginWider, i);
     underline(doc, col2MarginWider, i, 20);
+    if (result.employeeName.length >= 18) {
+        doc.setFontSize(3);
+    }
 
+    if (result.employeeDepartment.length >= 18) {
+        doc.setFontSize(2.5);
+    }
     doc.text('Department:', mainMargin, i = spacer(i));
     doc.text(result.employeeDepartment, col2MarginWider, i);
     underline(doc, col2MarginWider, i, 20);
+    if (result.employeeDepartment.length >= 18) {
+        doc.setFontSize(3);
+    }
 
     doc.text('Rate:', mainMargin, i = spacer(i));
     doc.text(result.rate + ' ' + result.rateBasis, col2MarginWider, i);

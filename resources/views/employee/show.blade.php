@@ -372,13 +372,13 @@
                 <div class="col-sm-5 col-6 form-paper">
                     <div class="form-group">
                         <label for="timeIn" class="form-paper-label">Time In</label>
-                        <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{  $employee->current != null && key_exists('timein', $employee->current) ? $employee->current['timein'] : '' }}" required />
+                        <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{  $employee->current != null && key_exists('timein', $employee->current) ? date_format(date_create($employee->current['timein']), 'H:i') : '' }}" required />
                     </div>
                 </div>
                 <div class="col-sm-5 col-6 form-paper">
                     <div class="form-group">
                         <label for="timeOut" class="form-paper-label">Time Out</label>
-                        <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->current != null && key_exists('timeout', $employee->current) ? $employee->current['timeout'] : '' }}" required />
+                        <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->current != null && key_exists('timeout', $employee->current) ? date_format(date_create($employee->current['timeout']), 'H:i') : '' }}" required />
                     </div>
                 </div>
                 <div class="col-sm-2 form-paper">

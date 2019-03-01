@@ -321,7 +321,7 @@
                 <div class="col-md-2 form-paper">
                     <div class="form-group">
                         <label for="break" class="form-paper-label">Break</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['break']) ? $employee->current['break'] : 'None' }}</div>
+                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['break']) && $employee->current['break']*1 > 0 ? $employee->current['break'] : 'None' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>

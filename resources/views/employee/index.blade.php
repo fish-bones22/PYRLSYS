@@ -80,8 +80,14 @@ Employees
                     <th>Middle Name</th>
                     <th>Sex</th>
                     <th>Civil Status</th>
+                    <th>Birthday</th>
                     <th>Spouse</th>
                     <th>Dependents</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Emergency Contact Name</th>
+                    <th>Emergency Contact Number</th>
                     <th>Department</th>
                     <th>Position</th>
                     <th>Employment Type</th>
@@ -94,8 +100,12 @@ Employees
                     <th>PAGIBIG</th>
                     <th>Type of Payment</th>
                     <th>Mode of Payment</th>
+                    <th>Rate Basis</th>
                     <th>Rate</th>
                     <th>Allowance</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Break</th>
                     <th>Pending Memos</th>
                     <th>Remarks</th>
                 </tr>
@@ -110,6 +120,7 @@ Employees
                     <td>{{ $employee->middleName }}</td>
                     <td>{{ $employee->sex }}</td>
                     <td>{{ isset($employee->details['civilstatus']['value']) ? $employee->details['civilstatus']['value'] : '' }}</td>
+                    <td>{{ key_exists('birthday', $employee->details) ? $employee->details['birthday']['value'] : '' }}</td>
                     <td>{{ isset($employee->details['spouse']) ? $employee->details['spouse'][0]['firstname']['value'].' '.$employee->details['spouse'][0]['middlename']['value'].' '.$employee->details['spouse'][0]['lastname']['value'] : '' }}</td>
                         <?php
                         $dependents = '';
@@ -121,20 +132,29 @@ Employees
                         }
                         ?>
                     <td>{{ $dependents }}</td>
+                    <td>{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: '' }}</td>
+                    <td>{{  $employee->details != null && key_exists('phonenumber', $employee->details) ? $employee->details['phonenumber']['value']: '' }}</td>
+                    <td>{{  $employee->details != null && key_exists('email', $employee->details) ? $employee->details['email']['value']: '' }}</td>
+                    <td>{{  $employee->details != null && key_exists('emergencyname', $employee->details) ? $employee->details['emergencyname']['value']: '' }}</td>
+                    <td>{{  $employee->details != null && key_exists('emergencyphone', $employee->details) ? $employee->details['emergencyphone']['value']: '' }}</td>
                     <td>{{ isset($employee->current['department']) ? $employee->current['department']['displayName'] : '' }}</td>
                     <td>{{ isset($employee->current['position']) ? $employee->current['position'] : '' }}</td>
                     <td>{{ isset($employee->current['employmenttype']) ? $employee->current['employmenttype']['displayName'] : '' }}</td>
                     <td>{{ isset($employee->current['datestarted']) ? date_format(date_create($employee->current['datestarted']), 'Y-m-d') : '' }}</td>
                     <td>{{ isset($employee->current['datetransfered']) ? date_format(date_create($employee->current['datetransfered']), 'Y-m-d') : '' }}</td>
                     <td>{{ isset($employee->current['contractstatus']) ? $employee->current['contractstatus']['displayName'] : '' }}</td>
-                    <td>{{ isset($employee->deductibles['sss']) ? $employee->deductibles['sss'] : '' }}</td>
-                    <td>{{ isset($employee->deductibles['tin']) ? $employee->deductibles['tin'] : '' }}</td>
-                    <td>{{ isset($employee->deductibles['philhealth']) ? $employee->deductibles['philhealth'] : '' }}</td>
-                    <td>{{ isset($employee->deductibles['pagibig']) ? $employee->deductibles['pagibig'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['sss']) ? $employee->deductibles['sss']['value'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['tin']) ? $employee->deductibles['tin']['value'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['philhealth']) ? $employee->deductibles['philhealth']['value'] : '' }}</td>
+                    <td>{{ isset($employee->deductibles['pagibig']) ? $employee->deductibles['pagibig']['value'] : '' }}</td>
                     <td>{{ isset($employee->current['paymenttype']) ? $employee->current['paymenttype']['displayName'] : '' }}</td>
                     <td>{{ isset($employee->current['paymentmode']) ? $employee->current['paymentmode']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->current['ratebasis']) ? $employee->current['ratebasis'] : '' }}</td>
                     <td>{{ isset($employee->current['rate']) ? $employee->current['rate'] : '' }}</td>
                     <td>{{ isset($employee->current['allowance']) ? $employee->current['allowance'] : '' }}</td>
+                    <td>{{ $employee->current != null && isset($employee->current['timein']) ? date_format(date_create($employee->current['timein']), 'h:i A') : '' }}</td>
+                    <td>{{ $employee->current != null && isset($employee->current['timeout']) ? date_format(date_create($employee->current['timeout']), 'h:i A') : '' }}</td>
+                    <td>{{ $employee->current != null && isset($employee->current['break']) && $employee->current['break']*1 > 0 ? $employee->current['break'] : '' }}</td>
                     <td>{{ isset($employee->details['numberofmemo']) ? $employee->details['numberofmemo']['value'] : '' }}</td>
                     <td>{{ isset($employee->details['remarks']) ? $employee->details['remarks']['value'] : '' }}</td>
                 </tr>
