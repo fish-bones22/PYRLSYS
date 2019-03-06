@@ -743,7 +743,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $history['position'] = $model->position;
         $history['department'] = array();
         $history['department']['value'] = $model->department;
-        $history['department']['displayName'] = $model->departmentDetails->value;
+        $history['department']['displayName'] = isset($model->departmentDetails) ? $model->departmentDetails->value : '';
         $history['datestarted'] = $model->dateStarted;
         $history['datetransfered'] = $model->dateTransfered;
         $history['current'] = $model->current;
@@ -762,8 +762,8 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $history['ratebasis'] = $model->rateBasis;
         $history['rate'] = $model->rate;
         $history['allowance'] = $model->allowance;
-        $history['timein'] = $model->timein;
-        $history['timeout'] = $model->timeout;
+        $history['timein'] = isset($model->timein) && $model->timein != '00:00:00' && $model->timein != '00:00:00.0000000' ? $model->timein : null;
+        $history['timeout'] = isset($model->timeout) && $model->timeout != '00:00:00' && $model->timein != '00:00:00.0000000' ? $model->timeout : null;
         $history['break'] = $model->break;
 
         return $history;
@@ -898,13 +898,52 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
-    private function getEmployeeTimeTable($employeeId, $date) {
+    public function getEmployeeTimeTable($employeeId, $date) {
+
         $employee = $this->getEmployeeByIdWithStateOnDate($employeeId, $date);
 
         if ($employee == null)
             return null;
 
-        return $timeTable = $this->getTimeTableOnDate($timeTableHistory, $date, $employee->current['timein'], $employee->current['timeout'], $employee->current['break']);
+        $timeTable = null;
+        $possibleFallback = null;
+
+        foreach ($employee->timeTableHistory as $model) {
+            if (date_create($model['startdate']) > $date) {
+                continue;
+            }
+
+            // Store first level fallback;
+            if ($model['enddate'] == null && $possibleFallback == null) {
+                $possibleFallback = $model;
+                continue;
+            }
+
+            if ($model['enddate']!= null && date_create($model['enddate']) < $date) {
+                continue;
+            }
+
+            $timeTable = $model;
+            break;
+        }
+
+        // If no record found for the date
+        // get from latest record with null endDate
+        if ($timeTable == null) {
+
+            if ($possibleFallback != null) {
+                $timeTable = $possibleFallback;
+            }
+            else {
+                $timeTable = array();
+                $timeTable['timein'] = $employee->current['timein'];
+                $timeTable['timeout'] = $employee->current['timeout'];
+                $timeTable['break'] = $employee->current['break'];
+            }
+
+        }
+
+        return $timeTable;
     }
 
 

@@ -210,6 +210,7 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->date = date_format($date, 'M d Y');
 
         $history = $this->employeeService->getEmployeeHistoryOnDate($record->employeeId, $date);
+        $timeTable = $this->employeeService->getEmployeeTimeTable($record->employeeId, $date);
 
         if ($history == null)
             $history = $this->employeeService->getCurrentEmployeeHistory($record->employeeId);
@@ -217,7 +218,7 @@ class ManhourService extends EntityService implements IManhourService {
         $summary->timeCard = $history['timecard'];
         $summary->departmentName = $history['department']['displayName'];
         $summary->departmentId = $history['department']['value'];
-        $summary->break = isset($history['break']) && $history['break'] != null ? $history['break'] : 0;
+        $summary->break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
 
         $properHours = 0;
         $recordHours = 0;
@@ -229,9 +230,10 @@ class ManhourService extends EntityService implements IManhourService {
         if ($record->timeIn != null && $record->timeOut != null) {
 
             // Get employee schedule
-            $scheduledTimeIn = isset($employee->current['timein']) ? $employee->current['timein'] : '';
-            $scheduledTimeOut = isset($employee->current['timeout']) ? $employee->current['timeout'] : '';
+            $scheduledTimeIn = isset($timeTable['timein']) ? $timeTable['timein'] : null;
+            $scheduledTimeOut = isset($timeTable['timeout']) ? $timeTable['timeout'] : null;
             $formattedDateTime = null;
+
 
             // Special case wherein schedule is 12:00 MN onwards, but employee
             // logged 11:59 or earlier
@@ -492,6 +494,9 @@ class ManhourService extends EntityService implements IManhourService {
 
         if ($time1 === null || $time2 === null)
             return [null, null];
+
+        $time1 = date_format(date_create($time1), 'H:i');
+        $time2 = date_format(date_create($time2), 'H:i');
 
         $dateFormatted = Carbon::parse($date);
 

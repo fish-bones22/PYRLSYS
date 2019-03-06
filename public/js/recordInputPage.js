@@ -1,5 +1,14 @@
 $(document).ready(function() {
 
+    $("#timeIn").attr("disabled", "");
+    $("#timeOut").attr("disabled", "");
+    $("#hour").attr("disabled", "");
+
+    if ($("#hasinvalidwarning").val() != undefined) {
+        $("#warningText").hide();
+        return
+    }
+
     var calendar = jsCalendar.new("#calendar");
     //console.log(calendar);
     calendar.onDateClick(function(e, date) {
@@ -8,9 +17,6 @@ $(document).ready(function() {
     })
 
     $(".timepicker").timepicki({ on_change: setHour });
-    $("#timeIn").attr("disabled", "");
-    $("#timeOut").attr("disabled", "");
-    $("#hour").attr("disabled", "");
 
 });
 
@@ -141,9 +147,15 @@ function clearDetails() {
 
     $("#timeIn").val('');
     $("#timeOut").val('');
+    $("#scheduledTimeInHidden").val('');
+    $("#scheduledTimeOutHidden").val('');
+    $("#scheduledTimeIn").text('');
+    $("#scheduledTimeOut").text('');
     $("[name='outlier']").prop('checked', false);
     $("[name='authorized']").prop('checked', false);
     $("#remarks").text('');
+    $("#hour").val('');
+    $("#counted-hour").val('');
 
 }
 
@@ -152,6 +164,12 @@ function mapDetails(json) {
     $("#departmentNameDisplay").html(json.departmentName);
     $("#departmentIdDisplay").val(json.departmentId);
     $("[name='outlier'][value='" + json.outlier+ "']").prop('checked', true);
+
+    $("#scheduledTimeInHidden").val(json.scheduledTimeIn);
+    $("#scheduledTimeOutHidden").val(json.scheduledTimeOut);
+
+    $("#scheduledTimeIn").text(json.scheduledTimeIn);
+    $("#scheduledTimeOut").text(json.scheduledTimeOut);
 
     if (json.timeIn == null)
         return;

@@ -170,3 +170,8 @@ tr.highlighted {
 .page-link {
     color: darkorange;
 }
+
+.alert-warning a {
+    color: darkgoldenrod;
+    text-decoration: underline;
+}

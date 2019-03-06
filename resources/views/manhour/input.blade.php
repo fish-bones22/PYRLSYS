@@ -19,6 +19,11 @@ Manhour Input
 <div class="alert alert-success">{{ $success }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
 @endif
 
+@if (!isset($employee->timeTable['timein']) || $employee->timeTable['timein'] == null || $employee->timeTable['timein'] == '')
+<div class="alert alert-warning">Employee has no defined schedule, please set it <a href="{{ action('EmployeeController@view', ['id' => $employee->id ]) }}">here</a> first to avoid unexpected behaviors</div>
+<input type="hidden" id="hasinvalidwarning" value="true" />
+@endif
+
 <div class="row">
     <div class="col-lg-10 offset-lg-1 col-12">
 
@@ -75,13 +80,17 @@ Manhour Input
             </div>
             <?php
 
-            $scheduledTimeInStr = key_exists('timein', $employee->current) ? $employee->current['timein'] : '';
+            // Raw strings
+            $scheduledTimeInStr = key_exists('timein', $employee->timeTable) ? $employee->timeTable['timein'] : '';
+            $scheduledTimeOutStr = key_exists('timeout', $employee->timeTable) ? $employee->timeTable['timeout'] : '';
+            // Date object
             $scheduledTimeIn_ = $scheduledTimeInStr != '' ? date_create($scheduledTimeInStr) : null;
-            $scheduledTimeIn = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'h:i A') : '';
-            $scheduledTimeInUnformatted = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'H:i') : '';
-            $scheduledTimeOutStr = key_exists('timeout', $employee->current) ? $employee->current['timeout'] : '';
             $scheduledTimeOut_ = $scheduledTimeOutStr != '' ? date_create($scheduledTimeOutStr) : null;
+            // hh:mm tt
+            $scheduledTimeIn = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'h:i A') : '';
             $scheduledTimeOut = $scheduledTimeOut_ != null ? date_format($scheduledTimeOut_, 'h:i A') : '';
+            // HH:mm
+            $scheduledTimeInUnformatted = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'H:i') : '';
             $scheduledTimeOutUnformatted = $scheduledTimeOut_ != null ? date_format($scheduledTimeOut_, 'H:i') : '';
 
             ?>
@@ -103,7 +112,7 @@ Manhour Input
                         <div class="col-sm-5">
                             <label for="timeIn" class="form-paper-label">Scheduled In</label>
                             <input type="hidden" id="scheduledTimeInHidden" value="{{ $scheduledTimeInUnformatted }}" />
-                            <div id="scheduledTimeIn" class="form-paper-display">{{ $scheduledTimeIn }}</div>
+                            <div id="scheduledTimeIn" class="form-paper-display">{{ $scheduledTimeInUnformatted }}</div>
                         </div>
                         <div class="col-sm-7">
                             <label for="timeOut" class="form-paper-label">Time Out</label>
@@ -112,7 +121,7 @@ Manhour Input
                         <div class="col-sm-5">
                             <label for="timeOut" class="form-paper-label">Scheduled Out</label>
                             <input type="hidden" id="scheduledTimeOutHidden" value="{{ $scheduledTimeOutUnformatted }}" />
-                            <div id="scheduledTimeOut" class="form-paper-display">{{ $scheduledTimeOut }}</div>
+                            <div id="scheduledTimeOut" class="form-paper-display">{{ $scheduledTimeOutUnformatted }}</div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
