@@ -7,14 +7,14 @@
     <div class="row">
         <div class="col-12 form-paper">
             <div class="form-group">
-                <label for="nameEdit">Name:</label>
+                <label for="nameEdit" class="form-paper-label">Name:</label>
                 <input type="text" id="nameEdit" class="form-control display-toggle" name="name" style="display:none" required  />
                 <div id="nameDisplay" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
         <div class="col-12 form-paper">
             <div class="form-group">
-                <label for="descriptionEdit">Description:</label>
+                <label for="descriptionEdit" class="form-paper-label">Description:</label>
                 <textarea id="descriptionEdit" class="form-control description  display-toggle" name="description" style="display:none"></textarea>
                 <div id="descriptionDisplay" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
@@ -22,27 +22,39 @@
 
         @if ($key == 'department')
 
-        <div class="col-4 form-paper">
+        <div class="col-12 form-paper section-divider"></div>
+        <div class="col-12 form-paper section-title">Shedule</div>
+        <div class="col-sm-4 col-6 form-paper">
             <div class="form-group">
-                <label for="subValue1Edit">Time In:</label>
+                <label for="subValue1Edit" class="form-paper-label">Time In:</label>
                 <input id="subValue1Edit" class="form-control description  display-toggle" type="time" name="subvalue1" style="display:none" />
                 <div id="subValue1Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
-        <div class="col-4 form-paper">
+        <div class="col-sm-4 col-6 form-paper">
             <div class="form-group">
-                <label for="subValue2Edit">Time Out:</label>
-                <input id="subValue2Edit" class="form-control description  display-toggle" type="time" name="subvalue2" style="display:none" />
+                <label for="subValue2Edit" class="form-paper-label">Time Out:</label>
+                <input id="subValue2Edit" class="form-control description display-toggle" type="time" name="subvalue2" style="display:none" />
                 <div id="subValue2Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
-        <div class="col-4 form-paper">
+        <div class="col-sm-4 col-12 form-paper">
             <div class="form-group">
-                <label for="subValue3Edit">Break (hrs):</label>
-                <input id="subValue3Edit" class="form-control description  display-toggle" type="number" name="subvalue3" style="display:none" />
+                <label for="subValue3Edit" class="form-paper-label">Break (hrs):</label>
+                <input id="subValue3Edit" class="form-control description display-toggle" type="number" name="subvalue3" style="display:none" />
                 <div id="subValue3Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
+        <span class="col-12 form-paper description display-toggle" style="display:none" >
+            <div class="form-check mt-2">
+                <input id="checkbox1Edit" class="form-check-input" type="checkbox" name="checkbox1"/>
+                <label for="checkbox1Edit">Cascade changes to employees under department</label>
+            </div>
+            <div class="form-check">
+                <input id="checkbox1Edit" class="form-check-input" type="checkbox" name="checkbox1"/>
+                <label for="checkbox1Edit">Cascade changes to employees under department</label>
+            </div>
+        </span>
 
         @endif
 

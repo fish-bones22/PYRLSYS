@@ -21,5 +21,7 @@ class EmployeeEntity extends Entity {
     public $deductibles = array();
     public $history = array();
     public $current = array();
+    public $timeTable = array();
+    public $timeTableHistory = array();
 
 }

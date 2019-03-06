@@ -56,7 +56,7 @@
                         <div class="form-paper-display">{{ key_exists('civilstatus', $employee->details) ? $employee->details['civilstatus']['value'] : '' }}</div>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 form-paper">
+                <div class="col-md-3 col-12 form-paper">
                     <div class="form-group">
                         <label for="birthday" class="form-paper-label">Birthday:</label>
                         <div class="form-paper-display">{{ key_exists('birthday', $employee->details) ? $employee->details['birthday']['value'] : 'None' }}</div>
@@ -306,22 +306,44 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-5 form-paper">
-                    <div class="form-group">
-                        <label for="timeIn" class="form-paper-label">Time In</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timein']) ? date_format(date_create($employee->current['timein']), 'h:i A') : 'None' }}</div>
-                    </div>
-                </div>
-                <div class="col-md-5 form-paper">
-                    <div class="form-group">
-                        <label for="timeOut" class="form-paper-label">Time Out</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['timeout']) ? date_format(date_create($employee->current['timeout']), 'h:i A') : 'None' }}</div>
-                    </div>
-                </div>
-                <div class="col-md-2 form-paper">
-                    <div class="form-group">
-                        <label for="break" class="form-paper-label">Break</label>
-                        <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['break']) && $employee->current['break']*1 > 0 ? $employee->current['break'] : 'None' }}</div>
+                <div class="col-12 form-paper">
+                    <div class="row mt-1">
+                        <div class="col-12 section-label">Schedule</div>
+                        <div class="col-sm-4 col-6">
+                            <div class="form-group">
+                                <label for="timeIn" class="form-paper-label">Time In</label>
+                                <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['timein']) ? date_format(date_create($employee->timeTable['timein']), 'H:i') : 'None' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-6">
+                            <div class="form-group">
+                                <label for="timeOut" class="form-paper-label">Time Out</label>
+                                <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['timeout']) ? date_format(date_create($employee->timeTable['timeout']), 'H:i') : 'None' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="break" class="form-paper-label">Break</label>
+                                <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['break']) && $employee->timeTable['break']*1 > 0 ? $employee->timeTable['break'] : 'None' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="form-group">
+                                <label for="effectiveDateStart" class="form-paper-label">Effective Date Start</label>
+                                <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['startdate']) ? date_format(date_create($employee->timeTable['startdate']), 'M d, Y') : 'None' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="form-group">
+                                <label for="effectiveDateEnd" class="form-paper-label">Until</label>
+                                <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['enddate']) ? date_format(date_create($employee->timeTable['enddate']), 'M d, Y') : 'None' }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#scheduleHistoryModal">View Schedule History</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
@@ -488,6 +510,52 @@
                         </div>
                     </div>
                     <div class="mb-2">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Schedule History --}}
+<div class="modal fade" role="dialog" id="scheduleHistoryModal" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-12 form-paper section-title"><span id="title">{{ $employee->fullName }} - History of Schedules</span>
+                    <button type="button" class="close" data-dismiss='modal'>&times;</button>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
+            </div>
+            <div class="row">
+                <div class="col-12 form-paper">
+                    <table class="table table-sm" id="transferHistoryTable">
+                        <thead>
+                            <tr>
+                                <th>Time In</th>
+                                <th>Time out</th>
+                                <th>Break</th>
+                                <th>Date Effective</th>
+                                <th>Until </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($employee->timeTableHistory != null && sizeof($employee->timeTableHistory) > 0)
+                            @for ($i = 0; $i < sizeof($employee->timeTableHistory); $i++)
+                            <tr {!! $employee->timeTable != null && isset($employee->timeTable['id']) && $employee->timeTableHistory[$i]['id'] == $employee->timeTable['id'] ? 'class=highlighted' : '' !!}>
+                                <td>{{ isset($employee->timeTableHistory[$i]['timein']) ? date_format(date_create($employee->timeTableHistory[$i]['timein']), 'H:i') : '' }}</td>
+                                <td>{{ isset($employee->timeTableHistory[$i]['timeout']) ? date_format(date_create($employee->timeTableHistory[$i]['timeout']), 'H:i') : '' }}</td>
+                                <td>{{ $employee->timeTableHistory[$i]['break'] }}</td>
+                                <td>{{ isset($employee->timeTableHistory[$i]['startdate']) ? date_format(date_create($employee->timeTableHistory[$i]['startdate']), 'M d, Y') : ''  }}</td>
+                                <td>{{ isset($employee->timeTableHistory[$i]['enddate']) ? date_format(date_create($employee->timeTableHistory[$i]['enddate']), 'M d, Y') : '' }}</td>
+                            </tr>
+                            @endfor
+                            @else
+                            <tr>
+                                <td colspan="5"><em class="text-muted">No schedule history</em></td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

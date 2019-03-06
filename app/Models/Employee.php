@@ -28,6 +28,10 @@ class Employee extends Model
         return $this->hasMany('App\Models\EmployeeDeductible');
     }
 
+    public function timeTable() {
+        return $this->hasMany('App\Models\EmployeeTimeTable');
+    }
+
 
     public function fullName() {
         $middleInitial = $this->middleName != '' ? substr($this->middleName, 0, 1).'.' : '';

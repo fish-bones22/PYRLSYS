@@ -119,6 +119,7 @@ class EmployeeController extends Controller
 
         $employee->details = $this->detailsToEntity($req);
         $employee->current = $this->historyToEntity($req);
+        $employee->timeTable = $this->timeTableToEntity($req);
 
         $employee->deductibles = $this->deductiblesToEntity($req);
         $action = 'updated';
@@ -314,6 +315,20 @@ class EmployeeController extends Controller
     }
 
 
+    private function timeTableToEntity($history) {
+
+        $entity = array();
+        $entity['id'] = isset($history['schedule_id']) ? $history['schedule_id'] : null;
+        $entity['timein'] = isset($history['time_in']) ? $history['time_in'] : null;
+        $entity['timeout'] = isset($history['time_out']) ? $history['time_out'] : null;
+        $entity['startdate'] = isset($history['effective_date_start']) ? $history['effective_date_start'] : null;
+        $entity['enddate'] = isset($history['effective_date_end']) ? $history['effective_date_end'] : null;
+        $entity['break'] = isset($history['break']) ? $history['break'] : null;
+
+        return $entity;
+    }
+
+
     private function historyToEntity($history) {
 
         $entity = array();
@@ -339,14 +354,14 @@ class EmployeeController extends Controller
         // Rate Basis
         $entity['ratebasis'] = isset($history['rate_basis']) ? $history['rate_basis'] : 'monthly';
 
-        // Time In
-        $entity['timein'] = $history['time_in'];
+        // // Time In
+        // $entity['timein'] = $history['time_in'];
 
-        // Time Out
-        $entity['timeout'] = $history['time_out'];
+        // // Time Out
+        // $entity['timeout'] = $history['time_out'];
 
-        // Time Out
-        $entity['break'] = $history['break'];
+        // // Time Out
+        // $entity['break'] = $history['break'];
 
         // Department
         $entity['department'] = [

@@ -139,6 +139,10 @@ tbody.extended-display td {
     white-space: unset;
 }
 
+tr.highlighted {
+    background-color:#efe!important;
+}
+
 @media only screen and (max-width: 575px) {
     tbody td {
         overflow: unset;

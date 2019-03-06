@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeeTimeTableTable extends Migration
+class CreateDepartmentTimeTableTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,17 @@ class CreateEmployeeTimeTableTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee_time_tables', function (Blueprint $table) {
+        Schema::create('department_time_tables', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('employee_id');
+            $table->integer('department_id');
             $table->dateTime('timeIn')->nullable();
             $table->dateTime('timeOut')->nullable();
             $table->float('break')->nullable();
             $table->date('startDate');
             $table->date('endDate')->nullable();
 
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('department_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 
@@ -34,6 +34,6 @@ class CreateEmployeeTimeTableTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_time_table');
+        Schema::dropIfExists('department_time_table');
     }
 }

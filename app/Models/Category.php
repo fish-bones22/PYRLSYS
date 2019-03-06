@@ -14,4 +14,8 @@ class Category extends Model
     public function details() {
         return $this->belongsTo('App\Models\CategoryDetail', 'key', 'key');
     }
+
+    public function timeTable() {
+        return $this->hasMany('App\Models\DepartmentTimeTable');
+    }
 }

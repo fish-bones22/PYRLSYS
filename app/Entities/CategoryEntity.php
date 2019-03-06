@@ -14,4 +14,6 @@ class CategoryEntity extends Entity {
     public $displayName;
     public $description;
 
+    public $timeTable = array();
+
 }

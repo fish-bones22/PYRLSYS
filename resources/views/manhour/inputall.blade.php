@@ -92,7 +92,7 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
                         <?php
                             //if ($record === null)
                         ?>
-                        <tr {{ $record != null && $record->regularHours != null ? "style=background-color:#efe;" : ''}} >
+                        <tr {{ $record != null && $record->regularHours != null ? "class=\"highlighted\"" : ''}} >
                             <td>
                                 {{ $record != null ? $record->timecard : '' }}
                                 <input type="hidden" name="time_card[{{$index}}]" value="{{  $record != null ? $record->timecard : ''}}" />

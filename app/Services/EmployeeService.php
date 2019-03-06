@@ -8,6 +8,7 @@ use App\Models\EmployeeDeductible;
 use App\Models\EmployeeDetail;
 use App\Models\EmployeeHistory;
 use App\Models\EmployeePicture;
+use App\Models\EmployeeTimeTable;
 use App\Models\EmploymentDetail;
 use App\Entities\EmployeeEntity;
 use AuthUtility;
@@ -228,6 +229,11 @@ class EmployeeService extends EntityService implements IEmployeeService {
             $entity->history[] = $this->getHistoryDetails($history);
         }
 
+        // Time table
+        $entity->timeTable = $this->getCurrentTimeTable($model->timeTable, $curr['timein'], $curr['timeout'], $curr['break']);
+        // Time Table History
+        $entity->timeTableHistory = $this->getTimeTableHistory($model->timeTable);
+
         return $entity;
 
     }
@@ -355,6 +361,10 @@ class EmployeeService extends EntityService implements IEmployeeService {
                 return $res;
         }
 
+        $res = $this->addEmployeeTimeTable($id, $entity->timeTable);
+        if (!$res['result'])
+            return $res;
+
         $res = $this->saveDeductibles($id, $entity->deductibles);
 
         return [
@@ -405,7 +415,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
                 return $res;
         }
 
+        $res = $this->addEmployeeTimeTable($id, $entity->timeTable);
+        if (!$res['result'])
+            return $res;
+
         $res = $this->saveDeductibles($id, $entity->deductibles);
+
 
         return $res;
     }
@@ -651,9 +666,9 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $current->rate = $history['rate'];
         $current->rateBasis = isset($history['ratebasis']) ? $history['ratebasis'] : null;
         $current->allowance = isset($history['allowance']) ? $history['allowance'] : null;
-        $current->timein = $history['timein'];
-        $current->timeout = $history['timeout'];
-        $current->break = $history['break'];
+        // $current->timein = $history['timein'];
+        // $current->timeout = $history['timeout'];
+        // $current->break = $history['break'];
 
         try {
             $current->save();
@@ -688,9 +703,9 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $new->rate = $history['rate'];
         $new->rateBasis = isset($history['ratebasis']) ? $history['ratebasis'] : null;
         $new->allowance = isset($history['allowance']) ? $history['allowance'] : null;
-        $new->timein = $history['timein'];
-        $new->timeout = $history['timeout'];
-        $new->break = $history['break'];
+        // $new->timein = $history['timein'];
+        // $new->timeout = $history['timeout'];
+        // $new->break = $history['break'];
 
         $new->current = true;
 
@@ -752,6 +767,144 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $history['break'] = $model->break;
 
         return $history;
+    }
+
+
+    private function addEmployeeTimeTable($id, $timeTable) {
+
+        if (!isset($timeTable['timein']) || $timeTable['timein'] == null) {
+            return [
+                'result' => false,
+                'message' => 'No Time In provided'
+            ];
+        }
+
+        if (!isset($timeTable['startdate']) || $timeTable['startdate'] == null) {
+            return [
+                'result' => false,
+                'message' => 'No Start Date for schedule provided'
+            ];
+        }
+
+        // Get most compatible record
+        $date = date_create($timeTable["startdate"]);
+        $timeTableRecord =  EmployeeTimeTable::where('startDate', $date)->orderBy('id', 'DESC')->first();
+
+        if ($timeTableRecord == null) {
+            $timeTableRecord = new EmployeeTimeTable();
+            $timeTableRecord->employee_id = $id;
+        }
+
+        $timeTableRecord->timeIn = $timeTable["timein"];
+        $timeTableRecord->timeOut = $timeTable["timeout"];
+        $timeTableRecord->break = $timeTable["break"]*1;
+        $timeTableRecord->startDate = $timeTable["startdate"];
+        $timeTableRecord->endDate = $timeTable["enddate"];
+
+        try {
+            $timeTableRecord->save();
+        } catch (\Exception $e) {
+            return [
+                'result' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true
+        ];
+
+    }
+
+
+    private function getTimeTableHistory($timeTableHistory) {
+
+        $history = array();
+
+        foreach ($timeTableHistory as $model) {
+            $timeTable = array();
+            $timeTable['id'] = $model->id;
+            $timeTable['timein'] = $model->timeIn;
+            $timeTable['timeout'] = $model->timeOut;
+            $timeTable['startdate'] = $model->startDate;
+            $timeTable['enddate'] = $model->endDate;
+            $timeTable['break'] = $model->break;
+
+            $history[] = $timeTable;
+        }
+
+        return $history;
+    }
+
+
+    private function getTimeTableOnDate($timeTableHistory, $date, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak) {
+
+        $timeTable = null;
+        $possibleFallback = null;
+
+        foreach ($timeTableHistory as $model) {
+
+            if (date_create($model->startDate) > date_create($date)) {
+                continue;
+            }
+
+            // Store first level fallback;
+            if ($model->endDate == null && $possibleFallback == null) {
+                $possibleFallback = $model;
+                continue;
+            }
+
+            if ($model->endDate != null && date_create($model->endDate) < date_create($date)) {
+                continue;
+            }
+
+            $timeTable = array();
+            $timeTable['id'] = $model->id;
+            $timeTable['timein'] = $model->timeIn;
+            $timeTable['timeout'] = $model->timeOut;
+            $timeTable['startdate'] = $model->startDate;
+            $timeTable['enddate'] = $model->endDate;
+            $timeTable['break'] = $model->break;
+            break;
+        }
+
+        // If no record found for the date
+        // get from latest record with null endDate
+        if ($timeTable == null) {
+
+            $timeTable = array();
+            if ($possibleFallback != null) {
+                $timeTable['id'] = $possibleFallback->id;
+                $timeTable['timein'] = $possibleFallback->timeIn;
+                $timeTable['timeout'] = $possibleFallback->timeOut;
+                $timeTable['startdate'] = $possibleFallback->startDate;
+                $timeTable['enddate'] = $possibleFallback->endDate;
+                $timeTable['break'] = $possibleFallback->break;
+            }
+            else {
+                $timeTable['timein'] = $fallBackTimeIn;
+                $timeTable['timeout'] = $fallBackTimeout;
+                $timeTable['break'] = $fallBackBreak;
+            }
+
+        }
+
+        return $timeTable;
+    }
+
+
+    private function getCurrentTimeTable($timeTableHistory, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak) {
+        return $this->getTimeTableOnDate($timeTableHistory, NOW(), $fallBackTimeIn, $fallBackTimeout, $fallBackBreak);
+    }
+
+
+    private function getEmployeeTimeTable($employeeId, $date) {
+        $employee = $this->getEmployeeByIdWithStateOnDate($employeeId, $date);
+
+        if ($employee == null)
+            return null;
+
+        return $timeTable = $this->getTimeTableOnDate($timeTableHistory, $date, $employee->current['timein'], $employee->current['timeout'], $employee->current['break']);
     }
 
 
