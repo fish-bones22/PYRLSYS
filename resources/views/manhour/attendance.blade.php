@@ -35,13 +35,13 @@ $title = 'View Attendance';
         <div class="col-md-3 col-6 form-paper">
             <div class="form-group">
                 <label for="dateFrom" class="form-paper-label">From</label>
-                <input name="datefrom" type="date" class="form-control form-control-sm" id="dateFrom" value="{{ isset($details['datefrom']) ? $details['datefrom'] : old('datefrom') }}" />
+                <input name="datefrom" type="date" class="form-control form-control-sm" id="dateFrom" value="{{ isset($details['datefrom']) ? $details['datefrom'] : (old('datefrom') != null ? old('datefrom') : date_format(now(), 'Y-m-d')) }}" />
             </div>
         </div>
         <div class="col-md-3 col-6 form-paper">
             <div class="form-group">
                 <label for="dateTo" class="form-paper-label">To</label>
-                <input name="dateto" type="date" class="form-control form-control-sm" id="dateTo" value="{{ isset($details['dateto']) ? $details['dateto'] : old('dateto') }}" />
+                <input name="dateto" type="date" class="form-control form-control-sm" id="dateTo" value="{{ isset($details['dateto']) ? $details['dateto'] : old('dateto') }}" min="{{ isset($details['datefrom']) ? $details['datefrom'] : (old('datefrom') != null ? old('datefrom') : date_format(now(), 'Y-m-d')) }}" />
             </div>
         </div>
         <div class="col-md-3 form-paper">
@@ -59,7 +59,7 @@ $title = 'View Attendance';
     </div>
     @endif
     <div class="col form-paper">
-        <div style="overflow-x: auto">
+        <div style="overflow-x: auto" class="mb-4">
             @if (isset($records) && $records != null)
             <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.8em;">
                 <thead>
@@ -118,5 +118,5 @@ $title = 'View Attendance';
 @stop
 
 @section('script')
-<script src="{{ asset('js/attendacePage.js') }}"></script>
+<script src="{{ asset('js/attendancePage.js') }}"></script>
 @stop
