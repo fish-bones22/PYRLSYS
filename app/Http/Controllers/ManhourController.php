@@ -41,11 +41,6 @@ class ManhourController extends Controller
 
 
 
-    // public function viewAttendace(Request $request) {
-    //     return view('manhour.attendance');
-    // }
-
-
     public function viewAttendace(Request $request) {
 
         if (!$request->has('ispostback')) {
@@ -104,6 +99,26 @@ class ManhourController extends Controller
         return view('manhour.attendance', ['records' => $records, 'details' => $details]);
     }
 
+
+    public function viewRange($mode, $datefrom = null, $dateto = null) {
+        if ($datefrom == null)
+            $datefrom = date_create('1900-01-01');
+        else
+            $datefrom = date_create($datefrom);
+        if ($dateto == null)
+            $dateto = date_create('3000-01-01');
+        else
+            $dateto = date_create($dateto);
+        $departments = $this->categoryService->getCategories('department');
+        $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
+        // if ($records == null || sizeof($records) == 0 || $records[0] == null)
+        //     return redirect()->action('ManhourController@index');
+        $date['datefrom'] = date_format($datefrom, 'Y-m-d');
+        $date['dateto'] = date_format($dateto, 'Y-m-d');
+        $date['startday'] = date_format($datefrom, 'd');
+        $date['mode'] = $mode;
+        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
+    }
 
 
     public function viewRecordNow($id) {
