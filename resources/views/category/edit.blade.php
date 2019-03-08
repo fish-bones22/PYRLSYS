@@ -45,12 +45,22 @@
                 <div id="subValue3Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
+        <div class="col-sm-6 col-6 form-paper">
+            <div class="form-group">
+                <label for="subValue4Edit" class="form-paper-label">Date Effective:</label>
+                <input id="subValue4Edit" class="form-control description display-toggle" type="date" name="subvalue4" style="display:none" />
+                <div id="subValue4Display" class="form-paper-display display-toggle">Retrieving information...</div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-6 form-paper">
+            <div class="form-group">
+                <label for="subValue5Edit" class="form-paper-label">Until:</label>
+                <input id="subValue5Edit" class="form-control description display-toggle" type="date" name="subvalue5" style="display:none" />
+                <div id="subValue5Display" class="form-paper-display display-toggle">Retrieving information...</div>
+            </div>
+        </div>
         <span class="col-12 form-paper description display-toggle" style="display:none" >
             <div class="form-check mt-2">
-                <input id="checkbox1Edit" class="form-check-input" type="checkbox" name="checkbox1"/>
-                <label for="checkbox1Edit">Cascade changes to employees under department</label>
-            </div>
-            <div class="form-check">
                 <input id="checkbox1Edit" class="form-check-input" type="checkbox" name="checkbox1"/>
                 <label for="checkbox1Edit">Cascade changes to employees under department</label>
             </div>

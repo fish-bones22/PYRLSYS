@@ -800,53 +800,54 @@
             </div>
             <div class="row">
                 <div class="col-12 form-paper">
-                    <table class="table table-sm" style="font-size:0.75em;" id="transferHistoryTable">
-                        <thead>
-                            <tr>
-                                <th rowspan="2">ID</th>
-                                <th rowspan="2">Last Name</th>
-                                <th rowspan="2">First Name</th>
-                                <th rowspan="2">Middle Name</th>
-                                <th colspan="3">Current</th>
-                                <th colspan="3">New</th>
-                                <th rowspan="2">Date Started</th>
-                                <th rowspan="2">Date Transfered</th>
-                            </tr>
-                            <tr>
-                                <th>Department</th>
-                                <th>Position</th>
-                                <th>TC #</th>
-                                <th>Department </th>
-                                <th>Position </th>
-                                <th>TC # </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for ($i = 0; $i < sizeof($employee->history); $i++)
-                            <tr>
-                                <td>{{ $employee->employeeId }}</td>
-                                <td>{{ $employee->lastName }}</td>
-                                <td>{{ $employee->firstName }}</td>
-                                <td>{{ $employee->middleName }}</td>
-                                <td>{{ $employee->history[$i]['department']['displayName'] }}</td>
-                                <td>{{ $employee->history[$i]['position'] }}</td>
-                                <td>{{ $employee->history[$i]['timecard'] }}</td>
-                                @if ($i+1 != sizeof($employee->history))
-                                <td>{{ $employee->history[$i+1]['department']['displayName'] }}</td>
-                                <td>{{ $employee->history[$i+1]['position'] }}</td>
-                                <td>{{ $employee->history[$i+1]['timecard'] }}</td>
-                                @else
-                                <td><i class="text-muted"></i></td>
-                                <td></td>
-                                <td></td>
-                                @endif
-                                <td>{{ $employee->history[$i]['datestarted'] != null ? date_format(date_create($employee->history[$i]['datestarted']), 'M d, Y') : '' }}</td>
-                                <td>{{ $employee->history[$i]['datetransfered'] != null ? date_format(date_create($employee->history[$i]['datetransfered']), 'M d, Y') : '' }}</td>
-                            </tr>
-                            @endfor
-                        </tbody>
-                    </table>
-
+                    <div style="overflow-x: auto;">
+                        <table class="table table-sm" style="font-size:0.75em;" id="transferHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">ID</th>
+                                    <th rowspan="2">Last Name</th>
+                                    <th rowspan="2">First Name</th>
+                                    <th rowspan="2">Middle Name</th>
+                                    <th colspan="3">Current</th>
+                                    <th colspan="3">New</th>
+                                    <th rowspan="2">Date Started</th>
+                                    <th rowspan="2">Date Transfered</th>
+                                </tr>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Position</th>
+                                    <th>TC #</th>
+                                    <th>Department </th>
+                                    <th>Position </th>
+                                    <th>TC # </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for ($i = 0; $i < sizeof($employee->history); $i++)
+                                <tr>
+                                    <td>{{ $employee->employeeId }}</td>
+                                    <td>{{ $employee->lastName }}</td>
+                                    <td>{{ $employee->firstName }}</td>
+                                    <td>{{ $employee->middleName }}</td>
+                                    <td>{{ $employee->history[$i]['department']['displayName'] }}</td>
+                                    <td>{{ $employee->history[$i]['position'] }}</td>
+                                    <td>{{ $employee->history[$i]['timecard'] }}</td>
+                                    @if ($i+1 != sizeof($employee->history))
+                                    <td>{{ $employee->history[$i+1]['department']['displayName'] }}</td>
+                                    <td>{{ $employee->history[$i+1]['position'] }}</td>
+                                    <td>{{ $employee->history[$i+1]['timecard'] }}</td>
+                                    @else
+                                    <td><i class="text-muted"></i></td>
+                                    <td></td>
+                                    <td></td>
+                                    @endif
+                                    <td>{{ $employee->history[$i]['datestarted'] != null ? date_format(date_create($employee->history[$i]['datestarted']), 'M d, Y') : '' }}</td>
+                                    <td>{{ $employee->history[$i]['datetransfered'] != null ? date_format(date_create($employee->history[$i]['datetransfered']), 'M d, Y') : '' }}</td>
+                                </tr>
+                                @endfor
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="row">

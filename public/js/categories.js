@@ -22,10 +22,10 @@ function filterDepartment() {
     table.column(0).draw();
 }
 
-function getDetails(self) {
+function getDetails(self, key) {
 
     var id = $(self).data("id");
-    var url = "/category/getdetails/" + id;
+    var url = "/category/getdetails/" + key + "/" + id;
     $("#idEdit").val(id);
     $.ajax({
         url: url,
@@ -49,6 +49,8 @@ function mapDetails(data) {
         $("#descriptionDisplay").text(data.description);
     }
 
+    $("#subValue5Edit").attr("value", data.subvalue5);
+    $("#subValue4Edit").attr("value", data.subvalue4);
     $("#subValue3Edit").attr("value", data.subvalue3);
     $("#subValue2Edit").attr("value", data.subvalue2);
     $("#subValue1Edit").attr("value", data.subvalue1);
@@ -56,13 +58,23 @@ function mapDetails(data) {
     if ($("#key").val() === 'department') {
         var sub1 = moment(data.subvalue1, 'HH:mm');
         var sub2 = moment(data.subvalue2, 'HH:mm');
+        var sub4 = moment(data.subvalue4, 'YYYY-MM-DD');
+        var sub5 = moment(data.subvalue5, 'YYYY-MM-DD');
         data.subvalue1 = sub1.format("hh:mm A");
         data.subvalue2 = sub2.format("hh:mm A");
+        if (sub4.isValid()) {
+            data.subvalue4 = sub4.format('MM/DD/YYYY');
+        }
+        if (sub5.isValid()) {
+            data.subvalue5 = sub5.format('MM/DD/YYYY');
+        }
     }
 
     $("#subValue1Display").text(data.subvalue1);
     $("#subValue2Display").text(data.subvalue2);
     $("#subValue3Display").text(data.subvalue3);
+    $("#subValue4Display").text(data.subvalue4 != null ? data.subvalue4 : 'None');
+    $("#subValue5Display").text(data.subvalue5 != null ? data.subvalue5 : 'None');
 }
 
 
@@ -84,6 +96,10 @@ function resetViewModal() {
     $("#subValue2Display").text("Retrieving information...");
     $("#subValue3Edit").attr("value", "");
     $("#subValue3Display").text("Retrieving information...");
+    $("#subValue4Edit").attr("value", "");
+    $("#subValue4Display").text("Retrieving information...");
+    $("#subValue5Edit").attr("value", "");
+    $("#subValue5Display").text("Retrieving information...");
 
     $(".display-toggle").not("div").hide();
     $("div.display-toggle").show();

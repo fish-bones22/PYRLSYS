@@ -147,12 +147,13 @@ class PayrollService implements IPayrollService {
                 continue;
 
             $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
+            $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, $date);
 
             $rateBasis = 'monthly';
             $rate = 0;
             $allowance = 0;
             $hourlyAllowance = 0;
-            $break = isset($history['break']) && $history['break'] != null ? $history['break'] : 0;
+            $break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
 
             if ($history['rate'] != null)
                 $rate = $history['rate'];

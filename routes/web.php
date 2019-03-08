@@ -27,7 +27,7 @@ Route::get('logout', 'UserController@logout');
 Route::resource('category', 'CategoryController');
 Route::get('/manage/{key}', 'CategoryController@index');
 Route::get('manage/{category}', 'CategoryController@manage');
-Route::get('category/getdetails/{id}', 'CategoryController@getDetails');
+Route::get('category/getdetails/{key}/{id}', 'CategoryController@getDetails');
 Route::get('category/getsubvalues/{id}', 'CategoryController@getSubvalues');
 Route::get('categories', 'CategoryController@categories');
 Route::post('categories', 'CategoryController@setCategory');

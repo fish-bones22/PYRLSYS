@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Contracts\ICategoryService;
+use App\Contracts\IEmployeeService;
 use App\Contracts\IUserService;
 use App\Entities\CategoryEntity;
 use Illuminate\Http\Request;
@@ -13,12 +14,14 @@ class CategoryController extends Controller
 {
     private $categoryService;
     private $userService;
+    private $employeeService;
     private $key;
     private $pageKey = 'accountsmanagement';
 
-    public function __construct(ICategoryService $categoryService, IUserService $userService) {
+    public function __construct(ICategoryService $categoryService, IUserService $userService, IEmployeeService $employeeService) {
         $this->categoryService = $categoryService;
         $this->userService = $userService;
+        $this->employeeService = $employeeService;
     }
 
     private function setKey($key) {
@@ -82,13 +85,31 @@ class CategoryController extends Controller
         $category->key = $req['key'];
         $category->value = $req['name'];
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
-        $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
-        $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
-        $category->subvalue3 = isset($req['subvalue3']) ? $req['subvalue3'] : null;
+
+        if ($req['key'] === 'department') {
+            $category->timeTable = array();
+            $category->timeTable['timein'] = isset($req['subvalue1']) ? $req['subvalue1'] : null;
+            $category->timeTable['timeout'] = isset($req['subvalue2']) ? $req['subvalue2'] : null;
+            $category->timeTable['break'] = isset($req['subvalue3']) ? $req['subvalue3'] : null;
+            $category->timeTable['startdate'] = isset($req['subvalue4']) ? $req['subvalue4'] : null;
+            $category->timeTable['enddate'] = isset($req['subvalue5']) ? $req['subvalue5'] : null;
+        }
+        else {
+            $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
+            $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
+            $category->subvalue3 = isset($req['subvalue3']) ? $req['subvalue3'] : null;
+        }
+
         $result = $this->categoryService->addCategory($category);
 
+        if (!$result['result']) {
+            return redirect()->action('CategoryController@index', $req['key'])->with('error', $result['message']);
+        }
+
+        $newId = $result['message'];
+
         if (Auth::user() != null) {
-            $this->userService->addDepartmentToUser($result, Auth::user()->id);
+            $this->userService->addDepartmentToUser($newId, Auth::user()->id);
         }
 
         return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully added');
@@ -129,12 +150,43 @@ class CategoryController extends Controller
         $category->key = $req['key'];
         $category->value = $req['name'];
         $category->detail = $req['description'] != null && $req['description'] != '' ? $req['description'] : '';
-        $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
-        $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
-        $category->subvalue3 = isset($req['subvalue3']) ? $req['subvalue3'] : null;
-        $this->categoryService->updateCategory($category);
 
-        return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully updated');
+        if ($req['key'] === 'department') {
+            $timeTable = array();
+            $timeTable['timein'] = isset($req['subvalue1']) ? $req['subvalue1'] : null;
+            $timeTable['timeout'] = isset($req['subvalue2']) ? $req['subvalue2'] : null;
+            $timeTable['break'] = isset($req['subvalue3']) ? $req['subvalue3'] : null;
+            $timeTable['startdate'] = isset($req['subvalue4']) ? $req['subvalue4'] : null;
+            $timeTable['enddate'] = isset($req['subvalue5']) ? $req['subvalue5'] : null;
+            $category->timeTable = $timeTable;
+        }
+        else {
+            $category->subvalue1 = isset($req['subvalue1']) ? $req['subvalue1'] : null;
+            $category->subvalue2 = isset($req['subvalue2']) ? $req['subvalue2'] : null;
+            $category->subvalue3 = isset($req['subvalue3']) ? $req['subvalue3'] : null;
+        }
+
+        $res = $this->categoryService->updateCategory($category);
+
+        // If saving is successful and key is 'department' and checkbox is checked
+        if ($res['result']
+        && $req['key'] === 'department'
+        && isset($req['checkbox1'])) {
+            $employees = $this->employeeService->getEmployeesByDepartment($id);
+            foreach ($employees as $employee) {
+                \var_dump($employee->id);
+                $res = $this->employeeService->addEmployeeTimeTable($employee->id, $timeTable);
+                if (!$res['result']) break;
+            }
+        }
+
+
+        if ($res['result']) {
+            return redirect()->action('CategoryController@index', $req['key'])->with('success', 'Successfully updated');
+        }
+        else {
+            return redirect()->action('CategoryController@index', $req['key'])->with('error', $res['message']);
+        }
     }
 
 
@@ -146,16 +198,33 @@ class CategoryController extends Controller
     }
 
 
-    public function getDetails($id) {
+    public function getDetails($key, $id) {
 
         $category = $this->categoryService->getCategoryById($id);
+        $timeTable = $category->timeTable;
+
+        $sub1 = $category->subvalue1;
+        $sub2 = $category->subvalue2;
+        $sub3 = $category->subvalue3;
+        $sub4 = null;
+        $sub5 = null;
+
+        if ($key === 'department') {
+            $sub1 = isset($timeTable['timein']) ? date_format(date_create($timeTable['timein']), 'H:i') : null;
+            $sub2 = isset($timeTable['timeout']) ? date_format(date_create($timeTable['timeout']), 'H:i') : null;
+            $sub3 = isset($timeTable['break']) ? $timeTable['break'] : null;
+            $sub4 = isset($timeTable['startdate']) ? $timeTable['startdate'] : null;
+            $sub5 = isset($timeTable['enddate']) ? $timeTable['enddate'] : null;
+        }
 
         return response()->json([
             'name' => $category->value,
             'description' => $category->detail,
-            'subvalue1' => $category->subvalue1,
-            'subvalue2' => $category->subvalue2,
-            'subvalue3' => $category->subvalue3
+            'subvalue1' => $sub1,
+            'subvalue2' => $sub2,
+            'subvalue3' => $sub3,
+            'subvalue4' => $sub4,
+            'subvalue5' => $sub5
         ]);
     }
 

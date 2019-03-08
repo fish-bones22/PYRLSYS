@@ -16,6 +16,6 @@ class Category extends Model
     }
 
     public function timeTable() {
-        return $this->hasMany('App\Models\DepartmentTimeTable');
+        return $this->hasMany('App\Models\DepartmentTimeTable', 'department_id', 'id');
     }
 }

@@ -30,7 +30,7 @@
 <div class="row">
     <div class="col-md-2 offset-md-3 form-paper">
         <div class="form-group mt-3">
-            <button class="btn btn-light btn-sm btn-block" type="button" data-toggle="modal" data-target="#addModal">New {{ $displayName }}</button>
+            <button class="btn btn-light btn-sm btn-block btn-clipping" type="button" data-toggle="modal" data-target="#addModal">New {{ $displayName }}</button>
         </div>
     </div>
     <div class="col-md-4 form-paper">
@@ -56,7 +56,7 @@
                     <td>{{ $category->value }}</td>
                     <td>
                         <span class="btn-group float-right">
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal" data-id="{{ $category->id }}" onclick="getDetails(this)">Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal" data-id="{{ $category->id }}" onclick="getDetails(this, '{{$key}}')">Edit</button>
                             <form action="{{ route('category.destroy', $category->id) }}" method="POST">
                                 @csrf
                                 @method('delete')

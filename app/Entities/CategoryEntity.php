@@ -10,6 +10,7 @@ class CategoryEntity extends Entity {
     public $detail;
     public $subvalue1;
     public $subvalue2;
+    public $subvalue3;
 
     public $displayName;
     public $description;

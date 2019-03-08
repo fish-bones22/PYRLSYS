@@ -110,7 +110,9 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $date_ = strtotime(date_format($date,'Y-m-d'));
 
         $earliest = null;
+        $latest = null;
         $earliestHistory = null;
+        $latestHistory = null;
 
         // Iterate through employee's past states and present
         foreach ($employee->history as $history) {
@@ -126,6 +128,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
             if ($earliest == null || $start <= $earliest) {
                 $earliest = $start;
                 $earliestHistory = $history;
+            }
+
+            // Get latest date from the collection
+            if ($latest == null || ($end != null && $end >= $latest)) {
+                $latest = $end;
+                $latestHistory = $history;
             }
 
             // If no datetransfered (most likely, this is the current state)
@@ -147,8 +155,13 @@ class EmployeeService extends EntityService implements IEmployeeService {
             }
         }
 
-        if ($date_ <= $earliest && $current == null) {
-            $current = $earliestHistory;
+        if ($current == null) {
+            if ($date_ <= $earliest) {
+                $current = $earliestHistory;
+            }
+            else if ($date_ >= $latest) {
+                $current = $latestHistory;
+            }
         }
 
         $employee->current = $current;
@@ -161,7 +174,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
         $employees = $this->getAllEmployees('lastName');
 
         if ($employees == null) return 'Hello';
-
+        $dept *= 1;
         foreach ($employees as $key => $emp) {
             if ($dept == 0)
                 break;
@@ -251,6 +264,8 @@ class EmployeeService extends EntityService implements IEmployeeService {
 
         $earliest = null;
         $earliestHistory = null;
+        $latest = null;
+        $latestHistory = null;
 
         foreach ($histories as $history) {
 
@@ -271,6 +286,12 @@ class EmployeeService extends EntityService implements IEmployeeService {
                 $earliestHistory = $history;
             }
 
+            // Get latest date from the collection
+            if ($latest == null || ($end != null && $end >= $latest)) {
+                $latest = $end;
+                $latestHistory = $history;
+            }
+
             if ($end == null) {
                 if ($start <= $date_) {
                     $current = $history;
@@ -285,8 +306,13 @@ class EmployeeService extends EntityService implements IEmployeeService {
             }
         }
 
-        if ($date_ <= $earliest && $current == null) {
-            $current = $earliestHistory;
+        if ($current == null) {
+            if ($date_ <= $earliest) {
+                $current = $earliestHistory;
+            }
+            else if ($date_ >= $latest) {
+                $current = $latestHistory;
+            }
         }
 
         return $this->getHistoryDetails($current);
@@ -770,7 +796,7 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
-    private function addEmployeeTimeTable($id, $timeTable) {
+    public function addEmployeeTimeTable($id, $timeTable) {
 
         if (!isset($timeTable['timein']) || $timeTable['timein'] == null) {
             return [

@@ -30,7 +30,7 @@ function updateTimeInTimeOut(self) {
         $("#break").val(0);
         return;
     }
-    var url = "/category/getsubvalues/" + id;
+    var url = "/category/getdetails/department/" + id;
     $.ajax({
         url: url,
         contentType: 'text/plain',
@@ -50,7 +50,7 @@ function updateTimeInTimeOutOnModal(self) {
         $("#timeOutModal").val('');
         return;
     }
-    var url = "/category/getsubvalues/" + id;
+    var url = "/category/getdetails/department/" + id;
     $.ajax({
         url: url,
         contentType: 'text/plain',
