@@ -38,7 +38,7 @@ function filterRecords() {
 
     table.search(term);
     table.columns().draw();
-}``
+}
 
 function toggleMode() {
     var mode = $("input[name='mode']:checked").val();
@@ -47,16 +47,25 @@ function toggleMode() {
         $("#dailyRow").show();
         $("#monthlyRow").hide();
         $("#periodicRow").hide();
+        $("#daterangeRow").hide();
     }
     else if (mode === 'periodic') {
         $("#periodicRow").show();
         $("#monthlyRow").hide();
         $("#dailyRow").hide();
+        $("#daterangeRow").hide();
     }
-    else {
+    else if (mode === 'monthly') {
         $("#dailyRow").hide();
         $("#periodicRow").hide();
         $("#monthlyRow").show();
+        $("#daterangeRow").hide();
+    }
+    else if (mode === 'daterange') {
+        $("#dailyRow").hide();
+        $("#periodicRow").hide();
+        $("#monthlyRow").hide();
+        $("#daterangeRow").show();
     }
     var rand =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     table.search(rand);

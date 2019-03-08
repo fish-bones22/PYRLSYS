@@ -115,9 +115,12 @@ class ManhourController extends Controller
         //     return redirect()->action('ManhourController@index');
         $date['datefrom'] = date_format($datefrom, 'Y-m-d');
         $date['dateto'] = date_format($dateto, 'Y-m-d');
+        var_dump($date);
         $date['startday'] = date_format($datefrom, 'd');
         $date['mode'] = $mode;
-        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
+
+        var_dump($date);
+       // return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
 
 
@@ -145,13 +148,18 @@ class ManhourController extends Controller
         $year = $request->get('year');
         $month = $request->get('month');
         $day = '01';
+        $endDay = '15';
         $period = $request->get('period');
-        if ($period !== 'second')
+        if ($period !== 'second') {
             $day = '16';
+            $endDay = date_format(date_create($year.'-'.$month.'-'.$day), 't'); // End of month
+        }
 
-        return redirect()->action('ManhourController@viewRecordCollated', ['year' => $year, 'month' => $month, 'day' => $day]);
+        return redirect()->action('ManhourController@viewRecordCollated', ['datefrom' => $year.'-'.$month.'-'.$day, 'dateto' => $year.'-'.$month.'-'.$endDay]);
 
     }
+
+
 
     public function viewRecord($id, $year = null, $month = null, $day = null) {
 
@@ -195,31 +203,27 @@ class ManhourController extends Controller
     }
 
 
-    public function viewRecordCollated($year = null, $month = null, $day = null) {
+    public function viewRecordCollated($datefrom = null, $dateto = null) {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
-        $startDay;
-        $endDay;
-        if ($day <= 15) {
-            $startDay = '1';
-            $endDay = 15;
+        $datefrom_ = date_create($datefrom);
+        $dateto_ = date_create($datefrom);
+        if ($dateto != null) {
+            $dateto_ = date_create($dateto);;
         }
-        else {
-            $startDay = 16;
-            $endDay = date_format(date_create($year.'-'.$month.'-'.$startDay), 't'); // End of month
-        }
-        $datefrom = date_create($year.'-'.$month.'-'.$startDay);
-        $dateto = date_create($year.'-'.$month.'-'.$endDay);
+
         $details = array();
 
         $employees =  $this->employeeService->getAllEmployees();
         $records = array();
 
-        $details['startday'] = $startDay;
-        $details['endday'] = $endDay;
-        $details['year'] = $year;
-        $details['month'] = $month;
+        $details['datefrom'] = $datefrom;
+        $details['dateto'] = $dateto;
+        $details['startday'] = date_format($datefrom_, 'd');
+        $details['endday'] = date_format($dateto_, 'd');
+        $details['year'] = date_format($datefrom_, 'Y');
+        $details['month'] = date_format($datefrom_, 'm');
         $details['employees'] = array();
 
         foreach ($employees as $employee) {
@@ -238,9 +242,19 @@ class ManhourController extends Controller
 
             $employeeRecord = array();
 
-            for ($i = $startDay; $i <= $endDay; $i++) {
-                $record = $this->manhourService->getSummaryOfRecord($employee->id, $year.'-'.$month.'-'.$i, $employee);
-                $employeeRecord[$i] = $record;
+            // Create interval dev
+            $interval = DateInterval::createFromDateString('1 day');
+            // Create date range
+            $period = new DatePeriod($datefrom_, $interval, $dateto_->modify("+1 day"));
+            $limiter = 0;
+            // Iterate through date range
+            foreach ($period as $dt) {
+                $date_ = $dt->format("Y-m-d");
+                $record = $this->manhourService->getSummaryOfRecord($employee->id, $date_, $employee);
+                $employeeRecord[$date_] = $record;
+                if ($limiter++ >= 30) {
+                    break;
+                }
             }
 
             $records[] = $employeeRecord;
@@ -271,6 +285,15 @@ class ManhourController extends Controller
             $endDay = $period === 'second' ? '15' : date_format(date_create($datefrom), 't');
             $dateto = $year.'-'.$month.'-'.$endDay;
 
+            return redirect()->route('manhour.viewrange', ['mode' => $mode, 'datefrom' => $datefrom, 'dateto' => $dateto]);
+        }
+        else if ($mode === 'daterange') {
+            $datefrom = $request->get('date_from');
+            $dateto = $request->get('date_to');
+            if ($request->$dateto == '') {
+                $dateto = $datefrom;
+            }
+            var_dump($request->all());
             return redirect()->route('manhour.viewrange', ['mode' => $mode, 'datefrom' => $datefrom, 'dateto' => $dateto]);
         }
         else {

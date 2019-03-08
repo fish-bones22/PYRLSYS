@@ -12,7 +12,27 @@ Manhour Records
             <?php $dateSelected = date_create($details['year'].'-'.$details['month'].'-'.$details['startday']); ?>
             <div class="col-12 form-paper section-title" id="title">Manhour Records - {{ date_format($dateSelected, 'F ').$details['startday'].'-'.$details['endday'].', '.$details['year']  }}</div>
             <div class="col-12 form-paper section-divider"></div>
-            <div class="col-2 form-paper">
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-sm-6 order-lg-10 form-paper">
+                <div class="form-group">
+                    <label for="department" class="form-paper-label">Department</label>
+                    <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
+                        <option value="">All</option>
+                        @foreach ($departments as $dept)
+                            <option value="{{ $dept->value }}">{{ $dept->value }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-6 order-lg-8 form-paper">
+                <div class="form-group">
+                    <label for="searchBox" class="form-paper-label">Search</label>
+                    <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterTables()" />
+                </div>
+            </div>
+
+            <div class="col-md-2 form-paper">
                 <div class="form-group">
                     <input type="hidden" id="currentOutlier" value="record" />
                     <div class="">
@@ -25,12 +45,12 @@ Manhour Records
                     </div>
                 </div>
             </div>
-            <div class="col-6 form-paper">
+            <div class="col-lg-6 col-md-10 form-paper">
                 <form action="{{ action('ManhourController@setRecordDateCollated') }}" method="POST" id="setDateForm">
                     @csrf
                     @method('post')
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label class="form-paper-label">Period</label><br />
                                 <div class="form-check-inline">
@@ -43,7 +63,7 @@ Manhour Records
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label class="form-paper-label">Month and Year</label>
                                 <div class="input-group">
@@ -56,23 +76,27 @@ Manhour Records
                     </div>
                 </form>
             </div>
-            <div class="col-2 form-paper">
-                <div class="form-group">
-                    <label for="department" class="form-paper-label">Department</label>
-                    <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
-                        <option value="">All</option>
-                        @foreach ($departments as $dept)
-                            <option value="{{ $dept->value }}">{{ $dept->value }}</option>
-                        @endforeach
-                    </select>
+        </div>
+        <div class="row">
+            <div class="col-12 form-paper section-divider"></div>
+
+            <div class="col-12 form-paper">
+                <div class="row">
+                    <div class="col-lg-6 col-md-8">
+                        <form>
+                            <div class="form-group">
+                                <label class="form-paper-label">Date Range</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control form-control-sm" name="datefrom" id="dateFrom" />
+                                    <input type="date" class="form-control form-control-sm" name="dateto" id="dateTo" />
+                                    <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="col-2 form-paper">
-                <div class="form-group">
-                    <label for="searchBox" class="form-paper-label">Search</label>
-                    <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterTables()" />
-                </div>
-            </div>
+
             <div class="col-12 form-paper section-divider"></div>
 
             <div class="col-12 mode-view">
@@ -80,108 +104,123 @@ Manhour Records
                     <div class="col-12 form-paper section-title">Record</div>
                     <div class="col-12 form-paper section-divider"></div>
                     <div class="col-12 form-paper">
-                        <table id="recordSummaryTable" class="table table-sm" style="font-size:0.75em;">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2">ID</th>
-                                    <th rowspan="2">Timecard</th>
-                                    <th rowspan="2">Name</th>
-                                    <th rowspan="2">Department</th>
-                                    <th colspan="{{ $details['endday'] - $details['startday'] + 2 }}">Regular Hours</th>
-                                    <th rowspan="2">ROT</th>
-                                    <th rowspan="2">SSHOT</th>
-                                    <th rowspan="2">XSSHOT</th>
-                                    <th rowspan="2">LHOT</th>
-                                    <th rowspan="2">XLHOT</th>
-                                    <th rowspan="2">ND</th>
-                                </tr>
-                                <tr>
-                                    @for ($i = $details['startday']; $i <= $details['endday']; $i++)
-                                    <th>{{ $i }}</th>
-                                    @endfor
-                                    <th>T</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <div style="overflow-x: auto" class="mb-4">
+                            <table id="recordSummaryTable" class="table table-sm" style="font-size:0.75em;">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">ID</th>
+                                        <th rowspan="2">Timecard</th>
+                                        <th rowspan="2">Name</th>
+                                        <th rowspan="2">Department</th>
+                                        <th colspan="{{ $details['endday'] - $details['startday'] + 2 }}">Regular Hours</th>
+                                        <th rowspan="2">ROT</th>
+                                        <th rowspan="2">SSHOT</th>
+                                        <th rowspan="2">XSSHOT</th>
+                                        <th rowspan="2">LHOT</th>
+                                        <th rowspan="2">XLHOT</th>
+                                        <th rowspan="2">ND</th>
+                                    </tr>
+                                    <tr>
+                                        <?php
+                                            $interval = DateInterval::createFromDateString('1 day');
+                                            // Create date range
+                                            $period = new DatePeriod(date_create($details['datefrom']), $interval, date_create($details['dateto'])->modify("+1 day"));
+                                            // Iterate through date range
+                                        ?>
+                                        @foreach ($period as $dt)
+                                        <th>{{ date_format($dt, 'd') }}</th>
+                                        @endforeach
+                                        <th>T</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                                @if (sizeof($records) > 0)
+                                    @if (sizeof($records) > 0)
 
-                                @foreach ($records as $empRecord)
+                                    @foreach ($records as $empRecord)
 
-                                <?php
-
-                                $currentDept = '';
-                                $currentTimecard = '';
-
-                                if ($empRecord == null || !is_array($empRecord) || sizeof($empRecord) <= 0)
-                                    continue;
-                                ?>
-
-                                @foreach ($empRecord as $record)
-                                <?php
-                                // Skip record with the same timecard and department
-                                if ($record === null)
-                                    continue;
-
-                                if ($record->timeCard === null || $currentTimecard === $record->timeCard)
-                                    continue;
-
-                                $currentTimecard = $record->timeCard;
-                                $currentDept = $record->departmentName;
-                                ?>
-                                <tr>
-                                    <td>{{ $details['employees'][$record->employee_id]['employeeId'] }}</td>
-                                    <td>{{ $record->timeCard }}</td>
-                                    <td>{{ $details['employees'][$record->employee_id]['name'] }}</td>
-                                    <td>{{ $record->departmentName }}</td>
                                     <?php
-                                    $total = 0;
+
+                                    $currentDept = '';
+                                    $currentTimecard = '';
+
+                                    if ($empRecord == null || !is_array($empRecord) || sizeof($empRecord) <= 0)
+                                        continue;
                                     ?>
-                                    @for ($i = $details['startday']; $i <= $details['endday']; $i++)
-                                    {{-- Skip record not belonging to current timecard --}}
-                                    @if ($empRecord[$i]->timeCard != $currentTimecard)
-                                    <td width="25px" style="border-right:1px solid lightgray;"></td>
-                                    @else
+
+                                    @foreach ($empRecord as $record)
                                     <?php
-                                    $total = isset($empRecord[$i]) ? $total + $empRecord[$i]->regularHours : $total;
+                                    // Skip record with the same timecard and department
+                                    if ($record === null)
+                                        continue;
+
+                                    if ($record->timeCard === null || $currentTimecard === $record->timeCard)
+                                        continue;
+
+                                    $currentTimecard = $record->timeCard;
+                                    $currentDept = $record->departmentName;
                                     ?>
-                                    <td width="25px" style="border-right:1px solid lightgray;">{{ isset($empRecord[$i]) && $empRecord[$i]->regularHours != 0 ? $empRecord[$i]->regularHours : '' }}</td>
+                                    <tr>
+                                        <td>{{ $details['employees'][$record->employee_id]['employeeId'] }}</td>
+                                        <td>{{ $record->timeCard }}</td>
+                                        <td>{{ $details['employees'][$record->employee_id]['name'] }}</td>
+                                        <td>{{ $record->departmentName }}</td>
+                                        <?php
+                                        $total = 0;
+                                        $interval = DateInterval::createFromDateString('1 day');
+                                        // Create date range
+                                        $period = new DatePeriod(date_create($details['datefrom']), $interval, date_create($details['dateto'])->modify("+1 day"));
+                                        // Iterate through date range
+                                        ?>
+                                        @foreach ($period as $dt)
+                                        <?php
+                                        $date_ = date_format($dt, 'Y-m-d');
+                                        ?>
+                                        {{-- Skip record not belonging to current timecard --}}
+                                        @if ($empRecord[$date_]->timeCard != $currentTimecard)
+                                        <td width="25px" style="border-right:1px solid lightgray;"></td>
+                                        @else
+                                        <?php
+                                        $total = isset($empRecord[$date_]) ? $total + $empRecord[$date_]->regularHours : $total;
+                                        ?>
+                                        <td width="25px" style="border-right:1px solid lightgray;">{{ isset($empRecord[$date_]) && $empRecord[$date_]->regularHours != 0 ? $empRecord[$date_]->regularHours : '' }}</td>
+                                        @endif
+                                        @endforeach
+                                        <td>{{ $total }}</td>
+
+                                        <?php
+                                            $trot = 0;
+                                            $tsot = 0;
+                                            $txsot = 0;
+                                            $tlhot = 0;
+                                            $txlhot = 0;
+                                            $nd = 0;
+                                            foreach ($empRecord as $key => $record) {
+                                                if ($record === null || $record->timeCard != $currentTimecard)
+                                                    continue;
+                                                $trot += $record->rot != '' ? $record->rot : 0;
+                                                $tsot += $record->sot != '' ? $record->sot : 0;
+                                                $txsot += $record->xsot != '' ? $record->xsot : 0;
+                                                $tlhot += $record->lhot != '' ? $record->lhot : 0;
+                                                $txlhot += $record->xlhot != '' ? $record->xlhot : 0;
+                                                $nd += $record->nd != '' ? $record->nd : 0;
+                                            }
+                                        ?>
+
+                                        <td>{{ $trot != 0 ? $trot : '' }}</td>
+                                        <td>{{ $tsot != 0 ? $tsot : ''  }}</td>
+                                        <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
+                                        <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>
+                                        <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>
+                                        <td>{{ $nd != 0 ? $nd : ''  }}</td>
+                                    </tr>
+
+                                    @endforeach
+                                    @endforeach
                                     @endif
-                                    @endfor
-                                    <td>{{ $total }}</td>
-
-                                    <?php
-                                        $trot = 0;
-                                        $tsot = 0;
-                                        $txsot = 0;
-                                        $tlhot = 0;
-                                        $txlhot = 0;
-                                        $nd = 0;
-                                        foreach ($empRecord as $key => $record) {
-                                            if ($record === null || $record->timeCard != $currentTimecard)
-                                                continue;
-                                            $trot += $record->rot != '' ? $record->rot : 0;
-                                            $tsot += $record->sot != '' ? $record->sot : 0;
-                                            $txsot += $record->xsot != '' ? $record->xsot : 0;
-                                            $tlhot += $record->lhot != '' ? $record->lhot : 0;
-                                            $txlhot += $record->xlhot != '' ? $record->xlhot : 0;
-                                            $nd += $record->nd != '' ? $record->nd : 0;
-                                        }
-                                    ?>
-
-                                    <td>{{ $trot != 0 ? $trot : '' }}</td>
-                                    <td>{{ $tsot != 0 ? $tsot : ''  }}</td>
-                                    <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
-                                    <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>
-                                    <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>
-                                    <td>{{ $nd != 0 ? $nd : ''  }}</td>
-                                </tr>
-
-                                @endforeach
-                                @endforeach
-                                @endif
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-12 form-paper section-divider"></div>
 

@@ -81,7 +81,11 @@ Manhour Masterlist
 <div class="fixed-bottom btn-container m-4">
     <div class="float-right">
         <div class="btn-group">
-            <a role="button" href="{{ action('ManhourController@viewRecordCollated', ['year' => date_format(now(), 'Y'), 'month' => date_format(now(), 'm'), 'day' =>  date_format(now(), 'd')]) }}" class="btn btn-secondary">View Manhour Summary</a>
+            <?php
+            $datefrom = date_format(now(), 'Y').'-'.date_format(now(), 'm').'-'.(date_format(now(), 'd')*1 < 16 ? '01' : '16');
+            $dateto = date_format(now(), 'Y').'-'.date_format(now(), 'm').'-'.(date_format(now(), 'd')*1 < 16 ? '15' : date_format(now(), 't'));
+            ?>
+            <a role="button" href="{{ action('ManhourController@viewRecordCollated', ['datefrom' => $datefrom, 'dateto' => $dateto ]) }}" class="btn btn-secondary">View Manhour Summary</a>
             <a role="button" href="{{ action('ManhourController@viewNow') }}" class="btn btn-secondary">View Daily Working Hours</a>
         </div>
     </div>

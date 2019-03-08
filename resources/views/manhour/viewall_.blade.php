@@ -26,6 +26,9 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
             <label class="form-check-label">
                 <input form="filterForm" type="radio" class="form-radio" value="periodic" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] == 'periodic' ? 'checked' : '' }}> Periodical Record
             </label>
+            <label class="form-check-label">
+                <input form="filterForm" type="radio" class="form-radio" value="daterange" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] == 'daterange' ? 'checked' : '' }}> Date Range
+            </label>
         </div>
     </div>
     <div class="col form-paper" id="dailyRow"  {{ isset($date['mode']) && $date['mode'] === 'daily' ? '' : 'style=display:none' }}>
@@ -79,6 +82,16 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                         <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col form-paper" {{ isset($date['mode']) && $date['mode'] === 'daterange' ? '' : 'style=display:none' }} id="daterangeRow">
+        <div class="form-group">
+            <label for="monthSelect" class="form-paper-label">Date Range</label>
+            <div class="input-group">
+                <input form="filterForm" type="date" id="dateFrom" class="form-control form-control-sm" name="date_from" value="{{ isset($date['datefrom']) ? $date['datefrom'] : date_format(now(), 'Y-m-d') }}" />
+                <input form="filterForm" type="date" id="dateTo" class="form-control form-control-sm" name="date_to" value="{{ isset($date['dateto']) ? $date['dateto'] : '' }}" />
+                <button form="filterForm" type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
