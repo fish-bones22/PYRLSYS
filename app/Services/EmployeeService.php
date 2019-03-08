@@ -75,6 +75,20 @@ class EmployeeService extends EntityService implements IEmployeeService {
     }
 
 
+    public function getEmployeeByEmployeeId($employeeId) {
+
+        $emp = Employee::where('employeeId', $employeeId)->first();
+
+        if ($emp == null)
+            return null;
+
+        $details = $emp->details;
+
+        if (key_exists('applicant', $details))
+            return null;
+
+        return $this->mapToEntity($emp, new EmployeeEntity());
+    }
 
     public function getEmployeeByName($name) {
 

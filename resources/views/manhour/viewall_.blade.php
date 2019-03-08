@@ -107,56 +107,58 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
 </div>
 <div class="row">
     <div class="col form-paper">
-        <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.8em;">
-            <thead>
-                <tr class="text-center">
-                    <th rowspan="2">Timecard</th>
-                    <th rowspan="2">Employee Name</th>
-                    <th rowspan="2">Project/Department</th>
-                    {!! isset($date['mode']) && $date['mode'] == true ? '<th rowspan="2">Date</th>' : '' !!}
-                    <th colspan="2">Regular Time</th>
-                    <th rowspan="2">Undertime</th>
-                    <th rowspan="2">Total <br />Regular <br />Hours</th>
-                    <th colspan="5">Overtime</th>
-                    <th rowspan="2">ND</th>
-                    <th rowspan="2">Remarks/Comments</th>
-                </tr>
-                <tr>
-                    <th>In</th>
-                    <th>Out</th>
-                    <th>ROT</th>
-                    <th>SOT</th>
-                    <th>XSOT</th>
-                    <th>LHOT</th>
-                    <th>XLOT</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($records as $record)
-                <?php
-                    if ($record === null)
-                        continue;
-                ?>
-                <tr>
-                    <td>{{ $record->timecard }}</td>
-                    <td>{{ $record->employeeName }}</td>
-                    <td>{{ $record->departmentName }}</td>
-                    {!! isset($date['mode']) && $date['mode'] == true ? '<td>'.$record->date.'</td>' : '' !!}
-                    <td>{{ $record->timeIn != null ? date_format(date_create($record->timeIn), 'h:i A') : '' }}</td>
-                    <td>{{ $record->timeOut != null ? date_format(date_create($record->timeOut), 'h:i A') : '' }}</td>
-                    <td>{{ $record->undertime != null ? date_format(date_create($record->undertime), 'h:i A') : '' }}</td>
-                    <td>{{ $record->regularHours }}</td>
-                    <td>{{ $record->rot }}</td>
-                    <td>{{ $record->sot }}</td>
-                    <td>{{ $record->xsot }}</td>
-                    <td>{{ $record->lhot }}</td>
-                    <td>{{ $record->xlhot }}</td>
-                    <td>{{ $record->nd }}</td>
-                    <td>{{ $record->remarks }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div style="overflow-x: auto">
+            <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.8em;">
+                <thead>
+                    <tr class="text-center">
+                        <th rowspan="2">Timecard</th>
+                        <th rowspan="2">Employee Name</th>
+                        <th rowspan="2">Project/Department</th>
+                        {!! isset($date['mode']) && $date['mode'] == true ? '<th rowspan="2">Date</th>' : '' !!}
+                        <th colspan="2">Regular Time</th>
+                        <th rowspan="2">Undertime</th>
+                        <th rowspan="2">Total <br />Regular <br />Hours</th>
+                        <th colspan="5">Overtime</th>
+                        <th rowspan="2">ND</th>
+                        <th rowspan="2">Remarks/Comments</th>
+                    </tr>
+                    <tr>
+                        <th>In</th>
+                        <th>Out</th>
+                        <th>ROT</th>
+                        <th>SOT</th>
+                        <th>XSOT</th>
+                        <th>LHOT</th>
+                        <th>XLOT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($records as $record)
+                    <?php
+                        if ($record === null)
+                            continue;
+                    ?>
+                    <tr>
+                        <td>{{ $record->timecard }}</td>
+                        <td>{{ $record->employeeName }}</td>
+                        <td>{{ $record->departmentName }}</td>
+                        {!! isset($date['mode']) && $date['mode'] == true ? '<td>'.$record->date.'</td>' : '' !!}
+                        <td>{{ $record->timeIn != null ? date_format(date_create($record->timeIn), 'h:i A') : '' }}</td>
+                        <td>{{ $record->timeOut != null ? date_format(date_create($record->timeOut), 'h:i A') : '' }}</td>
+                        <td>{{ $record->undertime != null ? date_format(date_create($record->undertime), 'h:i A') : '' }}</td>
+                        <td>{{ $record->regularHours }}</td>
+                        <td>{{ $record->rot }}</td>
+                        <td>{{ $record->sot }}</td>
+                        <td>{{ $record->xsot }}</td>
+                        <td>{{ $record->lhot }}</td>
+                        <td>{{ $record->xlhot }}</td>
+                        <td>{{ $record->nd }}</td>
+                        <td>{{ $record->remarks }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <div class="m-4">&nbsp;</div>

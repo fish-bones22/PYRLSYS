@@ -76,6 +76,7 @@ Route::get('manhour/viewrecord/{id}/{year}-{month}-{day}', 'ManhourController@vi
 Route::post('manhour/viewrecord/{id}', 'ManhourController@setRecordDate');
 Route::get('manhour/viewrecordcollated/{year}-{month}-{day}', 'ManhourController@viewRecordCollated');
 Route::post('manhour/viewrecordcollated', 'ManhourController@setRecordDateCollated');
+Route::get('manhour/attendance/', 'ManhourController@viewAttendace')->name('manhour.attendance');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
 Route::get('otrequest/approved/{date}', 'OtRequestController@viewApproved');

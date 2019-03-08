@@ -10,6 +10,9 @@ use App\Contracts\ICategoryService;
 use App\Entities\ManhourEntity;
 use Carbon\Carbon;
 
+use \DateInterval;
+use \DatePeriod;
+
 class ManhourController extends Controller
 {
     private $manhourService;
@@ -37,31 +40,70 @@ class ManhourController extends Controller
     }
 
 
-    public function viewRange($mode, $datefrom = null, $dateto = null) {
 
-        if ($datefrom == null)
-            $datefrom = date_create('1900-01-01');
-        else
-            $datefrom = date_create($datefrom);
+    // public function viewAttendace(Request $request) {
+    //     return view('manhour.attendance');
+    // }
 
-        if ($dateto == null)
-            $dateto = date_create('3000-01-01');
-        else
-            $dateto = date_create($dateto);
 
-        $departments = $this->categoryService->getCategories('department');
-        $records = $this->manhourService->getSummaryOfRecordsByDateRange($datefrom, $dateto);
+    public function viewAttendace(Request $request) {
 
-        // if ($records == null || sizeof($records) == 0 || $records[0] == null)
-        //     return redirect()->action('ManhourController@index');
+        if (!$request->has('ispostback')) {
+            return view('manhour.attendance');
+        }
 
-        $date['datefrom'] = date_format($datefrom, 'Y-m-d');
-        $date['dateto'] = date_format($dateto, 'Y-m-d');
-        $date['startday'] = date_format($datefrom, 'd');
-        $date['mode'] = $mode;
+        if ($request->employeeid == null) {
+            return redirect()->back()->withInput($request->all())->with('error', 'Employee ID is required');
+        }
 
-        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
+        if ($request->datefrom == null) {
+           return redirect()->back()->withInput($request->all())->with('error', 'Start date is required');
+        }
+
+        $employeeid = $request->input('employeeid');
+        $datefrom = date_create($request->input('datefrom'));
+        $dateto = date_create($request->input('datefrom'));
+        if ($request->dateto != null) {
+            $dateto = date_create($request->input('dateto'));;
+        }
+
+        $details = array();
+        $details['employeeid'] = $employeeid;
+        $details['datefrom'] = date_format($datefrom, 'Y-m-d');
+        $details['dateto'] = date_format($dateto, 'Y-m-d');
+
+        $employee = $this->employeeService->getEmployeeByEmployeeId($employeeid);
+
+
+        if ($employee == null)
+            return redirect()->back()->withInput($request->all())->with('error', 'Employee not found');
+
+        $details['id'] = $employee->id;
+        $details['lastname'] = $employee->lastName;
+        $details['firstname'] = $employee->firstName;
+        $details['middlename'] = $employee->middleName;
+        $details['name'] = $employee->fullName;
+
+        $records = array();
+
+        // Create interval dev
+        $interval = DateInterval::createFromDateString('1 day');
+        // Create date range
+        $period = new DatePeriod($datefrom, $interval, $dateto->modify("+1 day"));
+        $limiter = 0;
+        // Iterate through date range
+        foreach ($period as $dt) {
+            $date_ = $dt->format("Y-m-d");
+            $record = $this->manhourService->getSummaryOfRecord($employee->id, $date_, $employee);
+            $records[$date_] = $record;
+            if ($limiter++ >= 30) {
+                break;
+            }
+        }
+
+        return view('manhour.attendance', ['records' => $records, 'details' => $details]);
     }
+
 
 
     public function viewRecordNow($id) {
