@@ -79,14 +79,16 @@ Route::post('manhour/viewrecordcollated', 'ManhourController@setRecordDateCollat
 Route::get('manhour/attendance/', 'ManhourController@viewAttendace')->name('manhour.attendance');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
-Route::get('otrequest/approved/{date}', 'OtRequestController@viewApproved');
-Route::post('otrequest/approved', 'OtRequestController@filterDate')->name('otrequest.gotodate');
+Route::post('otrequests', 'OtRequestController@index')->name('otrequest.post');
+Route::get('otrequest/processed/{datefrom}/{dateto}', 'OtRequestController@viewApproved')->name('otrequest.processed');
+Route::post('otrequest/processed', 'OtRequestController@filterDate')->name('otrequest.gotodate');
 Route::get('otrequest/new', 'OtRequestController@new')->name('otrequest.new');
 Route::post('otrequest/new', 'OtRequestController@add');
 Route::post('otrequest/getemployees/{dept}', 'OtRequestController@getEmployees');
 Route::post('otrequest/approve/{id}', 'OtRequestController@approve')->name('otrequest.approve');
 Route::post('otrequest/deny/{id}', 'OtRequestController@deny')->name('otrequest.deny');
 Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@getOtRequestForEmployee');
+Route::post('otrequest/batchapprove', 'OtRequestController@batchApprove')->name('otrequest.batchapprove');
 
 Route::get('payroll', 'PayrollController@index');
 Route::get('payroll/summary/{date}', 'PayrollController@summary');

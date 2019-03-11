@@ -96,7 +96,8 @@ Manhour Records
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="row">
             <div class="col-12 form-paper section-divider"></div>
 
             <div class="col-12 mode-view">

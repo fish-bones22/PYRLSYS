@@ -22,12 +22,30 @@ class OtRequestController extends Controller
         $this->employeeService = $employeeService;
     }
 
-    public function index() {
+    public function index(Request $request) {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $dateFrom = $request->get('datefrom');
+        $dateTo = $request->get('dateto');
+        if ($dateTo == null) {
+            $dateTo = $dateFrom;
+        }
+
+        $details = null;
         $departments = $this->categoryService->getCategories('department');
-        $otRequests = $this->otRequestService->getPendingOtRequests();
-        return view('otrequest.index', ['otRequests' => $otRequests, 'departments' => $departments]);
+
+        if ($dateFrom == null) {
+            $otRequests = $this->otRequestService->getPendingOtRequests();
+        }
+        else {
+            $otRequests = $this->otRequestService->getPendingOtRequestsByDateRange($dateFrom, $dateTo);
+            $details = array();
+            $datails['datefrom'] = $dateFrom;
+            $details['dateto'] = $dateTo;
+        }
+
+        return view('otrequest.index', ['otRequests' => $otRequests, 'departments' => $departments, 'details' => $details]);
 
     }
 
@@ -97,6 +115,25 @@ class OtRequestController extends Controller
     }
 
 
+    public function batchApprove(Request $request) {
+
+        $batchApproval = $request->get('batchapproval');
+
+        if ($batchApproval == null) {
+            return redirect()->back()->with('error', 'No Request selected');
+        }
+
+        foreach ($batchApproval as $key => $appr) {
+            $result = $this->otRequestService->approveOtRequest($key);
+
+            if (!$result['result'])
+            return redirect()->back()->with('error', $result['message']);
+        }
+
+        return redirect()->back()->with('success', 'OT Requests has been approved.');
+    }
+
+
     public function approve($id) {
         if ($id == 0)
             return redirect()->back()->with('error', 'Invalid record');
@@ -123,23 +160,35 @@ class OtRequestController extends Controller
     }
 
 
-    public function viewApproved($date) {
+    public function viewApproved($dateFrom, $dateTo) {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
-        $day = date_format(date_create($date),'d');
-        $year = date_format(date_create($date), 'Y');
-        $month = date_format(date_create($date), 'm');
+        if ($dateFrom == null)
+            $dateFrom = date_create('1900-01-01');
+        else
+            $dateFrom = date_create($dateFrom);
+        if ($dateTo == null)
+            $dateTo = date_create('3000-01-01');
+        else
+            $dateTo = date_create($dateTo);
 
-        $start = $day <= 15 ? '01' : '16';
-        $dateFrom = $year.'-'.$month.'-'.$start;
+        $day = date_format($dateFrom,'d');
+        $year = date_format($dateFrom, 'Y');
+        $month = date_format($dateFrom, 'm');
 
-        $end = $day <= 15 ? '15' : date_format(date_create($date), 't'); // End of month;
-        $dateTo = $year.'-'.$month.'-'.$end;
+        $details = array();
+        $details['startday'] = $day;
+        $details['endday'] =  date_format($dateTo,'d');
+        $details['year'] = $year;
+        $details['month'] = $month;
+        $details['datefrom'] = date_format($dateFrom, 'Y-m-d');
+        $details['dateto'] = date_format($dateTo, 'Y-m-d');
 
         $departments = $this->categoryService->getCategories('department');
-        $otRequests = $this->otRequestService->getApprovedOtRequestsByDateRange($dateFrom, $dateTo);
-        return view('otrequest.approvedindex', ['otRequests' => $otRequests, 'departments' => $departments]);
+        $otRequests = $this->otRequestService->getApprovedOtRequestsByDateRange(date_format($dateFrom, 'Y-m-d'), date_format($dateTo, 'Y-m-d'));
+        $otRequestsDenied = $this->otRequestService->getDeniedOtRequestsByDateRange(date_format($dateFrom, 'Y-m-d'), date_format($dateTo, 'Y-m-d'));
+        return view('otrequest.approvedindex', ['otRequests' => $otRequests, 'otRequestsDenied' => $otRequestsDenied, 'departments' => $departments, 'details' => $details]);
     }
 
 
@@ -150,7 +199,13 @@ class OtRequestController extends Controller
         $period = $request->get('period');
         $day = $period === 'first' ? '16' : '01';
 
-        return redirect()->action('OtRequestController@viewApproved', ['date' => $year.'-'.$month.'-'.$day]);
+        $datefrom = $request->get('datefrom');
+        $dateto = $request->get('dateto');
+        if ($dateto == null) {
+            $dateto = $datefrom;
+        }
+
+        return redirect()->action('OtRequestController@viewApproved', ['datefrom' => $datefrom, 'dateto' => $dateto]);
     }
 
 

@@ -4,13 +4,47 @@ $(document).ready(function() {
         "lengthChange": false,
         "info": false,
         "dom": "<t<'float-right'p>>",
+        "order": [[ 1, "asc" ]],
         "columnDefs": [{
-            "targets":7,
+            "targets": [0, 8],
             "orderable": false
         }]
     });
+
+    checkBatchApproval();
+    $("#cb-batch-approval-all").change(function() {
+        if ($(this).prop('checked')) {
+            $(".cb-batch-approval").prop('checked', true);
+        }
+        else {
+            $(".cb-batch-approval").prop('checked', false);
+        }
+        checkBatchApproval();
+    });
+
+    $(".cb-batch-approval").change(function() {
+        if (!$(this).prop('checked')) {
+            $("#cb-batch-approval-all").prop('checked', false);
+        }
+        checkBatchApproval();
+    });
 });
 
+function checkBatchApproval() {
+    var hasChecked = false;
+    $(".cb-batch-approval").each(function() {
+        if ($(this).prop('checked')) {
+            hasChecked = true;
+            return;
+        }
+    });
+    if (hasChecked) {
+        $("#btn-batch-approve").show();
+    }
+    else {
+        $("#btn-batch-approve").hide();
+    }
+}
 
 function searchEmployee(term) {
     var term = $("#searchBox").val();
@@ -30,3 +64,4 @@ function filterDepartment() {
     table.column(1).draw();
 
 }
+

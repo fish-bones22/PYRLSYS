@@ -36,6 +36,19 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $otReq;
     }
 
+    public function getPendingOtRequestsByDateRange($datefrom, $dateto) {
+
+        $otRequests = OtRequest::whereNull('approval')->whereBetween('otDate', [$datefrom, $dateto])->get();
+        if ($otRequests == null) return null;
+
+        $otReq = array();
+        foreach ($otRequests as $otRequest) {
+            $otReq[] = $this->mapToEntity($otRequest, new OtRequestEntity());
+        }
+
+        return $otReq;
+    }
+
     public function getApprovedOtRequests() {
 
         $otRequests = OtRequest::where('approval', true)->get();
@@ -67,6 +80,20 @@ class OtRequestService extends EntityService implements IOtRequestService {
     public function getApprovedOtRequestByDateRange($employeeId, $datefrom, $dateto) {
 
         $otRequests = OtRequest::where('approval', true)->where('employee_id', $employeeId)->whereBetween('otDate', [$datefrom, $dateto])->get();
+        if ($otRequests == null) return null;
+
+        $otReq = array();
+        foreach ($otRequests as $otRequest) {
+            $otReq[] = $this->mapToEntity($otRequest, new OtRequestEntity());
+        }
+
+        return $otReq;
+    }
+
+
+    public function getDeniedOtRequestsByDateRange($datefrom, $dateto) {
+
+        $otRequests = OtRequest::where('approval', false)->whereBetween('otDate', [$datefrom, $dateto])->get();
         if ($otRequests == null) return null;
 
         $otReq = array();

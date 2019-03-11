@@ -88,6 +88,18 @@
     /* width: 100%; */
 }
 
+.form-paper.section-title span {
+    font-weight: unset;
+    padding-bottom: unset;
+    padding-top: unset;
+    text-transform: none;
+}
+
+.form-paper.section-title span a {
+    font-size: 1em;
+    padding: 0;
+}
+
 .form-paper.spacer {
     background-color: transparent;
     height: 3px;
