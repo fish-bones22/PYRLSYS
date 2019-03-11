@@ -115,12 +115,11 @@ class ManhourController extends Controller
         //     return redirect()->action('ManhourController@index');
         $date['datefrom'] = date_format($datefrom, 'Y-m-d');
         $date['dateto'] = date_format($dateto, 'Y-m-d');
-        var_dump($date);
         $date['startday'] = date_format($datefrom, 'd');
         $date['mode'] = $mode;
+        $date['date_to'] = date_format($dateto, 'Y-m-d');
 
-        var_dump($date);
-       // return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
+        return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
 
 
@@ -290,10 +289,9 @@ class ManhourController extends Controller
         else if ($mode === 'daterange') {
             $datefrom = $request->get('date_from');
             $dateto = $request->get('date_to');
-            if ($request->$dateto == '') {
+            if ($request->get('date_to') == null) {
                 $dateto = $datefrom;
             }
-            var_dump($request->all());
             return redirect()->route('manhour.viewrange', ['mode' => $mode, 'datefrom' => $datefrom, 'dateto' => $dateto]);
         }
         else {

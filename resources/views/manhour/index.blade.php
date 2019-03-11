@@ -37,43 +37,44 @@ Manhour Masterlist
     </div>
     <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
     <div class="col-md-8 offset-md-2 form-paper">
-        <table class="table table-sm" id="masterListTable">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Department</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $index = 0;
-                ?>
-                @foreach($employees as $emp)
-                <?php
-                    $next = 0;
-                    if ($index == sizeof($employees) - 1)
-                        $next = null;
-                    else
-                        $next = $employees[$index+1]->id;
+        <div style="overflow-x:auto">
+            <table class="table table-sm" id="masterListTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $index = 0;
+                    ?>
+                    @foreach($employees as $emp)
+                    <?php
+                        $next = 0;
+                        if ($index == sizeof($employees) - 1)
+                            $next = null;
+                        else
+                            $next = $employees[$index+1]->id;
 
-                    $index++;
-                ?>
-                <tr>
-                    <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
-                    <td>{{ $emp->fullName }}</td>
-                    <td>{{ isset($emp->current['department']['displayName']) ? $emp->current['department']['displayName'] : ''}}</td>
-                    <td>
-                        <span class="btn-group">
-                            <a href="{{ action('ManhourController@input', ['id' => $emp->id]) }}" class="btn btn-sm btn-light">Input Record</a>
-                            <a href="{{ action('ManhourController@viewRecordNow', ['id' => $emp->id ]) }}" class="btn btn-sm btn-light">View Record</a>
-                        </span>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        $index++;
+                    ?>
+                    <tr>
+                        <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
+                        <td>{{ $emp->fullName }}</td>
+                        <td>{{ isset($emp->current['department']['displayName']) ? $emp->current['department']['displayName'] : ''}}</td>
+                        <td>
+                            <span class="btn-group">
+                                <a href="{{ action('ManhourController@input', ['id' => $emp->id]) }}" class="btn btn-sm btn-light">Input Record</a>
+                                <a href="{{ action('ManhourController@viewRecordNow', ['id' => $emp->id ]) }}" class="btn btn-sm btn-light">View Record</a>
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
     </div>
 </div>
 
