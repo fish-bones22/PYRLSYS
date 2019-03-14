@@ -24,16 +24,16 @@
 @endif
 
 <div class="row">
-    <div class="col-md-6 offset-md-3 form-paper section-title">{{ $displayName }}</div>
+    <div class="col-md-6 offset-md-3 form-paper section-title">
+        {{ $displayName }}
+        <span class="float-right">
+            <button class="btn btn-link btn-clipping" type="button" data-toggle="modal" data-target="#addModal">New {{ $displayName }}</button>
+        </span>
+    </div>
     <div class="col-md-6 offset-md-3 form-paper section-divider"></div>
 </div>
 <div class="row">
-    <div class="col-md-2 offset-md-3 form-paper">
-        <div class="form-group mt-3">
-            <button class="btn btn-light btn-sm btn-block btn-clipping" type="button" data-toggle="modal" data-target="#addModal">New {{ $displayName }}</button>
-        </div>
-    </div>
-    <div class="col-md-4 form-paper">
+    <div class="col-md-6 offset-md-3  form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" class="form-control form-control-sm" type="search" onkeyup="filterDepartment()" />

@@ -16,7 +16,7 @@ class CreateEmployeeTimeTableTable extends Migration
         Schema::create('employee_time_tables', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('employee_id');
+            $table->unsignedInteger('employee_id');
             $table->dateTime('timeIn')->nullable();
             $table->dateTime('timeOut')->nullable();
             $table->float('break')->nullable();

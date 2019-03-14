@@ -7,14 +7,13 @@ Manhour Masterlist
 @section('content')
 
 <div class="row">
-    <div class="col-md-8 offset-md-2 form-paper section-title">Manhour Masterlist</div>
-    <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
-    <div class="col-md-3 offset-md-2 form-paper">
-        <div class="form-group mt-3">
-            <a href="{{ action('ManhourController@input', '') }}" class="btn btn-sm btn-block btn-light">Input Record</a>
-        </div>
+    <div class="col-md-8 offset-md-2 form-paper section-title">Manhour Masterlist
+        <span class="float-right">
+            <a href="{{ action('ManhourController@input', '') }}" class="btn btn-link btn-clipping">Input Record</a>
+        </span>
     </div>
-    <div class="col-md-5 form-paper">
+    <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
+    <div class="col-md-8 offset-md-2 form-paper">
         <div class="row">
             <div class="col-6">
                 <div class="form-group">

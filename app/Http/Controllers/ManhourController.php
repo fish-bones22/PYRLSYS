@@ -527,6 +527,10 @@ class ManhourController extends Controller
         return redirect()->route('manhour.inputall', ['date' => $date]);
     }
 
+    public function defineHoliday() {
+        return view('manhour.defineholiday');
+    }
+
 
     public function getRecord($id, $date) {
 

@@ -95,7 +95,7 @@
     text-transform: none;
 }
 
-.form-paper.section-title span a {
+.form-paper.section-title span a, .form-paper.section-title span button {
     font-size: 1em;
     padding: 0;
 }

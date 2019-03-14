@@ -7,14 +7,13 @@ Employees
 @section('content')
 
 <div class="row">
-    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-title">Employees</div>
-    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
-    <div class="col-lg-2 offset-lg-2 col-md-3 offset-md-1 form-paper">
-        <div class="form-group mt-3">
-            <a role="button" href="employee/new" class="btn btn-sm btn-block btn-light">New Employee</a>
-        </div>
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-title">Employees
+        <span class="float-right">
+            <a role="button" href="employee/new" class="btn btn-link btn-clipping">New Employee</a>
+        </span>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 form-paper">
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
+    <div class="col-lg-4 offset-lg-2 col-md-5 offset-md-1 col-sm-6 form-paper">
         <div class="form-group">
             <label for="department" class="form-paper-label">Department</label>
             <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
@@ -25,7 +24,7 @@ Employees
             </select>
         </div>
     </div>
-    <div class="col-lg-3 col-md-4 col-sm-6 form-paper">
+    <div class="col-lg-4 col-md-5 col-sm-6 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" class="form-control form-control-sm" type="search" onkeyup="filterEmployees()" />
@@ -33,35 +32,37 @@ Employees
     </div>
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper">
-        <table class="table table-sm" id="employeesTable">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Department</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($employees as $emp)
-                <tr>
-                    <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
-                    <td>{{ $emp->fullName }}</td>
-                    <td>{{ $emp->current['department']['displayName'] }}</td>
-                    <td>
-                        <div class="btn-group">
-                            <a class="btn btn-sm btn-light" href="{{ action('EmployeeController@view', ['id' => $emp->id ]) }}">View</a>
-                            <form action="{{ route('employee.delete', $emp->id) }}" method="post">
-                                @csrf
-                                @method('post')
-                                <input class="btn btn-sm btn-secondary" data-confirm="delete" type="submit" value="Delete" />
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div style="overflow-x: auto">
+            <table class="table table-sm" id="employeesTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($employees as $emp)
+                    <tr>
+                        <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
+                        <td>{{ $emp->fullName }}</td>
+                        <td>{{ $emp->current['department']['displayName'] }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-light" href="{{ action('EmployeeController@view', ['id' => $emp->id ]) }}">View</a>
+                                <form action="{{ route('employee.delete', $emp->id) }}" method="post">
+                                    @csrf
+                                    @method('post')
+                                    <input class="btn btn-sm btn-secondary" data-confirm="delete" type="submit" value="Delete" />
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

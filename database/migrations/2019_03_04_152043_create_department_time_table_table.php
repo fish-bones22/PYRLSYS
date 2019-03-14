@@ -16,7 +16,7 @@ class CreateDepartmentTimeTableTable extends Migration
         Schema::create('department_time_tables', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('department_id');
+            $table->unsignedInteger('department_id');
             $table->dateTime('timeIn')->nullable();
             $table->dateTime('timeOut')->nullable();
             $table->float('break')->nullable();

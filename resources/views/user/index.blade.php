@@ -7,14 +7,14 @@ All Users
 @section('content')
 
 <div class="row">
-    <div class="col-sm-4 offset-sm-4 form-paper section-title">Users</div>
-    <div class="col-sm-4 offset-sm-4 form-paper section-divider"></div>
-    <div class="col-sm-2 offset-sm-4 form-paper">
-        <div class="form-group mt-3">
-            <a href="{{ action('UserController@addUser') }}" role="button" class="btn btn-sm btn-block btn-light">Add User</a>
-        </div>
+    <div class="col-sm-4 offset-sm-4 form-paper section-title">
+        Users
+        <span class="float-right">
+            <a href="{{ action('UserController@addUser') }}" role="button" class="btn btn-link btn-clipping">Add User</a>
+        </span>
     </div>
-    <div class="col-sm-2 form-paper">
+    <div class="col-sm-4 offset-sm-4 form-paper section-divider"></div>
+    <div class="col-sm-4 offset-sm-4 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="filterUsers()" />

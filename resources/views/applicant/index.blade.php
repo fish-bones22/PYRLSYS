@@ -15,14 +15,13 @@ Applicants
 
 
 <div class="row">
-    <div class="col-md-8 offset-md-2 form-paper section-title">Applicants</div>
-    <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
-    <div class="col-md-2 offset-md-2 form-paper">
-        <div class="form-group mt-3">
-            <a href="{{ action('ApplicantController@new') }}" role="button" class="btn btn-sm btn-block btn-light">Application Form</a>
-        </div>
+    <div class="col-md-8 offset-md-2 form-paper section-title">Applicants
+        <span class="float-right">
+            <a href="{{ action('ApplicantController@new') }}" role="button" class="btn btn-clipping btn-link">Application Form</a>
+        </span>
     </div>
-    <div class="col-md-3 form-paper">
+    <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
+    <div class="col-md-4 offset-md-2 form-paper">
         <div class="form-group">
             <label for="status" class="form-paper-label">Filter Applicant Status</label>
             <select id="status" class="form-control form-control-sm" onchange="filterStatus()">
@@ -33,7 +32,7 @@ Applicants
             </select>
         </div>
     </div>
-    <div class="col-md-3 form-paper">
+    <div class="col-md-4 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="searchApplicants()" />
