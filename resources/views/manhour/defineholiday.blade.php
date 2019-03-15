@@ -12,8 +12,8 @@ Manhour Input
 
 @section('content')
 
-<div class="alert alert-danger" style="display:none">Failed<button type="button" class="close" data-dismiss="alert">&times;</button></div>
-<div class="alert alert-success" style="display:none">Successful<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+<div class="alert alert-danger" style="display:none"><span>Failed</span><button type="button" class="close" onclick="$('.alert').hide()">&times;</button></div>
+<div class="alert alert-success" style="display:none">Successful<button type="button" class="close"  onclick="$('.alert').hide()">&times;</button></div>
 
 
 <div class="row">
@@ -69,7 +69,8 @@ Manhour Input
                 <div class="float-right">
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('ManhourController@index') }}">Back to List</a>
-                        <input type="submit" class="btn btn-primary" value="Save"/>
+                        <input type="button" id="deleteBtn" class="btn btn-secondary" value="Delete" style="display:none" />
+                        <input type="button" id="saveBtn" class="btn btn-primary" value="Save"/>
                     </div>
                 </div>
             </div>

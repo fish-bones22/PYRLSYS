@@ -532,6 +532,61 @@ class ManhourController extends Controller
     }
 
 
+    public function saveHoliday(Request $request) {
+        if ($request->get('date') === null || $request->get('date') === '') {
+            return response()->json([
+                'result' => false,
+                'message' => 'Date is not specified'
+            ]);
+        }
+        if ($request->name === null || $request->name === '') {
+            return response()->json([
+                'result' => false,
+                'message' => 'Name is not specified'
+            ]);
+        }
+        if ($request->type === null || $request->type === '') {
+            return response()->json([
+                'result' => false,
+                'message' => 'Type is not specified'
+            ]);
+        }
+        $result = $this->manhourService->saveHoliday([
+            'name' => $request->name,
+            'date' => $request->date,
+            'description' => $request->description != null ? $request->description : '',
+            'type' => $request->type
+        ]);
+
+        return response()->json($result);
+    }
+
+
+    public function deleteHoliday(Request $request) {
+
+        $result = $this->manhourService->deleteHoliday($request->date);
+
+        return response()->json($result);
+
+    }
+
+    public function getHolidayOnDate($date) {
+
+        if ($date === null || $date === '') return null;
+
+        $holiday = $this->manhourService->getHoliday($date);
+
+        if ($holiday === null || $holiday['name'] === null) return null;
+
+        return response()->json([
+            'name' => $holiday['name'],
+            'description' => $holiday['description'],
+            'type' => $holiday['type']
+        ]);
+
+    }
+
+
     public function getRecord($id, $date) {
 
         if ($id == null || $id == 0 || $date == null || $date == '')

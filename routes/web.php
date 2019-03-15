@@ -78,6 +78,9 @@ Route::get('manhour/viewrecordcollated/{datefrom}/{dateto}', 'ManhourController@
 Route::post('manhour/viewrecordcollated', 'ManhourController@setRecordDateCollated');
 Route::get('manhour/attendance/', 'ManhourController@viewAttendace')->name('manhour.attendance');
 Route::get('manhour/defineholiday', 'ManhourController@defineHoliday');
+Route::get('manhour/getholiday/{date}', 'ManhourController@getHolidayOnDate');
+Route::post('manhour/saveholiday', 'ManhourController@saveHoliday');
+Route::post('manhour/deleteholiday', 'ManhourController@deleteHoliday');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
 Route::post('otrequests', 'OtRequestController@index')->name('otrequest.post');

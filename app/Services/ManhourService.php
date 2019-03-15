@@ -10,6 +10,7 @@ use App\Entities\EmployeeEntity;
 use App\Entities\ManhourSummaryEntity;
 use App\Entities\ManhourEntity;
 use App\Models\Manhour;
+use App\Models\Holiday;
 use Carbon\Carbon;
 
 class ManhourService extends EntityService implements IManhourService {
@@ -185,6 +186,95 @@ class ManhourService extends EntityService implements IManhourService {
         }
 
         return $recordsSummary;
+    }
+
+
+    public function saveHoliday($entity) {
+
+        if (!isset($entity['date']))
+            return [
+                'result' => false,
+                'message' => 'Date is not specified'
+            ];
+        if (!isset($entity['name']))
+            return [
+                'result' => false,
+                'message' => 'Name is not specified'
+            ];
+        if (!isset($entity['type']))
+            return [
+                'result' => false,
+                'message' => 'Type is not specified'
+            ];
+
+        $model = Holiday::where('holidayDate', date_create($entity['date']))->first();
+        if ($model === null) {
+            $model = new Holiday();
+            $model->holidayDate = date_format(date_create($entity['date']), 'Y-m-d');
+        }
+        $model->name = $entity['name'];
+        $model->description = $entity['description'];
+        $model->type = $entity['type'];
+
+        try {
+            $model->save();
+        } catch (\Exception $e) {
+            return [
+                'result' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true
+        ];
+
+    }
+
+
+    public function deleteHoliday($date) {
+
+        if ($date === null || $date === '')
+            return [
+                'result' => false,
+                'message' => 'Date is not specified'
+            ];
+
+        $holiday = Holiday::where('holidayDate', date_create($date))->first();
+        if ($holiday == null) {
+            return [
+                'result' => false,
+                'message' => 'No holiday on date specified'
+            ];
+
+        }
+
+        try {
+            $holiday->delete();
+        } catch (\Exception $e) {
+            return [
+                'result' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true
+        ];
+
+    }
+
+
+    public function getHoliday($date) {
+        $holiday = Holiday::where('holidayDate', date_create($date))->first();
+        if ($holiday == null) return null;
+
+        return [
+            'name' => $holiday->name,
+            'description' => $holiday->description,
+            'date' => date_format(date_create($date), 'Y-m-d'),
+            'type' => $holiday->type
+        ];
     }
 
 
