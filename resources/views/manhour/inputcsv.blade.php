@@ -17,7 +17,11 @@ $title = 'CSV Input'
 @endif
 
 <div class="row">
-    <div class="col-12 form-paper section-title" id="title">{{ $title }}</div>
+    <div class="col-12 form-paper section-title" id="title">{{ $title }}
+        <span class="float-right">
+            <a href="{{ route('manhour.inputall', date_format(now(), 'Y-m-d')) }}" class="btn btn-link btn-clipping">Manual batch input</a>
+        </span>
+    </div>
     <div class="col-12 form-paper section-divider"></div>
 </div>
 <form action="{{ route('manhour.postcsv') }}" method="POST" enctype="multipart/form-data">
@@ -39,6 +43,8 @@ $title = 'CSV Input'
 </form>
 @if ($records != null)
 <form action="{{ route('manhour.postcsvrecords') }}" method="POST" id="cvrRecordsForm">
+    @csrf
+    @method('post')
     <div class="row">
         <div class="col-12 form-paper section-divider"></div>
         <div class="col-lg-3 col-md-5 form-paper">
@@ -137,6 +143,11 @@ $title = 'CSV Input'
                         <input type="hidden" name="records[{{$i}}][xlot]" value="{{ isset($records[$i]['xlot']) ? $records[$i]['xlot'] : '' }}" />
                         <input type="hidden" name="records[{{$i}}][nd]" value="{{ isset($records[$i]['nd']) ? $records[$i]['nd'] : '' }}" />
                         <input type="hidden" name="records[{{$i}}][remarks]" value="{{ isset($records[$i]['remarks']) ? $records[$i]['remarks'] : '' }}" />
+
+                        @if (isset($records[$i]['invalid']))
+                        <input type="hidden" name="records[{{$i}}][invalid]" value="{{ isset($records[$i]['invalid']) ? $records[$i]['invalid'] : '' }}" />
+                        @endif
+
                         @endfor
                     </tbody>
                 </table>

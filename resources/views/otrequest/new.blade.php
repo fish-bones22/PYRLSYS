@@ -25,7 +25,7 @@ New OT Request
             @csrf
             @method('post')
             <div class="row">
-                <div class="col-12 form-paper text-center"><div class="display-4">New Request</div></div>
+                <div class="col-12 form-paper section-title">New Request</div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
 

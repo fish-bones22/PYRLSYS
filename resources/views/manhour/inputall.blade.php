@@ -11,7 +11,11 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
 @section('content')
 
 <div class="row">
-    <div class="col-12 form-paper section-title" id="title">{{ $title }}</div>
+    <div class="col-12 form-paper section-title" id="title">{{ $title }}
+        <span class="float-right">
+            <a href="{{ action('ManhourController@inputCsv') }}" class="btn btn-link btn-clipping">Use CSV file</a>
+        </span>
+    </div>
     <div class="col-12 form-paper section-divider"></div>
 </div>
 <div class="row">
@@ -57,7 +61,7 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
     @method('post')
     <div class="row">
         <div class="col form-paper">
-            <div style="overflow-x:auto">
+            <div style="overflow-x:auto" class=" mb-4">
                 <input type="hidden" name="date" value="{{$details['date']}}" />
                 <table class="table table-sm" id="dailyWorkingHoursTable" style="font-size:0.75em;">
                     <thead>

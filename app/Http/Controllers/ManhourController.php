@@ -700,6 +700,16 @@ class ManhourController extends Controller
 
         foreach ($request->records as $record) {
 
+            if (isset($record['invalid'])) continue;
+
+            if (!isset($record['date']) || $record['date'] === '') continue;
+
+            if (!isset($record['outlier']) || $record['outlier'] === null || $record['outlier'] === '') {
+                if (!isset($record['timein']) || $record['timein'] === '') continue;
+                if (!isset($record['timeout']) || $record['timeout'] === '') continue;
+            }
+
+            if (!isset($record['employee_id']) || $record['employee_id'] === 0) continue;
 
             $manhourEntity = new ManhourEntity();
 
@@ -713,17 +723,35 @@ class ManhourController extends Controller
             $manhourEntity->department = $record['department'];
 
             if (isset($record['outlier']) && $record['outlier'] != '') {
-                $manhourEntity->authorized = isset($record['authorized']) ? true : false;
+                $manhourEntity->authorized = isset($record['authorized']) && $record['authorized'] ? true : false;
             }
 
             $manhourEntity->outlier = isset($record['outlier']) ? $record['outlier'] : null;
             $manhourEntity->remarks = $record['remarks'];
 
-            $result = $this->manhourService->recordManhour($manhourEntity);
+            if ($request->overwrite != null && $request->overwrite === 'on') {
+                $result = $this->manhourService->recordManhour($manhourEntity);
+            // If not option to not overwrite is selected, check records first for existing data
+            } else {
+                $isOnRecord = $this->manhourService->getRecord($record['employee_id'], date_create($record['date'])) != null;
+                // Save record only when no record is found for emp on date
+                if (!$isOnRecord) {
+                    $result = $this->manhourService->recordManhour($manhourEntity);
+                } else {
+                    $result = [
+                        'result' => true
+                    ];
+                }
+            }
+
+            if (!$result['result']) {
+                return redirect()->back()->with('error', $result['message']);
+            }
+
 
         }
 
-        return redirect()->back()->with('error', 'Failed to save CSV records');
+        return redirect()->back()->with('success', 'Successfully saved valid entries');
 
     }
 

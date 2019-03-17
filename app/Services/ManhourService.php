@@ -9,6 +9,7 @@ use App\Contracts\ICategoryService;
 use App\Entities\EmployeeEntity;
 use App\Entities\ManhourSummaryEntity;
 use App\Entities\ManhourEntity;
+use App\Entities\OtRequestEntity;
 use App\Models\Manhour;
 use App\Models\Holiday;
 use Carbon\Carbon;
@@ -90,6 +91,77 @@ class ManhourService extends EntityService implements IManhourService {
                 'result' => false,
                 'message' => $e->getMessage()
             ];
+        }
+
+        // Auto OT count
+        $timeFormatted_ = $this->appendDateToTime($entity->date, $entity->timeIn, $entity->timeOut);
+        $timeIn_ = date_create($timeFormatted_[0]);
+        $timeOut_ = date_create($timeFormatted_[1]);
+        $date = date_create($entity->date);
+
+        $timeTable = $this->employeeService->getEmployeeTimeTable($entity->employee_id, $date);
+        $scheduledTimeIn = $timeTable['timein'];
+        $scheduledTimeOut = $timeTable['timeout'];
+        $scheduledTimeFormatted_ = $this->appendDateToTime($entity->date, $scheduledTimeIn, $scheduledTimeOut);
+        $scheduledTimeIn_ = date_create($scheduledTimeFormatted_[0]);
+        $scheduledTimeOut_ = date_create($scheduledTimeFormatted_[1]);
+
+        $offsetHour = 0;
+        $earlyOt = false;
+
+        // Check for OTs
+        if ($timeIn_ < $scheduledTimeIn_) {
+            $x = $scheduledTimeIn_->diff($timeIn_);
+            $offsetHour = $this->getTotalHours($x);
+            $offsetHour = $offsetHour < 0 ? 0 : $offsetHour;
+            $earlyOt = true;
+        }
+        if ($timeOut_ > $scheduledTimeOut_) {
+            $x = $timeOut_->diff($scheduledTimeOut_);
+            $offsetHour = $this->getTotalHours($x);
+            $offsetHour = $offsetHour < 0 ? 0 : $offsetHour;
+            $earlyOt = false;
+        }
+
+
+        if ($offsetHour >= 1) {
+
+            $otTrimmedOffset = floor($offsetHour);
+            $otStartTime = null;
+            $otEndTime = null;
+
+            if ($earlyOt) {
+                $otStartTime = date("H:i:s", strtotime('-'.$otTrimmedOffset.' hours', strtotime($scheduledTimeFormatted_[0])));
+                $otEndTime = date_format($scheduledTimeIn_, 'H:i:s');
+            } else {
+                $otStartTime = date_format($scheduledTimeOut_, 'H:i:s');
+                $otEndTime = date("H:i:s", strtotime('+'.$otTrimmedOffset.' hours', strtotime($scheduledTimeFormatted_[1])));
+            }
+
+            $otType = 'rot';
+            if ($this->isSunday($entity->date)) {
+                $otType = 'sot';
+            } else {
+                $holiday = $this->getHoliday($entity->date);
+                if ($holiday != null && $holiday['type'] == 'legal') {
+                    $otType = 'lhot';
+                }
+            }
+
+            $otReq = new OtRequestEntity();
+            $otReq->otDate = $date;
+            $otReq->employeeId = $entity->employee_id;
+            $otReq->employeeName = $entity->employeeName;
+            $otReq->department = $entity->department;
+            $otReq->startTime = $otStartTime;
+            $otReq->endTime = $otEndTime;
+            $otReq->allowedHours = $otTrimmedOffset;
+            $otReq->reason = 'System generated';
+            $otReq->otType = $otType;
+            $otReq->approval = null;
+            $result = $this->otRequestService->addOtRequest($otReq);
+
+            if (!$result['result']) return $result;
         }
 
         return [
@@ -370,17 +442,11 @@ class ManhourService extends EntityService implements IManhourService {
             }
 
             // Get time in/out recorded hour
-            // $x = ($timeOut_ - $timeIn_) / 3600;
-            // $recordHour = floor($x * 2) / 2;
-            // $recordHour = $recordHour < 0 ? 0 : $recordHour;
             $x = $timeOut_->diff($timeIn_);
             $recordHour = $this->getTotalHours($x);
             $recordHour = $recordHour < 0 ? 0 : $recordHour;
 
             // Get scheduled hour
-            // $x = $scheduledTimeIn_ != null && $scheduledTimeOut_ != null ? ($scheduledTimeOut_->diff($scheduledTimeIn_)) / 3600 : null;
-            // $scheduledHour = $x != null ? floor($x * 2) / 2 : null;
-            // $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? (24 + $scheduledHour) : $scheduledHour;
             $x =  $scheduledTimeIn_ != null && $scheduledTimeOut_ != null ? $scheduledTimeOut_->diff($scheduledTimeIn_) : null;
             $scheduledHour = $x != null ? $this->getTotalHours($x) : null;
             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? 0 : $scheduledHour;
@@ -425,6 +491,7 @@ class ManhourService extends EntityService implements IManhourService {
             $otStartTime_;
             $otEndTime_;
             $overtimeCounted = false;
+
             // Check if OT is counted
             if($otRequest != null) {
 
@@ -436,13 +503,23 @@ class ManhourService extends EntityService implements IManhourService {
                 $otStartTime_ = date_create($otStartTime_);
                 $otEndTime_ = date_create($otEndTime_);
 
-                // If scheduled time out is earlier, and actual time out is earlier than OT start time, and actual time in is earlier than actual time out
-                // or actual time out is earlier than OT start time, and time out is the next day today
-                // if (($timeOut_ > $scheduledTimeOut_ && $otStartTime_ <= $timeOut_ && $timeIn_ < $timeOut_)
-                // || ($otStartTime_ > $timeOut_ && $timeIn_ > $timeOut_)) {
-                if ($timeIn_ <= $otStartTime_ && $timeOut_ >= $otEndTime_
+
+                $isEarlyOt = false;
+                // Check if OT is early OT (offset) or reg OT (after regular hours)
+                if ($scheduledTimeIn_ >= $otStartTime_ && $scheduledTimeIn_ >= $otEndTime_) {
+                    $isEarlyOt = true;
+                }
+
+                // Regular OT
+                if (!$isEarlyOt
+                   && (
+                    // Time out is later than OT end time
+                    // or actual in is late for OT but actual in is earlier than OT out and actual out is later than OT out (incomplete OT)
+                    // or actual in is earlier for OT in but actual out is earlier than OT out  (incomplete OT)
+                      $timeIn_ <= $otStartTime_ && $timeOut_ >= $otEndTime_
                    || $timeIn_ >= $otStartTime_ && $timeOut_ >= $otEndTime_ && $timeIn_ < $otEndTime_
-                   || $timeIn_ <= $otStartTime_ && $timeOut_ <= $otEndTime_ && $timeOut > $otStartTime_) {
+                   || $timeIn_ <= $otStartTime_ && $timeOut_ <= $otEndTime_ && $timeOut_ > $otStartTime_)
+                   ) {
 
                     $overtimeCounted = true;
                     $otHours =  $otRequest[0]->allowedHours;
@@ -456,9 +533,6 @@ class ManhourService extends EntityService implements IManhourService {
                     }
 
                     // Get actual hours in OT
-                    // $otActualHours = ($timeOut_ - $otStartTime_) / 3600;
-                    // $otActualHours = floor($otActualHours * 2) / 2;
-                    // $otActualHours = $otActualHours < 0 ? 0 : $otActualHours;
                     $x = $timeOut_->diff($otStartTime_);
                     $otActualHours = $this->getTotalHours($x);
                     $otActualHours = $otActualHours < 0 ? 0 : $otActualHours;
@@ -467,6 +541,37 @@ class ManhourService extends EntityService implements IManhourService {
                         $otHours = $otActualHours;
                     }
 
+                }
+                // Early OT (offset)
+                else if ($isEarlyOt
+                && (
+                    // actual time in is earlier than OT start and actual out is later than OT end
+                    // or actual time in it later then OT start but actual out is later than OT end (incomplete OT)
+                    // or actual time in is earlier than OT start but actual time out is earlier than OT end (incomplete OT)
+                    $timeIn_ <= $otStartTime_ && $timeOut >= $otEndTime_
+                    || $timeIn_ >= $otStartTime_ && $timeOut >= $otEndTime_
+                    || $timeIn_ <= $otStartTime_ && $timeOut <= $otEndTime_
+                )) {
+
+                    $overtimeCounted = true;
+                    $otHours =  $otRequest[0]->allowedHours;
+
+                    if ($timeIn_ < $otStartTime_) {
+                        $otStartTime_ = $timeIn_;
+                    }
+
+                    if ($timeOut_ > $otEndTime_) {
+                        $otEndTime_ = $timeOut_;
+                    }
+
+                    // Get actual hours in OT
+                    $x = $timeOut_->diff($otStartTime_);
+                    $otActualHours = $this->getTotalHours($x);
+                    $otActualHours = $otActualHours < 0 ? 0 : $otActualHours;
+
+                    if ($otActualHours < $otHours) {
+                        $otHours = $otActualHours;
+                    }
                 }
             }
 
@@ -623,5 +728,9 @@ class ManhourService extends EntityService implements IManhourService {
         $hours = ($int->d * 24) + $int->h + $int->i / 60;
         return $hours;
 
+    }
+
+    private function isSunday($date) {
+        return date('N', strtotime($date)) > 6;
     }
 }
