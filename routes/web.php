@@ -81,6 +81,9 @@ Route::get('manhour/defineholiday', 'ManhourController@defineHoliday');
 Route::get('manhour/getholiday/{date}', 'ManhourController@getHolidayOnDate');
 Route::post('manhour/saveholiday', 'ManhourController@saveHoliday');
 Route::post('manhour/deleteholiday', 'ManhourController@deleteHoliday');
+Route::get('manhour/inputcsv', 'ManhourController@inputCsv');
+Route::post('manhour/inputcsv', 'ManhourController@postCsvFile')->name('manhour.postcsv');
+Route::post('manhour/postcsvrecords', 'ManhourController@postCsvRecords')->name('manhour.postcsvrecords');
 
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
 Route::post('otrequests', 'OtRequestController@index')->name('otrequest.post');

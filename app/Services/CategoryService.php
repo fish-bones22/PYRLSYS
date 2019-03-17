@@ -80,6 +80,21 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
+    public function getCategoryByValueAndKey($value, $key) {
+
+        if ($value === null) return null;
+        if ($key === null) return null;
+
+        $category = Category::where('value', $value)->where('key', $key)->first();
+
+        if ($category === null) return null;
+
+        $categoryEntity = $this->mapToEntity($category, new CategoryEntity());
+
+        return $categoryEntity;
+    }
+
+
     protected function mapToEntity($model, $entity) {
         $entity = parent::mapToEntity($model, $entity);
 

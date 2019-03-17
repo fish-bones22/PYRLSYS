@@ -151,6 +151,10 @@ tr.highlighted {
     background-color:#efe!important;
 }
 
+tr.warning {
+    background-color:lightpink!important;
+}
+
 @media only screen and (max-width: 575px) {
     tbody td {
         overflow: unset;

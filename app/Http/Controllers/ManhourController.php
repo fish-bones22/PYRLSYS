@@ -570,6 +570,164 @@ class ManhourController extends Controller
 
     }
 
+
+    public function inputCsv() {
+        return view('manhour.inputcsv', ['records' => null]);
+    }
+
+
+    public function postCsvFile(Request $request) {
+
+        if ($request->file('csvfile')) {
+
+            $data = null;
+
+            try {
+                $csvFilePath = $request->file('csvfile')->getRealPath();
+                $data = array_map('str_getcsv', file($csvFilePath));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Invalid CSV file');
+            }
+
+            if ($data == null || sizeof($data) < 0) {
+                return redirect()->back()->with('error', 'Invalid content on CSV file');
+            }
+
+            $records = array();
+            $processedPool = array();
+            $headers = $data[0];
+
+            for ($i = 1; $i < sizeof($data); $i++) {
+
+                $record = array();
+                $employeeId = 0;
+                $recordDate = null;
+                $empId = 0;
+                $outlierValue = '';
+
+                for ($j = 0; $j < sizeof($headers); $j++) {
+
+                    $htitle = $headers[$j];
+                    $htitle = strtolower($htitle);
+                    $htitle = str_replace(' ', '', $htitle);
+
+
+                    if ($htitle === 'employeeid') {
+                        $record['employeeid'] = $data[$i][$j];
+                        $employeeId = $record['employeeid'];
+                    } else if ($htitle === 'date') {
+                        $recordDate = $data[$i][$j] != null && $data[$i][$j] != '' ? date_create($data[$i][$j]) : null;
+                        $record['date'] = $recordDate != null ? date_format($recordDate, 'Y-m-d') : '';
+                    } else if ($htitle === 'timein') {
+                        $record['timein'] = $data[$i][$j];
+                    } else if ($htitle === 'timeout') {
+                        $record['timeout'] = $data[$i][$j];
+                    } else if ($htitle === 'outlier') {
+                        $outlierValue = $data[$i][$j];
+                        $record['outlier'] = $data[$i][$j];
+                    } else if ($htitle === 'authorized') {
+                        $res = null;
+                        if ($outlierValue != '') {
+                            if (strtolower($data[$i][$j]) === 'yes' || strtolower($data[$i][$j]) === 'true') {
+                                $res = true;
+                            } else {
+                                $res = false;
+                            }
+                        }
+                        $record['authorized'] = $res;
+                    } else if ($htitle === 'rot') {
+                        $record['rot'] = $data[$i][$j];
+                    } else if ($htitle === 'sot') {
+                        $record['sot'] = $data[$i][$j];
+                    } else if ($htitle === 'xsot') {
+                        $record['xsot'] = $data[$i][$j];
+                    } else if ($htitle === 'lhot') {
+                        $record['lhot'] = $data[$i][$j];
+                    } else if ($htitle === 'xlot') {
+                        $record['xlot'] = $data[$i][$j];
+                    } else if ($htitle === 'nightdifferential') {
+                        $record['nd'] = $data[$i][$j];
+                    } else if ($htitle === 'remarks') {
+                        $record['remarks'] = $data[$i][$j];
+                    }
+                }
+
+                // Employee
+                $empId = $this->employeeService->getIdByEmployeeId($employeeId);
+                $employee = $this->employeeService->getEmployeeByIdWithStateOnDate($empId, $recordDate);
+                $record['employee_id'] = $empId;
+                $record['name'] = $employee != null ? $employee->fullName : '';
+                $record['timecard'] = $employee != null ? $employee->current['timecard'] : '';
+                $record['department'] = $employee != null ? $employee->current['department'] : '';
+                // Outlier
+                $record['outlier'] = $this->categoryService->getCategoryByValueAndKey($outlierValue, 'outlier');
+
+
+                if ($employee === null)
+                {
+                    $record['warning'] = 'Employee not found';
+                    $record['invalid'] = true;
+                }
+
+                // If no in/out or date
+                if ($recordDate === null
+                && (!isset($record['timein']) || $record['timein'] === '' || !isset($record['timeout']) || $record['timeout'] === '') && (strtolower($outlierValue) != 'absence' && !strpos(strtolower($outlierValue), 'leave')) ) {
+                    $record['invalid'] = true;
+                    $record['warning'] = 'No time in/out value';
+                }
+
+                if (in_array($record['date'].'|'.$employeeId, $processedPool)) {
+                    $record['invalid'] = true;
+                    $record['warning'] = 'Duplicate value';
+                }
+
+                $processedPool[] = $record['date'].'|'.$employeeId;
+
+                $records[] = $record;
+            }
+
+           return view('manhour.inputcsv', ['records' => $records]);
+        }
+        return redirect()->back()->with('error', 'No CSV file');
+    }
+
+
+    public function postCsvRecords(Request $request) {
+
+        if ($request->records == null || sizeof($request->records) < 0) {
+            return redirect()->back()->with('error', 'No records to save');
+        }
+
+        foreach ($request->records as $record) {
+
+
+            $manhourEntity = new ManhourEntity();
+
+            $manhourEntity->date = $record['date'];
+            $manhourEntity->timeIn = $record['timein'];
+            $manhourEntity->timeOut = $record['timeout'];
+
+            $manhourEntity->employee_id = $record['employee_id'];
+            $manhourEntity->employeeName = $record['name'];
+            $manhourEntity->timeCard = $record['timecard'];
+            $manhourEntity->department = $record['department'];
+
+            if (isset($record['outlier']) && $record['outlier'] != '') {
+                $manhourEntity->authorized = isset($record['authorized']) ? true : false;
+            }
+
+            $manhourEntity->outlier = isset($record['outlier']) ? $record['outlier'] : null;
+            $manhourEntity->remarks = $record['remarks'];
+
+            $result = $this->manhourService->recordManhour($manhourEntity);
+
+        }
+
+        return redirect()->back()->with('error', 'Failed to save CSV records');
+
+    }
+
+
     public function getHolidayOnDate($date) {
 
         if ($date === null || $date === '') return null;
