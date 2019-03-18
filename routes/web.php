@@ -92,6 +92,7 @@ Route::post('otrequest/processed', 'OtRequestController@filterDate')->name('otre
 Route::get('otrequest/new', 'OtRequestController@new')->name('otrequest.new');
 Route::post('otrequest/new', 'OtRequestController@add');
 Route::post('otrequest/getemployees/{dept}', 'OtRequestController@getEmployees');
+Route::get('otrequest/getholidays/{date}', 'OtRequestController@getHolidays');
 Route::post('otrequest/approve/{id}', 'OtRequestController@approve')->name('otrequest.approve');
 Route::post('otrequest/deny/{id}', 'OtRequestController@deny')->name('otrequest.deny');
 Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@getOtRequestForEmployee');

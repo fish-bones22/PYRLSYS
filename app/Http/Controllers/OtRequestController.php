@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\IOtRequestService;
 use App\Contracts\ICategoryService;
 use App\Contracts\IEmployeeService;
+use App\Contracts\IManhourService;
 use App\Entities\OtRequestEntity;
 use Illuminate\Http\Request;
 
@@ -13,13 +14,15 @@ class OtRequestController extends Controller
     private $otRequestService;
     private $categoryService;
     private $employeeService;
+    private $manhourService;
     private $pageKey = 'manhourmanagement';
 
-    public function __construct(IOtRequestService $otRequestService, ICategoryService $categoryService, IEmployeeService $employeeService) {
+    public function __construct(IOtRequestService $otRequestService, ICategoryService $categoryService, IEmployeeService $employeeService, IManhourService $manhourService) {
 
         $this->otRequestService = $otRequestService;
         $this->categoryService = $categoryService;
         $this->employeeService = $employeeService;
+        $this->manhourService = $manhourService;
     }
 
     public function index(Request $request) {
@@ -206,6 +209,17 @@ class OtRequestController extends Controller
         }
 
         return redirect()->action('OtRequestController@viewApproved', ['datefrom' => $datefrom, 'dateto' => $dateto]);
+    }
+
+
+    public function getHolidays($date) {
+
+        if ($date === null || $date === '') {
+            return null;
+        }
+
+        $holidays = $this->manhourService->getHoliday($date);
+        return response()->json($holidays);
     }
 
 

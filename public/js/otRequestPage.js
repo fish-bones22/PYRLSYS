@@ -1,8 +1,30 @@
 $(document).ready(function() {
 
     //$("input[type='time']").not("[readonly]").timepicki();
-
+    $('#date').change(function() {
+        getHoliday();
+    });
 });
+
+function getHoliday() {
+    var date = $('#date').val();
+
+    $.ajax({
+        type: 'get',
+        url: 'getholidays/' + date,
+        contentType: 'text/plain',
+        dataType:"json",
+        success: function(result) {
+            $('input[name="ot_type_[0]"]').prop('checked', false);
+            if (result.type === 'legal') {
+                $('input[value="lhot"]').prop('checked', true);
+            }
+        },
+        error: function() {
+            $('input[name="ot_type_[0]"]').prop('checked', false);
+        }
+    });
+}
 
 function getEmployeesOnDepartment() {
 
