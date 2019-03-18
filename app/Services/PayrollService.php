@@ -148,6 +148,7 @@ class PayrollService implements IPayrollService {
 
             $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, $date);
+            $holiday = $this->manhourService->getHoliday($monthYear.'-'.$i);
 
             $rateBasis = 'monthly';
             $rate = 0;
@@ -172,6 +173,12 @@ class PayrollService implements IPayrollService {
                 $hourlyRate = ($rate/2)/($this->workDays*$this->hoursPerDay);
                 $hourlyAllowance = ($allowance/2)/($this->workDays*$this->hoursPerDay);
                 $allowance = ($allowance/2)/$this->workDays;
+            }
+
+            if ($holiday != null && $holiday['type'] == 'legal') {
+                $hourlyRate *= 2;
+            } else if ($holiday != null && $holiday['type'] == 'special') {
+                $hourlyRate *= 1.3;
             }
 
             $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
