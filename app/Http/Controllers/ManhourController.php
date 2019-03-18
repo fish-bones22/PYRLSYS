@@ -649,6 +649,16 @@ class ManhourController extends Controller
                         $record['nd'] = $data[$i][$j];
                     } else if ($htitle === 'remarks') {
                         $record['remarks'] = $data[$i][$j];
+                    } else if ($htitle === 'otapproval') {
+                        $res = null;
+                        if ($$data[$i][$j] != '') {
+                            if (strtolower($data[$i][$j]) === 'true' || strtolower($data[$i][$j]) === 'approved') {
+                                $res = true;
+                            } else {
+                                $res = false;
+                            }
+                        }
+                        $record['otapproval'] = $res;
                     }
                 }
 
@@ -726,17 +736,22 @@ class ManhourController extends Controller
                 $manhourEntity->authorized = isset($record['authorized']) && $record['authorized'] ? true : false;
             }
 
+            $otApproval = null;
+            if (isset($record['otapproval'])) {
+                $otApproval = $record['otapproval'];
+            }
+
             $manhourEntity->outlier = isset($record['outlier']) ? $record['outlier'] : null;
             $manhourEntity->remarks = $record['remarks'];
 
             if ($request->overwrite != null && $request->overwrite === 'on') {
-                $result = $this->manhourService->recordManhour($manhourEntity);
+                $result = $this->manhourService->recordManhour($manhourEntity, $otApproval);
             // If not option to not overwrite is selected, check records first for existing data
             } else {
                 $isOnRecord = $this->manhourService->getRecord($record['employee_id'], date_create($record['date'])) != null;
                 // Save record only when no record is found for emp on date
                 if (!$isOnRecord) {
-                    $result = $this->manhourService->recordManhour($manhourEntity);
+                    $result = $this->manhourService->recordManhour($manhourEntity, $otApproval);
                 } else {
                     $result = [
                         'result' => true

@@ -53,7 +53,7 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    public function recordManhour(ManhourEntity $entity) {
+    public function recordManhour(ManhourEntity $entity, $otApproval = null) {
 
         $record = Manhour::where('recordDate', $entity->date)->where('employee_id', $entity->employee_id)->first();
 
@@ -158,7 +158,7 @@ class ManhourService extends EntityService implements IManhourService {
             $otReq->allowedHours = $otTrimmedOffset;
             $otReq->reason = 'System generated';
             $otReq->otType = $otType;
-            $otReq->approval = null;
+            $otReq->approval = $otApproval;
             $result = $this->otRequestService->addOtRequest($otReq);
 
             if (!$result['result']) return $result;
