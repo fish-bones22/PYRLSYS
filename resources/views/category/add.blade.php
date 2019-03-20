@@ -39,7 +39,7 @@
         <div class="col-sm-6 col-6 form-paper">
             <div class="form-group">
                 <label for="subValue4Add" class="form-paper-label">Date Effective:</label>
-                <input id="subValue4Add" class="form-control" type="date" name="subvalue4" />
+                <input id="subValue4Add" class="form-control" type="date" name="subvalue4" value="{{ date_format(now(), 'Y-m-d') }}" />
             </div>
         </div>
         <div class="col-sm-6 col-6 form-paper">

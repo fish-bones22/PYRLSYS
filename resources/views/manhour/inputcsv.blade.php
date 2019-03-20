@@ -86,7 +86,7 @@ $title = 'CSV Input'
                             <th colspan="2">Regular Time</th>
                             <th rowspan="2">Outlier</th>
                             <th rowspan="2">Auth</th>
-                            <th colspan="5">Overtime</th>
+                            {{-- <th colspan="5">Overtime</th> --}}
                             <th rowspan="2">OT Appr</th>
                             <th rowspan="2">Remarks/Comments</th>
                             <th rowspan="2">Wrn</th>
@@ -94,11 +94,11 @@ $title = 'CSV Input'
                         <tr>
                             <th>In</th>
                             <th>Out</th>
-                            <th>ROT</th>
+                            {{-- <th>ROT</th>
                             <th>SOT</th>
                             <th>XSOT</th>
                             <th>LHOT</th>
-                            <th>XLOT</th>
+                            <th>XLOT</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -117,11 +117,11 @@ $title = 'CSV Input'
                             <td>{{ $records[$i]['timeout'] }}</td>
                             <td>{{ isset($records[$i]['outlier']) ? $records[$i]['outlier']->value : '' }}</td>
                             <td>{{ isset($records[$i]['authorized']) ? $records[$i]['authorized'] ? 'Yes' : 'No' : '' }}</td>
-                            <td>{{ isset($records[$i]['rot']) ? $records[$i]['rot'] : '' }}</td>
+                            {{-- <td>{{ isset($records[$i]['rot']) ? $records[$i]['rot'] : '' }}</td>
                             <td>{{ isset($records[$i]['sot']) ? $records[$i]['sot'] : '' }}</td>
                             <td>{{ isset($records[$i]['xsot']) ? $records[$i]['xsot'] : '' }}</td>
                             <td>{{ isset($records[$i]['lhot']) ? $records[$i]['lhot'] : '' }}</td>
-                            <td>{{ isset($records[$i]['xlot']) ? $records[$i]['xlot'] : '' }}</td>
+                            <td>{{ isset($records[$i]['xlot']) ? $records[$i]['xlot'] : '' }}</td> --}}
                             <td>{{ isset($records[$i]['otapproval']) ? ($records[$i]['otapproval'] ? 'Approved' : 'Denied') : '' }}</td>
                             <td>{{ isset($records[$i]['remarks']) ? $records[$i]['remarks'] : '' }}</td>
                             <td>{{ isset($records[$i]['warning']) ? $records[$i]['warning'] : '' }}</td>

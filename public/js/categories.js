@@ -49,6 +49,10 @@ function mapDetails(data) {
         $("#descriptionDisplay").text(data.description);
     }
 
+    // if (data.subvalue4 === null) {
+    //     data.subvalue4 = moment().format('YYYY-MM-DD');
+    // }
+
     $("#subValue5Edit").attr("value", data.subvalue5);
     $("#subValue4Edit").attr("value", data.subvalue4);
     $("#subValue3Edit").attr("value", data.subvalue3);

@@ -48,7 +48,7 @@
         <div class="col-sm-6 col-6 form-paper">
             <div class="form-group">
                 <label for="subValue4Edit" class="form-paper-label">Date Effective:</label>
-                <input id="subValue4Edit" class="form-control description display-toggle" type="date" name="subvalue4" style="display:none" />
+                <input id="subValue4Edit" class="form-control description display-toggle" type="date" name="subvalue4" style="display:none"  value="{{ date_format(now(), 'Y-m-d') }}" />
                 <div id="subValue4Display" class="form-paper-display display-toggle">Retrieving information...</div>
             </div>
         </div>
