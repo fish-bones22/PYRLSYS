@@ -6,7 +6,7 @@
 @stop
 
 @section('title')
-Manhour Input
+Define Holidays
 @stop
 
 

@@ -210,7 +210,8 @@ class PayrollService implements IPayrollService {
         $basicAdj = isset($summary['basicadjustment']) ? $summary['basicadjustment'] : 0;
         $otAdj = isset($summary['overtimeadjustment']) ? $summary['overtimeadjustment'] : 0;
 
-        $basicPay = $basicPay > $this->getComputedMonthlyRate($employeeId, $date)/2 ? $this->getComputedMonthlyRate($employeeId, $date)/2 : $basicPay;
+        $monRate = $this->getComputedMonthlyRate($employeeId, $date)/2;
+        $basicPay = $basicPay > $monRate ? $monRate : $basicPay;
         $payroll->basicPayBase = $basicPay;
         $basicPay += $basicAdj;
 
@@ -258,8 +259,6 @@ class PayrollService implements IPayrollService {
 
     public function getComputedMonthlyRate($employeeId, $date) {
 
-        $month = date_format($date, 'm');
-        $year = date_format($date, 'Y');
 
         $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
         $workDays = 26;
@@ -278,6 +277,14 @@ class PayrollService implements IPayrollService {
             $rateBasis = $history['ratebasis'];
 
         if ($rateBasis == 'daily') {
+            // Adjust rate if holiday
+            $holiday = $this->manhourService->getHoliday(date_format($date, 'Y-m-d'));
+            if ($holiday != null && $holiday['type'] == 'legal') {
+                $rate *= 2;
+            } else if ($holiday != null && $holiday['type'] == 'special') {
+                $rate *= 1.3;
+            }
+
             $monthlyRate = $rate * $workDays;
         }
         else {
