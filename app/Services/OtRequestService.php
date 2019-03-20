@@ -121,7 +121,7 @@ class OtRequestService extends EntityService implements IOtRequestService {
         $otRequest->allowedHours = $entity->allowedHours;
         $otRequest->reason = $entity->reason;
         $otRequest->otType = $entity->otType;
-        $otRequest->approval = null;
+        $otRequest->approval = $entity->approval === '' ? null : $entity->approval;
 
         try {
             $otRequest->save();

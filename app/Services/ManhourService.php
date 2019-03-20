@@ -93,6 +93,13 @@ class ManhourService extends EntityService implements IManhourService {
             ];
         }
 
+
+        if ($entity->timeIn === null && $entity->timeOut === null) {
+            return [
+                'result' => true
+            ];
+        }
+
         // Auto OT count
         $timeFormatted_ = $this->appendDateToTime($entity->date, $entity->timeIn, $entity->timeOut);
         $timeIn_ = date_create($timeFormatted_[0]);

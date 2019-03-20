@@ -528,6 +528,7 @@ class ManhourController extends Controller
     }
 
     public function defineHoliday() {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         return view('manhour.defineholiday');
     }
 
@@ -572,6 +573,7 @@ class ManhourController extends Controller
 
 
     public function inputCsv() {
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         return view('manhour.inputcsv', ['records' => null]);
     }
 
@@ -651,9 +653,11 @@ class ManhourController extends Controller
                         $record['remarks'] = $data[$i][$j];
                     } else if ($htitle === 'otapproval') {
                         $res = null;
-                        if ($$data[$i][$j] != '') {
+                        if ($data[$i][$j] !== '') {
                             if (strtolower($data[$i][$j]) === 'true' || strtolower($data[$i][$j]) === 'approved') {
                                 $res = true;
+                            } else if (strtolower($data[$i][$j]) === 'pending') {
+                                $res = null;
                             } else {
                                 $res = false;
                             }
