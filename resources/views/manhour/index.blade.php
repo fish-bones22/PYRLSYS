@@ -36,7 +36,7 @@ Manhour Masterlist
     </div>
     <div class="col-md-8 offset-md-2 form-paper section-divider"></div>
     <div class="col-md-8 offset-md-2 form-paper">
-        <div style="overflow-x:auto">
+        <div style="overflow-x:auto" class="mb-4">
             <table class="table table-sm" id="masterListTable">
                 <thead>
                     <tr>
@@ -74,6 +74,7 @@ Manhour Masterlist
                     @endforeach
                 </tbody>
             </table>
+        </div>
     </div>
 </div>
 

@@ -2,10 +2,10 @@ var table;
 
 $(function() {
     table = $("#masterListTable").DataTable({
-        "lengthChange": false,
         "info": false,
         "ordering": true,
-        "dom": "<t<'float-right'p>>",
+        "pageLength": 50,
+        "dom": "<t<'float-left'l><'float-right'p>>",
         "columnDefs": [
             {"targets": 3, "orderable": false}
         ]

@@ -1,13 +1,13 @@
 var table;
 $(function() {
     table = $("#payrollMasterTable").DataTable({
-        "lengthChange": false,
         "info": false,
         "columnDefs": [{
             "targets": 2,
             "orderable": false
         }],
-        "dom": "<t<'float-right'p>>",
+        "pageLength": 50,
+        "dom": "<t<'float-left'l><'float-right'p>>",
         "buttons": [
             {
                 filename: getFileName,
