@@ -357,6 +357,26 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
+    public function getHolidays($dateFrom, $dateTo) {
+
+        $holidays = Holiday::whereBetween('holidayDate', [date_create($dateFrom), date_create($dateTo)])->orderBy('holidayDate')->get();
+
+        if ($holidays == null) return null;
+
+        $holidaysRecord = [];
+        foreach ($holidays as $holiday) {
+            $holidaysRecord[] = [
+                'name' => $holiday->name,
+                'description' => $holiday->description,
+                'date' => date_format(date_create($holiday->holidayDate), 'Y-m-d'),
+                'type' => $holiday->type
+            ];
+        }
+
+        return $holidaysRecord;
+    }
+
+
     private function formatSummary($record, EmployeeEntity $employee = null) {
 
         $summary = new ManhourSummaryEntity();

@@ -214,7 +214,7 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                         <tr><td><a href="{{ action('ManhourController@viewNow') }}">Show Daily Work Hours</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@index') }}">Show OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         <tr><td><a href="{{ action('OtRequestController@new') }}">Add OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('ManhourController@defineHoliday') }}">Define Holidays</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                        <tr><td><a href="{{ action('ManhourController@defineHoliday', date_format(now(), 'Y')) }}">Define Holidays</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         @endif
                         @if ($auth['payroll'])
                         <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>

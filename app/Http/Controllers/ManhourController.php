@@ -527,9 +527,23 @@ class ManhourController extends Controller
         return redirect()->route('manhour.inputall', ['date' => $date]);
     }
 
-    public function defineHoliday() {
+    public function defineHoliday($year) {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
-        return view('manhour.defineholiday');
+
+        $holidays = null;
+        if ($year !== null) {
+            $holidays = $this->manhourService->getHolidays($year.'-01-31', $year.'-12-31');
+        }
+
+        return view('manhour.defineholiday', ['holidays' => $holidays, 'year' => $year ]);
+    }
+
+
+    public function defineHolidayPost(Request $request) {
+
+        $year = $request->year;
+
+        return redirect()->action('ManhourController@defineHoliday', $year);
     }
 
 

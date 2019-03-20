@@ -1,8 +1,11 @@
+var calendar;
+
 $(document).ready(function() {
 
-    var calendar = jsCalendar.new("#calendar");
+    calendar = jsCalendar.new("#calendar");
     //console.log(calendar);
     calendar.onDateClick(function(e, date) {
+        console.log(date);
         selectDate(calendar, date);
         getDate();
     })
@@ -14,7 +17,18 @@ $(document).ready(function() {
         deleteHoliday();
     });
 
+    $('[data-conditional]').click(function() {
+
+    });
+
 });
+
+
+function onTableRowClicked(self) {
+    var date = $(self).data('conditional');
+    selectDate(calendar, new Date(date));
+    getDate();
+}
 
 
 function selectDate(calendar, date) {
@@ -78,8 +92,13 @@ function saveHoliday() {
         'method': 'post',
         'dataType': 'json',
         'success': result => {
-            console.log(result);
             mapResults(result);
+            var dateFormatted = moment(date);
+            if ($('[data-conditional="' + date + '"]').length > 0) {
+                $('[data-conditional="' + date + '"]').remove();
+            }
+            $('#holidayList').append('<tr data-conditional="' + date + '" onclick="onTableRowClicked(this)"><td>' + dateFormatted.format('MMM DD, YYYY') + '</td><td>' + name + '</td><td>' + type + '</td><td>' + description + '</td></tr>');
+            $("#deleteBtn").show();
         },
         'error': err => {
             console.error("Failed to save holiday", err);
@@ -107,12 +126,12 @@ function deleteHoliday() {
         'method': 'post',
         'dataType': 'json',
         'success': result => {
-            console.log(result);
             mapResults(result);
             $('#name').val('');
             $('#description').val('');
             $('[name="type"]').prop('checked', false);
             $("#deleteBtn").hide();
+            $('tr[data-conditional="' + date + '"]').remove();
         },
         'error': err => {
             console.error("Failed to delete holiday", err);

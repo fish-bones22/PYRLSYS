@@ -48,7 +48,7 @@
                         <a class="dropdown-item" href="{{ action('ManhourController@input', '') }}">Input Records</a>
                         <a class="dropdown-item" href="{{ action('ManhourController@inputAll', date_format(now(),'Y-m-d')) }}">Batch Input Records</a>
                         <a class="dropdown-item" href="{{ action('OtRequestController@index') }}" role="button">OT Requests</a>
-                        <a class="dropdown-item" href="{{ action('ManhourController@defineHoliday') }}" role="button">Define Holidays</a>
+                        <a class="dropdown-item" href="{{ action('ManhourController@defineHoliday', date_format(now(), 'Y')) }}" role="button">Define Holidays</a>
                     </div>
                 </li>
                 @endif
