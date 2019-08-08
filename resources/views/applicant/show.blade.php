@@ -438,37 +438,37 @@
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="spouseAge" class="form-paper-label">Age:</label>
-                        <div class="form-paper-display">{{ $applicant->details['spouse'][$i]['age']['value'] }}</div>
+                        <div class="form-paper-display">{{ key_exists('age',  $applicant->details['spouse'][$i]) ? $applicant->details['spouse'][$i]['age']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-8 form-paper">
                     <div class="form-group">
                         <label for="spouseAddress" class="form-paper-label">Address:</label>
-                        <div class="form-paper-display">{{ $applicant->details['spouse'][$i]['address']['value'] }}</div>
+                        <div class="form-paper-display">{{ key_exists('address',  $applicant->details['spouse'][$i]) ? $applicant->details['spouse'][$i]['address']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-5 form-paper">
                     <div class="form-group">
                         <label for="dateOfMarriage" class="form-paper-label">Date of Marriage:</label>
-                        <div class="form-paper-display">{{ $applicant->details['spouse'][$i]['dateofmarriage']['value'] }}</div>
+                        <div class="form-paper-display">{{ key_exists('dateofmarriage',  $applicant->details['spouse'][$i]) ? $applicant->details['spouse'][$i]['dateofmarriage']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label for="placeOfMarriage" class="form-paper-label">Place of Marriage:</label>
-                        <div class="form-paper-display">{{ $applicant->details['spouse'][$i]['placeofmarriage']['value'] }}</div>
+                        <div class="form-paper-display">{{ key_exists('placeofmarriage',  $applicant->details['spouse'][$i]) ? $applicant->details['spouse'][$i]['placeofmarriage']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-5 form-paper">
                     <div class="form-group">
                         <label for="occupationOfSpouse" class="form-paper-label">Occupation of Spouse:</label>
-                        <div class="form-paper-display">{{ $applicant->details['spouse'][$i]['occupation']['value'] }}</div>
+                        <div class="form-paper-display">{{ key_exists('occupation',  $applicant->details['spouse'][$i]) ? $applicant->details['spouse'][$i]['occupation']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-7 form-paper">
                     <div class="form-group">
                         <label for="employerOfSpouse" class="form-paper-label">Employer of Spouse:</label>
-                        <div class="form-paper-display">{{ $applicant->details['spouse'][$i]['employer']['value'] }}</div>
+                        <div class="form-paper-display">{{ key_exists('employer',  $applicant->details['spouse'][$i]) ? $applicant->details['spouse'][$i]['employer']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -576,25 +576,25 @@
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Sex:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['child'][$i]['sex']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('sex', $applicant->details['child'][$i]) ? $applicant->details['child'][$i]['sex']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Age:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['child'][$i]['age']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('age', $applicant->details['child'][$i]) ? $applicant->details['child'][$i]['age']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Address:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['child'][$i]['address']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('address', $applicant->details['child'][$i]) ? $applicant->details['child'][$i]['address']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Occupation/Employer:</label>
-                        <div class="form-paper-display">{{ key_exists('child', $applicant->details) ? $applicant->details['child'][$i]['occupation']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('occupation', $applicant->details['child'][$i]) ? $applicant->details['child'][$i]['occupation']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
@@ -672,25 +672,25 @@
                 <div class="col-12 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Name:</label>
-                        <div class="form-paper-display">{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['name']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('name', $applicant->details['reference'][$i]) ? $applicant->details['reference'][$i]['name']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-4 col-6 form-paper">
                     <div class="form-group">
                         <label for="referenceOccupation[{{ $i }}]" class="form-paper-label">Occupation:</label>
-                        <div class="form-paper-display">{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['occupation']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('occupation', $applicant->details['reference'][$i]) ? $applicant->details['reference'][$i]['occupation']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-4 col-6 form-paper">
                     <div class="form-group">
                         <label for="referenceAddress[{{ $i }}]" class="form-paper-label">Address:</label>
-                        <div class="form-paper-display">{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['address']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('address', $applicant->details['reference'][$i]) ? $applicant->details['reference'][$i]['address']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-4 form-paper">
                     <div class="form-group">
                         <label for="referenceContact[{{ $i }}]" class="form-paper-label">Contact Details:</label>
-                        <div class="form-paper-display">{{ key_exists('reference', $applicant->details) ? $applicant->details['reference'][$i]['contact']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('contact', $applicant->details['reference'][$i]) ? $applicant->details['reference'][$i]['contact']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
