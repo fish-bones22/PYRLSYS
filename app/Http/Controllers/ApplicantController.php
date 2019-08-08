@@ -90,6 +90,12 @@ class ApplicantController extends Controller
 
         $req = $request->all();
 
+        // Backend validations
+        if (!isset($req['respondent_to'])) {
+            $request->flash();
+            return redirect()->action('ApplicantController@new')->with('error', "Please complete the form");
+        }
+
         $applicant = new EmployeeEntity;
         $applicant->id = $id;
         $applicant->firstName = $req['first_name'];
@@ -100,6 +106,7 @@ class ApplicantController extends Controller
 
         $applicant->details = $this->detailsToEntity($req);
         $applicant->deductibles = $this->deductiblesToEntity($req);
+
 
         if ($id != 0) {
             $result = $this->employeeService->updateEmployee($applicant);

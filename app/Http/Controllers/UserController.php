@@ -61,8 +61,8 @@ class UserController extends Controller {
 
     public function logout() {
 
-        Session::flush();
         $this->userService->logout();
+        Session::flush();
         return redirect()->action('UserController@login');
 
     }

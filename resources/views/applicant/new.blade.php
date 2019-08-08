@@ -71,19 +71,19 @@ Application For Employment
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="lastname" class="form-paper-label">Last name:</label>
-                                <input id="lastname" name="last_name" type="text" class="form-control" value="{{ $applicant->lastName }}" required/>
+                                <input id="lastname" name="last_name" type="text" class="form-control" value="{{ old('last_name') }}" required/>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
                                 <label for="firstname" class="form-paper-label">First name:</label>
-                                <input id="firstname" name="first_name" type="text" class="form-control" value="{{ $applicant->firstName }}" required/>
+                                <input id="firstname" name="first_name" type="text" class="form-control" value="{{ old('first_name') }}" required/>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
                                 <label id="middleNameLabel" for="middlename" class="form-paper-label">Middle name (Maiden if married):</label>
-                                <input id="middlename" name="middle_name" type="text" class="form-control" value="{{ $applicant->middleName }}"/>
+                                <input id="middlename" name="middle_name" type="text" class="form-control" value="{{ old('middle_name') }}"/>
                             </div>
                         </div>
                         {{-- <div class="col-12">

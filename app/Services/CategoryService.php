@@ -122,6 +122,14 @@ class CategoryService extends EntityService implements ICategoryService {
     public function addCategory(CategoryEntity $category) {
 
         $categoryModel = new Category();
+
+
+        if (Category::where('value', $category->value)->where('key', $category->key)->exists())
+            return [
+                'result' => false,
+                'message' => 'Name already existing'
+            ];
+
         $categoryModel->key = $category->key;
         $categoryModel->value = $category->value;
         $categoryModel->detail = $category->detail;

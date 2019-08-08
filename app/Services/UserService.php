@@ -64,7 +64,7 @@ class UserService extends EntityService implements IUserService {
     public function getUserByUsername($username) {
 
         $user = User::where('username', $username)->first();
-        $entity = $this->mapToEntity($user);
+        $entity = $this->mapToEntity($user, new UserEntity());
         return $entity;
 
     }
@@ -91,7 +91,7 @@ class UserService extends EntityService implements IUserService {
     public function userExists($username, $password) {
         $user = User::where('username', $username)->first();
 
-        if ($user == null)
+        if ($user === null)
             return false;
 
         return Hash::check($password, $user->password);
@@ -99,9 +99,7 @@ class UserService extends EntityService implements IUserService {
 
 
     public function usernameExists($username) {
-        $user = User::where('username', $username)->first();
-
-        if ($user == null)
+        if (!User::where('username', $username)->exists())
             return false;
 
         return true;
@@ -112,7 +110,7 @@ class UserService extends EntityService implements IUserService {
         $hashed = Hash::make($password);
         $user = User::where('username', $username)->where('admin', 1)->first();
 
-        if ($user == null)
+        if ($user === null)
             return false;
 
         return Hash::check($password, $user->password);
