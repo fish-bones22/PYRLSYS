@@ -410,15 +410,15 @@ class EmployeeService extends EntityService implements IEmployeeService {
             return $res;
 
         if ($employee->employeeId != null && $employee->employeeId != '') {
+            // Employment history module
             $res = $this->addEmploymentHistory($id, $entity->current);
-
+            if (!$res['result'])
+                return $res;
+            // Employee schedules
+            $res = $this->addEmployeeTimeTable($id, $entity->timeTable);
             if (!$res['result'])
                 return $res;
         }
-
-        $res = $this->addEmployeeTimeTable($id, $entity->timeTable);
-        if (!$res['result'])
-            return $res;
 
         $res = $this->saveDeductibles($id, $entity->deductibles);
 

@@ -102,7 +102,7 @@ class ApplicantController extends Controller
         $applicant->deductibles = $this->deductiblesToEntity($req);
 
         if ($id != 0) {
-            $result = $this->employeeService->updateEmployee($employee);
+            $result = $this->employeeService->updateEmployee($applicant);
             if (!$result['result']) {
                 $request->flash();
                 return redirect()->action('ApplicantController@new')->with('error', $result['message']);
@@ -895,20 +895,46 @@ class ApplicantController extends Controller
 
         $entity = array();
 
-        if (isset($details['tinnumber']) && $details['tinnumber'] != '') {
-            $entity['tin'] = $details['tinnumber'];
+        $entity['tin'] = array();
+        $entity['sss'] = array();
+        $entity['philhealth'] = array();
+        $entity['pagibig'] = array();
+
+        $entity['tin']['isset'] = false;
+        $entity['sss']['isset'] = false;
+        $entity['philhealth']['isset'] = false;
+        $entity['pagibig']['isset'] = false;
+
+        // TIN
+        if (isset($details['tinnumber'])) {
+            $entity['tin']['value'] = $details['tinnumber'];
+        }
+        if (isset($details['tin'])) {
+            $entity['tin']['isset'] = true;
         }
 
-        if (isset($details['ssnumber']) && $details['ssnumber'] != '') {
-            $entity['sss'] = $details['ssnumber'];
+        // SSS
+        if (isset($details['ssnumber'])) {
+            $entity['sss']['value'] = $details['ssnumber'];
+        }
+        if (isset($details['sss'])) {
+            $entity['sss']['isset'] = true;
         }
 
-        if (isset($details['philhealthnumber']) && $details['philhealthnumber'] != '') {
-            $entity['philhealth'] = $details['philhealthnumber'];
+        // Philhealth
+        if (isset($details['philhealthnumber'])) {
+            $entity['philhealth']['value'] = $details['philhealthnumber'];
+        }
+        if (isset($details['philhealth'])) {
+            $entity['philhealth']['isset'] = true;
         }
 
-        if (isset($details['pagibignumber']) && $details['pagibignumber'] != '') {
-            $entity['pagibig'] = $details['pagibignumber'];
+        // PAGIBIG
+        if (isset($details['pagibignumber'])) {
+            $entity['pagibig']['value'] = $details['pagibignumber'];
+        }
+        if (isset($details['pagibig'])) {
+            $entity['pagibig']['isset'] = true;
         }
 
         return $entity;

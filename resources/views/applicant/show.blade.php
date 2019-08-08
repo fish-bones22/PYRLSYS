@@ -746,25 +746,25 @@
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="tin" class="form-paper-label">Tax Identification No.</label>
-                        <div class="form-paper-display">{{ key_exists('tin', $applicant->deductibles) ? $applicant->deductibles['tin'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('tin', $applicant->deductibles) && isset($applicant->deductibles['tin']['value']) ? $applicant->deductibles['tin']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="ssn" class="form-paper-label">Social Security No.</label>
-                        <div class="form-paper-display">{{ key_exists('sss', $applicant->deductibles) ? $applicant->deductibles['sss'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('sss', $applicant->deductibles) && isset($applicant->deductibles['sss']['value'])? $applicant->deductibles['sss']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="philhealth" class="form-paper-label">PhilHealth Identification No.</label>
-                        <div class="form-paper-display">{{ key_exists('philhealth', $applicant->deductibles) ? $applicant->deductibles['philhealth'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('philhealth', $applicant->deductibles) && isset($applicant->deductibles['philhealth']['value'])? $applicant->deductibles['philhealth']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="pagibig" class="form-paper-label">PAGIBIG No.</label>
-                        <div class="form-paper-display">{{ key_exists('pagibig', $applicant->deductibles) ? $applicant->deductibles['pagibig'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('pagibig', $applicant->deductibles) && isset($applicant->deductibles['pagibig']['value'])? $applicant->deductibles['pagibig']['value'] : '' }}</div>
                     </div>
                 </div>
             </div>
