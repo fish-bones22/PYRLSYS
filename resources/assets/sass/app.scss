@@ -1,0 +1,30 @@
+
+// Fonts
+// @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Font Awesome
+@import "~font-awesome/scss/font-awesome";
+
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.previous-image img:hover {
+    border-style: solid;
+    border-width: 2px;
+    border-color: dodgerblue;
+}
+
+.previous-image.selected img {
+    border-style: solid;
+    border-width: 4px;
+    border-color: cornflowerblue;
+}

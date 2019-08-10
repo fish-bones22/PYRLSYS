@@ -1,0 +1,71 @@
+.tile-selection {
+    cursor: pointer;
+}
+
+.tile-selection:hover {
+    background-color: lightgray;
+    transition: ease-in-out 0.1s;
+}
+
+.tile-selection:hover .tile-icon {
+    opacity: 0.8;
+}
+
+.tile-selection.disabled {
+    color: gray;
+    cursor: default;
+    background-color: gainsboro;
+}
+
+.tile-selection.disabled .tile-icon {
+    opacity: 0.3;
+}
+
+.tile-logo {
+    width:15em;
+}
+
+.tile-header {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 3em;
+}
+
+@media (max-width: 575px) {
+    .tile-icon {
+        width:2em;
+        transition: ease-in-out 0.1s;
+    }
+
+}
+
+@media (min-width: 576px) {
+    .tile-icon {
+        width:4em;
+        transition: ease-in-out 0.1s;
+    }
+
+}
+
+@media (min-width: 768px) {
+    .tile-icon {
+        width:5em;
+        transition: ease-in-out 0.1s;
+    }
+
+}
+
+@media (min-width: 992px) {
+    .tile-icon {
+        width:8em;
+        transition: ease-in-out 0.1s;
+    }
+
+}
+
+@media (min-width: 1200px) {
+    .tile-icon {
+        width:10em;
+        transition: ease-in-out 0.1s;
+    }
+
+}

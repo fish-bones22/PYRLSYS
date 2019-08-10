@@ -1,0 +1,137 @@
+.form-paper {
+    background-color: rgb(252, 253, 250);
+    outline: 0.3px solid rgb(220, 220, 220);
+    margin-bottom: 1px;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.form-paper .form-group {
+    /* padding-left: 1.5em; */
+    /* padding-right: 1.5em; */
+    padding-top: 0.5em;
+}
+
+.form-paper.border-left {
+    border-left: 1px solid rgb(180, 180, 180);
+}
+.form-paper.border-bottom {
+    border-bottom: 1px solid rgb(180, 180, 180);
+}
+.form-paper.border-right {
+    border-right: 1px solid rgb(180, 180, 180);
+}
+.form-paper.border-top {
+    border-top: 1px solid rgb(180, 180, 180);
+}
+.form-paper.border {
+    border: 1px solid rgb(180, 180, 180);
+}
+
+.section-label {
+    font-size: 60%;
+    font-weight: 300;
+    line-height: 1em;
+    text-transform: uppercase;
+}
+
+.form-paper.section-label {
+    padding-bottom: 0.5em;
+    padding-top: 0.5em;
+}
+
+.form-paper .section-label {
+    margin-left: -5px;
+    margin-top: 0.5em;
+    margin-bottom: -1em;
+}
+
+.form-paper .form-paper-label {
+    font-size: 80%;
+    line-height: 0.7em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.form-paper .form-control {
+    background-color: rgb(252, 253, 250);
+    border-top: 0 solid black!important ;
+    border-radius: 0;
+}
+
+.form-paper .form-control:focus {
+    background-color: rgb(255, 255, 230);
+    box-shadow: 0 0 0 0 white;
+}
+
+.form-paper .form-control:disabled {
+    background-color: rgb(246, 246, 246);
+}
+
+.form-paper-display {
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.form-paper-subdisplay {
+    font-weight: 200;
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.form-paper.section-title {
+    font-size: 0.8em;
+    font-weight: 600;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    text-transform: uppercase;
+    /* width: 100%; */
+}
+
+.form-paper.section-title span {
+    font-weight: unset;
+    padding-bottom: unset;
+    padding-top: unset;
+    text-transform: none;
+}
+
+.form-paper.section-title span a, .form-paper.section-title span button {
+    font-size: 1em;
+    padding: 0;
+}
+
+.form-paper.spacer {
+    background-color: transparent;
+    height: 3px;
+    outline: 0 solid transparent;
+}
+
+.form-paper.section-divider {
+    height: 0.1px;
+    outline: 0 solid lightgray;
+}
+
+.form-paper.section-delete {
+    background-color: transparent;
+    outline: 0 solid transparent;
+    position: absolute;
+    padding: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.form-paper.section-delete button.close {
+    border-bottom: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    padding: 5px 15px;
+}
+
+.form-paper.section-delete button.close:hover {
+    background-color: silver;
+    color: white;
+    transition: cubic-bezier(0.39, 0.575, 0.565, 1) 0.1s;
+}
+
+.form-paper table.table th {
+    border-top: 0 solid transparent;
+}

@@ -1,0 +1,189 @@
+body {
+    background-color: rgb(242, 245, 240) !important;
+}
+
+a, .btn-link {
+    color: mediumseagreen;
+}
+
+a:hover .btn-link {
+    color: seagreen;
+}
+
+/* Form Controls */
+.form-control-sh {
+    max-width: 80px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: mediumseagreen;
+    border-color: mediumseagreen;
+}
+
+.btn-primary:hover {
+    background-color: seagreen;
+    border-color: seagreen;
+}
+
+.btn-primary:active {
+    background-color: seagreen!important;
+}
+
+.btn-primary:focus {
+    border-color: palegreen!important;
+    box-shadow: 0 0 0 0.2rem palegreen!important;
+}
+
+.btn-primary:disabled {
+    background-color: lightgreen!important;
+    border-color: lightgreen!important;
+    color: darkslategrey!important;
+}
+
+
+.btn-secondary {
+    background-color: lightgray;
+    border-color: lightgray;
+    color: black;
+}
+
+.btn-secondary:hover {
+    background-color: gray;
+    border-color: gray;
+    color: black;
+}
+
+.btn-secondary:active {
+    background-color: gray!important;
+}
+
+.btn-secondary:focus {
+    border-color: lightgray!important;
+    box-shadow: 0 0 0 0.2rem lightgray!important;
+}
+
+.btn-secondary:disabled {
+    background-color: gray!important;
+    border-color: gray!important;
+    color: darkgray!important;
+}
+
+.btn-light {
+    background-color: ghostwhite!important;
+    border-color: whitesmoke!important;
+}
+
+.btn-light:hover {
+    background-color: gainsboro!important;
+    border-color: gainsboro!important;
+}
+
+.bg-primary {
+    background-color: mediumseagreen!important;
+}
+
+.current-image {
+    height: 170px;
+    position: relative;
+    width: 170px;
+}
+
+.previous-image {
+    position: relative;
+}
+
+.btn-change-image {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 0;
+    border-style: none;
+    bottom: 0;
+    color: white;
+    position: absolute;
+    right: 0;
+}
+
+.btn-delete-image {
+    border-radius: 0;
+    position: absolute;
+    right: 15px;
+}
+
+.fixed-bottom.btn-container {
+    left: unset;
+    right: 0;
+    width: fit-content;
+}
+
+.image-holder {
+    height: 100px;
+    width: 100px;
+}
+
+.auto-tag {
+    font-size: 0.7em;
+    font-weight: 800;
+}
+
+.btn-clipping {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+tbody td {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+tbody.extended-display td {
+    max-width: unset;
+    overflow: unset;
+    text-overflow: unset;
+    white-space: unset;
+}
+
+tr.highlighted {
+    background-color:#efe!important;
+}
+
+tr.warning {
+    background-color:lightpink!important;
+}
+
+@media only screen and (max-width: 575px) {
+    tbody td {
+        overflow: unset;
+        text-overflow: unset;
+        white-space: unset;
+    }
+}
+
+.dataTables_length label {
+    display: flex;
+    font-size: 10px;
+}
+.dataTables_length select {
+    border: none;
+    font-size: 12px;
+    height: 1rem;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.page-item.active .page-link {
+    background-color: darkorange;
+    border-color: darkorange;
+}
+.page-link {
+    color: darkorange;
+}
+
+.alert-warning a {
+    color: darkgoldenrod;
+    text-decoration: underline;
+}
