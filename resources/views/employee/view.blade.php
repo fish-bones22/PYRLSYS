@@ -182,19 +182,19 @@
                 <div class="col-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">Address</label>
-                        <div class="form-paper-display">{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: 'No Address' }}</div>
+                        <div class="form-paper-display">{{  $employee->details != null && key_exists('presentaddress', $employee->details) ? $employee->details['presentaddress']['value']: 'No Address' }}</div>
                     </div>
                 </div>
                 <div class="col-3 form-paper">
                     <div class="form-group">
                         <label for="phoneNumber" class="form-paper-label">Phone Number</label>
-                        <div class="form-paper-display">{{  $employee->details != null && key_exists('phonenumber', $employee->details) ? $employee->details['phonenumber']['value']: 'No Phone Number' }}</div>
+                        <div class="form-paper-display">{{  $employee->details != null && key_exists('contactnumber', $employee->details) ? $employee->details['contactnumber']['value']: 'No Phone Number' }}</div>
                     </div>
                 </div>
                 <div class="col-3 form-paper">
                     <div class="form-group">
                         <label for="email" class="form-paper-label">Email Address</label>
-                        <div class="form-paper-display">{{  $employee->details != null && key_exists('email', $employee->details) ? $employee->details['email']['value']: 'No Email' }}</div>
+                        <div class="form-paper-display">{{  $employee->details != null && key_exists('emailaddress', $employee->details) ? $employee->details['emailaddress']['value']: 'No Email' }}</div>
                     </div>
                 </div>
                 <div class="col-12 form-paper">

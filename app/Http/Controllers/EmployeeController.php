@@ -20,30 +20,32 @@ class EmployeeController extends Controller
     protected $categoryService;
     private $pageKey = 'humanresourcemanagement';
 
-    public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService) {
+    public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService)
+    {
 
         $this->employeeService = $employeeService;
         $this->categoryService = $categoryService;
-
     }
 
-    public function index() {
+    public function index()
+    {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $employees = $this->employeeService->getAllEmployees();
         $departments = $this->categoryService->getCategories('department');
 
         return view('employee.index', ['employees' => $employees, 'departments' => $departments]);
-
     }
 
 
-    public function new() {
+    public function new()
+    {
 
         return redirect()->action('EmployeeController@show', 0);
     }
 
-    public function view($id) {
+    public function view($id)
+    {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         $categories = array();
@@ -58,17 +60,17 @@ class EmployeeController extends Controller
             return view('employee.view', ['employee' => new EmployeeEntity(), 'categories' => $categories]);
         }
 
-        $employee= $this->employeeService->getEmployeeById($id);
+        $employee = $this->employeeService->getEmployeeById($id);
 
         if ($employee == null)
             return redirect()->action('EmployeeController@index');
 
 
         return view('employee.view', ['employee' => $employee, 'categories' => $categories]);
-
     }
 
-    public function show($id = 0) {
+    public function show($id = 0)
+    {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $categories = array();
@@ -83,18 +85,18 @@ class EmployeeController extends Controller
             return view('employee.show', ['employee' => new EmployeeEntity(), 'categories' => $categories]);
         }
 
-        $employee= $this->employeeService->getEmployeeById($id);
+        $employee = $this->employeeService->getEmployeeById($id);
 
         if ($employee == null)
             return redirect()->action('EmployeeController@index');
 
 
         return view('employee.show', ['employee' => $employee, 'categories' => $categories]);
-
     }
 
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
 
         $req = $request->all();
 
@@ -106,12 +108,17 @@ class EmployeeController extends Controller
         $employee->employeeId = $req['employee_id'];
         $employee->sex = $req['sex'];
 
+        // Bckend validations
+        if (!isset($req['time_card'])) {
+            return redirect()->action('EmployeeController@show', $id)->with('error', 'Time card required');
+        }
+
         // File
         if ($request->file('file_new')) {
             // Save file to storage
             $file = $request->file('file_new');
             $details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
-            $filename = $employee->employeeId.'-'.$details.'.'.$file->getClientOriginalExtension();
+            $filename = $employee->employeeId . '-' . $details . '.' . $file->getClientOriginalExtension();
             // Store file to storage
             Storage::putFileAs('public/', $file, $filename);
             $req['file_new_name'] = $filename;
@@ -151,7 +158,7 @@ class EmployeeController extends Controller
                 // Save image file to storage
                 $image = $request->file('new_image_file');
                 $location = 'profilepictures/';
-                $filename = time().$id.'.'.$image->getClientOriginalExtension();
+                $filename = time() . $id . '.' . $image->getClientOriginalExtension();
                 $this->saveImageToStorage($image, $location, $filename);
                 // Save data to DB
                 $this->employeeService->addEmployeeImage($id, $location, $filename);
@@ -159,11 +166,11 @@ class EmployeeController extends Controller
         }
 
 
-        return redirect()->action('EmployeeController@show', $id)->with('success', 'Successfully '.$action.' employee. ');
-
+        return redirect()->action('EmployeeController@show', $id)->with('success', 'Successfully ' . $action . ' employee. ');
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
         $result = $this->employeeService->removeEmployee($id);
 
@@ -171,31 +178,35 @@ class EmployeeController extends Controller
             return redirect()->action('EmployeeController@index')->with('error', $result['message']);
 
         return redirect()->action('EmployeeController@index')->with('success', 'Delete successful');
-
     }
 
-    public function deleteAll() {
+    public function deleteAll()
+    {
         $this->employeeService->deleteAllEmployee();
         return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
     }
 
-    public function transferEmployee(Request $request, $id) {
+    public function transferEmployee(Request $request, $id)
+    {
 
         $req  = $request->all();
         $employmentDetails = $this->historyToEntity($req);
         $res = $this->employeeService->transferEmployee($id, $employmentDetails);
 
         if (!$res['result'])
-            return redirect()->back()->with('error', 'Transfer failed. '.$res['message']);
+            return redirect()->back()->with('error', 'Transfer failed. ' . $res['message']);
 
         return redirect()->back()->with('success', 'Transfer success');
     }
 
-    public function updateImage(Request $request, $id) {
+    public function updateImage(Request $request, $id)
+    {
 
-        if (!$request->file('picture_file')
-        && !$request->get('selected_filename')
-        && !$request->get('selected_location')) {
+        if (
+            !$request->file('picture_file')
+            && !$request->get('selected_filename')
+            && !$request->get('selected_location')
+        ) {
             return redirect()->action('EmployeeController@show', $id)->with('error', 'Image file is not valid');
         }
 
@@ -208,12 +219,11 @@ class EmployeeController extends Controller
             $image = $request->file('picture_file');
             // Path and file name
             $location = 'profilepictures/';
-            $filename = time().$id.'.'.$image->getClientOriginalExtension();
+            $filename = time() . $id . '.' . $image->getClientOriginalExtension();
 
             $this->saveImageToStorage($image, $location, $filename);
             // Save data to DB
             $this->employeeService->addEmployeeImage($id, $location, $filename);
-
         }
         // If previous image is selected
         else if ($request->get('selected_filename') && $request->get('selected_location')) {
@@ -225,16 +235,17 @@ class EmployeeController extends Controller
         }
 
         return redirect()->action('EmployeeController@show', $id)
-        ->with('success', 'Image successfully changed');
+            ->with('success', 'Image successfully changed');
     }
 
 
-    public function deleteImage(Request $request, $id) {
+    public function deleteImage(Request $request, $id)
+    {
 
         $location = $request->get('location');
         $filename = $request->get('filename');
 
-        $this->removeImageFromStorage($location.$filename);
+        $this->removeImageFromStorage($location . $filename);
 
         $this->employeeService->removeEmployeeImage($id, $location, $filename);
 
@@ -243,7 +254,8 @@ class EmployeeController extends Controller
 
 
 
-    public function getEmployeeBasicDetails($id) {
+    public function getEmployeeBasicDetails($id)
+    {
 
         if ($id == 0) return null;
 
@@ -265,36 +277,39 @@ class EmployeeController extends Controller
             //'timecard' => $employee->details['timecard']['value'],
             'timecard' => $employee->current['timecard']
         ]);
-
     }
 
 
-    public function downloadFile($filename) {
-        return Storage::download('public/'.$filename);
+    public function downloadFile($filename)
+    {
+        return Storage::download('public/' . $filename);
     }
 
 
-    public function getEmployeeJson($id) {
+    public function getEmployeeJson($id)
+    {
 
         $employee = $this->employeeService->getEmployeeById($id);
         return json_encode($employee);
-
     }
 
 
-    private function saveImageToStorage($file, $location, $filename) {
+    private function saveImageToStorage($file, $location, $filename)
+    {
         // Resize amd crop image to square
         $resizedImg = Image::make($file);
         $resizedImg = $this->resizeImage($resizedImg);
         // Store to file to storage
-        Storage::put('public/'.$location.$filename, (string) $resizedImg->encode());
+        Storage::put('public/' . $location . $filename, (string) $resizedImg->encode());
     }
 
-    private function removeImageFromStorage($path) {
-        Storage::delete('public/'.$path);
+    private function removeImageFromStorage($path)
+    {
+        Storage::delete('public/' . $path);
     }
 
-    private function resizeImage($image) {
+    private function resizeImage($image)
+    {
 
         $size = 300;
         $newWidth = $image->width();
@@ -302,20 +317,20 @@ class EmployeeController extends Controller
 
         // if image is portrait
         if ($newHeight > $newWidth) {
-            $newHeight = ($newHeight/$newWidth) * $size;
+            $newHeight = ($newHeight / $newWidth) * $size;
             $newWidth = $size;
         } else { // if landscape
-            $newWidth = ($newWidth/$newHeight) * $size;
+            $newWidth = ($newWidth / $newHeight) * $size;
             $newHeight = $size;
         }
 
         $image->resize($newWidth, $newHeight)->crop($size, $size);
         return $image;
-
     }
 
 
-    private function timeTableToEntity($history) {
+    private function timeTableToEntity($history)
+    {
 
         $entity = array();
         $entity['id'] = isset($history['schedule_id']) ? $history['schedule_id'] : null;
@@ -329,7 +344,8 @@ class EmployeeController extends Controller
     }
 
 
-    private function historyToEntity($history) {
+    private function historyToEntity($history)
+    {
 
         $entity = array();
 
@@ -394,11 +410,11 @@ class EmployeeController extends Controller
         ];
 
         return $entity;
-
     }
 
 
-    private function detailsToEntity($details) {
+    private function detailsToEntity($details)
+    {
 
         $entity = array();
 
@@ -447,7 +463,7 @@ class EmployeeController extends Controller
 
         // Dependent
         $entity['dependent'] = array();
-        for($i = 0; $i < sizeof($details['dependent_last_name']); $i++) {
+        for ($i = 0; $i < sizeof($details['dependent_last_name']); $i++) {
 
             if ($details['dependent_last_name'][$i] == null)
                 continue;
@@ -481,23 +497,23 @@ class EmployeeController extends Controller
         }
 
         // Address
-        $entity['address'] = [
-            'key' => 'address',
-            'value' => $details['address'],
+        $entity['presentaddress'] = [
+            'key' => 'presentaddress',
+            'value' => $details['presentaddress'],
             'displayName' => 'Address'
         ];
 
         // Phone Number
-        $entity['phonenumber'] = [
-            'key' => 'phonenumber',
-            'value' => $details['phone_number'],
+        $entity['contactnumber'] = [
+            'key' => 'contactnumber',
+            'value' => $details['contact_number'],
             'displayName' => 'Phone Number'
         ];
 
         // Email
-        $entity['email'] = [
-            'key' => 'email',
-            'value' => $details['email'],
+        $entity['emailaddress'] = [
+            'key' => 'emailaddress',
+            'value' => $details['email_address'],
             'displayName' => 'Email Address'
         ];
 
@@ -522,8 +538,7 @@ class EmployeeController extends Controller
                 'value' => $details['file_new_name'],
                 'displayName' => $details['file_details']
             ];
-        }
-        else {
+        } else {
             if (isset($details['file_old']) && $details['file_old'] != null) {
                 $entity['file'] = [
                     'key' => 'file',
@@ -557,7 +572,8 @@ class EmployeeController extends Controller
         return $entity;
     }
 
-    private function employmentDetailsToEntity($details) {
+    private function employmentDetailsToEntity($details)
+    {
 
         $entity = array();
         $entity['department'] = $details['department'];
@@ -569,7 +585,8 @@ class EmployeeController extends Controller
         return $entity;
     }
 
-    private function deductiblesToEntity($details) {
+    private function deductiblesToEntity($details)
+    {
 
         $entity = array();
 
@@ -618,7 +635,8 @@ class EmployeeController extends Controller
         return $entity;
     }
 
-    private function entityToDetails($entityArray) {
+    private function entityToDetails($entityArray)
+    {
         $entity = array();
         foreach ($entityArray as $arr) {
             $entity[$arr['key']] = $arr;

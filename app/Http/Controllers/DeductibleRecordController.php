@@ -17,14 +17,16 @@ class DeductibleRecordController extends Controller
     private $payrollService;
     private $pageKey = 'payrollmanagement';
 
-    public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService, ICategoryService $categoryService, IPayrollService $payrollService) {
+    public function __construct(IDeductibleRecordService $deductibleRecordService, IEmployeeService $employeeService, ICategoryService $categoryService, IPayrollService $payrollService)
+    {
         $this->deductibleRecordService =  $deductibleRecordService;
         $this->employeeService = $employeeService;
         $this->categoryService = $categoryService;
         $this->payrollService = $payrollService;
     }
 
-    public function add(Request $request, $id) {
+    public function add(Request $request, $id)
+    {
 
         $req = $request->all();
 
@@ -32,13 +34,13 @@ class DeductibleRecordController extends Controller
 
             // if (!isset($model['amount']) )//|| $model['amount'] == '')
             //     continue;
-            if (!isset($model['identifier']) )//|| $model['amount'] == '')
+            if (!isset($model['identifier'])) //|| $model['amount'] == '')
                 continue;
 
             $entity = $this->mapToEntity($id, $req['record_date'], $req['employee_name'], $model);
 
             // If entry has loan field create separate model entry
-            if (isset($model['loan']) ) {
+            if (isset($model['loan'])) {
 
                 $lnEntity = new DeductibleRecordEntity();
                 $lnEntity->employee = array();
@@ -50,10 +52,10 @@ class DeductibleRecordController extends Controller
                 $lnEntity->identifier['details'] = $model['identifier_details'];
 
                 $lnEntity->deductible = array();
-                $lnEntity->id = isset($req['models'][$model['key'].'loan']['id']) ? $req['models'][$model['key'].'loan']['id'] : 0;
-                $lnEntity->id = isset($req['models'][$model['key'].'loan']['id']) ? $req['models'][$model['key'].'loan']['id'] : 0;
-                $lnEntity->key = $model['key'].'loan';
-                $lnEntity->details = $model['details'].' Loan';
+                $lnEntity->id = isset($req['models'][$model['key'] . 'loan']['id']) ? $req['models'][$model['key'] . 'loan']['id'] : 0;
+                $lnEntity->id = isset($req['models'][$model['key'] . 'loan']['id']) ? $req['models'][$model['key'] . 'loan']['id'] : 0;
+                $lnEntity->key = $model['key'] . 'loan';
+                $lnEntity->details = $model['details'] . ' Loan';
                 $lnEntity->recordDate = $req['record_date'];
 
                 $lnEntity->amount = $model['loan'];
@@ -61,13 +63,12 @@ class DeductibleRecordController extends Controller
 
                 if (!$result['result'])
                     return redirect()->back()->withInputs($req)->with('error', $result['message']);
-
             }
 
-        $result = $this->deductibleRecordService->addRecord($entity);
+            $result = $this->deductibleRecordService->addRecord($entity);
 
-        if (!$result['result'])
-            return redirect()->back()->withInputs($req)->with('error', $result['message']);
+            if (!$result['result'])
+                return redirect()->back()->withInputs($req)->with('error', $result['message']);
         }
 
         // Other models
@@ -80,7 +81,7 @@ class DeductibleRecordController extends Controller
                 continue;
 
             if (!isset($model['amount']) || $model['amount'] == '')
-            continue;
+                continue;
 
             $lnEntity = new DeductibleRecordEntity();
 
@@ -101,25 +102,26 @@ class DeductibleRecordController extends Controller
             $result = $this->deductibleRecordService->addRecord($lnEntity);
 
             if (!$result['result'])
-                return redirect()->back()->withInputs($req)->with('error', $result['message']);
+                return redirect()->back()->withInputs($req)->with('error', $result['message'] . 'Test');
         }
 
         return redirect()->back()->with('success', 'Deductible added successfuly');
-
     }
 
 
-    public function goToDate(Request $request, $id) {
+    public function goToDate(Request $request, $id)
+    {
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
         $day = $period === 'first' ? '16' : '01';
 
-        return redirect()->action('DeductibleRecordController@get', ['id' => $id, 'date' => $year.'-'.$month.'-'.$day]);
+        return redirect()->action('DeductibleRecordController@get', ['id' => $id, 'date' => $year . '-' . $month . '-' . $day]);
     }
 
 
-    public function get($id, $date) {
+    public function get($id, $date)
+    {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $details = array();
         $details['year'] = date_format(date_create($date), 'Y');
@@ -227,12 +229,13 @@ class DeductibleRecordController extends Controller
                 $models['tin']['auto'] = true;
         }
 
-        return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]);//
+        return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]); //
 
     }
 
 
-    private function mapToEntity($id, $date, $name, $viewModel, $entity = null) {
+    private function mapToEntity($id, $date, $name, $viewModel, $entity = null)
+    {
 
         if ($entity == null)
             $entity = new DeductibleRecordEntity();
@@ -256,21 +259,22 @@ class DeductibleRecordController extends Controller
         $entity->key = $viewModel['key'];
 
         $entity->amount = isset($viewModel['amount']) ? $viewModel['amount'] : null;
-        $entity->subamount = isset($viewModel['subamount']) ?$viewModel['subamount'] : null;
-        $entity->subamount2 = isset($viewModel['subamount2']) ?$viewModel['subamount2'] : null;
-        $entity->remarks = isset($viewModel['remarks']) ?$viewModel['remarks'] : null;
+        $entity->subamount = isset($viewModel['subamount']) ? $viewModel['subamount'] : null;
+        $entity->subamount2 = isset($viewModel['subamount2']) ? $viewModel['subamount2'] : null;
+        $entity->remarks = isset($viewModel['remarks']) ? $viewModel['remarks'] : null;
 
         return $entity;
     }
 
-    public function autogenerate(Request $request, $date) {
+    public function autogenerate(Request $request, $date)
+    {
 
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
         $day = date_format(date_create($date), 'd');
 
-        $day = (((int)$day) < 16) ? '1' : '16';
-        $date = $year.'-'.$month.'-'.$day;
+        $day = (((int) $day) < 16) ? '1' : '16';
+        $date = $year . '-' . $month . '-' . $day;
         $req = $request->all();
         $override = isset($req['override_values']) ? true : false;
 
@@ -288,10 +292,12 @@ class DeductibleRecordController extends Controller
 
             foreach ($records as $record) {
 
-                if ($record->key != 'sss'
-                && $record->key != 'pagibig'
-                && $record->key != 'philhealth'
-                && $record->key != 'tin') {
+                if (
+                    $record->key != 'sss'
+                    && $record->key != 'pagibig'
+                    && $record->key != 'philhealth'
+                    && $record->key != 'tin'
+                ) {
                     continue;
                 }
 
@@ -321,7 +327,7 @@ class DeductibleRecordController extends Controller
 
                 // SSS
                 if ($record->key == 'sss') {
-                    if ( $override) {
+                    if ($override) {
                         $entity->amount = isset($rem['sss']) ? $rem['sss'][0] : 0;
                         $entity->subamount = isset($rem['sss']) ? $rem['sss'][1] : 0;
                         $entity->subamount2 = isset($rem['sss']) ? $rem['sss'][2] : 0;
@@ -330,7 +336,7 @@ class DeductibleRecordController extends Controller
                 }
                 // Philhealth
                 else if ($record->key == 'philhealth') {
-                    if ( $override) {
+                    if ($override) {
                         $entity->amount = isset($rem['philhealth']) ? $rem['philhealth'][0] : 0;
                         $entity->subamount = isset($rem['philhealth']) ? $rem['philhealth'][1] : 0;
                     }
@@ -338,7 +344,7 @@ class DeductibleRecordController extends Controller
                 }
                 // Pagibig
                 else if ($record->key == 'pagibig') {
-                    if ( $override) {
+                    if ($override) {
                         $entity->amount = isset($rem['pagibig']) ? $rem['pagibig'][0] : 0;
                         $entity->subamount = isset($rem['pagibig']) ? $rem['pagibig'][1] : 0;
                     }
@@ -346,7 +352,7 @@ class DeductibleRecordController extends Controller
                 }
                 // Tax
                 else if ($record->key == 'tin') {
-                    if ( $override) {
+                    if ($override) {
                         $entity->amount = isset($rem['tin']) ? $rem['tin'][0] : 0;
                     }
                     $hasTax = true;
@@ -426,22 +432,22 @@ class DeductibleRecordController extends Controller
         }
 
         return redirect()->action('DeductibleRecordController@getAll', ['date' => $date]);
-
     }
 
-    public function getAll($date) {
+    public function getAll($date)
+    {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
-        $day = date_format(date_create($date),'d');
+        $day = date_format(date_create($date), 'd');
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
 
         $startDay = $day <= 15 ? '01' : '16';
-        $date = $year.'-'.$month.'-'.$startDay;
+        $date = $year . '-' . $month . '-' . $startDay;
         $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
 
         $details = [
-            'date' => $year.'-'.$month.'-'.$startDay,
+            'date' => $year . '-' . $month . '-' . $startDay,
             'startday' => $startDay,
             'month' => $month,
             'year' => $year
@@ -450,25 +456,27 @@ class DeductibleRecordController extends Controller
         return view('deductibles.getall', ['records' => $records, 'details' => $details]);
     }
 
-    public function getAllOnDate(Request $request) {
+    public function getAllOnDate(Request $request)
+    {
 
         $month = $request->get('month');
         $year = $request->get('year');
         $period = $request->get('period');
         $day = $period === 'first' ? '16' : '01';
 
-        return redirect()->action('DeductibleRecordController@getAll', ['date' => $year.'-'.$month.'-'.$day]);
+        return redirect()->action('DeductibleRecordController@getAll', ['date' => $year . '-' . $month . '-' . $day]);
     }
 
-    public function view($key, $date) {
+    public function view($key, $date)
+    {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
-        $day = date_format(date_create($date),'d');
+        $day = date_format(date_create($date), 'd');
         $year = date_format(date_create($date), 'Y');
         $month = date_format(date_create($date), 'm');
 
-        $day2 = date_format(date_create($date),'d');
+        $day2 = date_format(date_create($date), 'd');
         $year2 = date_format(date_create($date), 'Y');
         $month2 = date_format(date_create($date), 'm');
 
@@ -477,24 +485,23 @@ class DeductibleRecordController extends Controller
             $day2 = '01';
             $month2 = $month < 12 ? $month + 1 : '01';
             $year2 = $month < 12 ? $year : $year + 1;
-        }
-        else {
+        } else {
             $day = '16';
             $day2 = '01';
             $month = $month > 1 ? $month - 1 : '12';
             $year = $month > 1 ? $year : $year - 1;
         }
 
-        $date = $year.'-'.$month.'-'.$day;
-        $date2 = $year2.'-'.$month2.'-'.$day2;
+        $date = $year . '-' . $month . '-' . $day;
+        $date2 = $year2 . '-' . $month2 . '-' . $day2;
 
         $records = $this->deductibleRecordService->getAllDeductiblesOnDate($date);
         $records2 = $this->deductibleRecordService->getAllDeductiblesOnDate($date2);
         $departments = $this->categoryService->getCategories('department');
 
         $details = [
-            'date' => $year.'-'.$month.'-'.$day,
-            'date2' => $year2.'-'.$month2.'-'.$day2,
+            'date' => $year . '-' . $month . '-' . $day,
+            'date2' => $year2 . '-' . $month2 . '-' . $day2,
             'startday' => $day,
             'month' => $month,
             'year' => $year,
@@ -516,7 +523,7 @@ class DeductibleRecordController extends Controller
             foreach ($records2 as $record) {
                 $payrollRecord2[$record->employee['id']] = $this->payrollService->getPayroll($record->employee['id'],  date_create($date2));
             }
-            return view('deductibles.item.bir', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments, 'payrollRecord1' => $payrollRecord1, 'payrollRecord2' => $payrollRecord2 ]);
+            return view('deductibles.item.bir', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments, 'payrollRecord1' => $payrollRecord1, 'payrollRecord2' => $payrollRecord2]);
         }
         if ($key == 'companyloan' || $key == 'companyloan/cashadvance') {
             return view('deductibles.item.clca', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
@@ -536,18 +543,16 @@ class DeductibleRecordController extends Controller
         }
 
         return redirect()->action('DeductibleRecordController@getAll', $date);
-
     }
 
-    public function goToDateView(Request $request) {
+    public function goToDateView(Request $request)
+    {
 
         $month = $request->get('month');
         $year = $request->get('year');
         $day = '16';
         $key = $request->get('key');
 
-        return redirect()->action('DeductibleRecordController@view', ['key' => $key, 'date' => $year.'-'.$month.'-'.$day]);
-
+        return redirect()->action('DeductibleRecordController@view', ['key' => $key, 'date' => $year . '-' . $month . '-' . $day]);
     }
-
 }

@@ -6,22 +6,24 @@ use App\Contracts\IDeductibleRecordService;
 use App\Entities\DeductibleRecordEntity;
 use App\Models\DeductibleRecord;
 
-class DeductibleRecordService extends EntityService implements IDeductibleRecordService {
+class DeductibleRecordService extends EntityService implements IDeductibleRecordService
+{
 
 
-    public function addRecord($entity) {
+    public function addRecord($entity)
+    {
 
         $model;
         if ($entity->id == 0) {
             if (($entity->amount === null || $entity->amount === '')
-             && ($entity->subamount === null || $entity->subamount === '')
-             && ($entity->subamount2 === null || $entity->subamount2 === '')) {
+                && ($entity->subamount === null || $entity->subamount === '')
+                && ($entity->subamount2 === null || $entity->subamount2 === '')
+            ) {
                 return ['result' => true];
             }
 
             $model = new DeductibleRecord();
-        }
-        else {
+        } else {
             $model = DeductibleRecord::find($entity->id);
             if ($model == null)
                 return [
@@ -30,8 +32,9 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
                 ];
 
             if (($entity->amount === null || $entity->amount === '')
-             && ($entity->subamount === null || $entity->subamount === '')
-             && ($entity->subamount2 === null || $entity->subamount2 === '')) {
+                && ($entity->subamount === null || $entity->subamount === '')
+                && ($entity->subamount2 === null || $entity->subamount2 === '')
+            ) {
                 $model->delete();
                 return ['result' => true];
             }
@@ -51,10 +54,10 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $model->recordDate = $entity->recordDate;
         $model->dueDate = $entity->dueDate;
 
+
         try {
             $model->save();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return [
                 'result' => false,
                 'message' => $e->getMessage()
@@ -64,11 +67,11 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         return [
             'result' => true
         ];
-
     }
 
 
-    public function getEmployeeDeductiblesOnDate($employeeId, $date) {
+    public function getEmployeeDeductiblesOnDate($employeeId, $date)
+    {
 
         $records = DeductibleRecord::where('employee_id', $employeeId)->where('recordDate', $date)->get();
 
@@ -81,11 +84,11 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         }
 
         return $recordEntities;
-
     }
 
 
-    protected function mapToEntity($model, $entity) {
+    protected function mapToEntity($model, $entity)
+    {
 
         $entity = parent::mapToEntity($model, $entity);
 
@@ -117,11 +120,11 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $entity->remarks = $model->remarks;
 
         return $entity;
-
     }
 
 
-    public function getAllDeductiblesOnDate($date) {
+    public function getAllDeductiblesOnDate($date)
+    {
 
         $records = DeductibleRecord::where('recordDate', $date)->get();
 
@@ -138,7 +141,8 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         return $recordEntities;
     }
 
-    public function deleteAllOtherDeductible($employeeId, $date) {
+    public function deleteAllOtherDeductible($employeeId, $date)
+    {
 
         $records = DeductibleRecord::where('employee_id', $employeeId)->where('recordDate', $date)->whereNull('identifier');
 
@@ -148,6 +152,4 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
 
         return true;
     }
-
-
 }

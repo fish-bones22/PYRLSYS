@@ -13,20 +13,24 @@ use App\Entities\OtRequestEntity;
 use App\Models\Manhour;
 use App\Models\Holiday;
 use Carbon\Carbon;
+use PHPUnit\Framework\Exception;
 
-class ManhourService extends EntityService implements IManhourService {
+class ManhourService extends EntityService implements IManhourService
+{
 
     private $otRequestService;
     private $employeeService;
     private $categoryService;
 
-    public function __construct(IOtRequestService $otRequestService, IEmployeeService $employeeService, ICategoryService $categoryService) {
+    public function __construct(IOtRequestService $otRequestService, IEmployeeService $employeeService, ICategoryService $categoryService)
+    {
         $this->otRequestService = $otRequestService;
         $this->employeeService = $employeeService;
         $this->categoryService = $categoryService;
     }
 
-    public function getAllRecords() {
+    public function getAllRecords()
+    {
         $records = Manhour::all();
         if ($records == null) return null;
         $recordsEntity = array();
@@ -38,7 +42,8 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    public function getAllRecordsByDateRange($datefrom, $dateto) {
+    public function getAllRecordsByDateRange($datefrom, $dateto)
+    {
 
         $records = Manhour::whereBetween('recordDate', [$datefrom, $dateto])->get();
 
@@ -53,7 +58,8 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    public function recordManhour(ManhourEntity $entity, $otApproval = null) {
+    public function recordManhour(ManhourEntity $entity, $otApproval = null)
+    {
 
         $record = Manhour::where('recordDate', $entity->date)->where('employee_id', $entity->employee_id)->first();
 
@@ -138,11 +144,11 @@ class ManhourService extends EntityService implements IManhourService {
             $otEndTime = null;
 
             if ($earlyOt) {
-                $otStartTime = date("H:i:s", strtotime('-'.$otTrimmedOffset.' hours', strtotime($scheduledTimeFormatted_[0])));
+                $otStartTime = date("H:i:s", strtotime('-' . $otTrimmedOffset . ' hours', strtotime($scheduledTimeFormatted_[0])));
                 $otEndTime = date_format($scheduledTimeIn_, 'H:i:s');
             } else {
                 $otStartTime = date_format($scheduledTimeOut_, 'H:i:s');
-                $otEndTime = date("H:i:s", strtotime('+'.$otTrimmedOffset.' hours', strtotime($scheduledTimeFormatted_[1])));
+                $otEndTime = date("H:i:s", strtotime('+' . $otTrimmedOffset . ' hours', strtotime($scheduledTimeFormatted_[1])));
             }
 
             $otType = 'rot';
@@ -174,10 +180,10 @@ class ManhourService extends EntityService implements IManhourService {
         return [
             'result' => true
         ];
-
     }
 
-    protected function mapToEntity($model, $entity) {
+    protected function mapToEntity($model, $entity)
+    {
 
         $entity = parent::mapToEntity($model, $entity);
 
@@ -204,11 +210,11 @@ class ManhourService extends EntityService implements IManhourService {
         $entity->remarks = stripslashes($model->remarks);
 
         return $entity;
-
     }
 
 
-    public function getRecord($id, $date) {
+    public function getRecord($id, $date)
+    {
 
         $record = Manhour::where('employee_id', $id)->where('recordDate', $date)->first();
 
@@ -216,10 +222,10 @@ class ManhourService extends EntityService implements IManhourService {
             return null;
 
         return $this->mapToEntity($record, new ManhourEntity());
-
     }
 
-    public function getOutliersOnDateRange($employeeId, $datefrom, $dateto) {
+    public function getOutliersOnDateRange($employeeId, $datefrom, $dateto)
+    {
         $records = Manhour::where('employee_id', $employeeId)->whereBetween('recordDate', [$datefrom, $dateto])->get();
 
         if ($records == null) return null;
@@ -232,7 +238,8 @@ class ManhourService extends EntityService implements IManhourService {
         return $recordsEntity;
     }
 
-    public function getSummaryOfRecord($employeeId, $date, $employee = null) {
+    public function getSummaryOfRecord($employeeId, $date, $employee = null)
+    {
 
         $record = $this->getRecord($employeeId, $date);
 
@@ -253,11 +260,11 @@ class ManhourService extends EntityService implements IManhourService {
 
         $summ = $this->formatSummary($record, $employee);
         return $summ;
-
     }
 
 
-    public function getSummaryOfRecordsByDateRange($datefrom, $dateto) {
+    public function getSummaryOfRecordsByDateRange($datefrom, $dateto)
+    {
         $records = $this->getAllRecordsByDateRange($datefrom, $dateto);
         $recordsSummary = array();
         foreach ($records as $record) {
@@ -268,7 +275,8 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    public function saveHoliday($entity) {
+    public function saveHoliday($entity)
+    {
 
         if (!isset($entity['date']))
             return [
@@ -307,11 +315,11 @@ class ManhourService extends EntityService implements IManhourService {
         return [
             'result' => true
         ];
-
     }
 
 
-    public function deleteHoliday($date) {
+    public function deleteHoliday($date)
+    {
 
         if ($date === null || $date === '')
             return [
@@ -325,7 +333,6 @@ class ManhourService extends EntityService implements IManhourService {
                 'result' => false,
                 'message' => 'No holiday on date specified'
             ];
-
         }
 
         try {
@@ -340,11 +347,11 @@ class ManhourService extends EntityService implements IManhourService {
         return [
             'result' => true
         ];
-
     }
 
 
-    public function getHoliday($date) {
+    public function getHoliday($date)
+    {
         $holiday = Holiday::where('holidayDate', date_create($date))->first();
         if ($holiday == null) return null;
 
@@ -357,7 +364,8 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    public function getHolidays($dateFrom, $dateTo) {
+    public function getHolidays($dateFrom, $dateTo)
+    {
 
         $holidays = Holiday::whereBetween('holidayDate', [date_create($dateFrom), date_create($dateTo)])->orderBy('holidayDate')->get();
 
@@ -377,7 +385,8 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    private function formatSummary($record, EmployeeEntity $employee = null) {
+    private function formatSummary($record, EmployeeEntity $employee = null)
+    {
 
         $summary = new ManhourSummaryEntity();
         $summary->timecard = $record->timeCard;
@@ -391,7 +400,7 @@ class ManhourService extends EntityService implements IManhourService {
 
         if ($employee == null)
             $employee = $this->employeeService->getEmployeeByIdWithStateOnDate($record->employeeId, $date);
-            //$employee = $this->employeeService->getEmployeeById($record->employeeId);
+        //$employee = $this->employeeService->getEmployeeById($record->employeeId);
         if ($employee == null)
             return;
         $summary->employeeId = $employee->employeeId;
@@ -426,12 +435,14 @@ class ManhourService extends EntityService implements IManhourService {
 
             // Special case wherein schedule is 12:00 MN onwards, but employee
             // logged 11:59 or earlier
-            if (strtotime($record->timeIn) > strtotime($record->timeOut)
-            && strtotime($scheduledTimeIn) < strtotime($scheduledTimeOut)
-            // Schedule is earlier than actual time in
-            // and scheduled time out is earlier than actual time out
-            && strtotime($scheduledTimeIn) < strtotime($record->timeIn)
-            && strtotime($scheduledTimeOut) <= strtotime($record->timeOut)) {
+            if (
+                strtotime($record->timeIn) > strtotime($record->timeOut)
+                && strtotime($scheduledTimeIn) < strtotime($scheduledTimeOut)
+                // Schedule is earlier than actual time in
+                // and scheduled time out is earlier than actual time out
+                && strtotime($scheduledTimeIn) < strtotime($record->timeIn)
+                && strtotime($scheduledTimeOut) <= strtotime($record->timeOut)
+            ) {
                 $formattedDateTime = $this->appendDateToTime(Carbon::parse($record->date)->addDay()->format('Y-m-d'), $scheduledTimeIn, $scheduledTimeOut);
             }
             // Normal case
@@ -479,6 +490,11 @@ class ManhourService extends EntityService implements IManhourService {
             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? 0 : $scheduledHour;
 
             //Check if late
+            // All else fails
+            if ($scheduledTimeIn_ === null) {
+                return $summary;
+            }
+
             $minPassed = $timeIn_->diff($scheduledTimeIn_);
             if ($this->getTotalHoursNotFloored($minPassed) > 0.25) {
                 $isLate = true;
@@ -520,7 +536,7 @@ class ManhourService extends EntityService implements IManhourService {
             $overtimeCounted = false;
 
             // Check if OT is counted
-            if($otRequest != null) {
+            if ($otRequest != null) {
 
                 // Format to datetime
                 $formattedDateTime = $this->appendDateToTime($record->date, $otRequest[0]->startTime, $otRequest[0]->endTime);
@@ -538,15 +554,16 @@ class ManhourService extends EntityService implements IManhourService {
                 }
 
                 // Regular OT
-                if (!$isEarlyOt
-                   && (
-                    // Time out is later than OT end time
-                    // or actual in is late for OT but actual in is earlier than OT out and actual out is later than OT out (incomplete OT)
-                    // or actual in is earlier for OT in but actual out is earlier than OT out  (incomplete OT)
-                      $timeIn_ <= $otStartTime_ && $timeOut_ >= $otEndTime_
-                   || $timeIn_ >= $otStartTime_ && $timeOut_ >= $otEndTime_ && $timeIn_ < $otEndTime_
-                   || $timeIn_ <= $otStartTime_ && $timeOut_ <= $otEndTime_ && $timeOut_ > $otStartTime_)
-                   ) {
+                if (
+                    !$isEarlyOt
+                    && (
+                        // Time out is later than OT end time
+                        // or actual in is late for OT but actual in is earlier than OT out and actual out is later than OT out (incomplete OT)
+                        // or actual in is earlier for OT in but actual out is earlier than OT out  (incomplete OT)
+                        $timeIn_ <= $otStartTime_ && $timeOut_ >= $otEndTime_
+                        || $timeIn_ >= $otStartTime_ && $timeOut_ >= $otEndTime_ && $timeIn_ < $otEndTime_
+                        || $timeIn_ <= $otStartTime_ && $timeOut_ <= $otEndTime_ && $timeOut_ > $otStartTime_)
+                ) {
 
                     $overtimeCounted = true;
                     $otHours =  $otRequest[0]->allowedHours;
@@ -567,18 +584,18 @@ class ManhourService extends EntityService implements IManhourService {
                     if ($otActualHours < $otHours) {
                         $otHours = $otActualHours;
                     }
-
                 }
                 // Early OT (offset)
-                else if ($isEarlyOt
-                && (
-                    // actual time in is earlier than OT start and actual out is later than OT end
-                    // or actual time in it later then OT start but actual out is later than OT end (incomplete OT)
-                    // or actual time in is earlier than OT start but actual time out is earlier than OT end (incomplete OT)
-                    $timeIn_ <= $otStartTime_ && $timeOut >= $otEndTime_
-                    || $timeIn_ >= $otStartTime_ && $timeOut >= $otEndTime_
-                    || $timeIn_ <= $otStartTime_ && $timeOut <= $otEndTime_
-                )) {
+                else if (
+                    $isEarlyOt
+                    && (
+                        // actual time in is earlier than OT start and actual out is later than OT end
+                        // or actual time in it later then OT start but actual out is later than OT end (incomplete OT)
+                        // or actual time in is earlier than OT start but actual time out is earlier than OT end (incomplete OT)
+                        $timeIn_ <= $otStartTime_ && $timeOut >= $otEndTime_
+                        || $timeIn_ >= $otStartTime_ && $timeOut >= $otEndTime_
+                        || $timeIn_ <= $otStartTime_ && $timeOut <= $otEndTime_)
+                ) {
 
                     $overtimeCounted = true;
                     $otHours =  $otRequest[0]->allowedHours;
@@ -615,7 +632,7 @@ class ManhourService extends EntityService implements IManhourService {
             // Check for Night Differential
             $time10PM = date_create($time10PM);
             $time4AM = date_create($time4AM);
-            $time4AM_Today= date_create($record->date.' 04:00:00');
+            $time4AM_Today = date_create($record->date . ' 04:00:00');
             $ndTimeStart = $time10PM;
             $ndTimeEnd = $time10PM;
 
@@ -656,9 +673,7 @@ class ManhourService extends EntityService implements IManhourService {
             $x = $ndTimeEnd->diff($ndTimeStart);
             $ndHours = $this->getTotalHours($x);
             $ndHours = $ndHours <= 0 ? '' : $ndHours;
-
-        }
-        else {
+        } else {
             $summary->timeIn = 'A';
             $summary->timeOut = '';
             $summary->undertime = '';
@@ -667,7 +682,7 @@ class ManhourService extends EntityService implements IManhourService {
         $break = $summary->break;
         // If work hours is less than or half the required work hours,
         // Do not count breaks
-        if ($properHours <= $scheduledHour/2) {
+        if ($properHours <= $scheduledHour / 2) {
             $break = 0;
         }
 
@@ -690,17 +705,13 @@ class ManhourService extends EntityService implements IManhourService {
         if ($otRequest != null && $overtimeCounted) {
             if ($otRequest[0]->otType == 'rot') {
                 $summary->rot = $otHours;
-            }
-            else if ($otRequest[0]->otType == 'sot') {
+            } else if ($otRequest[0]->otType == 'sot') {
                 $summary->sot = $otHours;
-            }
-            else if ($otRequest[0]->otType == 'xsot') {
+            } else if ($otRequest[0]->otType == 'xsot') {
                 $summary->xsot = $otHours;
-            }
-            else if ($otRequest[0]->otType == 'lhot') {
+            } else if ($otRequest[0]->otType == 'lhot') {
                 $summary->lhot = $otHours;
-            }
-            else if ($otRequest[0]->otType == 'xlhot') {
+            } else if ($otRequest[0]->otType == 'xlhot') {
                 $summary->xlhot = $otHours;
             }
         }
@@ -712,7 +723,8 @@ class ManhourService extends EntityService implements IManhourService {
     }
 
 
-    private function appendDateToTime($date, $time1, $time2) {
+    private function appendDateToTime($date, $time1, $time2)
+    {
 
         if ($time1 === null || $time2 === null)
             return [null, null];
@@ -735,29 +747,29 @@ class ManhourService extends EntityService implements IManhourService {
         $time2Formatted = strtotime($time2);
 
         if ($time1Formatted > $time2Formatted) {
-            return [ $date.' '.$time1, $dateTomorrow.' '.$time2 ];
+            return [$date . ' ' . $time1, $dateTomorrow . ' ' . $time2];
         }
 
-        return [ $date.' '.$time1, $date.' '.$time2 ];
-
+        return [$date . ' ' . $time1, $date . ' ' . $time2];
     }
 
 
-    private function getTotalHours(\DateInterval $int){
+    private function getTotalHours(\DateInterval $int)
+    {
 
         $hours = ($int->d * 24) + $int->h + $int->i / 60;
         return floor($hours * 2) / 2;
-
     }
 
-    private function getTotalHoursNotFloored(\DateInterval $int){
+    private function getTotalHoursNotFloored(\DateInterval $int)
+    {
 
         $hours = ($int->d * 24) + $int->h + $int->i / 60;
         return $hours;
-
     }
 
-    private function isSunday($date) {
+    private function isSunday($date)
+    {
         return date('N', strtotime($date)) > 6;
     }
 }
