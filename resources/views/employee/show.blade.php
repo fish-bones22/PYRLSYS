@@ -211,19 +211,19 @@
                 <div class="col-sm-6 col-12 form-paper">
                     <div class="form-group">
                         <label for="phoneNumber" class="form-paper-label">Address</label>
-                        <input id="address" type="text" name="address" class="form-control" value="{{  $employee->details != null && key_exists('address', $employee->details) ? $employee->details['address']['value']: '' }}" />
+                        <input id="address" type="text" name="presentaddress" class="form-control" value="{{  $employee->details != null && key_exists('presentaddress', $employee->details) ? $employee->details['presentaddress']['value']: '' }}" />
                     </div>
                 </div>
                 <div class="col-sm-3 col-12 form-paper">
                     <div class="form-group">
                         <label for="phoneNumber" class="form-paper-label">Phone Number</label>
-                        <input id="phoneNumber" type="text" name="phone_number" class="form-control" value="{{  $employee->details != null && key_exists('phonenumber', $employee->details) ? $employee->details['phonenumber']['value']: '' }}" />
+                        <input id="phoneNumber" type="text" name="contact_number" class="form-control" value="{{  $employee->details != null && key_exists('contactnumber', $employee->details) ? $employee->details['contactnumber']['value']: '' }}" />
                     </div>
                 </div>
                 <div class="col-sm-3 col-12 form-paper">
                     <div class="form-group">
                         <label for="email" class="form-paper-label">Email Address</label>
-                        <input id="email" type="text" name="email" class="form-control" value="{{  $employee->details != null && key_exists('email', $employee->details) ? $employee->details['email']['value']: '' }}" />
+                        <input id="email" type="text" name="email_address" class="form-control" value="{{  $employee->details != null && key_exists('emailaddress', $employee->details) ? $employee->details['emailaddress']['value']: '' }}" />
                     </div>
                 </div>
                 <div class="col-12 form-paper">

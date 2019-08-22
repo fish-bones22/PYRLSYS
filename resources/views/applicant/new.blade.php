@@ -144,7 +144,7 @@ Application For Employment
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="dateOfBirth" class="form-paper-label">Date of Birth:</label>
-                        <input type="date" id="dateOfBirth" name="date_of_birth" class="form-control" value="{{ key_exists('dateofbirth', $applicant->details) ? $applicant->details['dateofbirth']['value'] : '' }}"/>
+                        <input type="date" id="dateOfBirth" name="birthday" class="form-control" value="{{ key_exists('birthday', $applicant->details) ? $applicant->details['birthday']['value'] : '' }}"/>
                     </div>
                 </div>
                 <div class="col-3 form-paper">

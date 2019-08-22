@@ -131,7 +131,7 @@
                 <div class="col-4 form-paper">
                     <div class="form-group">
                         <label for="dateOfBirth" class="form-paper-label">Date of Birth:</label>
-                        <div class="form-paper-display">{{ key_exists('dateofbirth', $applicant->details) ? $applicant->details['dateofbirth']['value'] : '' }}</div>
+                        <div class="form-paper-display">{{ key_exists('birthday', $applicant->details) ? $applicant->details['birthday']['value'] : '' }}</div>
                     </div>
                 </div>
                 <div class="col-3 form-paper">
@@ -774,7 +774,10 @@
                 <div class="float-right">
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('ApplicantController@index') }}">Back to List</a>
+<<<<<<< HEAD
                         <input type="submit" class="btn btn-secondary" value="Print"/>
+=======
+>>>>>>> corinthdev
                         <a href="{{ action('ApplicantController@process', $applicant->id) }}" class="btn btn-primary" value="Process">Process</a>
                     </div>
                 </div>

@@ -9,9 +9,11 @@ use App\Models\CategoryDetail;
 use App\Models\DepartmentTimeTable;
 use AuthUtility;
 
-class CategoryService extends EntityService implements ICategoryService {
+class CategoryService extends EntityService implements ICategoryService
+{
 
-    public function hasKey($key) {
+    public function hasKey($key)
+    {
         if (CategoryDetail::where('key', $key)->first() != null)
             return true;
 
@@ -19,7 +21,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function getAllCategories() {
+    public function getAllCategories()
+    {
         $categories = CategoryDetail::all();
         $categoryEntities = array();
 
@@ -35,7 +38,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function getCategories($key) {
+    public function getCategories($key)
+    {
 
         $hasKey = CategoryDetail::where('key', $key)->first();
         $categories = Category::all()->where('key', $key);
@@ -54,7 +58,8 @@ class CategoryService extends EntityService implements ICategoryService {
         return $categoryEntities;
     }
 
-    public function getCategoriesNofilter($key) {
+    public function getCategoriesNofilter($key)
+    {
 
         $hasKey = CategoryDetail::where('key', $key)->first();
         $categories = Category::all()->where('key', $key);
@@ -72,7 +77,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function getCategoryById($id) {
+    public function getCategoryById($id)
+    {
         $category = Category::find($id);
         $categoryEntity = $this->mapToEntity($category, new CategoryEntity());
 
@@ -80,7 +86,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function getCategoryByValueAndKey($value, $key) {
+    public function getCategoryByValueAndKey($value, $key)
+    {
 
         if ($value === null) return null;
         if ($key === null) return null;
@@ -95,7 +102,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    protected function mapToEntity($model, $entity) {
+    protected function mapToEntity($model, $entity)
+    {
         $entity = parent::mapToEntity($model, $entity);
 
         $entity->key = $model->key;
@@ -119,7 +127,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function addCategory(CategoryEntity $category) {
+    public function addCategory(CategoryEntity $category)
+    {
 
         $categoryModel = new Category();
 
@@ -159,11 +168,11 @@ class CategoryService extends EntityService implements ICategoryService {
             'result' => true,
             'message' => $id
         ];
-
     }
 
 
-    public function updateCategory(CategoryEntity $category) {
+    public function updateCategory(CategoryEntity $category)
+    {
 
         $categoryModel = Category::find($category->id);
         $categoryModel->key = $category->key;
@@ -195,12 +204,14 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    public function removeCategory($id) {
+    public function removeCategory($id)
+    {
         $categoryModel = Category::find($id);
         $categoryModel->delete();
     }
 
-    public function createNewCategory($key, $displayName, $description) {
+    public function createNewCategory($key, $displayName, $description)
+    {
         $category = new CategoryDetail();
         $category->key = $key;
         $category->displayName = $displayName;
@@ -208,25 +219,29 @@ class CategoryService extends EntityService implements ICategoryService {
         $category->save();
     }
 
-    public function updateCategoryTitle($key, $displayName) {
+    public function updateCategoryTitle($key, $displayName)
+    {
         $category = CategoryDetail::where('key', $key)->first();
         $category->displayName = $displayName;
         $category->save();
     }
 
-    public function updateCategoryDescription($key, $description) {
+    public function updateCategoryDescription($key, $description)
+    {
         $category = CategoryDetail::where('key', $key)->first();
         $category->description = $description;
         $category->save();
     }
 
-    public function getDisplayName($key) {
+    public function getDisplayName($key)
+    {
         $category = CategoryDetail::where('key', $key)->first();
         return $category->displayName;
     }
 
 
-    public function getDepartmentTimeTable($departmentId, $date) {
+    public function getDepartmentTimeTable($departmentId, $date)
+    {
 
         $department = $this->getCategoryById($departmentId);
 
@@ -247,7 +262,7 @@ class CategoryService extends EntityService implements ICategoryService {
                 continue;
             }
 
-            if ($model['enddate']!= null && date_create($model['enddate']) < $date) {
+            if ($model['enddate'] != null && date_create($model['enddate']) < $date) {
                 continue;
             }
 
@@ -261,20 +276,19 @@ class CategoryService extends EntityService implements ICategoryService {
 
             if ($possibleFallback != null) {
                 $timeTable = $possibleFallback;
-            }
-            else {
+            } else {
                 $timeTable = array();
                 $timeTable['timein'] = $department->subvalue1;
                 $timeTable['timeout'] = $department->subvalue2;
                 $timeTable['break'] = $employee->subvalue3;
             }
-
         }
 
         return $timeTable;
     }
 
-    private function setTimeTable($id, $timeTable) {
+    private function setTimeTable($id, $timeTable)
+    {
 
         if (!isset($timeTable['timein']) || $timeTable['timein'] == null) {
             return [
@@ -299,9 +313,9 @@ class CategoryService extends EntityService implements ICategoryService {
             $timeTableRecord->department_id = $id;
         }
 
-        $timeTableRecord->timeIn = $timeTable["timein"];
-        $timeTableRecord->timeOut = $timeTable["timeout"];
-        $timeTableRecord->break = $timeTable["break"]*1;
+        $timeTableRecord->timeIn = date_format(date_create($timeTable["timein"]), 'Y-m-d H:i');
+        $timeTableRecord->timeOut = date_format(date_create($timeTable["timeout"]), 'Y-m-d H:i');
+        $timeTableRecord->break = $timeTable["break"] * 1;
         $timeTableRecord->startDate = $timeTable["startdate"];
         $timeTableRecord->endDate = $timeTable["enddate"];
 
@@ -319,7 +333,8 @@ class CategoryService extends EntityService implements ICategoryService {
         ];
     }
 
-    private function getTimeTableHistory($timeTableHistory) {
+    private function getTimeTableHistory($timeTableHistory)
+    {
 
         $history = array();
 
@@ -339,7 +354,8 @@ class CategoryService extends EntityService implements ICategoryService {
     }
 
 
-    private function getTimeTableOnDate($timeTableHistory, $date, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak) {
+    private function getTimeTableOnDate($timeTableHistory, $date, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak)
+    {
 
         $timeTable = null;
         $possibleFallback = null;
@@ -382,20 +398,19 @@ class CategoryService extends EntityService implements ICategoryService {
                 $timeTable['startdate'] = $possibleFallback->startDate;
                 $timeTable['enddate'] = $possibleFallback->endDate;
                 $timeTable['break'] = $possibleFallback->break;
-            }
-            else {
+            } else {
                 $timeTable['timein'] = $fallBackTimeIn;
                 $timeTable['timeout'] = $fallBackTimeout;
                 $timeTable['break'] = $fallBackBreak;
             }
-
         }
 
         return $timeTable;
     }
 
 
-    private function getCurrentTimeTable($timeTableHistory, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak) {
+    private function getCurrentTimeTable($timeTableHistory, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak)
+    {
         return $this->getTimeTableOnDate($timeTableHistory, NOW(), $fallBackTimeIn, $fallBackTimeout, $fallBackBreak);
     }
 }

@@ -19,74 +19,76 @@ class ApplicantController extends Controller
     protected $categoryService;
     private $pageKey = 'humanresourcemanagement';
 
-    public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService) {
+    public function __construct(IEmployeeService $employeeService, ICategoryService $categoryService)
+    {
 
         $this->employeeService = $employeeService;
         $this->categoryService = $categoryService;
-
     }
 
-    public function index() {
+    public function index()
+    {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         $applicants = $this->employeeService->getAllApplicants();
 
         return view('applicant.index', compact('applicants'));
-
     }
 
 
-    public function new() {
+    public function new()
+    {
 
         $applicant = new EmployeeEntity();
         return view('applicant.new', compact('applicant'));
     }
 
-    public function show($id = 0) {
+    public function show($id = 0)
+    {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
-        $applicant= $this->employeeService->getEmployeeById($id);
+        $applicant = $this->employeeService->getEmployeeById($id);
 
         if ($applicant == null)
             return redirect()->action('ApplicantController@index');
 
         return view('applicant.show', compact('applicant'));
-
     }
 
 
-    public function process($id) {
+    public function process($id)
+    {
 
         $result = $this->employeeService->updateDetail($id, 'applicationstatus', 'Processing');
 
-        $applicant= $this->employeeService->getEmployeeById($id);
+        $applicant = $this->employeeService->getEmployeeById($id);
 
         if (!$result['result'])
             return redirect()->action('ApplicantController@index')->with('error', 'Failed to update application status');
 
         return redirect()->action('ApplicantController@index')->with('success', 'Successfuly updated application status');
-
     }
 
 
-    public function hire($id) {
+    public function hire($id)
+    {
 
         $result = $this->employeeService->updateDetail($id, 'applicationstatus', 'Hired');
         $result = $this->employeeService->removeDetail($id, 'applicant');
 
-        $applicant= $this->employeeService->getEmployeeById($id);
+        $applicant = $this->employeeService->getEmployeeById($id);
 
         if (!$result['result'])
             return redirect()->action('ApplicantController@index')->with('error', 'Failed to update application status');
 
 
         return redirect()->action('ApplicantController@index')->with('success', 'Successfuly updated application status');
-
     }
 
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
 
         $req = $request->all();
 
@@ -114,15 +116,18 @@ class ApplicantController extends Controller
                 $request->flash();
                 return redirect()->action('ApplicantController@new')->with('error', $result['message']);
             }
-        }
-        else {
+        } else {
 
+            /**
+             * Uncomment to remove unique name restriction
+             */
             $result = $this->employeeService->checkApplicant($req['first_name'], $req['middle_name'], $req['last_name'], $req['position']);
 
             if ($result) {
                 $request->flash();
                 return redirect()->back()->withInput($request->all())->with('error', 'Name already submitted an application');
             }
+            /** END */
 
             $result = $this->employeeService->addEmployee($applicant);
             if (!$result['result']) {
@@ -136,7 +141,7 @@ class ApplicantController extends Controller
                 // Save image file to storage
                 $image = $request->file('new_image_file');
                 $location = 'profilepictures/';
-                $filename = time().$id.'.'.$image->getClientOriginalExtension();
+                $filename = time() . $id . '.' . $image->getClientOriginalExtension();
                 $this->saveImageToStorage($image, $location, $filename);
                 // Save data to DB
                 $this->employeeService->addEmployeeImage($id, $location, $filename);
@@ -146,10 +151,10 @@ class ApplicantController extends Controller
 
         // return redirect()->action('ApplicantController@new')->with('success', '');
         return redirect()->action('ApplicantController@success');
-
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
 
         $result = $this->employeeService->removeEmployee($id);
 
@@ -157,25 +162,29 @@ class ApplicantController extends Controller
             return redirect()->action('ApplicantController@index')->with('error', $result['message']);
 
         return redirect()->action('ApplicantController@index')->with('success', 'Delete successful');
-
     }
 
 
-    public function deleteAll() {
+    public function deleteAll()
+    {
         $this->employeeService->deleteAllApplicant();
         return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
     }
 
-    public function success() {
+    public function success()
+    {
         return view('applicant.success');
     }
 
 
-    public function updateImage(Request $request, $id) {
+    public function updateImage(Request $request, $id)
+    {
 
-        if (!$request->file('picture_file')
-        && !$request->get('selected_filename')
-        && !$request->get('selected_location')) {
+        if (
+            !$request->file('picture_file')
+            && !$request->get('selected_filename')
+            && !$request->get('selected_location')
+        ) {
             return redirect()->action('ApplicantController@show', $id)->with('error', 'Image file is not valid');
         }
 
@@ -188,12 +197,11 @@ class ApplicantController extends Controller
             $image = $request->file('picture_file');
             // Path and file name
             $location = 'profilepictures/';
-            $filename = time().$id.'.'.$image->getClientOriginalExtension();
+            $filename = time() . $id . '.' . $image->getClientOriginalExtension();
 
             $this->saveImageToStorage($image, $location, $filename);
             // Save data to DB
             $this->employeeService->addEmployeeImage($id, $location, $filename);
-
         }
         // If previous image is selected
         else if ($request->get('selected_filename') && $request->get('selected_location')) {
@@ -205,16 +213,17 @@ class ApplicantController extends Controller
         }
 
         return redirect()->action('ApplicantController@show', $id)
-        ->with('success', 'Image successfully changed');
+            ->with('success', 'Image successfully changed');
     }
 
 
-    public function deleteImage(Request $request, $id) {
+    public function deleteImage(Request $request, $id)
+    {
 
         $location = $request->get('location');
         $filename = $request->get('filename');
 
-        $this->removeImageFromStorage($location.$filename);
+        $this->removeImageFromStorage($location . $filename);
 
         $this->employeeService->removeEmployeeImage($id, $location, $filename);
 
@@ -222,19 +231,22 @@ class ApplicantController extends Controller
     }
 
 
-    private function saveImageToStorage($file, $location, $filename) {
+    private function saveImageToStorage($file, $location, $filename)
+    {
         // Resize amd crop image to square
         $resizedImg = Image::make($file);
         $resizedImg = $this->resizeImage($resizedImg);
         // Store to file to storage
-        Storage::put('public/'.$location.$filename, (string) $resizedImg->encode());
+        Storage::put('public/' . $location . $filename, (string) $resizedImg->encode());
     }
 
-    private function removeImageFromStorage($path) {
-        Storage::delete('public/'.$path);
+    private function removeImageFromStorage($path)
+    {
+        Storage::delete('public/' . $path);
     }
 
-    private function resizeImage($image) {
+    private function resizeImage($image)
+    {
 
         $size = 300;
         $newWidth = $image->width();
@@ -242,20 +254,20 @@ class ApplicantController extends Controller
 
         // if image is portrait
         if ($newHeight > $newWidth) {
-            $newHeight = ($newHeight/$newWidth) * $size;
+            $newHeight = ($newHeight / $newWidth) * $size;
             $newWidth = $size;
         } else { // if landscape
-            $newWidth = ($newWidth/$newHeight) * $size;
+            $newWidth = ($newWidth / $newHeight) * $size;
             $newHeight = $size;
         }
 
         $image->resize($newWidth, $newHeight)->crop($size, $size);
         return $image;
-
     }
 
 
-    private function detailsToEntity($details) {
+    private function detailsToEntity($details)
+    {
 
         $entity = array();
 
@@ -313,9 +325,9 @@ class ApplicantController extends Controller
         }
 
         // Date of birth
-        $entity['dateofbirth'] = [
-            'key' => 'dateofbirth',
-            'value' => $details['date_of_birth'],
+        $entity['birthday'] = [
+            'key' => 'birthday',
+            'value' => $details['birthday'],
             'displayName' => 'Date of Birth'
         ];
 
@@ -802,36 +814,37 @@ class ApplicantController extends Controller
 
         // References
         $entity['reference'] = array();
-        for ($i = 0; $i < sizeof($details['reference_name']); $i++) {
+        if (isset($details['reference_name'])) {
+            for ($i = 0; $i < sizeof($details['reference_name']); $i++) {
 
-            $entity['reference'][] = [
-                'name' => [
-                    'key' => 'name',
-                    'grouping' => $i,
-                    'value' => $details['reference_name'][$i],
-                    'displayName' => 'Name'
-                ],
-                'occupation' => [
-                    'key' => 'firstname',
-                    'grouping' => $i,
-                    'value' => $details['reference_occupation'][$i],
-                    'displayName' => 'Occupation'
-                ],
-                'address' => [
-                    'key' => 'address',
-                    'grouping' => $i,
-                    'value' => $details['reference_address'][$i],
-                    'displayName' => 'Address'
-                ],
-                'contact' => [
-                    'key' => 'contact',
-                    'grouping' => $i,
-                    'value' => $details['reference_contact'][$i],
-                    'displayName' => 'Contact'
-                ]
-            ];
+                $entity['reference'][] = [
+                    'name' => [
+                        'key' => 'name',
+                        'grouping' => $i,
+                        'value' => $details['reference_name'][$i],
+                        'displayName' => 'Name'
+                    ],
+                    'occupation' => [
+                        'key' => 'firstname',
+                        'grouping' => $i,
+                        'value' => $details['reference_occupation'][$i],
+                        'displayName' => 'Occupation'
+                    ],
+                    'address' => [
+                        'key' => 'address',
+                        'grouping' => $i,
+                        'value' => $details['reference_address'][$i],
+                        'displayName' => 'Address'
+                    ],
+                    'contact' => [
+                        'key' => 'contact',
+                        'grouping' => $i,
+                        'value' => $details['reference_contact'][$i],
+                        'displayName' => 'Contact'
+                    ]
+                ];
+            }
         }
-
         // Additional Information
         $entity['additionalinfo'] = [
             [
@@ -886,7 +899,8 @@ class ApplicantController extends Controller
         return $entity;
     }
 
-    private function employmentDetailsToEntity($details) {
+    private function employmentDetailsToEntity($details)
+    {
 
         $entity = array();
         $entity['department'] = $details['department'];
@@ -898,7 +912,8 @@ class ApplicantController extends Controller
         return $entity;
     }
 
-    private function deductiblesToEntity($details) {
+    private function deductiblesToEntity($details)
+    {
 
         $entity = array();
 
@@ -947,7 +962,8 @@ class ApplicantController extends Controller
         return $entity;
     }
 
-    private function entityToDetails($entityArray) {
+    private function entityToDetails($entityArray)
+    {
         $entity = array();
         foreach ($entityArray as $arr) {
             $entity[$arr['key']] = $arr;
