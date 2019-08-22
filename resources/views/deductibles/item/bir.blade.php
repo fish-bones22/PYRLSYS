@@ -46,6 +46,14 @@ foreach ($records2 as $record) {
             'basicsalary' => $record->employee['basicsalary'],
             'department' => $record->employee['department']
         ];
+        $rcd[$record->employee['id']] = [
+            'employeeId' => $record->employee['employeeId'],
+            'lastName' => $record->employee['lastname'],
+            'firstName' => $record->employee['firstname'],
+            'middleName' => $record->employee['middlename'],
+            'basicsalary' => $record->employee['basicsalary'],
+            'department' => $record->employee['department']
+        ];
     }
 
     $rcd2[$record->employee['id']][$record->key] = [
@@ -109,94 +117,96 @@ foreach ($records2 as $record) {
 
         <div class="row">
             <div class="col-12 form-paper">
-                <table class="table table-sm" id="deductiblesTable" style="font-size:11px;">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
-                            <th>Department</th>
-                            <th>{{ strtoupper($_key) }} Number</th>
-                            <th>Gross Pay</th>
-                            <th>Exemption</th>
-                            <th>Taxable <br />Income</th>
-                            <th>Allowance</th>
-                            <th>Exemption</th>
-                            <th>Taxable <br />Income</th>
-                            <th>Total Taxable <br />Income</th>
-                            <th>Tax <br />Due</th>
-                            <th>Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $taxDueTotal = 0;
-                        ?>
-                        @foreach ($rcd as $key => $record)
-                        <?php
-
-
-                        $gp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->grossPay : 0;
-                        $gp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->grossPay : 0;
-                        $np1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->netPay : 0;
-                        $np2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->netPay : 0;
-                        $al1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->allowance : 0;
-                        $al2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->allowance : 0;
-                        $tp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->takeHomePay : 0;
-                        $tp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->takeHomePay : 0;
-                        $td1 = isset($record[$_key]['employee']) ? $record[$_key]['employee'] : 0;
-                        $td2 = isset($rcd2[$key]) && isset($rcd2[$key][$_key]) ?  $rcd2[$key][$_key]['employee'] : 0;
-                        $pbt1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->beforeTaxPay : 0;
-                        $pbt2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->beforeTaxPay : 0;
-                        $ex1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
-                        $ex2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
-
-                        if ($td1 + $td2 == 0) {
-                            continue;
-                        }
-
-                        $taxDueTotal += $td1 + $td2;
-                        ?>
+                <div style="overflow-x:scroll" class="mb-3">
+                    <table class="table table-sm" id="deductiblesTable" style="font-size:11px;">
+                        <thead>
                             <tr>
-                                <td>{{ $record['employeeId'] }}</td>
-                                <td>{{ $record['lastName'] }}</td>
-                                <td>{{ $record['firstName'] }}</td>
-                                <td>{{ $record['middleName'] }}</td>
-                                <td>{{ $record['department'] }}</td>
-                                <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
-                                <td>{{ $gp1 + $gp2 }}</td>
-                                <td>{{ $ex1 + $ex2 }}</td>
-                                <td>{{ $np1 + $np2 }}</td>
-                                <td>{{ $al1 + $al2 }}</td>
-                                <td>{{ 0 }}</td>
-                                <td>{{ $pbt1 + $pbt2 }}</td>
-                                <td>{{ $pbt1 + $pbt2 }}</td>
-                                <td>{{ $td1 + $td2 }}</td>
-                                <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
+                                <th>ID</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Department</th>
+                                <th>{{ strtoupper($_key) }} Number</th>
+                                <th>Gross Pay</th>
+                                <th>Exemption</th>
+                                <th>Taxable <br />Income</th>
+                                <th>Allowance</th>
+                                <th>Exemption</th>
+                                <th>Taxable <br />Income</th>
+                                <th>Total Taxable <br />Income</th>
+                                <th>Tax <br />Due</th>
+                                <th>Remarks</th>
                             </tr>
-                        @endforeach
-                        @if ($taxDueTotal != 0 && sizeof($rcd) > 0 || sizeof($rcd2) > 0)
-                        <tr>
-                            <td>TOTAL</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ $taxDueTotal }}</td>
-                            <td></td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $taxDueTotal = 0;
+                            ?>
+                            @foreach ($rcd as $key => $record)
+                            <?php
+
+
+                            $gp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->grossPay : 0;
+                            $gp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->grossPay : 0;
+                            $np1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->netPay : 0;
+                            $np2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->netPay : 0;
+                            $al1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->allowance : 0;
+                            $al2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->allowance : 0;
+                            $tp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->takeHomePay : 0;
+                            $tp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->takeHomePay : 0;
+                            $td1 = isset($record[$_key]['employee']) ? $record[$_key]['employee'] : 0;
+                            $td2 = isset($rcd2[$key]) && isset($rcd2[$key][$_key]) ?  $rcd2[$key][$_key]['employee'] : 0;
+                            $pbt1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->beforeTaxPay : 0;
+                            $pbt2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->beforeTaxPay : 0;
+                            $ex1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
+                            $ex2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->exemptionDetails['_TOTAL_BEFORE_TAX'] : 0;
+
+                            if ($td1 + $td2 == 0) {
+                                continue;
+                            }
+
+                            $taxDueTotal += $td1 + $td2;
+                            ?>
+                                <tr>
+                                    <td>{{ $record['employeeId'] }}</td>
+                                    <td>{{ $record['lastName'] }}</td>
+                                    <td>{{ $record['firstName'] }}</td>
+                                    <td>{{ $record['middleName'] }}</td>
+                                    <td>{{ $record['department'] }}</td>
+                                    <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
+                                    <td>{{ $gp1 + $gp2 }}</td>
+                                    <td>{{ $ex1 + $ex2 }}</td>
+                                    <td>{{ $np1 + $np2 }}</td>
+                                    <td>{{ $al1 + $al2 }}</td>
+                                    <td>{{ 0 }}</td>
+                                    <td>{{ $pbt1 + $pbt2 }}</td>
+                                    <td>{{ $pbt1 + $pbt2 }}</td>
+                                    <td>{{ $td1 + $td2 }}</td>
+                                    <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
+                                </tr>
+                            @endforeach
+                            @if ($taxDueTotal != 0 && sizeof($rcd) > 0 || sizeof($rcd2) > 0)
+                            <tr>
+                                <td>TOTAL</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ $taxDueTotal }}</td>
+                                <td></td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
