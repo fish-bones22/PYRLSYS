@@ -113,7 +113,6 @@
             </div>
         </div>
     </div>
-
     <script src="{{ asset('js/app.js') }}" ></script>
     <script type="text/javascript" src="{{ asset('js/vfs_fonts.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/confirmation.js') }}"></script>

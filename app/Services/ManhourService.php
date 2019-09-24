@@ -746,7 +746,7 @@ class ManhourService extends EntityService implements IManhourService
         $time1Formatted = strtotime($time1);
         $time2Formatted = strtotime($time2);
 
-        if ($time1Formatted > $time2Formatted) {
+        if ($time1Formatted >= $time2Formatted) {
             return [$date . ' ' . $time1, $dateTomorrow . ' ' . $time2];
         }
 

@@ -38,6 +38,14 @@ foreach ($records as $record) {
 $rcd2 = array();
 foreach ($records2 as $record) {
     if (!isset($rcd[$record->employee['id']])) {
+        $rcd[$record->employee['id']] = [
+            'employeeId' => $record->employee['employeeId'],
+            'lastName' => $record->employee['lastname'],
+            'firstName' => $record->employee['firstname'],
+            'middleName' => $record->employee['middlename'],
+            'basicsalary' => $record->employee['basicsalary'],
+            'department' => $record->employee['department']
+        ];
         $rcd2[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
             'lastName' => $record->employee['lastname'],
