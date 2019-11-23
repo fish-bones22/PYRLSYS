@@ -774,10 +774,6 @@
                 <div class="float-right">
                     <div class="btn-group">
                         <a class="btn btn-light" href="{{ action('ApplicantController@index') }}">Back to List</a>
-<<<<<<< HEAD
-                        <input type="submit" class="btn btn-secondary" value="Print"/>
-=======
->>>>>>> corinthdev
                         <a href="{{ action('ApplicantController@process', $applicant->id) }}" class="btn btn-primary" value="Process">Process</a>
                     </div>
                 </div>

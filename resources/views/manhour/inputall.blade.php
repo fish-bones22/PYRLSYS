@@ -110,9 +110,9 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
                                 {{  $record != null ? $record->departmentName : ''}}
                                 <input type="hidden" name="department[{{$index}}]" value="{{ $record != null ?  $record->departmentId : '' }}" />
                             </td>
-                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" tabindex="1" /></td>
-                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" tabindex="1" /></td>
-                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" tabindex="-1" /></td>
+                            <td><input type="time" class="form-control form-control-sm" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" tabindex="1" width="1000" size="500" /></td>
+                            <td><input type="time" class="form-control form-control-sm" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" tabindex="1" width="1000" size="500" /></td>
+                            <td><input type="time" class="form-control form-control-sm" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" tabindex="-1" width="1000" size="500" /></td>
                             <td>
                                 <select class="form-control form-control-sm" name="outlier[{{$index}}]" tabindex="-1">
                                     <option></option>

@@ -23,7 +23,7 @@ Route::get('login', 'UserController@login')->name('login');
 Route::post('login', 'UserController@login');
 Route::get('logout', 'UserController@logout');
 
-
+//
 Route::resource('category', 'CategoryController');
 Route::get('/manage/{key}', 'CategoryController@index');
 Route::get('manage/{category}', 'CategoryController@manage');
@@ -32,7 +32,8 @@ Route::get('category/getsubvalues/{id}', 'CategoryController@getSubvalues');
 Route::get('categories', 'CategoryController@categories');
 Route::post('categories', 'CategoryController@setCategory');
 
-// Route::resource('employee', 'EmployeeController');
+//
+Route::resource('employee', 'EmployeeController');
 Route::get('employees', 'EmployeeController@index');
 Route::get('employee/new', 'EmployeeController@show')->name('employee.new');
 Route::post('employee/deleteall', 'EmployeeController@deleteAll')->name('employee.deleteall');
@@ -47,6 +48,7 @@ Route::post('employee/deleteImage/{id}', 'EmployeeController@deleteImage');
 Route::post('employee/getbasic/{id}', 'EmployeeController@getEmployeeBasicDetails');
 Route::post('employee/transferemployee/{id}', 'EmployeeController@transferEmployee');
 
+// Application
 Route::get('applicants', 'ApplicantController@index');
 Route::get('application-form', 'ApplicantController@new');
 Route::get('application-success', 'ApplicantController@success');
@@ -57,6 +59,7 @@ Route::get('applicant-process/{id}', 'ApplicantController@process');
 Route::get('applicant-hire/{id}', 'ApplicantController@hire');
 Route::delete('applicant/{id}', 'ApplicantController@destroy')->name('applicant.destroy');
 
+// ManHour
 Route::get('manhour', 'ManhourController@index');
 Route::get('manhour/inputall/{date}', 'ManhourController@inputAll')->name('manhour.inputall');
 Route::post('manhour/inputall', 'ManhourController@recordAll');
@@ -86,6 +89,7 @@ Route::get('manhour/inputcsv', 'ManhourController@inputCsv');
 Route::post('manhour/inputcsv', 'ManhourController@postCsvFile')->name('manhour.postcsv');
 Route::post('manhour/postcsvrecords', 'ManhourController@postCsvRecords')->name('manhour.postcsvrecords');
 
+// OT Request
 Route::get('otrequests', 'OtRequestController@index')->name('otrequest');
 Route::post('otrequests', 'OtRequestController@index')->name('otrequest.post');
 Route::get('otrequest/processed/{datefrom}/{dateto}', 'OtRequestController@viewApproved')->name('otrequest.processed');
@@ -99,6 +103,7 @@ Route::post('otrequest/deny/{id}', 'OtRequestController@deny')->name('otrequest.
 Route::post('otrequest/checkemployeerecord/{id}/{date}', 'OtRequestController@getOtRequestForEmployee');
 Route::post('otrequest/batchapprove', 'OtRequestController@batchApprove')->name('otrequest.batchapprove');
 
+// Payroll
 Route::get('payroll', 'PayrollController@index');
 Route::get('payroll/summary/{date}', 'PayrollController@summary');
 Route::post('payroll/summary', 'PayrollController@goToDateSummary')->name('payroll.gotodatesummary');
@@ -109,6 +114,7 @@ Route::get('payroll/{id}', 'PayrollController@viewNow');
 Route::post('payroll/{id}', 'PayrollController@setRecordDate');
 Route::get('payroll/deductibles/{id}/{date}', 'PayrollController@deductibles');
 
+// Deductible Records
 Route::get('deductibles/goto/{id}', 'DeductibleRecordController@goToDate');
 Route::get('deductibles/getall/{date}', 'DeductibleRecordController@getAll');
 Route::get('deductibles/getalltodate', 'DeductibleRecordController@getAllOnDate');
@@ -118,8 +124,12 @@ Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get')->name('d
 Route::post('deductibles/autogenerate/{date}', 'DeductibleRecordController@autogenerate')->name('deductible.autogenerate');
 Route::post('deductibles/{id}', 'DeductibleRecordController@add');
 
+// Adjustments Record
 Route::get('adjustments/goto/{id}', 'AdjustmentsRecordController@goToDate');
 Route::get('adjustments/getall/{date}', 'AdjustmentsRecordController@getAll');
 Route::get('adjustments/getalltodate/', 'AdjustmentsRecordController@getAllOnDate');
 Route::get('adjustments/{id}/{date}', 'AdjustmentsRecordController@get')->name('adjustments.get');
 Route::post('adjustments/{id}', 'AdjustmentsRecordController@add');
+
+// PDF Download
+Route::get('employee/view/pdf/{id}', 'EmployeeController@printEmployeeDetailsPdf')->name('Employee.printPdf');

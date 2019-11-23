@@ -8,6 +8,9 @@ class EmployeeEntity extends Entity {
     public $fullName;
     public $firstName;
     public $middleName;
+    // Added Phone number 1 and 2
+    public $phoneNumber1;
+    public $phoneNumber2;
     public $maidenName;
     public $lastName;
     public $employeeId;

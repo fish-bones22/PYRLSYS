@@ -15,7 +15,6 @@ class Employee extends Model
         'employeeId', 'firstName', 'middleName', 'lastName'
     ];
 
-
     public function details() {
         return $this->hasMany('App\Models\EmployeeDetail');
     }
@@ -32,7 +31,6 @@ class Employee extends Model
         return $this->hasMany('App\Models\EmployeeTimeTable');
     }
 
-
     public function fullName() {
         $middleInitial = $this->middleName != '' ? substr($this->middleName, 0, 1).'.' : '';
 
@@ -40,12 +38,10 @@ class Employee extends Model
         return $this->lastName.', '.$this->firstName.' '.$middleInitial;
     }
 
-
     public function pictures() {
         $rawPics = $this->hasMany('App\Models\EmployeePicture')->orderBy('updated_at', 'desc')->orderBy('isCurrent', 'desc');
         return $rawPics;
     }
-
 
     public function history() {
         return $this->hasMany('App\Models\EmployeeHistory');

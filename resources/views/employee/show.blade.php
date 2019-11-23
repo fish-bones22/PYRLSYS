@@ -47,7 +47,7 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="employeeId" class="form-paper-label">Employee ID:</label>
-                        <input id="employeeId" name="employee_id" type="text" class="form-control" value="{{ $employee->employeeId }}" required/>
+                        <input id="employeeId" name="employee_id" type="text" class="form-control" maxlength="6" value="{{ $employee->employeeId }}" required/>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 form-paper">
@@ -101,6 +101,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-12 form-paper section-divider"></div>
             </div>
 
@@ -134,6 +135,8 @@
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
+
+
 
             <?php
 
@@ -205,25 +208,40 @@
                 </div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
-
-
             <div class="row">
                 <div class="col-sm-6 col-12 form-paper">
                     <div class="form-group">
-                        <label for="phoneNumber" class="form-paper-label">Address</label>
+                        <label for="address" class="form-paper-label">Address</label>
                         <input id="address" type="text" name="presentaddress" class="form-control" value="{{  $employee->details != null && key_exists('presentaddress', $employee->details) ? $employee->details['presentaddress']['value']: '' }}" />
                     </div>
                 </div>
-                <div class="col-sm-3 col-12 form-paper">
-                    <div class="form-group">
-                        <label for="phoneNumber" class="form-paper-label">Phone Number</label>
-                        <input id="phoneNumber" type="text" name="contact_number" class="form-control" value="{{  $employee->details != null && key_exists('contactnumber', $employee->details) ? $employee->details['contactnumber']['value']: '' }}" />
-                    </div>
-                </div>
-                <div class="col-sm-3 col-12 form-paper">
+{{--                <div class="col-sm-3 col-12 form-paper">--}}
+{{--                    <div class="form-group">--}}
+{{--                        <label for="phoneNumber" class="form-paper-label">Phone Number</label>--}}
+{{--                        <input id="phoneNumber" type="text" name="contact_number" class="form-control" value="{{  $employee->details != null && key_exists('contactnumber', $employee->details) ? $employee->details['contactnumber']['value']: '' }}" />--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+                <div class="col-sm-6 col-12 form-paper">
                     <div class="form-group">
                         <label for="email" class="form-paper-label">Email Address</label>
                         <input id="email" type="text" name="email_address" class="form-control" value="{{  $employee->details != null && key_exists('emailaddress', $employee->details) ? $employee->details['emailaddress']['value']: '' }}" />
+                    </div>
+                </div>
+                {{--                Added Phone number 1 and 2--}}
+                <div class="col-12 form-paper">
+                    <div class="row">
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="phonenumber1" class="form-paper-label">Phone Number 1</label>
+                                <input id="phonenumber1" name="phone_number_1" type="text" class="form-control" maxlength="13" value="{{  $employee->details != null && key_exists('phonenumber1', $employee->details) ? $employee->details['phonenumber1']['value']: '' }}"/>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="phonenumber2" class="form-paper-label">Phone Number 2</label>
+                                <input id="phonenumber2" name="phone_number_2" type="text" class="form-control" maxlength="13" value="{{  $employee->details != null && key_exists('phonenumber2', $employee->details) ? $employee->details['phonenumber2']['value']: '' }}"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 form-paper">
@@ -246,6 +264,7 @@
                     </div>
                 </div>
             </div>
+
 
 
             <div class="row">
@@ -274,7 +293,7 @@
                 <div class="col-md-4 col-7 form-paper">
                     <div class="form-group">
                         <label for="position" class="form-paper-label">Position</label>
-                        <input id="position" type="text" name="position" class="form-control" value="{{  $employee->current != null && key_exists('position', $employee->current) ? $employee->current['position'] : '' }}" />
+                        <input id="position" type="text" name="position" class="form-control" value="{{  $employee->current != null && key_exists('position', $employee->current) ? $employee->current['position'] : '' }}" required/>
                     </div>
                 </div>
                 <div class="col-md-3 col-5 form-paper">
@@ -292,13 +311,13 @@
             <div class="row">
                 <div class="col-sm-4 col-6 form-paper">
                     <div class="form-group">
-                        <label for="dateHired" class="form-paper-label">Date Started</label>
+                        <label for="dateHired" class="form-paper-label">Employment Start Date</label>
                         <input id="dateHired" type="date" name="date_started" class="form-control" value="{{  $employee->current != null && key_exists('datestarted', $employee->current) ? $employee->current['datestarted']: '' }}" />
                     </div>
                 </div>
                 <div class="col-sm-4 col-6 form-paper">
                     <div class="form-group">
-                        <label for="dateEnded" class="form-paper-label">Until</label>
+                        <label for="dateEnded" class="form-paper-label">Unemployment Date</label>
                         <input id="dateEnded" type="date" name="date_transfered" class="form-control" value="{{  $employee->current != null && key_exists('datetransfered', $employee->current) ? $employee->current['datetransfered'] : '' }}" />
                     </div>
                 </div>
@@ -384,15 +403,16 @@
                                 <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->timeTable != null && key_exists('timeout', $employee->timeTable) ? date_format(date_create($employee->timeTable['timeout']), 'H:i') : '' }}" required />
                             </div>
                         </div>
-                        <div class="col-sm-2 col-12">
-                            <div class="form-group">
-                                <label for="break" class="form-paper-label">Break</label>
-                                <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" required />
-                            </div>
-                        </div>
+{{--                        Removing Employee Break--}}
+{{--                        <div class="col-sm-2 col-12">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label for="break" class="form-paper-label">Break</label>--}}
+{{--                                <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" required />--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         <div class="col-sm-4 col-6">
                             <div class="form-group">
-                                <label for="effectiveDateStart" class="form-paper-label">Effective Date Start</label>
+                                <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
                                 <input id="effectiveDateStart" type="date" name="effective_date_start" class="form-control"  value="{{ $employee->timeTable != null && key_exists('startdate', $employee->timeTable) ? $employee->timeTable['startdate'] : date_format(NOW(), 'Y-m-d') }}" />
                             </div>
                         </div>
@@ -429,37 +449,38 @@
                 <div class="col-12 form-paper section-title">Other Information</div>
                 <div class="col-12 form-paper section-divider"></div>
             </div>
-            <div class="row">
-                <div class="col-12 form-paper">
-                    <label class="form-paper-label">Benefits:</label><br/>
-                    <div class="form-group">
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="tin" {{ key_exists('tin', $employee->deductibles) && $employee->deductibles['tin']['isset'] ? 'checked' : '' }} />
-                                TIN
-                            </label>
-                        </div>
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="sss" {{ key_exists('sss', $employee->deductibles) && $employee->deductibles['sss']['isset'] ? 'checked' : '' }} />
-                                SSS
-                            </label>
-                        </div>
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="philhealth" {{ key_exists('philhealth', $employee->deductibles) && $employee->deductibles['philhealth']['isset'] ? 'checked' : '' }} />
-                                PhilHealth
-                            </label>
-                        </div>
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" name="pagibig" {{ key_exists('pagibig', $employee->deductibles) && $employee->deductibles['pagibig']['isset'] ? 'checked' : '' }} />
-                                PAGIBIG
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+{{--            Removing All Check Box--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-12 form-paper">--}}
+{{--                    <label class="form-paper-label">Benefits:</label><br/>--}}
+{{--                    <div class="form-group">--}}
+{{--                        <div class="form-check-inline">--}}
+{{--                            <label class="form-check-label">--}}
+{{--                                <input class="form-check-input" type="checkbox" name="tin" {{ key_exists('tin', $employee->deductibles) && $employee->deductibles['tin']['isset'] ? 'checked' : '' }} />--}}
+{{--                                TIN--}}
+{{--                            </label>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-check-inline">--}}
+{{--                            <label class="form-check-label">--}}
+{{--                                <input class="form-check-input" type="checkbox" name="sss" {{ key_exists('sss', $employee->deductibles) && $employee->deductibles['sss']['isset'] ? 'checked' : '' }} />--}}
+{{--                                SSS--}}
+{{--                            </label>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-check-inline">--}}
+{{--                            <label class="form-check-label">--}}
+{{--                                <input class="form-check-input" type="checkbox" name="philhealth" {{ key_exists('philhealth', $employee->deductibles) && $employee->deductibles['philhealth']['isset'] ? 'checked' : '' }} />--}}
+{{--                                PhilHealth--}}
+{{--                            </label>--}}
+{{--                        </div>--}}
+{{--                        <div class="form-check-inline">--}}
+{{--                            <label class="form-check-label">--}}
+{{--                                <input class="form-check-input" type="checkbox" name="pagibig" {{ key_exists('pagibig', $employee->deductibles) && $employee->deductibles['pagibig']['isset'] ? 'checked' : '' }} />--}}
+{{--                                PAGIBIG--}}
+{{--                            </label>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
             <div class="row">
                 <div class="col-md form-paper">
@@ -513,14 +534,14 @@
                             <div class="form-group">
                                 <label class="form-paper-label">File</label>
                                 <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}</a>
-                                <input type="hidden" name="file_old" value="{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}" />
+                                <input type="hidden" name="file_old" value="{{ key_exists('files', $employee->details) ? $employee->details['files']['value'] : '' }}" />
                             </div>
                         </div>
                         @endif
                         <div  class="col">
                             <div class="form-group">
                                 <label for="file" class="form-paper-label">New File</label>
-                                <input id="file" type="file" name="file_new" class="form-control-file " />
+                                <input id="file" type="file" name="file_new[]" class="form-control-file " multiple />
                             </div>
                         </div>
                     </div>
@@ -674,13 +695,13 @@
                 <div class="row">
                     <div class="col-4 form-paper">
                         <div class="form-group">
-                            <label for="mewDateHired" class="form-paper-label">Date Started</label>
-                            <input id="mewDateHired" type="date" name="date_started" class="form-control" required />
+                            <label for="mewDateHired" class="form-paper-label">Employment Start Date</label>
+                            <input id="mewDateHired" type="date" name="date_started" class="form-control"/>
                         </div>
                     </div>
                     <div class="col-4 form-paper">
                         <div class="form-group">
-                            <label for="newDateEnded" class="form-paper-label">Until</label>
+                            <label for="newDateEnded" class="form-paper-label">Unemployment Date</label>
                             <input id="newDateEnded" type="date" name="date_transfered" class="form-control" />
                         </div>
                     </div>

@@ -47,7 +47,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $employeeEntities;
     }
 
-
     public function getAllApplicants()
     {
 
@@ -60,7 +59,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $applicantEntities;
     }
-
 
     public function getEmployeeById($id)
     {
@@ -77,7 +75,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $this->mapToEntity($emp, new EmployeeEntity());
     }
-
 
     public function getEmployeeByEmployeeId($employeeId)
     {
@@ -130,7 +127,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $emp;
     }
-
 
     public function getEmployeeByIdWithStateOnDate($id, $date)
     {
@@ -202,7 +198,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $employee;
     }
 
-
     public function getEmployeesByDepartment($dept)
     {
 
@@ -221,7 +216,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $employees;
     }
 
-
     public function getApplicantById($id)
     {
 
@@ -237,7 +231,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $this->mapToEntity($app, new EmployeeEntity());
     }
-
 
     protected function mapToEntity($model, $entity)
     {
@@ -286,7 +279,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $entity;
     }
-
 
     public function getEmployeeHistoryOnDate($id, $date)
     {
@@ -353,7 +345,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $this->getHistoryDetails($current);
     }
 
-
     public function getCurrentEmployeeHistory($id)
     {
         $current = EmployeeHistory::where('employee_id', $id)->where('current', true)->first();
@@ -363,7 +354,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $this->getHistoryDetails($current);
     }
-
 
     public function checkApplicant($firstName, $middleName, $lastName, $position)
     {
@@ -380,7 +370,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return true;
     }
-
 
     public function addEmployee(EmployeeEntity $entity)
     {
@@ -436,7 +425,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     public function updateEmployee(EmployeeEntity $entity)
     {
 
@@ -490,7 +478,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $res;
     }
 
-
     public function updateDetail($id, $key, $value)
     {
 
@@ -510,7 +497,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     public function removeDetail($id, $key)
     {
 
@@ -528,7 +514,6 @@ class EmployeeService extends EntityService implements IEmployeeService
             'result' => true
         ];
     }
-
 
     private function saveDetails($id, $key, $detailsArray)
     {
@@ -575,12 +560,10 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     public function transferEmployee($id, $employmentDetails)
     {
         return $this->addEmploymentHistory($id, $employmentDetails);
     }
-
 
     public function getDetails($detailsModel)
     {
@@ -634,7 +617,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $detail;
     }
 
-
     private function fillDetailArray($detailArray, $tempArray)
     {
 
@@ -658,7 +640,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $detailArray;
     }
-
 
     private function saveEmploymentDetails($id, $detailsArray)
     {
@@ -704,7 +685,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $detail;
     }
 
-
     private function updateEmploymentHistory($id, $history)
     {
 
@@ -740,7 +720,6 @@ class EmployeeService extends EntityService implements IEmployeeService
             'result' => true
         ];
     }
-
 
     private function addEmploymentHistory($id, $history)
     {
@@ -787,7 +766,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     private function getHistoryDetails($model)
     {
 
@@ -823,7 +801,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $history;
     }
-
 
     public function addEmployeeTimeTable($id, $timeTable)
     {
@@ -872,7 +849,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     private function getTimeTableHistory($timeTableHistory)
     {
 
@@ -892,7 +868,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         return $history;
     }
-
 
     private function getTimeTableOnDate($timeTableHistory, $date, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak)
     {
@@ -948,12 +923,10 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $timeTable;
     }
 
-
     private function getCurrentTimeTable($timeTableHistory, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak)
     {
         return $this->getTimeTableOnDate($timeTableHistory, NOW(), $fallBackTimeIn, $fallBackTimeout, $fallBackBreak);
     }
-
 
     public function getEmployeeTimeTable($employeeId, $date)
     {
@@ -967,6 +940,7 @@ class EmployeeService extends EntityService implements IEmployeeService
         $possibleFallback = null;
 
         foreach ($employee->timeTableHistory as $model) {
+
             if (date_create($model['startdate']) > $date) {
                 continue;
             }
@@ -1007,7 +981,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $timeTable;
     }
 
-
     private function saveDeductibles($id, $deductibles)
     {
 
@@ -1043,7 +1016,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     public function getDeductibles($deductiblesModel)
     {
 
@@ -1077,7 +1049,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-
     public function removeEmployeeImage($id, $location, $filename)
     {
 
@@ -1098,7 +1069,6 @@ class EmployeeService extends EntityService implements IEmployeeService
             'result' => true
         ];
     }
-
 
     public function addEmployeeImage($id, $location, $filename)
     {
@@ -1126,7 +1096,6 @@ class EmployeeService extends EntityService implements IEmployeeService
             'result' => true
         ];
     }
-
 
     public function setEmployeeImage($id, $location, $filename)
     {
@@ -1159,8 +1128,6 @@ class EmployeeService extends EntityService implements IEmployeeService
         }
     }
 
-
-
     public function deleteAllApplicant()
     {
         $employee = Employee::whereNull('employeeId', null);
@@ -1168,7 +1135,6 @@ class EmployeeService extends EntityService implements IEmployeeService
             $emp->delete();
         }
     }
-
 
     public function unsetCurrentEmployeeImage($id)
     {
@@ -1191,7 +1157,6 @@ class EmployeeService extends EntityService implements IEmployeeService
             'result' => true
         ];
     }
-
 
     public function idExists($id)
     {

@@ -45,16 +45,6 @@ foreach ($records2 as $record) {
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
             'basicsalary' => $record->employee['basicsalary'],
-            'basis' => $record->employee['basis'],
-            'department' => $record->employee['department']
-        ];
-        $rcd[$record->employee['id']] = [
-            'employeeId' => $record->employee['employeeId'],
-            'lastName' => $record->employee['lastname'],
-            'firstName' => $record->employee['firstname'],
-            'middleName' => $record->employee['middlename'],
-            'basicsalary' => $record->employee['basicsalary'],
-            'basis' => $record->employee['basis'],
             'department' => $record->employee['department']
         ];
     }
@@ -69,6 +59,7 @@ foreach ($records2 as $record) {
 
 }
 ?>
+
 <div class="row">
     <div class="col-md-12">
 
@@ -119,104 +110,102 @@ foreach ($records2 as $record) {
 
         <div class="row">
             <div class="col-12 form-paper">
-                <div style="overflow-x:scroll" class="mb-3">
-                    <table class="table table-sm" id="deductiblesTable" style="font-size:11px;">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Last Name</th>
-                                <th>First Name</th>
-                                <th>Middle Name</th>
-                                <th>Department</th>
-                                <th>{{ strtoupper($_key) }} Number</th>
-                                <th>Date of Coverage</th>
-                                <th>Basic Salary</th>
-                                <th>Emp <br />16-EoM</th>
-                                <th>Emp <br />1-15</th>
-                                <th>Emp Total</th>
-                                <th>Emr <br />Share</th>
-                                @if ($_key === 'sss')
-                                <th>Emr <br />EC</th>
-                                @endif
-                                <th>Total <br />Remmitance</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $emp1 = 0;
-                            $emr1 = 0;
-                            $emp2 = 0;
-                            $emr2 = 0;
-                            $subamount2 = 0;
-                            $empTotal1 = 0;
-                            $empTotal2 = 0;
-                            $empTotal = 0;
-                            $emrTotal = 0;
-                            $emcTotal = 0;
-                            $grandTotal = 0;
-                            ?>
-                            @foreach ($rcd as $key => $record)
-                            <?php
-                            $emp1 = (isset($record[$_key]) ? $record[$_key]['employee'] : 0);
-                            $emr1 = (isset($record[$_key]) ? $record[$_key]['employer'] : 0);
-                            $emp2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employee'] : 0);
-                            $emr2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employer'] : 0);
-                            $emp = $emp1 + $emp2;
-                            $emr = $emr1 + $emr2;
-                            $emc = (isset($record[$_key]) ? $record[$_key]['subamount2'] : '0') + (isset($rcd2[$key][$_key]['subamount2']) ? $rcd2[$key][$_key]['subamount2'] : '0');
-                            $total = $emp + $emc + $emr;
-                            $empTotal1 += $emp1;
-                            $empTotal2 += $emp2;
-                            $empTotal += $emp1 + $emp2;
-                            $emrTotal += $emr;
-                            $emcTotal += $emc;
-                            $grandTotal += $total;
-                            ?>
-                                <tr>
-                                    <td>{{ $record['employeeId'] }}</td>
-                                    <td>{{ $record['lastName'] }}</td>
-                                    <td>{{ $record['firstName'] }}</td>
-                                    <td>{{ $record['middleName'] }}</td>
-                                    <td>{{ $record['department'] }}</td>
-                                    <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
-                                    <td>{{ isset($details['date']) ? date_format(date_create($details['date']), 'M Y')  : '' }}</td>
-                                    {{-- Basic Salary --}}<td>{{ isset($record['basicsalary']) ? $record['basicsalary'].' '.$record['basis'] : '' }}</td>
-                                    {{-- Emp 16-EoM --}}<td>{{ $emp1 }}</td>
-                                    {{-- Emp 1-16 --}}<td>{{ $emp2 }}</td>
-                                    {{-- Emp Total --}}<td>{{ $emp }}</td>
-                                    {{-- Emr --}}<td>{{ $emr }}</td>
-                                    @if ($_key === 'sss')
-                                    {{-- Emr EC --}}<td>{{ $emc }}</td>
-                                    @endif
-                                    {{-- Total --}}<td>{{ $total }}</td>
-                                    <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
-                                </tr>
-                            @endforeach
-                            @if ($grandTotal != 0 && sizeof($rcd) > 0 || sizeof($rcd2) > 0)
-                            <tr>
-                                <td>TOTAL</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>{{ $empTotal1 }}</td>
-                                <td>{{ $empTotal2 }}</td>
-                                <td>{{ $empTotal }}</td>
-                                <td>{{ $emrTotal }}</td>
-                                @if ($_key === 'sss')
-                                <td>{{ $emcTotal }}</td>
-                                @endif
-                                <td>{{ $grandTotal }}</td>
-                                <td></td>
-                            </tr>
+                <table class="table table-sm" id="deductiblesTable" style="font-size:11px;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Middle Name</th>
+                            <th>Department</th>
+                            <th>{{ strtoupper($_key) }} Number</th>
+                            <th>Date of Coverage</th>
+                            <th>Basic Salary</th>
+                            <th>Emp <br />16-EoM</th>
+                            <th>Emp <br />1-15</th>
+                            <th>Emp Total</th>
+                            <th>Emr <br />Share</th>
+                            @if ($_key === 'sss')
+                            <th>Emr <br />EC</th>
                             @endif
-                        </tbody>
-                    </table>
-                </div>
+                            <th>Total <br />Remmitance</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $emp1 = 0;
+                        $emr1 = 0;
+                        $emp2 = 0;
+                        $emr2 = 0;
+                        $subamount2 = 0;
+                        $empTotal1 = 0;
+                        $empTotal2 = 0;
+                        $empTotal = 0;
+                        $emrTotal = 0;
+                        $emcTotal = 0;
+                        $grandTotal = 0;
+                        ?>
+                        @foreach ($rcd as $key => $record)
+                        <?php
+                        $emp1 = (isset($record[$_key]) ? $record[$_key]['employee'] : 0);
+                        $emr1 = (isset($record[$_key]) ? $record[$_key]['employer'] : 0);
+                        $emp2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employee'] : 0);
+                        $emr2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employer'] : 0);
+                        $emp = $emp1 + $emp2;
+                        $emr = $emr1 + $emr2;
+                        $emc = (isset($record[$_key]) ? $record[$_key]['subamount2'] : '0') + (isset($rcd2[$key][$_key]['subamount2']) ? $rcd2[$key][$_key]['subamount2'] : '0');
+                        $total = $emp + $emc + $emr;
+                        $empTotal1 += $emp1;
+                        $empTotal2 += $emp2;
+                        $empTotal += $emp1 + $emp2;
+                        $emrTotal += $emr;
+                        $emcTotal += $emc;
+                        $grandTotal += $total;
+                        ?>
+                            <tr>
+                                <td>{{ $record['employeeId'] }}</td>
+                                <td>{{ $record['lastName'] }}</td>
+                                <td>{{ $record['firstName'] }}</td>
+                                <td>{{ $record['middleName'] }}</td>
+                                <td>{{ $record['department'] }}</td>
+                                <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
+                                <td>{{ isset($details['date']) ? date_format(date_create($details['date']), 'M Y')  : '' }}</td>
+                                {{-- Basic Salary --}}<td>{{ isset($record['basicsalary']) ? $record['basicsalary'].' '.$record['basis'] : '' }}</td>
+                                {{-- Emp 16-EoM --}}<td>{{ $emp1 }}</td>
+                                {{-- Emp 1-16 --}}<td>{{ $emp2 }}</td>
+                                {{-- Emp Total --}}<td>{{ $emp }}</td>
+                                {{-- Emr --}}<td>{{ $emr }}</td>
+                                @if ($_key === 'sss')
+                                {{-- Emr EC --}}<td>{{ $emc }}</td>
+                                @endif
+                                {{-- Total --}}<td>{{ $total }}</td>
+                                <td>{{ isset($record['remarks']) ? $record['remarks'] : '' }}</td>
+                            </tr>
+                        @endforeach
+                        @if ($grandTotal != 0 && sizeof($rcd) > 0 || sizeof($rcd2) > 0)
+                        <tr>
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $empTotal1 }}</td>
+                            <td>{{ $empTotal2 }}</td>
+                            <td>{{ $empTotal }}</td>
+                            <td>{{ $emrTotal }}</td>
+                            @if ($_key === 'sss')
+                            <td>{{ $emcTotal }}</td>
+                            @endif
+                            <td>{{ $grandTotal }}</td>
+                            <td></td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
 

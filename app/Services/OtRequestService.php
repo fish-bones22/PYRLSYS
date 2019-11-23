@@ -22,7 +22,6 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $otReq;
     }
 
-
     public function getPendingOtRequests() {
 
         $otRequests = OtRequest::whereNull('approval')->get();
@@ -62,7 +61,6 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $otReq;
     }
 
-
     public function getApprovedOtRequestsByDateRange($datefrom, $dateto) {
 
         $otRequests = OtRequest::where('approval', true)->whereBetween('otDate', [$datefrom, $dateto])->get();
@@ -75,7 +73,6 @@ class OtRequestService extends EntityService implements IOtRequestService {
 
         return $otReq;
     }
-
 
     public function getApprovedOtRequestByDateRange($employeeId, $datefrom, $dateto) {
 
@@ -90,7 +87,6 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $otReq;
     }
 
-
     public function getDeniedOtRequestsByDateRange($datefrom, $dateto) {
 
         $otRequests = OtRequest::where('approval', false)->whereBetween('otDate', [$datefrom, $dateto])->get();
@@ -104,15 +100,20 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $otReq;
     }
 
-
     public function addOtRequest(OtRequestEntity $entity) {
 
-        $otRequest = OtRequest::where('otDate', $entity->otDate)->where('employee_id', $entity->employeeId)->first();
-        if ($otRequest == null) {
-            $otRequest = new OtRequest();
-            $otRequest->otDate = $entity->otDate;
-            $otRequest->employee_id = $entity->employeeId;
-        }
+        //$otRequest = OtRequest::where('otDate', $entity->otDate)->where('employee_id', $entity->employeeId)->first();
+
+//        if ($otRequest == null) {
+//            $otRequest = new OtRequest();
+//            $otRequest->otDate = $entity->otDate;
+//            $otRequest->employee_id = $entity->employeeId;
+//        }
+
+        //
+        $otRequest = new OtRequest();
+        $otRequest->otDate = $entity->otDate;
+        $otRequest->employee_id = $entity->employeeId;
 
         $otRequest->employeeName = $entity->employeeName;
         $otRequest->department = $entity->department;
@@ -139,7 +140,6 @@ class OtRequestService extends EntityService implements IOtRequestService {
 
     }
 
-
     public function getOtRequestOfEmployee($employeeId, $date) {
 
         $otRequest = OtRequest::where('employee_id', $employeeId)->where('otDate', $date)->first();
@@ -150,16 +150,13 @@ class OtRequestService extends EntityService implements IOtRequestService {
 
     }
 
-
     public function approveOtRequest($id) {
         return $this->setApproval($id, true);
     }
 
-
     public function declineOtRequest($id) {
         return $this->setApproval($id, false);
     }
-
 
     private function setApproval($id, $approval) {
 
@@ -184,7 +181,6 @@ class OtRequestService extends EntityService implements IOtRequestService {
         ];
     }
 
-
     protected function mapToEntity($model, $entity) {
 
         $entity = parent::mapToEntity($model, $entity);
@@ -207,5 +203,4 @@ class OtRequestService extends EntityService implements IOtRequestService {
         return $entity;
 
     }
-
 }

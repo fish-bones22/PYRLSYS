@@ -17,7 +17,7 @@ New User
     <div class="col-md-6 offset-md-3">
         <form action="{{ action('UserController@addUser') }}" method="POST">
             @csrf
-            @method('post')
+            @method('post')Employee ID
             <div class="row">
                 <div class="col-12 form-paper text-center"><div class="display-4">New User</div></div>
             </div>

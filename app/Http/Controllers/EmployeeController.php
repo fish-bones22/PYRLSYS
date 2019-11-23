@@ -9,10 +9,14 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 use App\Contracts\ICategoryService;
 use App\Contracts\IEmployeeService;
-use App\Models\Employee;
-use App\Models\EmployeeHistory;
-use App\Models\EmployeePicture;
+//use App\Models\Employee;
+//use App\Models\EmployeeHistory;
+//use App\Models\EmployeePicture;
 use App\Entities\EmployeeEntity;
+
+use PDF;
+
+use Dompdf\Dompdf;
 
 class EmployeeController extends Controller
 {
@@ -37,10 +41,8 @@ class EmployeeController extends Controller
         return view('employee.index', ['employees' => $employees, 'departments' => $departments]);
     }
 
-
     public function new()
     {
-
         return redirect()->action('EmployeeController@show', 0);
     }
 
@@ -90,11 +92,55 @@ class EmployeeController extends Controller
         if ($employee == null)
             return redirect()->action('EmployeeController@index');
 
-
         return view('employee.show', ['employee' => $employee, 'categories' => $categories]);
     }
 
+    public function printEmployeeDetailsPdf($id)
+    {
+//        Log::info('information to be log here, please read this');
 
+        //$data = $request->htmlValue; // This will get all the request data.
+        //$id = $request->id;
+
+        //  return response()->json(array('msg'=> $data), 200);
+
+//        $pdf = new Dompdf(); // \App::make('dompdf.wrapper');
+//        $pdf->loadHTML($data);
+//        $pdf->render();
+//        return $pdf->stream('samplePDF');
+
+//        $pdf = PDF::loadView('employee.view-pdf');
+//        return $pdf->download('invoice.pdf');
+
+
+        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
+        $categories = array();
+
+        $categories['department'] = $this->categoryService->getCategories('department');
+        $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
+        $categories['contractstatus'] = $this->categoryService->getCategories('contractstatus');
+        $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
+        $categories['paymentmode'] = $this->categoryService->getCategories('paymentmode');
+
+        $employee = $this->employeeService->getEmployeeById($id);
+
+        //print_r($employee); die();
+
+//        $pdf = PDF::loadView('employee.view-pdf', ['employee' => $employee, 'categories' => $categories]);
+//        return $pdf->stream('sampleDownloadPDF.pdf');
+
+        $pdf = PDF::loadView('employee.view-pdf', ['employee' => $employee, 'categories' => $categories]);
+        return $pdf->download('sampleDownloadPDF.pdf');
+
+    }
+
+
+    /*
+     * This method is for updating or adding an employee
+     * @var $request
+     * @var $id
+     * */
     public function update(Request $request, $id)
     {
 
@@ -105,6 +151,9 @@ class EmployeeController extends Controller
         $employee->firstName = $req['first_name'];
         $employee->lastName = $req['last_name'];
         $employee->middleName = $req['middle_name'];
+        // Added Phone number 1 and 2
+//        $employee->phoneNumber1 = $req['phone_number_1'];
+//        $employee->phoneNumber2 = $req['phone_number_2'];
         $employee->employeeId = $req['employee_id'];
         $employee->sex = $req['sex'];
 
@@ -114,15 +163,33 @@ class EmployeeController extends Controller
         }
 
         // File
-        if ($request->file('file_new')) {
-            // Save file to storage
-            $file = $request->file('file_new');
-            $details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
-            $filename = $employee->employeeId . '-' . $details . '.' . $file->getClientOriginalExtension();
-            // Store file to storage
-            Storage::putFileAs('public/', $file, $filename);
-            $req['file_new_name'] = $filename;
-        }
+        //if ($request->files('file_new')) {
+            // Procedure of saving file/s to storage
+            if($request->hasFile('file_new'))
+            {
+                $newFileNamesForDb = "";
+
+                foreach ($request->file('file_new') as $file) {
+                    //
+                    //$details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
+                    // creating a filename
+                    $filename = $employee->employeeId . '-' . $file->getClientOriginalName();// . '.' . $file->getClientOriginalExtension();
+                    // Store file to storage
+
+                    print_r($filename);
+                    printf($filename);
+
+                    Storage::putFileAs('public/files/', $file, $filename, 'public');
+
+                    $newFileNamesForDb = $newFileNamesForDb . "\n" . $filename;
+
+                    //$req['file_new_name'] = $req['file_new_name'] . "\n" . $filename;
+                }
+
+                $req['file_new_name'] = $newFileNamesForDb;
+
+            }
+        //}
 
         $employee->details = $this->detailsToEntity($req);
         $employee->current = $this->historyToEntity($req);
@@ -238,7 +305,6 @@ class EmployeeController extends Controller
             ->with('success', 'Image successfully changed');
     }
 
-
     public function deleteImage(Request $request, $id)
     {
 
@@ -251,8 +317,6 @@ class EmployeeController extends Controller
 
         return redirect()->action('EmployeeController@show', $id);
     }
-
-
 
     public function getEmployeeBasicDetails($id)
     {
@@ -279,12 +343,10 @@ class EmployeeController extends Controller
         ]);
     }
 
-
     public function downloadFile($filename)
     {
         return Storage::download('public/' . $filename);
     }
-
 
     public function getEmployeeJson($id)
     {
@@ -292,7 +354,6 @@ class EmployeeController extends Controller
         $employee = $this->employeeService->getEmployeeById($id);
         return json_encode($employee);
     }
-
 
     private function saveImageToStorage($file, $location, $filename)
     {
@@ -328,7 +389,6 @@ class EmployeeController extends Controller
         return $image;
     }
 
-
     private function timeTableToEntity($history)
     {
 
@@ -342,7 +402,6 @@ class EmployeeController extends Controller
 
         return $entity;
     }
-
 
     private function historyToEntity($history)
     {
@@ -411,7 +470,6 @@ class EmployeeController extends Controller
 
         return $entity;
     }
-
 
     private function detailsToEntity($details)
     {
@@ -504,10 +562,27 @@ class EmployeeController extends Controller
         ];
 
         // Phone Number
-        $entity['contactnumber'] = [
-            'key' => 'contactnumber',
-            'value' => $details['contact_number'],
-            'displayName' => 'Phone Number'
+//        $entity['contactnumber'] = [
+//            'key' => 'contactnumber',
+//            'value' => $details['contact_number'],
+//            'displayName' => 'Phone Number'
+//        ];
+
+
+        /*
+         * Added Phone number 1 and 2
+         */
+        // Phone Number 1
+        $entity['phonenumber1'] = [
+            'key' => 'phonenumber1',
+            'value' => $details['phone_number_1'],
+            'displayName' => 'Phone Number 1'
+        ];
+        // Phone Number 2
+        $entity['phonenumber2'] = [
+            'key' => 'phonenumber2',
+            'value' => $details['phone_number_2'],
+            'displayName' => 'Phone Number 2'
         ];
 
         // Email
@@ -644,4 +719,6 @@ class EmployeeController extends Controller
 
         return $entity;
     }
+
+
 }
