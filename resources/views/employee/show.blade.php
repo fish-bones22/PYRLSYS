@@ -399,13 +399,12 @@
                                 <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->timeTable != null && key_exists('timeout', $employee->timeTable) ? date_format(date_create($employee->timeTable['timeout']), 'H:i') : '' }}" required />
                             </div>
                         </div>
-{{--                        Removing Employee Break--}}
-{{--                        <div class="col-sm-2 col-12">--}}
-{{--                            <div class="form-group">--}}
-{{--                                <label for="break" class="form-paper-label">Break</label>--}}
-{{--                                <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" required />--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                       <div class="col-sm-2 col-12">
+                           <div class="form-group">
+                               <label for="break" class="form-paper-label">Break</label>
+                               <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" required />
+                           </div>
+                        </div>
                         <div class="col-sm-4 col-6">
                             <div class="form-group">
                                 <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>

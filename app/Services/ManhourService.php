@@ -543,15 +543,16 @@ class ManhourService extends EntityService implements IManhourService
             // 15 mins grace period is applicable only to
             // department with names defined in $deptName_15minRule
             $minPassed = $timeIn_->diff($scheduledTimeIn_);
-            if (in_array(strtolower($summary->departmentName), $this->deptName_15minRule)
-            && $this->getTotalHoursNotFloored($minPassed) > 0.25) {
-                $isLate = true;
+            var_dump($this->getTotalHoursNotFloored($minPassed));
+            if (in_array(strtolower($summary->departmentName), $this->deptName_15minRule)) {
+                if ($this->getTotalHoursNotFloored($minPassed) > 0.25) {
+                    $isLate = true;
+                }
             }
             // No grace period
             else if ($this->getTotalHoursNotFloored($minPassed) > 0) {
                 $isLate = true;
             }
-
             // Get actual hours
             // $x = ($properTimeOut - $properTimeIn) / 3600;
             // $properHours = floor($x * 2) / 2;
@@ -562,8 +563,6 @@ class ManhourService extends EntityService implements IManhourService
             }
             $properHours = $this->getTotalHours($x);
             $properHours = $properHours < 0 ? 0 : $properHours;
-
-            var_dump($record->outlier);
 
             // If leave
             if (isset($record->outlier['details']) && $record->outlier['details'] === 'payable') {
