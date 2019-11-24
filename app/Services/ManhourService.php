@@ -19,6 +19,7 @@ class ManhourService extends EntityService implements IManhourService
 {
 
     private $deptName_15minRule = ["admin", "administration", "administrator"];
+    private $deptName_12hoursExtensionRule = ["security"];
 
     private $otRequestService;
     private $employeeService;
@@ -534,6 +535,20 @@ class ManhourService extends EntityService implements IManhourService
             $scheduledHour = $x != null ? $this->getTotalHours($x) : null;
             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? 0 : $scheduledHour;
 
+            //** For 12 hour extension rule */
+            if ($recordHour > $scheduledHour && in_array(strtolower($summary->departmentName), $this->deptName_12hoursExtensionRule)) {
+                $properTimeOut = $timeOut_;
+                // Get hours from scheduled time in (to not account for tardiness) to time out
+                $x =  $scheduledTimeIn_ != null && $properTimeOut != null ? $properTimeOut->diff($scheduledTimeIn_) : null;
+                $hoursSpent = $x != null ? $this->getTotalHours($x) : null;
+                $hoursSpent = $hoursSpent != null && $hoursSpent < 0 ? 0 : $hoursSpent;
+                var_dump($hoursSpent);
+                // Limit to 12 hours only
+                if ($hoursSpent > 12) {
+                    $properTimeOut = date_create(date('Y-m-d H:i:s',strtotime('+4 hours', strtotime($scheduledTimeOut))));
+                }
+            }
+
             // All else fails
             if ($scheduledTimeIn_ === null) {
                 return $summary;
@@ -554,15 +569,13 @@ class ManhourService extends EntityService implements IManhourService
                 $isLate = true;
             }
             // Get actual hours
-            // $x = ($properTimeOut - $properTimeIn) / 3600;
-            // $properHours = floor($x * 2) / 2;
-            // $properHours = $properHours < 0 ? 0 : $properHours;
             $x = $properTimeOut->diff($properTimeIn);
             if (!$isLate) {
                 $x = $properTimeOut->diff($scheduledTimeIn_);
             }
             $properHours = $this->getTotalHours($x);
             $properHours = $properHours < 0 ? 0 : $properHours;
+            var_dump($properTimeOut);
 
             // If leave
             if (isset($record->outlier['details']) && $record->outlier['details'] === 'payable') {
@@ -721,9 +734,6 @@ class ManhourService extends EntityService implements IManhourService
                 $ndTimeEnd = $totalTimeOut;
             }
             // Get ND hours
-            // $x = ($ndTimeEnd - $ndTimeStart) / 3600;
-            // $ndHours = floor($x * 2) / 2;
-            // $ndHours = $ndHours < 0 ? 0 : $ndHours;
             $x = $ndTimeEnd->diff($ndTimeStart);
             $ndHours = $this->getTotalHours($x);
             $ndHours = $ndHours <= 0 ? '' : $ndHours;
