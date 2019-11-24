@@ -18,6 +18,8 @@ use PHPUnit\Framework\Exception;
 class ManhourService extends EntityService implements IManhourService
 {
 
+    private $deptName_15minRule = ["admin", "administration", "administrator"];
+
     private $otRequestService;
     private $employeeService;
     private $categoryService;
@@ -241,7 +243,6 @@ class ManhourService extends EntityService implements IManhourService
 
     public function getSummaryOfRecord($employeeId, $date, $employee = null)
     {
-
         $record = $this->getRecord($employeeId, $date);
 
         if ($record == null) {
@@ -469,7 +470,7 @@ class ManhourService extends EntityService implements IManhourService
         $ndHours = 0;
         $isLate = false;
         $overtimeCounted = false;
-        if ($record->timeIn != null && $record->timeOut != null) {
+        if ($record->timeIn != null && $record->timeOut != null || isset($record->outlier['details'])) {
 
             // Get employee schedule
             $scheduledTimeIn = isset($timeTable['timein']) ? $timeTable['timein'] : null;
@@ -533,14 +534,21 @@ class ManhourService extends EntityService implements IManhourService
             $scheduledHour = $x != null ? $this->getTotalHours($x) : null;
             $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? 0 : $scheduledHour;
 
-            //Check if late
             // All else fails
             if ($scheduledTimeIn_ === null) {
                 return $summary;
             }
 
+            //Check if late
+            // 15 mins grace period is applicable only to
+            // department with names defined in $deptName_15minRule
             $minPassed = $timeIn_->diff($scheduledTimeIn_);
-            if ($this->getTotalHoursNotFloored($minPassed) > 0.25) {
+            if (in_array(strtolower($summary->departmentName), $this->deptName_15minRule)
+            && $this->getTotalHoursNotFloored($minPassed) > 0.25) {
+                $isLate = true;
+            }
+            // No grace period
+            else if ($this->getTotalHoursNotFloored($minPassed) > 0) {
                 $isLate = true;
             }
 

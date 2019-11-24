@@ -167,7 +167,8 @@ Employee Record
                                 </tbody>
                             </table>
                         </div>
-                    <div class="col-12 form-paper section-divider"></div>
+                        <div class="col-12 form-paper section-divider"></div>
+                    </div>
                 </div>
             </div>
             <div class="col-12 mode-view" style="display:none">

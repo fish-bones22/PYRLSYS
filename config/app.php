@@ -167,7 +167,7 @@ return [
         //Barryvdh\DomPDF\ServiceProvider::class,
         //niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         //Ignited\Pdf\PdfServiceProvider,
-        Barryvdh\Snappy\ServiceProvider::class,
+        //Barryvdh\Snappy\ServiceProvider::class,
     ],
 
     /*

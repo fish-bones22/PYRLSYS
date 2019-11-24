@@ -196,25 +196,19 @@
                             <div class="form-paper-display">{{  $employee->details != null && key_exists('emailaddress', $employee->details) ? $employee->details['emailaddress']['value']: 'No Email' }}</div>
                         </div>
                     </div>
-                    {{--                Added Phone number 1 and 2--}}
-                    <div class="col-12 form-paper">
-                        <div class="row">
-                            <div class="col-sm-6 col-12 form-paper">
-                                <div class="form-group">
-                                    <label for="phonenumber1" class="form-paper-label">Phone Number 1</label>
-                                    <div class="form-paper-display">{{  $employee->details != null && key_exists('phonenumber1', $employee->details) ? $employee->details['phonenumber1']['value']: 'No Phone Number 1' }}</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-12 form-paper">
-                                <div class="form-group">
-                                    <label for="phonenumber2" class="form-paper-label">Phone Number 2</label>
-                                    <div class="form-paper-display">{{  $employee->details != null && key_exists('phonenumber2', $employee->details) ? $employee->details['phonenumber2']['value']: 'No Phone Number 2' }}</div>
-                                </div>
-                            </div>
+                    {{-- Added Phone number 1 and 2--}}
+                    <div class="col-sm-6 col-12 form-paper">
+                        <div class="form-group">
+                            <label for="phonenumber1" class="form-paper-label">Phone Number 1</label>
+                            <div class="form-paper-display">{{  $employee->details != null && key_exists('phonenumber1', $employee->details) ? $employee->details['phonenumber1']['value']: 'No Phone Number 1' }}</div>
                         </div>
                     </div>
-
-
+                    <div class="col-sm-6 col-12 form-paper">
+                        <div class="form-group">
+                            <label for="phonenumber2" class="form-paper-label">Phone Number 2</label>
+                            <div class="form-paper-display">{{  $employee->details != null && key_exists('phonenumber2', $employee->details) ? $employee->details['phonenumber2']['value']: 'No Phone Number 2' }}</div>
+                        </div>
+                    </div>
                     <div class="col-12 form-paper">
                         <div class="row">
                             <div class="col-12 section-label">Person to contact in case of emergency</div>
@@ -345,11 +339,11 @@
                                     <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['break']) && $employee->timeTable['break']*1 > 0 ? $employee->timeTable['break'] : 'None' }}</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-3 col-6">
-                            <div class="form-group">
-                                <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
-                                <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['startdate']) ? date_format(date_create($employee->timeTable['startdate']), 'M d, Y') : 'None' }}</div>
+                            <div class="col-sm-3 col-6">
+                                <div class="form-group">
+                                    <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
+                                    <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['startdate']) ? date_format(date_create($employee->timeTable['startdate']), 'M d, Y') : 'None' }}</div>
+                                </div>
                             </div>
                             <div class="col-sm-3 col-6">
                                 <div class="form-group">

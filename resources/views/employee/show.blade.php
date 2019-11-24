@@ -227,21 +227,17 @@
                         <input id="email" type="text" name="email_address" class="form-control" value="{{  $employee->details != null && key_exists('emailaddress', $employee->details) ? $employee->details['emailaddress']['value']: '' }}" />
                     </div>
                 </div>
-                {{--                Added Phone number 1 and 2--}}
-                <div class="col-12 form-paper">
-                    <div class="row">
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="phonenumber1" class="form-paper-label">Phone Number 1</label>
-                                <input id="phonenumber1" name="phone_number_1" type="text" class="form-control" maxlength="13" value="{{  $employee->details != null && key_exists('phonenumber1', $employee->details) ? $employee->details['phonenumber1']['value']: '' }}"/>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-12">
-                            <div class="form-group">
-                                <label for="phonenumber2" class="form-paper-label">Phone Number 2</label>
-                                <input id="phonenumber2" name="phone_number_2" type="text" class="form-control" maxlength="13" value="{{  $employee->details != null && key_exists('phonenumber2', $employee->details) ? $employee->details['phonenumber2']['value']: '' }}"/>
-                            </div>
-                        </div>
+                {{-- Added Phone number 1 and 2--}}
+                <div class="col-sm-6 col-12 form-paper">
+                    <div class="form-group">
+                        <label for="phonenumber1" class="form-paper-label">Phone Number 1</label>
+                        <input id="phonenumber1" name="phone_number_1" type="text" class="form-control" maxlength="13" value="{{  $employee->details != null && key_exists('phonenumber1', $employee->details) ? $employee->details['phonenumber1']['value']: '' }}"/>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-12 form-paper">
+                    <div class="form-group">
+                        <label for="phonenumber2" class="form-paper-label">Phone Number 2</label>
+                        <input id="phonenumber2" name="phone_number_2" type="text" class="form-control" maxlength="13" value="{{  $employee->details != null && key_exists('phonenumber2', $employee->details) ? $employee->details['phonenumber2']['value']: '' }}"/>
                     </div>
                 </div>
                 <div class="col-12 form-paper">
