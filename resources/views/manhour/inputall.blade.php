@@ -110,11 +110,11 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
                                 {{  $record != null ? $record->departmentName : ''}}
                                 <input type="hidden" name="department[{{$index}}]" value="{{ $record != null ?  $record->departmentId : '' }}" />
                             </td>
-                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" tabindex="1" /></td>
-                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" tabindex="1" /></td>
-                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" tabindex="-1" /></td>
+                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_in[{{$index}}]" value="{{  $record != null ? $record->timeIn : ''}}" tabindex="1" style="min-width:100px" /></td>
+                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out[{{$index}}]" value="{{  $record != null ? $record->timeOut : ''}}" tabindex="1" style="min-width:100px"/></td>
+                            <td><input type="time" class="form-control form-control-sm form-control-sh" name="time_out_undertime[{{$index}}]" value="{{  $record != null ? $record->undertime : '' }}" tabindex="-1" style="min-width:100px"/></td>
                             <td>
-                                <select class="form-control form-control-sm" name="outlier[{{$index}}]" tabindex="-1">
+                                <select class="form-control form-control-sm" name="outlier[{{$index}}]" tabindex="-1" style="min-width:100px">
                                     <option></option>
                                     @foreach ($outliers as $outlier)
                                     <option value="{{ $outlier->id }}" {{  $record != null && $outlier->id == $record->outlierId ? 'selected' : '' }}>{{ $outlier->value }}</option>

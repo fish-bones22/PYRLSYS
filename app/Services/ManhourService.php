@@ -205,7 +205,8 @@ class ManhourService extends EntityService implements IManhourService
         if ($model->outlier != null)
             $entity->outlier = [
                 'value' => $model->outlier,
-                'displayName' => $model->outlierDetails->value
+                'displayName' => $model->outlierDetails->value,
+                'details' => $model->outlierDetails->detail
             ];
         $entity->remarks = stripslashes($model->remarks);
 
@@ -218,7 +219,7 @@ class ManhourService extends EntityService implements IManhourService
 
         $record = Manhour::where('employee_id', $id)->where('recordDate', $date)->first();
 
-        if ($record == null)
+        if ($record == null) 
             return null;
 
         return $this->mapToEntity($record, new ManhourEntity());
@@ -254,6 +255,49 @@ class ManhourService extends EntityService implements IManhourService
             $summary->employeeName = $employee->fullName;
             $summary->departmentId = $employee->current['department']['value'];
             $summary->departmentName = $employee->current['department']['displayName'];
+
+            // Check for holiday
+            if ($this->getHoliday($date) == null) {
+                return $summary;
+            }
+
+            $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, date_create($date));
+            $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, date_create($date));
+    
+            if ($history == null)
+                $history = $this->employeeService->getCurrentEmployeeHistory($employee->employeeId);
+    
+            $summary->date = $date;
+            $summary->timeCard = $history['timecard'];
+            $summary->departmentName = $history['department']['displayName'];
+            $summary->departmentId = $history['department']['value'];
+            $summary->break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
+    
+            $properHours = 0;
+            $recordHours = 0;
+            $scheduledHour = 0;
+            $otHours = 0;
+            $ndHours = 0;
+            $isLate = false;
+            $overtimeCounted = false;
+            
+            // Get employee schedule
+            $scheduledTimeIn = isset($timeTable['timein']) ? $timeTable['timein'] : null;
+            $scheduledTimeOut = isset($timeTable['timeout']) ? $timeTable['timeout'] : null;
+            $formattedDateTime = $this->appendDateToTime($date, $scheduledTimeIn, $scheduledTimeOut);
+            $scheduledTimeIn = $formattedDateTime[0];
+            $scheduledTimeOut = $formattedDateTime[1];
+
+            // Get scheduled time in/out in Time object
+            $scheduledTimeIn_ = $scheduledTimeIn != null ? date_create($scheduledTimeIn) : null;
+            $scheduledTimeOut_ = $scheduledTimeOut != null ? date_create($scheduledTimeOut) : null;
+            // Get scheduled hour
+            $x =  $scheduledTimeIn_ != null && $scheduledTimeOut_ != null ? $scheduledTimeOut_->diff($scheduledTimeIn_) : null;
+            $scheduledHour = $x != null ? $this->getTotalHours($x) : null;
+            $scheduledHour = $scheduledHour != null && $scheduledHour < 0 ? 0 : $scheduledHour;
+
+            $summary->isHoliday = true;
+            $summary->totalPayableHours = $scheduledHour - $summary->break;
 
             return $summary;
         }
@@ -511,9 +555,12 @@ class ManhourService extends EntityService implements IManhourService
             $properHours = $this->getTotalHours($x);
             $properHours = $properHours < 0 ? 0 : $properHours;
 
+            var_dump($record->outlier);
+
             // If leave
             if (isset($record->outlier['details']) && $record->outlier['details'] === 'payable') {
-                $properHours = 8;
+                $properHours =  $scheduledHour;
+                $summary->isExcused = true;
             }
 
             // Get time in/out in Date object
@@ -693,6 +740,7 @@ class ManhourService extends EntityService implements IManhourService
 
         $properHours = $properHours > $break ? $properHours - $break : $properHours;
         $summary->regularHours = $properHours;
+        $summary->totalPayableHours = $properHours;
         $summary->totalHours = $properHours + $otHours;
         $summary->otHours = $otHours;
         $summary->nd = $ndHours;

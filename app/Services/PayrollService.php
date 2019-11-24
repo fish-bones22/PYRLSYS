@@ -140,11 +140,13 @@ class PayrollService implements IPayrollService {
         $otDetails = array();
         for ($i = $day; $i <= $endDate; $i++) {
             // Create new date
+            $datestr = $monthYear.'-'.$i;
             $date = date_create($monthYear.'-'.$i);
-            $manhour = $this->manhourService->getSummaryOfRecord($employeeId, $date, $employee);
+            $manhour = $this->manhourService->getSummaryOfRecord($employeeId, $datestr, $employee);
 
-            if ($manhour == null || $manhour->date == null)
+            if ($manhour == null || $manhour->date == null) {
                 continue;
+            }
 
             $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, $date);
@@ -181,11 +183,14 @@ class PayrollService implements IPayrollService {
                 $hourlyRate *= 1.3;
             }
 
-            $hours = $manhour->regularHours != null ? $manhour->regularHours : 0;
+            // Actual hours accounts for the total hours the employee actually logged
+            $actualHours = $manhour->regularHours != null ? $manhour->regularHours : 0;
+            // Hours account for all payable hours the employee have
+            $hours = $manhour->totalPayableHours != null ? $manhour->totalPayableHours : 0;
             $regularHours += $hours;
             $basicPay += $hours * $hourlyRate;
 
-            $totalAllowance += $hourlyAllowance * $hours;
+            $totalAllowance += $hourlyAllowance * $actualHours;
 
             $workingDays++;
 

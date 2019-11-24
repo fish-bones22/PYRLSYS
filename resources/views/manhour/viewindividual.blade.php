@@ -123,8 +123,14 @@ Employee Record
                                         @else
                                         <?php
                                         $total = isset($records[$i]) ? $total + $records[$i]->regularHours : $total;
+                                        $bgCol = '';
+                                        if ($records[$i]->isHoliday) {
+                                            $bgCol = 'background-color:#ddeeff';
+                                        } else if ($records[$i]->isExcused) {
+                                            $bgCol = 'background-color:#eeffaa';
+                                        }
                                         ?>
-                                        <td width="25px" style="border-right:1px solid lightgray;">{{ isset($records[$i]) ? $records[$i]->regularHours : '' }}</td>
+                                        <td width="25px" style="border-right:1px solid lightgray;{{ $bgCol }}">{{ isset($records[$i]) ? $records[$i]->regularHours : '' }}</td>
                                         @endif
                                         @endfor
                                         <td>{{ $total }}</td>
