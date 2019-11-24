@@ -25,7 +25,6 @@ class PayrollController extends Controller
         $this->categoryService = $categoryService;
     }
 
-
     public function index() {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         $employees = $this->employeeService->getAllEmployees('lastname');
@@ -37,7 +36,6 @@ class PayrollController extends Controller
         $date = date_format(now(), 'Y-m-d');
         return redirect()->action('PayrollController@viewPay', ['id' => $id, 'date' => $date]);
     }
-
 
     public function setRecordDate(Request $request, $id) {
 

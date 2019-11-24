@@ -47,7 +47,6 @@ class AdjustmentsRecordController extends Controller
 
     }
 
-
     public function goToDate(Request $request, $id) {
         $month = $request->get('month');
         $year = $request->get('year');
@@ -56,7 +55,6 @@ class AdjustmentsRecordController extends Controller
 
         return redirect()->action('AdjustmentsRecordController@get', ['id' => $id, 'date' => $year.'-'.$month.'-'.$day]);
     }
-
 
     public function get($id, $date) {
 
@@ -97,7 +95,6 @@ class AdjustmentsRecordController extends Controller
 
     }
 
-
     private function mapToEntity($id, $date, $name, $viewModel, $entity = null) {
 
         if ($entity == null)
@@ -119,7 +116,6 @@ class AdjustmentsRecordController extends Controller
 
         return $entity;
     }
-
 
     public function getAll($date) {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();

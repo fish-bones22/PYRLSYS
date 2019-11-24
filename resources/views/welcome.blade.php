@@ -49,104 +49,104 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
         <div class="row" id="masterNavigation">
 
             @if ($auth['admin'])
-            <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Administrator')">
-                <div class="form-group text-sm-center">
-                    <div class="row">
-                        <div class="col-sm-12 col-2">
-                            <img src="{{ asset('images/icons/gears.svg') }}" class="img-responsive tile-icon" />
-                        </div>
-                        <div class="col-sm-12 col-10">
-                            <div class="form-paper-display">Administrator</div>
-                            <noscript>
-                                <a href='{{ action('UserController@index') }}' class="btn btn-link">Administrator</a>
-                            </noscript>
+                <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Administrator')">
+                    <div class="form-group text-sm-center">
+                        <div class="row">
+                            <div class="col-sm-12 col-2">
+                                <img src="{{ asset('images/icons/gears.svg') }}" class="img-responsive tile-icon" />
+                            </div>
+                            <div class="col-sm-12 col-10">
+                                <div class="form-paper-display">Administrator</div>
+                                <noscript>
+                                    <a href='{{ action('UserController@index') }}' class="btn btn-link">Administrator</a>
+                                </noscript>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @else
-            <div class="col-sm-6 form-paper tile-selection disabled">
-                <div class="form-group text-sm-center">
-                    <div class="row">
-                        <div class="col-sm-12 col-2">
-                            <img src="{{ asset('images/icons/gears.svg') }}" class="img-responsive tile-icon" />
-                        </div>
-                        <div class="col-sm-12 col-10">
-                            <div class="form-paper-display">Administrator</div>
+                <div class="col-sm-6 form-paper tile-selection disabled">
+                    <div class="form-group text-sm-center">
+                        <div class="row">
+                            <div class="col-sm-12 col-2">
+                                <img src="{{ asset('images/icons/gears.svg') }}" class="img-responsive tile-icon" />
+                            </div>
+                            <div class="col-sm-12 col-10">
+                                <div class="form-paper-display">Administrator</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @endif
 
             @if ($auth['human'])
-            <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Human Resource')">
-                <div class="form-group">
-                    <div class="form-group text-sm-center">
-                        <div class="row">
-                            <div class="col-sm-12 col-2">
-                                <img src="{{ asset('images/icons/multi-user.svg') }}" class="img-responsive tile-icon" />
-                            </div>
-                            <div class="col-sm-12 col-10">
-                                <div class="form-paper-display">Human Resource</div>
-                                <noscript>
-                                    <a href='{{ action('EmployeeController@index') }}' class="btn btn-link">Human Resource</a>
-                                </noscript>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @else
-            <div class="col-sm-6 form-paper tile-selection disabled">
-                <div class="form-group">
-                    <div class="form-group text-sm-center">
-                        <div class="row">
-                            <div class="col-sm-12 col-2">
-                                <img src="{{ asset('images/icons/multi-user.svg') }}" class="img-responsive tile-icon" />
-                            </div>
-                            <div class="col-sm-12 col-10">
-                                <div class="form-paper-display">Human Resource</div>
+                <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Human Resource')">
+                    <div class="form-group">
+                        <div class="form-group text-sm-center">
+                            <div class="row">
+                                <div class="col-sm-12 col-2">
+                                    <img src="{{ asset('images/icons/multi-user.svg') }}" class="img-responsive tile-icon" />
                                 </div>
+                                <div class="col-sm-12 col-10">
+                                    <div class="form-paper-display">Human Resource</div>
+                                    <noscript>
+                                        <a href='{{ action('EmployeeController@index') }}' class="btn btn-link">Human Resource</a>
+                                    </noscript>
+                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            @else
+                <div class="col-sm-6 form-paper tile-selection disabled">
+                    <div class="form-group">
+                        <div class="form-group text-sm-center">
+                            <div class="row">
+                                <div class="col-sm-12 col-2">
+                                    <img src="{{ asset('images/icons/multi-user.svg') }}" class="img-responsive tile-icon" />
+                                </div>
+                                <div class="col-sm-12 col-10">
+                                    <div class="form-paper-display">Human Resource</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
             @endif
 
             @if ($auth['manhour'])
-            <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Manhour')">
-                <div class="form-group">
-                    <div class="form-group text-sm-center">
-                        <div class="row">
-                            <div class="col-sm-12 col-2">
-                                <img src="{{ asset('images/icons/clock.svg') }}" class="img-responsive tile-icon" />
-                            </div>
-                            <div class="col-sm-12 col-10">
-                                <div class="form-paper-display">Manhour</div>
-                                <noscript>
-                                    <a href='{{ action('ManhourController@index') }}' class="btn btn-link">Manhour</a>
-                                </noscript>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @else
-            <div class="col-sm-6 form-paper tile-selection disabled">
-                <div class="form-group">
-                    <div class="form-group text-sm-center">
-                        <div class="row">
-                            <div class="col-sm-12 col-2">
-                                <img src="{{ asset('images/icons/clock.svg') }}" class="img-responsive tile-icon" />
-                            </div>
-                            <div class="col-sm-12 col-10">
-                                <div class="form-paper-display">Manhour</div>
+                <div class="col-sm-6 form-paper tile-selection" onclick="filterType('Manhour')">
+                    <div class="form-group">
+                        <div class="form-group text-sm-center">
+                            <div class="row">
+                                <div class="col-sm-12 col-2">
+                                    <img src="{{ asset('images/icons/clock.svg') }}" class="img-responsive tile-icon" />
                                 </div>
+                                <div class="col-sm-12 col-10">
+                                    <div class="form-paper-display">Manhour</div>
+                                    <noscript>
+                                        <a href='{{ action('ManhourController@index') }}' class="btn btn-link">Manhour</a>
+                                    </noscript>
+                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @else
+                <div class="col-sm-6 form-paper tile-selection disabled">
+                    <div class="form-group">
+                        <div class="form-group text-sm-center">
+                            <div class="row">
+                                <div class="col-sm-12 col-2">
+                                    <img src="{{ asset('images/icons/clock.svg') }}" class="img-responsive tile-icon" />
+                                </div>
+                                <div class="col-sm-12 col-10">
+                                    <div class="form-paper-display">Manhour</div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             @if ($auth['payroll'])
@@ -168,20 +168,20 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                 </div>
             </div>
             @else
-            <div class="col-sm-6 form-paper tile-selection disabled">
-                <div class="form-group">
-                    <div class="form-group text-sm-center">
-                        <div class="row">
-                            <div class="col-sm-12 col-2">
-                                <img src="{{ asset('images/icons/money.svg') }}" class="img-responsive tile-icon" />
-                            </div>
-                            <div class="col-sm-12 col-10">
-                                <div class="form-paper-display">Payroll</div>
+                <div class="col-sm-6 form-paper tile-selection disabled">
+                    <div class="form-group">
+                        <div class="form-group text-sm-center">
+                            <div class="row">
+                                <div class="col-sm-12 col-2">
+                                    <img src="{{ asset('images/icons/money.svg') }}" class="img-responsive tile-icon" />
+                                </div>
+                                <div class="col-sm-12 col-10">
+                                    <div class="form-paper-display">Payroll</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @endif
 
         </div>
@@ -197,37 +197,37 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                     </thead>
                     <tbody>
                         @if ($auth['admin'])
-                        <tr><td><a href="{{ action('UserController@index') }}">Show Users</a></td><td><i class="text-muted small">Administrator</i></td></tr>
-                        <tr><td><a href="{{ action('UserController@register') }}">Add User</a></td><td><i class="text-muted small">Administrator</i></td></tr>
-                        <tr><td><a href="{{ action('CategoryController@manage', 'department') }}">Manage Departments</a></td><td><i class="text-muted small">Administrator</i></td></tr>
+                            <tr><td><a href="{{ action('UserController@index') }}">Show Users</a></td><td><i class="text-muted small">Administrator</i></td></tr>
+                            <tr><td><a href="{{ action('UserController@register') }}">Add User</a></td><td><i class="text-muted small">Administrator</i></td></tr>
+                            <tr><td><a href="{{ action('CategoryController@manage', 'department') }}">Manage Departments</a></td><td><i class="text-muted small">Administrator</i></td></tr>
                         @endif
                         @if ($auth['human'])
-                        <tr><td><a href="{{ action('EmployeeController@index') }}">Show Employees</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
-                        <tr><td><a href="{{ route('employee.new') }}">Add Employee</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
-                        <tr><td><a href="{{ action('ApplicantController@index') }}">Show Applicants</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
-                        <tr><td><a href="{{ action('ApplicantController@new') }}">Show Application Form</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
+                            <tr><td><a href="{{ action('EmployeeController@index') }}">Show Employees</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
+                            <tr><td><a href="{{ route('employee.new') }}">Add Employee</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
+                            <tr><td><a href="{{ action('ApplicantController@index') }}">Show Applicants</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
+                            <tr><td><a href="{{ action('ApplicantController@new') }}">Show Application Form</a></td><td><i class="text-muted small">Human Resource</i></td></tr>
                         @endif
                         @if ($auth['manhour'])
-                        <tr><td><a href="{{ action('ManhourController@index') }}">Show Manhour Master List</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ route('manhour.input') }}">Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('ManhourController@inputAll', date_format(now(), 'Y-m-d')) }}">Batch Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('ManhourController@viewNow') }}">Show Daily Work Hours</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('OtRequestController@index') }}">Show OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('OtRequestController@new') }}">Add OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
-                        <tr><td><a href="{{ action('ManhourController@defineHoliday', date_format(now(), 'Y')) }}">Define Holidays</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ action('ManhourController@index') }}">Show Manhour Master List</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ route('manhour.input') }}">Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ action('ManhourController@inputAll', date_format(now(), 'Y-m-d')) }}">Batch Input Manhour Records</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ action('ManhourController@viewNow') }}">Show Daily Work Hours</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ action('OtRequestController@index') }}">Show OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ action('OtRequestController@new') }}">Add OT Requests</a></td><td><i class="text-muted small">Manhour</i></td></tr>
+                            <tr><td><a href="{{ action('ManhourController@defineHoliday', date_format(now(), 'Y')) }}">Define Holidays</a></td><td><i class="text-muted small">Manhour</i></td></tr>
                         @endif
                         @if ($auth['payroll'])
-                        <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Show Payroll Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Semi-monthly Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'all', 'date' => date_format(now(), 'Y-m-d')]) }}">Show Monthly Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'companyloan', 'date' => date_format(now(), 'Y-m-d')]) }}">Company Loan Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'mealdeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Meal Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'medicaldeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Medical Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'pagibig', 'date' => date_format(now(), 'Y-m-d')]) }}">PAGIBIG Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'philhealth', 'date' => date_format(now(), 'Y-m-d')]) }}">Philhealth Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
-                        <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Witholding Tax Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('PayrollController@index') }}">Show Payroll Master List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Show Payroll Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Show Semi-monthly Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'all', 'date' => date_format(now(), 'Y-m-d')]) }}">Show Monthly Deductibles Record List</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'companyloan', 'date' => date_format(now(), 'Y-m-d')]) }}">Company Loan Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'mealdeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Meal Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'medicaldeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Medical Deduction Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'pagibig', 'date' => date_format(now(), 'Y-m-d')]) }}">PAGIBIG Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'philhealth', 'date' => date_format(now(), 'Y-m-d')]) }}">Philhealth Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Witholding Tax Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                         @endif
                     </tbody>
                 </table>
@@ -242,6 +242,7 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
 @section('script')
 <script>
     var table;
+
     $(function() {
 
         // $(".tile-selection").click(function() {

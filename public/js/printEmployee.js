@@ -17,10 +17,56 @@ var mainSize = 12;
 var isDone = false;
 var currPage = 0;
 
+// function printOne(id) {
+//     var doc = newDoc();
+//     getJson(id, doc, 'save', null);
+// }
 
 function printOne(id) {
-    var doc = newDoc();
-    getJson(id, doc, 'save', null);
+    // These variables are to be use removing items that must not include in pdf
+    var rateDiv = $('#rateDivId');
+    var allowanceDiv = $('#allowanceDivId');
+    var buttonsDiv = $('#buttonsDivId');
+    var viewScheduleHistoryDiv = $('#viewScheduleHistoryDivId');
+    var viewHistoryOfTransferDivId = $('#viewHistoryOfTransferDivId');
+
+    // removing all unnecessaries
+    $('#rateDivId').remove();
+    $('#allowanceDivId').remove();
+    $('#viewScheduleHistoryDivId').remove();
+    $('#viewHistoryOfTransferDivId').remove();
+    $('#buttonsDivId').remove();
+
+    var htmlValue = $('#pageContainerDivId').html();
+    //console.log(htmlValue);
+    console.log(id);
+    // returning back all removed item
+    $('#rateAndAllowanceDivId').append(rateDiv).append(allowanceDiv);
+    $('#scheduleDivId').append(viewScheduleHistoryDiv);
+    $(viewHistoryOfTransferDivId).insertAfter("#scheduleRowDivId");
+    $('form').append(buttonsDiv);
+
+    //
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: 'POST',
+        url:'/employee/view/viewPfd',
+        data: {'htmlValue' : htmlValue},
+        //data: {'id' : id},
+        success: function(data) {
+            var blob=new Blob([data]);
+            var link=document.createElement('a');
+            link.href=window.URL.createObjectURL(blob);
+            link.download="samplePDF.pdf";
+            link.click();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(JSON.stringify(jqXHR));
+            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+        }
+    });
 }
 
 function printAll() {
@@ -58,7 +104,7 @@ function getJson(id, doc, mode, filename) {
         contentType: 'text/plain',
         dataType:"json",
         success: function(result) {
-            console.log(result);
+            //console.log(result);
             print(result, doc, 'save', 'Employee', filename);
             //print(result, doc, mode, 'Company',filename);
         }

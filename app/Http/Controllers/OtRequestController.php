@@ -58,7 +58,6 @@ class OtRequestController extends Controller
         return view('otrequest.new', [ 'departments' => $departments ]);
     }
 
-
     public function add(Request $request) {
 
         $req = $request->all();
@@ -117,7 +116,6 @@ class OtRequestController extends Controller
         return redirect()->back()->with('success', 'OT Requests have been added.');
     }
 
-
     public function batchApprove(Request $request) {
 
         $batchApproval = $request->get('batchapproval');
@@ -136,7 +134,6 @@ class OtRequestController extends Controller
         return redirect()->back()->with('success', 'OT Requests has been approved.');
     }
 
-
     public function approve($id) {
         if ($id == 0)
             return redirect()->back()->with('error', 'Invalid record');
@@ -149,7 +146,6 @@ class OtRequestController extends Controller
         return redirect()->back()->with('success', 'OT Request has been approved.');
     }
 
-
     public function deny($id) {
         if ($id == 0)
             return redirect()->back()->with('error', 'Invalid record');
@@ -161,7 +157,6 @@ class OtRequestController extends Controller
 
         return redirect()->back()->with('success', 'OT Request has been denied.');
     }
-
 
     public function viewApproved($dateFrom, $dateTo) {
 
@@ -194,7 +189,6 @@ class OtRequestController extends Controller
         return view('otrequest.approvedindex', ['otRequests' => $otRequests, 'otRequestsDenied' => $otRequestsDenied, 'departments' => $departments, 'details' => $details]);
     }
 
-
     public function filterDate(Request $request) {
 
         $month = $request->get('month');
@@ -211,7 +205,6 @@ class OtRequestController extends Controller
         return redirect()->action('OtRequestController@viewApproved', ['datefrom' => $datefrom, 'dateto' => $dateto]);
     }
 
-
     public function getHolidays($date) {
 
         if ($date === null || $date === '') {
@@ -221,7 +214,6 @@ class OtRequestController extends Controller
         $holidays = $this->manhourService->getHoliday($date);
         return response()->json($holidays);
     }
-
 
     public function getEmployees($dept) {
 

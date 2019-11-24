@@ -108,7 +108,6 @@ class DeductibleRecordController extends Controller
         return redirect()->back()->with('success', 'Deductible added successfuly');
     }
 
-
     public function goToDate(Request $request, $id)
     {
         $month = $request->get('month');
@@ -119,10 +118,10 @@ class DeductibleRecordController extends Controller
         return redirect()->action('DeductibleRecordController@get', ['id' => $id, 'date' => $year . '-' . $month . '-' . $day]);
     }
 
-
     public function get($id, $date)
     {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
+
         $details = array();
         $details['year'] = date_format(date_create($date), 'Y');
         $details['month'] = date_format(date_create($date), 'm');
@@ -232,7 +231,6 @@ class DeductibleRecordController extends Controller
         return view('deductibles.get', ['models' => $models, 'otherModels' => $otherModels, 'employee' => $employee, 'details' => $details, 'categories' => $categories]); //
 
     }
-
 
     private function mapToEntity($id, $date, $name, $viewModel, $entity = null)
     {

@@ -264,7 +264,7 @@
                         <select class="form-control" name="other_models[{{$i}}][details]">
                             <?php
                             $options = [
-                                'Company Loan/Cash Advance', 'Meal Deduction', 'Medical Deduction'
+                                'Company Loan/Cash Advance', 'Medical Deduction'
                             ]
                             ?>
                             @foreach ($categories as $cat)

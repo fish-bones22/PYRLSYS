@@ -161,8 +161,13 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
 
+        // For PDF
+        //Barryvdh\DomPDF\ServiceProvider::class,
+        //niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
+        //Ignited\Pdf\PdfServiceProvider,
+        Barryvdh\Snappy\ServiceProvider::class,
     ],
 
     /*
@@ -213,7 +218,12 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-
+        // For PDF
+        //'PDF' => Barryvdh\DomPDF\Facade::class,
+        //'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+        //'PDF'  => Ignited\Pdf\Facades\Pdf,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
     ],
 
 ];

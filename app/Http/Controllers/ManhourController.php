@@ -34,12 +34,9 @@ class ManhourController extends Controller
         return view("manhour.index", ['employees' => $employees, 'departments' => $departments ]);
     }
 
-
     public function viewNow() {
         return redirect()->route('manhour.viewrange', ['mode' => 'daily', 'datefrom' => date_format(now(), 'Y-m-d'), 'dateto' => date_format(now(), 'Y-m-d')]);
     }
-
-
 
     public function viewAttendace(Request $request) {
 
@@ -99,8 +96,7 @@ class ManhourController extends Controller
         return view('manhour.attendance', ['records' => $records, 'details' => $details]);
     }
 
-
-    public function viewRange($mode, $datefrom = null, $dateto = null) {
+    public function viewRaninputge($mode, $datefrom = null, $dateto = null) {
         if ($datefrom == null)
             $datefrom = date_create('1900-01-01');
         else
@@ -122,14 +118,12 @@ class ManhourController extends Controller
         return view('manhour.viewall_', ['records' => $records, 'departments' => $departments, 'date' => $date ]);
     }
 
-
     public function viewRecordNow($id) {
         $month = date_format(now(), 'm');
         $day = date_format(now(), 'j');
         $year = date_format(now(), 'Y');
         return redirect()->action('ManhourController@viewRecord', ['id' => $id, 'year' => $year, 'month' => $month, 'day' => $day]);
     }
-
 
     public function setRecordDate(Request $request, $id) {
         $year = $request->get('year');
@@ -158,14 +152,13 @@ class ManhourController extends Controller
 
     }
 
-
-
     public function viewRecord($id, $year = null, $month = null, $day = null) {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         $startDay;
         $endDay;
+
         if ($day <= 15) {
             $startDay = '1';
             $endDay = 15;
@@ -200,7 +193,6 @@ class ManhourController extends Controller
         }
         return view('manhour.viewindividual', ['records' => $records, 'details' => $details]);
     }
-
 
     public function viewRecordCollated($datefrom = null, $dateto = null) {
 
@@ -264,7 +256,6 @@ class ManhourController extends Controller
         return view('manhour.viewcollated', ['records' => $records, 'details' => $details, 'departments' => $departments]);
     }
 
-
     public function filterDate(Request $request) {
 
         $mode = $request->get('mode');
@@ -303,7 +294,6 @@ class ManhourController extends Controller
         }
     }
 
-
     public function search(Request $request, $id) {
         $req = $request->all();
 
@@ -316,7 +306,6 @@ class ManhourController extends Controller
 
         return redirect()->action('ManhourController@input', ['id' => $id]);
     }
-
 
     public function getNext($id) {
 
@@ -374,7 +363,6 @@ class ManhourController extends Controller
         return redirect()->action('ManhourController@input', ['id' => $newId]);
     }
 
-
     public function input($id = null) {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
@@ -396,10 +384,8 @@ class ManhourController extends Controller
             return view('manhour.input', ['employee' => $employee, 'outliers' => $outliers])->with('success', $message);
         }
 
-
         return view('manhour.input', ['employee' => $employee, 'outliers' => $outliers]);
     }
-
 
     public function record(Request $request, $id) {
 
@@ -447,7 +433,6 @@ class ManhourController extends Controller
         return redirect()->back();
     }
 
-
     public function inputAll($date) {
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
@@ -475,7 +460,6 @@ class ManhourController extends Controller
 
         return view('manhour.inputall', ['records' => $records, 'departments' => $departments, 'details' => $details, 'outliers' => $outliers, 'employees' => $employees ]);
     }
-
 
     public function recordAll(Request $request) {
 
@@ -538,14 +522,12 @@ class ManhourController extends Controller
         return view('manhour.defineholiday', ['holidays' => $holidays, 'year' => $year ]);
     }
 
-
     public function defineHolidayPost(Request $request) {
 
         $year = $request->year;
 
         return redirect()->action('ManhourController@defineHoliday', $year);
     }
-
 
     public function saveHoliday(Request $request) {
         if ($request->get('date') === null || $request->get('date') === '') {
@@ -576,7 +558,6 @@ class ManhourController extends Controller
         return response()->json($result);
     }
 
-
     public function deleteHoliday(Request $request) {
 
         $result = $this->manhourService->deleteHoliday($request->date);
@@ -585,12 +566,10 @@ class ManhourController extends Controller
 
     }
 
-
     public function inputCsv() {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
         return view('manhour.inputcsv', ['records' => null]);
     }
-
 
     public function postCsvFile(Request $request) {
 
@@ -719,7 +698,6 @@ class ManhourController extends Controller
         return redirect()->back()->with('error', 'No CSV file');
     }
 
-
     public function postCsvRecords(Request $request) {
 
         if ($request->records == null || sizeof($request->records) < 0) {
@@ -788,7 +766,6 @@ class ManhourController extends Controller
 
     }
 
-
     public function getHolidayOnDate($date) {
 
         if ($date === null || $date === '') return null;
@@ -804,7 +781,6 @@ class ManhourController extends Controller
         ]);
 
     }
-
 
     public function getRecord($id, $date) {
 
@@ -828,5 +804,4 @@ class ManhourController extends Controller
             'departmentId' => $empDetails['department']['value']
         ]);
     }
-
 }
