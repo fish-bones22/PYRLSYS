@@ -253,13 +253,13 @@
             <div class="row">
                 <div class="col-4 form-paper">
                     <div class="form-group">
-                        <label for="dateHired" class="form-paper-label">Date Started</label>
+                        <label for="dateHired" class="form-paper-label">Employment Start Date</label>
                         <div class="form-paper-display">{{ $employee->current != null && key_exists('datestarted', $employee->current) ? date_format(date_create($employee->current['datestarted']), 'M d, Y'): '' }}</div>
                     </div>
                 </div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
-                        <label for="dateEnded" class="form-paper-label">Until</label>
+                        <label for="dateEnded" class="form-paper-label">Unemployment Date</label>
                         <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['datetransfered']) ? date_format(date_create($employee->current['datetransfered']), 'M d, Y'): 'None' }}</div>
                     </div>
                 </div>
@@ -329,7 +329,7 @@
                         </div>
                         <div class="col-sm-3 col-6">
                             <div class="form-group">
-                                <label for="effectiveDateStart" class="form-paper-label">Effective Date Start</label>
+                                <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
                                 <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['startdate']) ? date_format(date_create($employee->timeTable['startdate']), 'M d, Y') : 'None' }}</div>
                             </div>
                         </div>

@@ -110,12 +110,12 @@ OT Requests
                             <form action="{{ route('otrequest.approve', $req->id) }}" method="POST">
                                 @csrf
                                 @method('post')
-                                <button type="submit" class="btn btn-sm btn-primary">Approve</button>
+                                <button type="submit" class="btn btn-sm btn-primary" data-confirm="approve">Approve</button>
                             </form>
                             <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
                                 @csrf
                                 @method('post')
-                                <button type="submit" class="btn btn-sm btn-light">Deny</button>
+                                <button type="submit" class="btn btn-sm btn-light" data-confirm="deny">Deny</button>
                             </form>
                             {{-- <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
                                 @csrf

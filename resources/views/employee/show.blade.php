@@ -392,7 +392,7 @@
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="form-group">
-                                <label for="effectiveDateStart" class="form-paper-label">Effective Date Start</label>
+                                <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
                                 <input id="effectiveDateStart" type="date" name="effective_date_start" class="form-control"  value="{{ $employee->timeTable != null && key_exists('startdate', $employee->timeTable) ? $employee->timeTable['startdate'] : date_format(NOW(), 'Y-m-d') }}" />
                             </div>
                         </div>
@@ -674,13 +674,13 @@
                 <div class="row">
                     <div class="col-4 form-paper">
                         <div class="form-group">
-                            <label for="mewDateHired" class="form-paper-label">Date Started</label>
+                            <label for="mewDateHired" class="form-paper-label">Employment Start Date</label>
                             <input id="mewDateHired" type="date" name="date_started" class="form-control" required />
                         </div>
                     </div>
                     <div class="col-4 form-paper">
                         <div class="form-group">
-                            <label for="newDateEnded" class="form-paper-label">Until</label>
+                            <label for="newDateEnded" class="form-paper-label">Unemployment Date</label>
                             <input id="newDateEnded" type="date" name="date_transfered" class="form-control" />
                         </div>
                     </div>
@@ -878,6 +878,8 @@
                 <div class="col-12 form-paper section-divider"></div>
             </div>
             <div class="row">
+
+
                 <div class="col-12 form-paper">
                     <table class="table table-sm" id="transferHistoryTable">
                         <thead>

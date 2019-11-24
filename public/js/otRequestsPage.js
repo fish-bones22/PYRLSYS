@@ -48,8 +48,8 @@ function checkBatchApproval() {
 
 function searchEmployee(term) {
     var term = $("#searchBox").val();
-    table.column(0).search(term);
-    table.column(0).draw();
+    table.column(1).search(term);
+    table.column(1).draw();
 }
 
 function filterDepartment() {

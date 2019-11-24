@@ -107,75 +107,75 @@ class ManhourService extends EntityService implements IManhourService
         }
 
         // Auto OT count
-        $timeFormatted_ = $this->appendDateToTime($entity->date, $entity->timeIn, $entity->timeOut);
-        $timeIn_ = date_create($timeFormatted_[0]);
-        $timeOut_ = date_create($timeFormatted_[1]);
-        $date = date_create($entity->date);
+        // $timeFormatted_ = $this->appendDateToTime($entity->date, $entity->timeIn, $entity->timeOut);
+        // $timeIn_ = date_create($timeFormatted_[0]);
+        // $timeOut_ = date_create($timeFormatted_[1]);
+        // $date = date_create($entity->date);
 
-        $timeTable = $this->employeeService->getEmployeeTimeTable($entity->employee_id, $date);
-        $scheduledTimeIn = $timeTable['timein'];
-        $scheduledTimeOut = $timeTable['timeout'];
-        $scheduledTimeFormatted_ = $this->appendDateToTime($entity->date, $scheduledTimeIn, $scheduledTimeOut);
-        $scheduledTimeIn_ = date_create($scheduledTimeFormatted_[0]);
-        $scheduledTimeOut_ = date_create($scheduledTimeFormatted_[1]);
+        // $timeTable = $this->employeeService->getEmployeeTimeTable($entity->employee_id, $date);
+        // $scheduledTimeIn = $timeTable['timein'];
+        // $scheduledTimeOut = $timeTable['timeout'];
+        // $scheduledTimeFormatted_ = $this->appendDateToTime($entity->date, $scheduledTimeIn, $scheduledTimeOut);
+        // $scheduledTimeIn_ = date_create($scheduledTimeFormatted_[0]);
+        // $scheduledTimeOut_ = date_create($scheduledTimeFormatted_[1]);
 
-        $offsetHour = 0;
-        $earlyOt = false;
+        // $offsetHour = 0;
+        // $earlyOt = false;
 
-        // Check for OTs
-        if ($timeIn_ < $scheduledTimeIn_) {
-            $x = $scheduledTimeIn_->diff($timeIn_);
-            $offsetHour = $this->getTotalHours($x);
-            $offsetHour = $offsetHour < 0 ? 0 : $offsetHour;
-            $earlyOt = true;
-        }
-        if ($timeOut_ > $scheduledTimeOut_) {
-            $x = $timeOut_->diff($scheduledTimeOut_);
-            $offsetHour = $this->getTotalHours($x);
-            $offsetHour = $offsetHour < 0 ? 0 : $offsetHour;
-            $earlyOt = false;
-        }
+        // // Check for OTs
+        // if ($timeIn_ < $scheduledTimeIn_) {
+        //     $x = $scheduledTimeIn_->diff($timeIn_);
+        //     $offsetHour = $this->getTotalHours($x);
+        //     $offsetHour = $offsetHour < 0 ? 0 : $offsetHour;
+        //     $earlyOt = true;
+        // }
+        // if ($timeOut_ > $scheduledTimeOut_) {
+        //     $x = $timeOut_->diff($scheduledTimeOut_);
+        //     $offsetHour = $this->getTotalHours($x);
+        //     $offsetHour = $offsetHour < 0 ? 0 : $offsetHour;
+        //     $earlyOt = false;
+        // }
 
 
-        if ($offsetHour >= 1) {
+        // if ($offsetHour >= 1) {
 
-            $otTrimmedOffset = floor($offsetHour);
-            $otStartTime = null;
-            $otEndTime = null;
+        //     $otTrimmedOffset = floor($offsetHour);
+        //     $otStartTime = null;
+        //     $otEndTime = null;
 
-            if ($earlyOt) {
-                $otStartTime = date("H:i:s", strtotime('-' . $otTrimmedOffset . ' hours', strtotime($scheduledTimeFormatted_[0])));
-                $otEndTime = date_format($scheduledTimeIn_, 'H:i:s');
-            } else {
-                $otStartTime = date_format($scheduledTimeOut_, 'H:i:s');
-                $otEndTime = date("H:i:s", strtotime('+' . $otTrimmedOffset . ' hours', strtotime($scheduledTimeFormatted_[1])));
-            }
+        //     if ($earlyOt) {
+        //         $otStartTime = date("H:i:s", strtotime('-' . $otTrimmedOffset . ' hours', strtotime($scheduledTimeFormatted_[0])));
+        //         $otEndTime = date_format($scheduledTimeIn_, 'H:i:s');
+        //     } else {
+        //         $otStartTime = date_format($scheduledTimeOut_, 'H:i:s');
+        //         $otEndTime = date("H:i:s", strtotime('+' . $otTrimmedOffset . ' hours', strtotime($scheduledTimeFormatted_[1])));
+        //     }
 
-            $otType = 'rot';
-            if ($this->isSunday($entity->date)) {
-                $otType = 'sot';
-            } else {
-                $holiday = $this->getHoliday($entity->date);
-                if ($holiday != null && $holiday['type'] == 'legal') {
-                    $otType = 'lhot';
-                }
-            }
+        //     $otType = 'rot';
+        //     if ($this->isSunday($entity->date)) {
+        //         $otType = 'sot';
+        //     } else {
+        //         $holiday = $this->getHoliday($entity->date);
+        //         if ($holiday != null && $holiday['type'] == 'legal') {
+        //             $otType = 'lhot';
+        //         }
+        //     }
 
-            $otReq = new OtRequestEntity();
-            $otReq->otDate = $date;
-            $otReq->employeeId = $entity->employee_id;
-            $otReq->employeeName = $entity->employeeName;
-            $otReq->department = $entity->department;
-            $otReq->startTime = $otStartTime;
-            $otReq->endTime = $otEndTime;
-            $otReq->allowedHours = $otTrimmedOffset;
-            $otReq->reason = 'System generated';
-            $otReq->otType = $otType;
-            $otReq->approval = $otApproval;
-            $result = $this->otRequestService->addOtRequest($otReq);
+        //     $otReq = new OtRequestEntity();
+        //     $otReq->otDate = $date;
+        //     $otReq->employeeId = $entity->employee_id;
+        //     $otReq->employeeName = $entity->employeeName;
+        //     $otReq->department = $entity->department;
+        //     $otReq->startTime = $otStartTime;
+        //     $otReq->endTime = $otEndTime;
+        //     $otReq->allowedHours = $otTrimmedOffset;
+        //     $otReq->reason = 'System generated';
+        //     $otReq->otType = $otType;
+        //     $otReq->approval = $otApproval;
+        //     $result = $this->otRequestService->addOtRequest($otReq);
 
-            if (!$result['result']) return $result;
-        }
+        //     if (!$result['result']) return $result;
+        // }
 
         return [
             'result' => true
@@ -219,7 +219,7 @@ class ManhourService extends EntityService implements IManhourService
 
         $record = Manhour::where('employee_id', $id)->where('recordDate', $date)->first();
 
-        if ($record == null) 
+        if ($record == null)
             return null;
 
         return $this->mapToEntity($record, new ManhourEntity());
@@ -263,16 +263,16 @@ class ManhourService extends EntityService implements IManhourService
 
             $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, date_create($date));
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, date_create($date));
-    
+
             if ($history == null)
                 $history = $this->employeeService->getCurrentEmployeeHistory($employee->employeeId);
-    
+
             $summary->date = $date;
             $summary->timeCard = $history['timecard'];
             $summary->departmentName = $history['department']['displayName'];
             $summary->departmentId = $history['department']['value'];
             $summary->break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
-    
+
             $properHours = 0;
             $recordHours = 0;
             $scheduledHour = 0;
@@ -280,7 +280,7 @@ class ManhourService extends EntityService implements IManhourService
             $ndHours = 0;
             $isLate = false;
             $overtimeCounted = false;
-            
+
             // Get employee schedule
             $scheduledTimeIn = isset($timeTable['timein']) ? $timeTable['timein'] : null;
             $scheduledTimeOut = isset($timeTable['timeout']) ? $timeTable['timeout'] : null;

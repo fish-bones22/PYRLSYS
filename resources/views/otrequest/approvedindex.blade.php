@@ -131,7 +131,7 @@ Approved OT Requests
                             <form action="{{ route('otrequest.deny', $req->id) }}" method="POST">
                                 @csrf
                                 @method('post')
-                                <button type="submit" class="close" data-confirm="delete">&times;</button>
+                                <button type="submit" class="close" data-confirm="deny">&times;</button>
                             </form>
                         </td>
                     </tr>
@@ -155,7 +155,7 @@ Approved OT Requests
                             <form action="{{ route('otrequest.approve', $req->id) }}" method="POST">
                                 @csrf
                                 @method('post')
-                                <button type="submit" class="close" data-confirm="delete">&#10003;</button>
+                                <button type="submit" class="close" data-confirm="approve">&#10003;</button>
                             </form>
                         </td>
                     </tr>
