@@ -132,13 +132,15 @@ function printText(doc, result, copy) {
     // Info
     doc.setFontSize(labelSize);
     doc.text("Employee ID: ", col1, i = spacer(i));
-    doc.text("Sex: ", col5, i);
-    doc.text("Civil Status: ", col9, i);
+    doc.text("Sex: ", col4, i);
+    doc.text("Civil Status: ", col7, i);
+    doc.text("Birthday: ", col10, i);
 
     doc.setFontSize(mainSize);
     doc.text(result.employeeId, col1, i = spacer(i));
-    doc.text(result.sex === 'm' ? 'Male' : 'Female', col5, i);
-    doc.text(result.details.civilstatus.value, col9, i);
+    doc.text(result.sex === 'm' ? 'Male' : 'Female', col4, i);
+    doc.text(result.details.civilstatus.value, col7, i);
+    doc.text(result.details.birthday.value, col10, i);
 
     // Name
     doc.setFontSize(labelSize);
@@ -269,9 +271,9 @@ function printText(doc, result, copy) {
     doc.text("Break: ", col9, i);
 
     doc.setFontSize(mainSize);
-    doc.text(result.current.timein != undefined ? result.current.timein : 'Not set', col1, i = spacer(i));
-    doc.text(result.current.timeout != undefined ? result.current.timeout : 'Not set', col5, i);
-    doc.text(result.current.break != null ? result.current.break + " hrs": 'Not set', col9, i);
+    doc.text(result.timeTable.timein != undefined ? formatTime(result.timeTable.timein) : 'Not set', col1, i = spacer(i));
+    doc.text(result.timeTable.timeout != undefined ? formatTime(result.timeTable.timeout) : 'Not set', col5, i);
+    doc.text(result.timeTable.break != null ? result.timeTable.break + " hrs": 'Not set', col9, i);
 
      // Header
      doc.setFontSize(labelSize);
@@ -287,10 +289,10 @@ function printText(doc, result, copy) {
      doc.text("PAGIBIG: ", col10, i);
 
      doc.setFontSize(mainSize);
-     doc.text(result.deductibles.tin != undefined ? result.deductibles.tin : 'Not set', col1, i = spacer(i));
-     doc.text(result.deductibles.sss != undefined ? result.deductibles.sss : 'Not set', col4, i);
-     doc.text(result.deductibles.philhealth != undefined ? result.deductibles.philhealth : 'Not set', col7, i);
-     doc.text(result.deductibles.pagibig != undefined ? result.deductibles.pagibig : 'Not set', col10, i);
+     doc.text(result.deductibles.tin != undefined ? result.deductibles.tin.value : 'Not set', col1, i = spacer(i));
+     doc.text(result.deductibles.sss != undefined ? result.deductibles.sss.value : 'Not set', col4, i);
+     doc.text(result.deductibles.philhealth != undefined ? result.deductibles.philhealth.value : 'Not set', col7, i);
+     doc.text(result.deductibles.pagibig != undefined ? result.deductibles.pagibig.value : 'Not set', col10, i);
 
      // Row 2
      doc.setFontSize(labelSize);
@@ -314,4 +316,22 @@ function getTimestamp() {
     var sec = now.getSeconds();
     var mill = now.getMilliseconds();
     return year + "" + month + "" + day + "" + hour + "" + minutes + "" + sec + "" + mill;
+}
+
+function formatDate(date) {
+    var now = new Date(date);
+    var year = now.getFullYear();
+    var month = now.getMonth();
+    var day = now.getDay();
+    return year + "-" + month + "-" + day;
+}
+
+function formatTime(date) {
+    var now = new Date(date);
+    var hour = now.getHours();
+    var minutes  = now.getMinutes();
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    hour = hour < 10 ? '0' + hour : hour;
+
+    return hour + ":" + minutes;
 }
