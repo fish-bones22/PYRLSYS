@@ -446,10 +446,10 @@
                     <div class="float-right">
                         <div class="btn-group">
                             <a class="btn btn-light" href="{{ action('EmployeeController@index') }}">Back to List</a>
+                           <button class="btn btn-secondary" onclick="printOne({{ $employee->id }})" type="button">Save as PDF</button>
+                           {{-- <button class="btn btn-secondary" onclick="printOne()" type="button">Save as PDF</button> --}}
 {{--                            <button class="btn btn-secondary" onclick="printOne({{ $employee->id }})" type="button">Save as PDF</button>--}}
-{{--                            <button class="btn btn-secondary" onclick="printOne()" type="button">Save as PDF</button>--}}
-{{--                            <button class="btn btn-secondary" onclick="printOne({{ $employee->id }})" type="button">Save as PDF</button>--}}
-                            <a class="btn btn-secondary" href="{{ route('Employee.printPdf', $employee->id) }}">Save as PDF</a>
+                            {{-- <a class="btn btn-secondary" href="{{ route('Employee.printPdf', $employee->id) }}">Save as PDF</a> --}}
                             <a class="btn btn-primary" href="{{ action('EmployeeController@show', $employee->id) }}">Edit</a>
                         </div>
                     </div>
@@ -552,7 +552,7 @@
                                 <th>Time In</th>
                                 <th>Time out</th>
                                 <th>Break</th>
-                                <th>Date Effective</th>
+                                <th>Change Shift Schedule</th>
                                 <th>Until </th>
                             </tr>
                         </thead>

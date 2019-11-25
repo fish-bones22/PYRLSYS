@@ -17,57 +17,57 @@ var mainSize = 12;
 var isDone = false;
 var currPage = 0;
 
-// function printOne(id) {
-//     var doc = newDoc();
-//     getJson(id, doc, 'save', null);
-// }
-
 function printOne(id) {
-    // These variables are to be use removing items that must not include in pdf
-    var rateDiv = $('#rateDivId');
-    var allowanceDiv = $('#allowanceDivId');
-    var buttonsDiv = $('#buttonsDivId');
-    var viewScheduleHistoryDiv = $('#viewScheduleHistoryDivId');
-    var viewHistoryOfTransferDivId = $('#viewHistoryOfTransferDivId');
-
-    // removing all unnecessaries
-    $('#rateDivId').remove();
-    $('#allowanceDivId').remove();
-    $('#viewScheduleHistoryDivId').remove();
-    $('#viewHistoryOfTransferDivId').remove();
-    $('#buttonsDivId').remove();
-
-    var htmlValue = $('#pageContainerDivId').html();
-    //console.log(htmlValue);
-    console.log(id);
-    // returning back all removed item
-    $('#rateAndAllowanceDivId').append(rateDiv).append(allowanceDiv);
-    $('#scheduleDivId').append(viewScheduleHistoryDiv);
-    $(viewHistoryOfTransferDivId).insertAfter("#scheduleRowDivId");
-    $('form').append(buttonsDiv);
-
-    //
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        type: 'POST',
-        url:'/employee/view/viewPfd',
-        data: {'htmlValue' : htmlValue},
-        //data: {'id' : id},
-        success: function(data) {
-            var blob=new Blob([data]);
-            var link=document.createElement('a');
-            link.href=window.URL.createObjectURL(blob);
-            link.download="samplePDF.pdf";
-            link.click();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log(JSON.stringify(jqXHR));
-            console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
-        }
-    });
+    var doc = newDoc();
+    getJson(id, doc, 'save', null);
 }
+
+// function printOne(id) {
+//     // These variables are to be use removing items that must not include in pdf
+//     var rateDiv = $('#rateDivId');
+//     var allowanceDiv = $('#allowanceDivId');
+//     var buttonsDiv = $('#buttonsDivId');
+//     var viewScheduleHistoryDiv = $('#viewScheduleHistoryDivId');
+//     var viewHistoryOfTransferDivId = $('#viewHistoryOfTransferDivId');
+
+//     // removing all unnecessaries
+//     $('#rateDivId').remove();
+//     $('#allowanceDivId').remove();
+//     $('#viewScheduleHistoryDivId').remove();
+//     $('#viewHistoryOfTransferDivId').remove();
+//     $('#buttonsDivId').remove();
+
+//     var htmlValue = $('#pageContainerDivId').html();
+//     //console.log(htmlValue);
+//     console.log(id);
+//     // returning back all removed item
+//     $('#rateAndAllowanceDivId').append(rateDiv).append(allowanceDiv);
+//     $('#scheduleDivId').append(viewScheduleHistoryDiv);
+//     $(viewHistoryOfTransferDivId).insertAfter("#scheduleRowDivId");
+//     $('form').append(buttonsDiv);
+
+//     //
+//     $.ajax({
+//         headers: {
+//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//         },
+//         type: 'POST',
+//         url:'/employee/view/viewPfd',
+//         data: {'htmlValue' : htmlValue},
+//         //data: {'id' : id},
+//         success: function(data) {
+//             var blob=new Blob([data]);
+//             var link=document.createElement('a');
+//             link.href=window.URL.createObjectURL(blob);
+//             link.download="samplePDF.pdf";
+//             link.click();
+//         },
+//         error: function(jqXHR, textStatus, errorThrown) {
+//             console.log(JSON.stringify(jqXHR));
+//             console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+//         }
+//     });
+// }
 
 function printAll() {
 
@@ -104,9 +104,8 @@ function getJson(id, doc, mode, filename) {
         contentType: 'text/plain',
         dataType:"json",
         success: function(result) {
-            //console.log(result);
+            console.log(result);
             print(result, doc, 'save', 'Employee', filename);
-            //print(result, doc, mode, 'Company',filename);
         }
     });
 
@@ -248,13 +247,22 @@ function printText(doc, result, copy) {
     doc.setFontSize(labelSize);
     underline(doc, col1, i += 0.1, 122);
     doc.text("Address: ", col1, i = spacer(i));
-    doc.text("Phone Number: ", col7, i);
     doc.text("Email Address: ", col10, i);
 
     doc.setFontSize(mainSize);
-    doc.text(result.details.address != undefined ? result.details.address.value : 'Not set', col1, i = spacer(i));
-    doc.text(result.details.phonenumber != undefined ? result.details.phonenumber.value : 'Not set', col7, i);
-    doc.text(result.details.email != undefined ? result.details.email.value : 'Not set', col10, i);
+    doc.text(result.details.presentaddress != undefined ? result.details.presentaddress.value : 'Not set', col1, i = spacer(i));
+    // doc.text(result.details.phonenumber != undefined ? result.details.phonenumber.value : 'Not set', col7, i);
+    doc.text(result.details.emailaddress != undefined ? result.details.emailaddress.value : 'Not set', col10, i);
+
+    doc.setFontSize(labelSize);
+    underline(doc, col1, i += 0.1, 122);
+    doc.text("Phone Number 1: ", col1, i = spacer(i));
+    doc.text("Phone Number 2: ", col6, i);
+
+    doc.setFontSize(mainSize);
+    doc.text(result.details.phonenumber1 != undefined ? result.details.phonenumber1.value : 'Not set', col1, i = spacer(i));
+    // doc.text(result.details.phonenumber != undefined ? result.details.phonenumber.value : 'Not set', col7, i);
+    doc.text(result.details.phonenumber2 != undefined ? result.details.phonenumber2.value : 'Not set', col6, i);
 
     // Emergency Info
     doc.setFontSize(labelSize);
@@ -300,26 +308,59 @@ function printText(doc, result, copy) {
     doc.text("Type of Payment: ", col1, i = spacer(i));
     doc.text("Mode of Payment: ", col4, i);
     doc.text("Rate Basis: ", col7, i);
-    doc.text("Rate: ", col9, i);
-    doc.text("Allowance: ", col11, i);
+    //doc.text("Rate: ", col9, i);
+    doc.text("Allowance: ", col10, i);
 
     doc.setFontSize(mainSize);
     doc.text(result.current.paymenttype != undefined ? result.current.paymenttype.displayName : 'Not set', col1, i = spacer(i));
     doc.text(result.current.paymentmode != undefined ? result.current.paymentmode.displayName : 'Not set', col4, i);
     doc.text(result.current.ratebasis != undefined ? result.current.ratebasis : 'Not set', col7, i);
-    doc.text(result.current.rate != undefined ? result.current.rate : 'Not set', col9, i);
-    doc.text(result.current.allowance != undefined ? result.current.allowance : 'Not set', col11, i);
+    //doc.text(result.current.rate != undefined ? result.current.rate : 'Not set', col9, i);
+    doc.text(result.current.allowance != undefined ? result.current.allowance : 'Not set', col10, i);
 
     // Row 4
     doc.setFontSize(labelSize);
     doc.text("Time In: ", col1, i = spacer(i));
-    doc.text("Time Out: ", col5, i);
-    doc.text("Break: ", col9, i);
+    doc.text("Time Out: ", col3, i);
+    doc.text("Break: ", col5, i);
+    doc.text("Change shift schedule: ", col7, i);
+    doc.text("Until: ", col10, i);
 
     doc.setFontSize(mainSize);
     doc.text(result.timeTable.timein != undefined ? formatTime(result.timeTable.timein) : 'Not set', col1, i = spacer(i));
-    doc.text(result.timeTable.timeout != undefined ? formatTime(result.timeTable.timeout) : 'Not set', col5, i);
-    doc.text(result.timeTable.break != null ? result.timeTable.break + " hrs": 'Not set', col9, i);
+    doc.text(result.timeTable.timeout != undefined ? formatTime(result.timeTable.timeout) : 'Not set', col3, i);
+    doc.text(result.timeTable.break != null ? result.timeTable.break + " hrs": 'Not set', col5, i);
+    doc.text(result.timeTable.startdate != undefined ? formatDate(result.timeTable.startdate) : 'Not set', col7, i);
+    doc.text(result.timeTable.enddate != undefined ? formatDate(result.timeTable.enddate) : 'Not set', col10, i);
+
+    // Time table history
+    if (result.timeTableHistory != undefined) {
+
+        var size = Object.keys(result.timeTableHistory).length;
+
+        // Header
+        doc.setFontSize(labelSize);
+        underline(doc, col1, i = spacer(i), 122);
+        doc.text("SCHEDULE HISTORY", col1, i = spacer(i));
+        underline(doc, col1, i += 0.05, 122);
+
+        doc.setFontSize(labelSize);
+        doc.text("Time In", col1, i = spacer(i));
+        doc.text("Time Out", col3, i);
+        doc.text("Break", col5, i);
+        doc.text("Change Shift Schedule", col7, i);
+        doc.text("Until", col10, i);
+        doc.setFontSize(mainSize);
+
+        for (var j = 0; j < size; j++) {
+            doc.text(result.timeTableHistory[j].timein != undefined ? formatTime(result.timeTableHistory[j].timein) : 'Not set', col1, i = spacer(i));
+            doc.text(result.timeTableHistory[j].timeout != undefined ? formatTime(result.timeTableHistory[j].timeout) : 'Not set', col3, i);
+            doc.text(result.timeTableHistory[j].break != null ? result.timeTableHistory[j].break + " hrs": 'Not set', col5, i);
+            doc.text(result.timeTableHistory[j].startdate != undefined ? formatDate(result.timeTableHistory[j].startdate) : 'Not set', col7, i);
+            doc.text(result.timeTableHistory[j].enddate != undefined ? formatDate(result.timeTableHistory[j].enddate) : 'Not set', col10, i);
+        }
+
+    }
 
      // Header
      doc.setFontSize(labelSize);
@@ -367,8 +408,10 @@ function getTimestamp() {
 function formatDate(date) {
     var now = new Date(date);
     var year = now.getFullYear();
-    var month = now.getMonth();
-    var day = now.getDay();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
     return year + "-" + month + "-" + day;
 }
 
