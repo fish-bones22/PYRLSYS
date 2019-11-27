@@ -96,7 +96,7 @@ class ManhourController extends Controller
         return view('manhour.attendance', ['records' => $records, 'details' => $details]);
     }
 
-    public function viewRaninputge($mode, $datefrom = null, $dateto = null) {
+    public function viewRange($mode, $datefrom = null, $dateto = null) {
         if ($datefrom == null)
             $datefrom = date_create('1900-01-01');
         else

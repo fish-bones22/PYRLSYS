@@ -805,17 +805,16 @@ class EmployeeService extends EntityService implements IEmployeeService
     public function addEmployeeTimeTable($id, $timeTable)
     {
 
+        if (!isset($timeTable['startdate']) || $timeTable['startdate'] == null) {
+            return [
+                'result' => true
+            ];
+        }
+
         if (!isset($timeTable['timein']) || $timeTable['timein'] == null) {
             return [
                 'result' => false,
                 'message' => 'No Time In provided'
-            ];
-        }
-
-        if (!isset($timeTable['startdate']) || $timeTable['startdate'] == null) {
-            return [
-                'result' => false,
-                'message' => 'No Start Date for schedule provided'
             ];
         }
 

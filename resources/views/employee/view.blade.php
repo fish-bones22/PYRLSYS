@@ -266,7 +266,7 @@
                     <div class="col-4 form-paper">
                         <div class="form-group">
                             <label for="dateHired" class="form-paper-label">Employment Start Date</label>
-                            <div class="form-paper-display">{{ $employee->current != null && key_exists('datestarted', $employee->current) ? date_format(date_create($employee->current['datestarted']), 'M d, Y'): '' }}</div>
+                            <div class="form-paper-display">{{ $employee->current != null && key_exists('datestarted', $employee->current) && $employee->current['datestarted'] != null ? date_format(date_create($employee->current['datestarted']), 'M d, Y'): 'None' }}</div>
                         </div>
                     </div>
                     <div class="col-4 form-paper">

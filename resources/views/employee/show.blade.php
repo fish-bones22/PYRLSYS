@@ -402,7 +402,7 @@
                        <div class="col-sm-2 col-12">
                            <div class="form-group">
                                <label for="break" class="form-paper-label">Break</label>
-                               <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" required />
+                               <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" />
                            </div>
                         </div>
                         <div class="col-sm-4 col-6">
@@ -766,7 +766,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-sm-5 form-paper">
                         <div class="form-group">
                             <label for="timeInModal" class="form-paper-label">Time In</label>
@@ -786,7 +786,7 @@
                         </div>
                     </div>
                     <div class="col-12 form-paper section-divider"></div>
-                </div>
+                </div> --}}
 
                 <div class="row">
                     <div class="col-12 form-paper">
