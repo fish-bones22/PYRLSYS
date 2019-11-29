@@ -404,11 +404,26 @@ class ManhourController extends Controller
                 return redirect()->back()->withInputs($req)->with('error', 'Provide time out data');
         }
 
+        // If scheduled time is different with original, create a new employee timetable
+        if ($req['scheduled_timeout'] != $req['scheduled_timeout_input']
+        || $req['scheduled_timein'] != $req['scheduled_timein_input']) {
+            $timeTable = [
+                'startdate' => $req['date'],
+                'enddate' => $req['date'],
+                'break' => $req['break'],
+                'timein' => $req['scheduled_timein_input'],
+                'timeout' => $req['scheduled_timeout_input']
+            ];
+            $res = $this->employeeService->addEmployeeTimeTable($id, $timeTable);
+        }
+
+
         $manhourEntity = new ManhourEntity();
 
         $manhourEntity->date = $req['date'];
         $manhourEntity->timeIn = $req['time_in'];
         $manhourEntity->timeOut = $req['time_out'];
+        $manhourEntity->break = $req['break_type'] === 'break' ? $req['break'] : 0;
 
         $manhourEntity->employee_id = $id;
         $manhourEntity->employeeName = $req['full_name'];
@@ -794,8 +809,10 @@ class ManhourController extends Controller
         return response()->json([
             'scheduledTimeIn' => $timeTable != null && isset($timeTable['timein']) ? date_format(date_create($timeTable['timein']), 'H:i') : null,
             'scheduledTimeOut' => $timeTable != null && isset($timeTable['timeout']) ? date_format(date_create($timeTable['timeout']), 'H:i') : null,
+            'empBreak' => $timeTable != null && isset($timeTable['break']) ? $timeTable['break']: null,
             'timeIn' => $record != null ? date_format(date_create($record->timeIn), 'H:i') : null,
             'timeOut' => $record != null ?date_format(date_create($record->timeOut), 'H:i') : null,
+            'break' => $record != null ? $record->break : null,
             'outlier' => $record != null && $record->outlier != null ? $record->outlier['value'] : null,
             'remarks'  => $record != null ? $record->remarks : null,
             'authorized' => $record != null ? $record->authorized : null,

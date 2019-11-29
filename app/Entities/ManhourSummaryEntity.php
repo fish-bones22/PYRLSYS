@@ -7,6 +7,7 @@ class ManhourSummaryEntity extends Entity {
     public $date;
     public $timeIn;
     public $timeOut;
+    public $break;
 
     public $undertime;
     public $regularHours;
@@ -15,7 +16,6 @@ class ManhourSummaryEntity extends Entity {
     public $isHoliday;
     public $isExcused;
     public $totalPayableHours;
-    public $break;
 
     public $rot;
     public $sot;

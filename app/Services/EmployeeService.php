@@ -940,30 +940,43 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         foreach ($employee->timeTableHistory as $model) {
 
+            // Start date sooner than expected date, skip
             if (date_create($model['startdate']) > $date) {
                 continue;
             }
 
-            // Store first level fallback;
+            // Store first level fallback: indefinite schedule
             if ($model['enddate'] == null && $possibleFallback == null) {
                 $possibleFallback = $model;
                 continue;
             }
 
+            // Already behind expected date skip
             if ($model['enddate'] != null && date_create($model['enddate']) < $date) {
                 continue;
             }
 
-            $timeTable = $model;
-            break;
+            // Check for better suited record
+            if ($timeTable != null && $model['enddate'] != null && $timeTable['enddate'] != null) {
+                // Better suited record when end date is much sooner than current end date
+                $timeTableEndDate_ =  date_create($timeTable['enddate']);
+                $modelEndDate_ = date_create($model['enddate']);
+                if ($modelEndDate_ <= $timeTableEndDate_) {
+                    $timeTable = $model;
+                }
+            } else {
+                // Otherwise, no skip criteria met, use this record
+                $timeTable = $model;
+            }
         }
 
-        // If no record found for the date
-        // get from latest record with null endDate
+        // If no record found with above operation
+        // get fall back set earlier
         if ($timeTable === null) {
 
             if ($possibleFallback !== null) {
                 $timeTable = $possibleFallback;
+            // If no fallback, use employee history table
             } else {
                 $timeTable = array();
                 $timeTable['timein'] = $employee->current['timein'];
@@ -972,7 +985,7 @@ class EmployeeService extends EntityService implements IEmployeeService
             }
         }
 
-        // Final fallback, get first record of employee time table\
+        // Final fallback, get first record of employee time table
         if ($timeTable === null || $timeTable['timein'] === null) {
             $timeTable = $employee->timeTableHistory !== null && sizeof($employee->timeTableHistory) > 0 ? $employee->timeTableHistory[0] : null;
         }

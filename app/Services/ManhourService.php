@@ -84,6 +84,7 @@ class ManhourService extends EntityService implements IManhourService
 
         $record->timeIn = $entity->timeIn;
         $record->timeOut = $entity->timeOut;
+        $record->break = $entity->break;
 
         $record->employeeName = $entity->employeeName;
         $record->timeCard = $entity->timeCard;
@@ -193,6 +194,7 @@ class ManhourService extends EntityService implements IManhourService
         $entity->date = $model->recordDate;
         $entity->timeIn = $model->timeIn;
         $entity->timeOut = $model->timeOut;
+        $entity->break = $model->break;
 
         $entity->employeeId = $model->employee_id;
         $entity->employeeName = $model->employeeName;
@@ -263,6 +265,7 @@ class ManhourService extends EntityService implements IManhourService
                 return $summary;
             }
 
+            // Set model for holiday
             $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, date_create($date));
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, date_create($date));
 
@@ -430,7 +433,7 @@ class ManhourService extends EntityService implements IManhourService
         return $holidaysRecord;
     }
 
-
+    /* Format manhour record to business usable information */
     private function formatSummary($record, EmployeeEntity $employee = null)
     {
 
@@ -462,7 +465,6 @@ class ManhourService extends EntityService implements IManhourService
         $summary->timeCard = $history['timecard'];
         $summary->departmentName = $history['department']['displayName'];
         $summary->departmentId = $history['department']['value'];
-        $summary->break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
 
         $properHours = 0;
         $recordHours = 0;
@@ -741,10 +743,14 @@ class ManhourService extends EntityService implements IManhourService
             $summary->undertime = '';
         }
 
-        $break = $summary->break;
-        // If work hours is less than or half the required work hours,
+        $empBreak = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
+        // Get record for break while supporting legacy code.
+        // Legacy support: Checks if $record->break is null (since it is a new column (added 2019-11-28))
+        // If true, use timetable->break
+        $break = $record->break != null ? $record->break : $empBreak;
+        // Legacy support: If work hours is less than or half the required work hours,
         // Do not count breaks
-        if ($properHours <= $scheduledHour / 2) {
+        if ($record->break == null && $properHours <= $scheduledHour / 2) {
             $break = 0;
         }
 

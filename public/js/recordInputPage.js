@@ -83,8 +83,8 @@ function setCountedHours() {
 
     var timeInSt = $("#timeIn").val();
     var timeOutSt = $("#timeOut").val();
-    var timeInSchedSt = $("#scheduledTimeInHidden").val();
-    var timeOutSchedSt = $("#scheduledTimeOutHidden").val();
+    var timeInSchedSt = $("#scheduledTimeInInput").val();
+    var timeOutSchedSt = $("#scheduledTimeOutInput").val();
 
     if (timeInSt === '' || timeOutSt === '')
         return;
@@ -113,6 +113,16 @@ function setCountedHours() {
     }
 
     hours = Math.round(hours * 100) / 100;
+
+    // Subtract break
+    var employeeBreak;
+    if ($('#break-type option:selected').val() === 'straight') {
+        employeeBreak = 0;
+    }
+    else {
+        employeeBreak = $('#employee_break').val();
+    }
+    hours -= employeeBreak;
 
     $("#counted-hour").val(hours);
 
@@ -149,8 +159,8 @@ function clearDetails() {
     $("#timeOut").val('');
     $("#scheduledTimeInHidden").val('');
     $("#scheduledTimeOutHidden").val('');
-    $("#scheduledTimeIn").text('');
-    $("#scheduledTimeOut").text('');
+    $("#scheduledTimeInInput").val('');
+    $("#scheduledTimeOutInput").val('');
     $("[name='outlier']").prop('checked', false);
     $("[name='authorized']").prop('checked', false);
     $("#remarks").text('');
@@ -160,16 +170,23 @@ function clearDetails() {
 }
 
 function mapDetails(json) {
-
+console.log(json);
     $("#departmentNameDisplay").html(json.departmentName);
     $("#departmentIdDisplay").val(json.departmentId);
     $("[name='outlier'][value='" + json.outlier+ "']").prop('checked', true);
 
     $("#scheduledTimeInHidden").val(json.scheduledTimeIn);
     $("#scheduledTimeOutHidden").val(json.scheduledTimeOut);
+    $("#employee-break").val(json.empBreak);
 
-    $("#scheduledTimeIn").text(json.scheduledTimeIn);
-    $("#scheduledTimeOut").text(json.scheduledTimeOut);
+    if (json.break === 0) {
+        $("#break-type").val('straight');
+    } else {
+        $("#break-type").attr('break');
+    }
+
+    $("#scheduledTimeInInput").val(json.scheduledTimeIn);
+    $("#scheduledTimeOutInput").val(json.scheduledTimeOut);
 
     if (json.timeIn == null)
         return;

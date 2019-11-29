@@ -92,7 +92,8 @@ Manhour Input
             // HH:mm
             $scheduledTimeInUnformatted = $scheduledTimeIn_ != null ? date_format($scheduledTimeIn_, 'H:i') : '';
             $scheduledTimeOutUnformatted = $scheduledTimeOut_ != null ? date_format($scheduledTimeOut_, 'H:i') : '';
-
+            // Break
+            $break = key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : 0;
             ?>
             <div class="row">
                 <div class="col-5  form-paper">
@@ -111,8 +112,9 @@ Manhour Input
                         </div>
                         <div class="col-sm-5">
                             <label for="timeIn" class="form-paper-label">Scheduled In</label>
-                            <input type="hidden" id="scheduledTimeInHidden" value="{{ $scheduledTimeInUnformatted }}" />
-                            <div id="scheduledTimeIn" class="form-paper-display">{{ $scheduledTimeInUnformatted }}</div>
+                            <input type="hidden" id="scheduledTimeInHidden" name="scheduled_timein" value="{{ $scheduledTimeInUnformatted }}" />
+                            <input type="time" class="form-control" id="scheduledTimeInInput" name="scheduled_timein_input" onchange="setHour()" value="{{ $scheduledTimeInUnformatted }}" />
+                            {{-- <div id="scheduledTimeIn" class="form-paper-display">{{ $scheduledTimeInUnformatted }}</div> --}}
                         </div>
                         <div class="col-sm-7">
                             <label for="timeOut" class="form-paper-label">Time Out</label>
@@ -120,8 +122,9 @@ Manhour Input
                         </div>
                         <div class="col-sm-5">
                             <label for="timeOut" class="form-paper-label">Scheduled Out</label>
-                            <input type="hidden" id="scheduledTimeOutHidden" value="{{ $scheduledTimeOutUnformatted }}" />
-                            <div id="scheduledTimeOut" class="form-paper-display">{{ $scheduledTimeOutUnformatted }}</div>
+                            <input type="hidden" id="scheduledTimeOutHidden" name="scheduled_timeout" value="{{ $scheduledTimeOutUnformatted }}" />
+                            <input type="time" class="form-control" id="scheduledTimeOutInput" name="scheduled_timeout_input" onchange="setHour()" value="{{ $scheduledTimeOutUnformatted }}" />
+                            {{-- <div id="scheduledTimeOut" class="form-paper-display">{{ $scheduledTimeOutUnformatted }}</div> --}}
                         </div>
                         <div class="col-6">
                             <div class="form-group">
@@ -133,6 +136,15 @@ Manhour Input
                             <div class="form-group">
                                 <label for="hour" class="form-paper-label">Counted Hours</label>
                                 <input type="number" id="counted-hour" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input type="hidden" id="employee-break" name="break" value="{{ $break }}"/>
+                                <select class="form-control" name="break_type" id="break-type" onchange="setHour()">
+                                    <option value="break">With break</option>
+                                    <option value="straight">Straight hour</option>
+                                </select>
                             </div>
                         </div>
                     </div>
