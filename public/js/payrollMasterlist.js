@@ -32,8 +32,8 @@ function searchTable() {
 
 function filterDepartment() {
     var term  =$("#department").val();
-    table.column(1).search(term);
-    table.column(1).draw();
+    table.column(4).search(term);
+    table.column(4).draw();
 }
 
 

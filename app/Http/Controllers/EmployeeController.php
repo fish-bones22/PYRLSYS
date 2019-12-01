@@ -151,45 +151,36 @@ class EmployeeController extends Controller
         $employee->firstName = $req['first_name'];
         $employee->lastName = $req['last_name'];
         $employee->middleName = $req['middle_name'];
-        // Added Phone number 1 and 2
-//        $employee->phoneNumber1 = $req['phone_number_1'];
-//        $employee->phoneNumber2 = $req['phone_number_2'];
         $employee->employeeId = $req['employee_id'];
         $employee->sex = $req['sex'];
 
-        // Bckend validations
+        // Backend validations
         if (!isset($req['time_card'])) {
             return redirect()->action('EmployeeController@show', $id)->with('error', 'Time card required');
         }
 
-        // File
-        //if ($request->files('file_new')) {
-            // Procedure of saving file/s to storage
-            if($request->hasFile('file_new'))
-            {
-                $newFileNamesForDb = "";
+        if($request->hasFile('file_new'))
+        {
+            $newFileNamesForDb = "";
 
-                foreach ($request->file('file_new') as $file) {
-                    //
-                    //$details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
-                    // creating a filename
-                    $filename = $employee->employeeId . '-' . $file->getClientOriginalName();// . '.' . $file->getClientOriginalExtension();
-                    // Store file to storage
+            foreach ($request->file('file_new') as $file) {
+                //
+                //$details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
+                // creating a filename
+                $filename = $employee->employeeId . '-' . $file->getClientOriginalName();// . '.' . $file->getClientOriginalExtension();
+                // Store file to storage
 
-                    print_r($filename);
-                    printf($filename);
+                print_r($filename);
+                printf($filename);
 
-                    Storage::putFileAs('public/files/', $file, $filename, 'public');
+                Storage::putFileAs('public/files/', $file, $filename, 'public');
 
-                    $newFileNamesForDb = $newFileNamesForDb . "\n" . $filename;
-
-                    //$req['file_new_name'] = $req['file_new_name'] . "\n" . $filename;
-                }
-
-                $req['file_new_name'] = $newFileNamesForDb;
-
+                $newFileNamesForDb = $newFileNamesForDb . "\n" . $filename;
             }
-        //}
+
+            $req['file_new_name'] = $newFileNamesForDb;
+
+        }
 
         $employee->details = $this->detailsToEntity($req);
         $employee->current = $this->historyToEntity($req);
@@ -334,11 +325,8 @@ class EmployeeController extends Controller
             'firstName' => $employee->firstName,
             'middleName' => $employee->middleName,
             'fullName' => $employee->fullName,
-            //'department' => $employee->employmentDetails['department']['displayName'],
             'department' => $employee->current['department']['displayName'],
-            //'departmentValue' => $employee->employmentDetails['department']['value'],
             'departmentValue' => $employee->current['department']['value'],
-            //'timecard' => $employee->details['timecard']['value'],
             'timecard' => $employee->current['timecard']
         ]);
     }
@@ -428,15 +416,6 @@ class EmployeeController extends Controller
 
         // Rate Basis
         $entity['ratebasis'] = isset($history['rate_basis']) ? $history['rate_basis'] : 'monthly';
-
-        // // Time In
-        // $entity['timein'] = $history['time_in'];
-
-        // // Time Out
-        // $entity['timeout'] = $history['time_out'];
-
-        // // Time Out
-        // $entity['break'] = $history['break'];
 
         // Department
         $entity['department'] = [
@@ -560,15 +539,6 @@ class EmployeeController extends Controller
             'value' => $details['presentaddress'],
             'displayName' => 'Address'
         ];
-
-        // Phone Number
-//        $entity['contactnumber'] = [
-//            'key' => 'contactnumber',
-//            'value' => $details['contact_number'],
-//            'displayName' => 'Phone Number'
-//        ];
-
-
         /*
          * Added Phone number 1 and 2
          */
@@ -623,13 +593,6 @@ class EmployeeController extends Controller
             }
         }
 
-        // // Time Out
-        // $entity['timeout'] = [
-        //     'key' => 'timeout',
-        //     'value' => $details['time_out'],
-        //     'displayName' => 'Time Out'
-        // ];
-
         // Number of Memo
         $entity['numberofmemo'] = [
             'key' => 'numberofmemo',
@@ -670,10 +633,10 @@ class EmployeeController extends Controller
         $entity['philhealth'] = array();
         $entity['pagibig'] = array();
 
-        $entity['tin']['isset'] = false;
-        $entity['sss']['isset'] = false;
-        $entity['philhealth']['isset'] = false;
-        $entity['pagibig']['isset'] = false;
+        $entity['tin']['isset'] = true;
+        $entity['sss']['isset'] = true;
+        $entity['philhealth']['isset'] = true;
+        $entity['pagibig']['isset'] = true;
 
         // TIN
         if (isset($details['tinnumber'])) {

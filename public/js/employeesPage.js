@@ -35,6 +35,8 @@ function filterDepartment() {
     var term = $("#department").val();
     table.column(2).search(term);
     table.column(2).draw();
+    table2.column(16).search(term);
+    table2.column(16).draw();
 }
 
 function filterEmployees() {

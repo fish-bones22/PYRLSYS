@@ -48,7 +48,7 @@ Payroll Summary
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="department" class="form-paper-label">department</label>
+                            <label for="department" class="form-paper-label">Department</label>
                             <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
                                 <option value="">All</option>
                                 @foreach ($departments as $dept)
