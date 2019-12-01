@@ -53,7 +53,7 @@ OT Requests
                     <div class="form-group">
                         <label class="form-paper-label">Date Range</label>
                         <div class="input-group">
-                            <input type="date" class="form-control form-control-sm" name="datefrom" id="dateFrom" value="{{ isset($details['datefrom']) ? $details['datefrom'] : date_format(now(), 'Y-m-d') }}" />
+                            <input type="date" class="form-control form-control-sm" name="datefrom" id="dateFrom" value="{{ isset($details['datefrom']) ? $details['datefrom'] : '' }}" />
                             <input type="date" class="form-control form-control-sm" name="dateto" id="dateTo" value="{{ isset($details['dateto']) ? $details['dateto'] : "" }}" />
                             <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                         </div>
