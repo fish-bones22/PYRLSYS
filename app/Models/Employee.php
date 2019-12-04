@@ -28,11 +28,11 @@ class Employee extends Model
     }
 
     public function timeTable() {
-        return $this->hasMany('App\Models\EmployeeTimeTable');
+        return $this->hasMany('App\Models\EmployeeTimeTable')->orderBy('startDate');
     }
 
     public function payTable() {
-        return $this->hasMany('App\Models\EmployeePayTable');
+        return $this->hasMany('App\Models\EmployeePayTable')->orderBy('startDate');
     }
 
     public function fullName() {

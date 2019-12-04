@@ -1,5 +1,6 @@
 var mainMarginRef = 0.1;
 var subEntryMarginRef = 0.2;
+var col2MarginNarrowRef = 0.5;
 var col2MarginRef = 0.7;
 var col2MarginWiderRef = 0.8;
 var col3MarginRef = 1.5;
@@ -159,9 +160,11 @@ function sleep(ms) {
 
 
 function printText(doc, result, copy) {
+    console.log(result);
 
     var mainMargin = mainMarginRef + slider;
     var subEntryMargin = subEntryMarginRef + slider;
+    var col2MarginNarrow = col2MarginNarrowRef + slider;
     var col2Margin = col2MarginRef + slider;
     var col2MarginWider = col2MarginWiderRef + slider;
     var col3Margin = col3MarginRef + slider;
@@ -212,12 +215,21 @@ function printText(doc, result, copy) {
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Rate:', mainMargin, i = spacer(i));
-    doc.text(result.rate, col2MarginWider, i);
-    underline(doc, col2MarginWider, i, 20);
+    var margin = col2MarginWider;
+    var undlLength = 20;
+    for (var j = 0; j < result.details.length; j++) {
+        var dateShortStr = '';
+        if (result.details.length > 1) {
+            dateShortStr = formatToShortDate(result.details[j].startdate) + ': ';
+            margin = col2MarginNarrow;
+            undlLength = 25;
+        }
 
-    doc.text('Payment:', mainMargin, i = spacer(i));
-    doc.text(result.modeOfPayment, col2MarginWider, i);
-    underline(doc, col2MarginWider, i, 20);
+        doc.text(dateShortStr + result.details[j].rate + ' ' + result.details[j].ratebasis + ', ' + result.details[j].paymentmode.displayName, margin, i);
+        if (j < result.details.length - 1)
+            i = spacer(i);
+    }
+    underline(doc, margin, i, undlLength);
 
     doc.text("*************************************************", mainMargin, i = spacer(i));
 
@@ -383,5 +395,15 @@ function addBorders() {
     }
 
     doc.setFontSize(5);
+}
 
+function formatToShortDate(dateString) {
+    var date = new Date(dateString);
+    months = [
+        'Jan', 'Feb', 'Mar',
+        'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep',
+        'Oct', 'Nov', 'Dec'
+    ];
+    return months[date.getMonth()] + ' ' + date.getDate();
 }

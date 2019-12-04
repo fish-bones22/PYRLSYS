@@ -105,6 +105,7 @@ function sleep(ms) {
 
 
 function printText(doc, result, copy) {
+    console.log(result);
     var i = 0.1;
 
     doc.setFontSize(2);
@@ -148,7 +149,10 @@ function printText(doc, result, copy) {
     }
 
     doc.text('Rate:', mainMargin, i = spacer(i));
-    doc.text(result.rate + ' ' + result.rateBasis, col2MarginWider, i);
+    for (var j = 0; j < result.details.length; j++) {
+        doc.text(result.details[i].rate + ' ' + result.details[i].rateBasis, col2MarginWider, i);
+        i = spacer(i);
+    }
     underline(doc, col2MarginWider, i, 20);
 
     doc.text('Payment:', mainMargin, i = spacer(i));

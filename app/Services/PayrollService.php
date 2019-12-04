@@ -124,9 +124,7 @@ class PayrollService implements IPayrollService {
         $payroll->dateStart = $monthYear.'-'.$day ;
         $payroll->dateEnd = $monthYear.'-'.$endDate ;
         $payroll->period =  date_format($date, 'M').' '.$day.'-'.$endDate.', '.date_format($date, 'Y');
-        $payroll->rate = isset($employee->current['rate']) ? $employee->current['rate'] : 0;
-        $payroll->rateBasis = isset($employee->current['ratebasis']) ? $employee->current['ratebasis'] : 'monthly';
-        $payroll->modeOfPayment = $employee->current['paymentmode']['displayName'];
+        $payroll->details = array();
 
         $basicPay = 0;
         $otPay = 0;
@@ -138,19 +136,27 @@ class PayrollService implements IPayrollService {
         $workingDays = 0;
         $hourlyRate = 0;
         $otDetails = array();
+        $prevId = 0;
+        $hasFixed = false;
+        $fixedAllowance = 0;
+        $fixedRate = 0;
         for ($i = $day; $i <= $endDate; $i++) {
             // Create new date
             $datestr = $monthYear.'-'.$i;
             $date = date_create($monthYear.'-'.$i);
             $manhour = $this->manhourService->getSummaryOfRecord($employeeId, $datestr, $employee);
-
             if ($manhour == null || $manhour->date == null) {
                 continue;
             }
 
-            $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
+            $payRecord = $this->employeeService->getEmployeePayTable($employeeId, $date);
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, $date);
             $holiday = $this->manhourService->getHoliday($monthYear.'-'.$i);
+
+            if ($prevId !== $payRecord['id']) {
+                $payroll->details[] = $payRecord;
+                $prevId = $payRecord['id'];
+            }
 
             $rateBasis = 'monthly';
             $rate = 0;
@@ -158,14 +164,14 @@ class PayrollService implements IPayrollService {
             $hourlyAllowance = 0;
             $break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
 
-            if ($history['rate'] != null)
-                $rate = $history['rate'];
+            if ($payRecord['rate'] != null)
+                $rate = $payRecord['rate'];
 
-            if ($history['ratebasis'] != null)
-                $rateBasis = $history['ratebasis'];
+            if ($payRecord['ratebasis'] != null)
+                $rateBasis = $payRecord['ratebasis'];
 
-            if (isset($history['allowance']) && $history['allowance'] != null)
-                $allowance = $history['allowance'];
+            if (isset($payRecord['allowance']) && $payRecord['allowance'] != null)
+                $allowance = $payRecord['allowance'];
 
             if ($rateBasis == 'daily') {
                 $hourlyRate = $rate/$this->hoursPerDay;
@@ -175,6 +181,11 @@ class PayrollService implements IPayrollService {
                 $hourlyRate = ($rate/2)/($this->workDays*$this->hoursPerDay);
                 $hourlyAllowance = ($allowance/2)/($this->workDays*$this->hoursPerDay);
                 $allowance = ($allowance/2)/$this->workDays;
+            }
+            else if ($rateBasis == 'fixed') {
+                $fixedRate = $rate;
+                $fixedAllowance = $allowance;
+                $hasFixed = true;
             }
 
             if ($holiday != null && $holiday['type'] == 'legal') {
@@ -223,10 +234,6 @@ class PayrollService implements IPayrollService {
         $payroll->otherAdjustments = $summary['_OTHER_ADJUSTMENTS'];
         $payroll->adjustmentsDetails = $summary;
 
-        // if ($payroll->rateBasis == 'monthly') {
-        //     $basicPay += ($hourlyRate*$this->hoursPerDay*$sundays);
-        // }
-
         $payroll->hourlyRate = $hourlyRate;
         $payroll->basicPay = round($basicPay, 2);
         $payroll->otPay = round($otPay, 2);
@@ -236,11 +243,11 @@ class PayrollService implements IPayrollService {
         $payroll->allowance = round($totalAllowance, 2);
 
         // Exception of Fixed rate basis
-        if ($payroll->rateBasis === "fixed") {
-            $pay = $payroll->rate / 2;
+        if ($hasFixed) {
+            $pay = $fixedRate / 2;
             $payroll->basicPayBase = round($pay, 2);
             $basicPay = $pay + $basicAdj;
-            $totalAllowance = isset($employee->current['allowance']) ? $employee->current['allowance'] / 2 : 0;
+            $totalAllowance = $fixedAllowance;
             $payroll->hourlyRate = 0;
             $payroll->basicPay = round($basicPay, 2);
             $payroll->otPay = 0;
@@ -266,20 +273,23 @@ class PayrollService implements IPayrollService {
 
 
         $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
+        $payRecord = $this->employeeService->getEmployeePayTable($employeeId, $date);
         $workDays = 26;
 
         if ($history == null)
+            return 0;
+        if ($payRecord == null)
             return 0;
 
         $rateBasis = 'monthly';
         $rate = 0;
         $monthlyRate = 0;
 
-        if ($history['rate'] != null)
-            $rate = $history['rate'];
+        if ($payRecord['rate'] != null)
+            $rate = $payRecord['rate'];
 
-        if ($history['ratebasis'] != null)
-            $rateBasis = $history['ratebasis'];
+        if ($payRecord['ratebasis'] != null)
+            $rateBasis = $payRecord['ratebasis'];
 
         if ($rateBasis == 'daily') {
             // Adjust rate if holiday
