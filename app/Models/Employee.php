@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Employee extends Model
 {
@@ -55,7 +56,17 @@ class Employee extends Model
         return $this->hasMany('App\Models\EmployeeHistory')->where('current', true);
     }
 
-    public static function getInactive() {
-        return DB::raw('SELECT * FROM employees AS emp INNER JOIN employment_histories AS his ON emp.id = his.employee_id INNER JOIN categories AS cat ON his.status = cat.id WHERE cat.Value = \'Inactive\'');
+    public function hasDeductible($key) {
+        $res = DB::select('SELECT emp.id FROM employees AS emp INNER JOIN employee_deductibles as ded ON emp.id = ded.employee_id WHERE ded.key = \''.$key.'\'');
+        return sizeof($res) > 0;
+    }
+
+    public function isInactive() {
+        $res = DB::select('SELECT emp.id FROM employees AS emp INNER JOIN employment_histories AS his ON emp.id = his.employee_id INNER JOIN categories AS cat ON his.status = cat.id WHERE cat.Value = \'Inactive\' AND emp.id = '.$this->id);
+        return sizeof($res) > 0;
+    }
+
+    public static function deleteInactive() {
+        return DB::delete('DELETE emp, his FROM employees AS emp INNER JOIN employment_histories AS his ON emp.id = his.employee_id INNER JOIN categories AS cat ON his.status = cat.id WHERE cat.Value = \'Inactive\'');
     }
  }

@@ -262,8 +262,10 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         // Details
         $entity->details = $this->getDetails($model->details);
+        $entity->inactive = $model->isInactive();
         // Deductibles
         $entity->deductibles = $this->getDeductibles($model->deductibles);
+        $entity->hasTin = $model->hasDeductible('tin');
 
         // History
         $curr =  $this->getHistoryDetails($model->history->where('current', true)->first());
@@ -1262,8 +1264,23 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
-    public function deleteUnemployed() {
-        $employees = $this->getAllEmployees();
+    /**
+     * Delete all inactive employees
+     */
+    public function deleteInactive() {
+        // Attempt delete
+        try {
+            Employee::deleteInactive();
+        } catch (\Exception $ex) {
+            return [
+                'result' => false,
+                'message' => $ex->getMessage()
+            ];
+        }
+
+        return [
+            'result' => true
+        ];
 
     }
 

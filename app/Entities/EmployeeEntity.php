@@ -29,4 +29,7 @@ class EmployeeEntity extends Entity {
     public $payTable = array();
     public $payTableHistory = array();
 
+    public $inactive = false;
+    public $hasTin = false;
+
 }

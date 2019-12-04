@@ -52,6 +52,8 @@ Manhour Masterlist
                     ?>
                     @foreach($employees as $emp)
                     <?php
+                        if($emp->inactive) continue;
+
                         $next = 0;
                         if ($index == sizeof($employees) - 1)
                             $next = null;

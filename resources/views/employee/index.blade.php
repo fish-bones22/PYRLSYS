@@ -6,6 +6,13 @@ Employees
 
 @section('content')
 
+@if (session('error') != null)
+<div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+@if (session('success') != null)
+<div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+
 <div class="row">
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-title">Employees
         <span class="float-right">
@@ -39,6 +46,7 @@ Employees
                         <th>Id</th>
                         <th>Name</th>
                         <th>Department</th>
+                        <th style="display:none">Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -48,6 +56,7 @@ Employees
                         <td>{!! $emp->employeeId != null ? $emp->employeeId : '<i class="small text-muted">No ID</i>' !!}</td>
                         <td>{{ $emp->fullName }}</td>
                         <td>{{ $emp->current['department']['displayName'] }}</td>
+                        <td style="display:none">{{ $emp->inactive ? 'Inactive' : 'Active' }}</td>
                         <td>
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-light" href="{{ action('EmployeeController@view', ['id' => $emp->id ]) }}">View</a>
@@ -173,7 +182,13 @@ Employees
 <div class="fixed-bottom btn-container m-4">
     <div class="float-right">
         <div class="btn-group">
-            <form action="{{ route('employee.deleteall') }}" method="POST">
+            <button id="toggleInactive" type="button" class="btn btn-secondary">Inactive Employees</button>
+            <form id="deleteInactive" action="{{ route('employee.deleteallinactive') }}" method="POST" style="display:none">
+                @csrf
+                @method('post')
+                <input type="submit" class="btn btn-secondary" data-confirm="delete all inactive" value="Delete All Inactive"/>
+            </form>
+            <form id="deleteAll" action="{{ route('employee.deleteall') }}" method="POST">
                 @csrf
                 @method('post')
                 <input type="submit" class="btn btn-secondary" data-confirm="delete all" value="Delete All"/>

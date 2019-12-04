@@ -207,6 +207,15 @@ class EmployeeController extends Controller
         return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
     }
 
+    public function deleteAllInactive()
+    {
+        $res = $this->employeeService->deleteInactive();
+        if (!$res['result']) {
+            return redirect()->action('EmployeeController@index')->with('error', $res['message']);
+        }
+        return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
+    }
+
     public function transferEmployee(Request $request, $id)
     {
 

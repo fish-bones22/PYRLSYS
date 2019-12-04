@@ -29,6 +29,14 @@ $(function() {
             }
         ]
     });
+
+    table.column(3).search('^Active$', true, false, true).draw();
+    table2.column(21).search('^Active$', true, false, true).draw();
+    $('#toggleInactive').click(function() {
+        $('#deleteInactive').toggle();
+        $('#deleteAll').toggle();
+        filterInactive();
+    })
 });
 
 function filterDepartment() {
@@ -45,6 +53,19 @@ function filterEmployees() {
     table.column(1).draw();
 }
 
+function filterInactive() {
+    if ($('#toggleInactive').text() === 'Inactive Employees') {
+        $('#toggleInactive').text('Active Employees')
+        table.column(3).search('^Inactive$', true, false, true);
+        table2.column(21).search('^Inactive$', true, false, true);
+    } else {
+        $('#toggleInactive').text('Inactive Employees')
+        table.column(3).search('^Active$', true, false, true);
+        table2.column(21).search('^Active$', true, false, true);
+    }
+    table.column(3).draw();
+    table2.column(21).draw();
+}
 
 function getFileName() {
     return $("#title").text().replaceAll(" ", "-").replaceAll("---", "-").toLowerCase() + "-" + Date.now();
