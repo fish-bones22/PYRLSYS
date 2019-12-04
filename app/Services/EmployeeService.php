@@ -1262,6 +1262,11 @@ class EmployeeService extends EntityService implements IEmployeeService
         ];
     }
 
+    public function deleteUnemployed() {
+        $employees = $this->getAllEmployees();
+
+    }
+
     public function deleteAllEmployee()
     {
         $employee = Employee::whereNotNull('employeeId', null);
