@@ -803,7 +803,7 @@ class EmployeeService extends EntityService implements IEmployeeService
         $history['contractstatus']['displayName'] = $model->statusDetails->value;
         $history['paymentmode'] = array();
         $history['paymentmode']['value'] = $model->paymentmode;
-        $history['paymentmode']['displayName'] = $model->paymentMode->value;
+        $history['paymentmode']['displayName'] = $model->paymentMode != null ? $model->paymentMode->value : null;
         $history['ratebasis'] = $model->rateBasis;
         $history['rate'] = $model->rate;
         $history['allowance'] = $model->allowance;

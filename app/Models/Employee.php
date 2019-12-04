@@ -54,4 +54,8 @@ class Employee extends Model
     public function current() {
         return $this->hasMany('App\Models\EmployeeHistory')->where('current', true);
     }
+
+    public static function getInactive() {
+        return DB::raw('SELECT * FROM employees AS emp INNER JOIN employment_histories AS his ON emp.id = his.employee_id INNER JOIN categories AS cat ON his.status = cat.id WHERE cat.Value = \'Inactive\'');
+    }
  }
