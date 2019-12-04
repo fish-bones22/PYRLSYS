@@ -152,9 +152,9 @@ Employees
                     <td>{{ isset($employee->deductibles['philhealth']) ? $employee->deductibles['philhealth']['value'] : '' }}</td>
                     <td>{{ isset($employee->deductibles['pagibig']) ? $employee->deductibles['pagibig']['value'] : '' }}</td>
                     <td>{{ isset($employee->current['paymenttype']) ? $employee->current['paymenttype']['displayName'] : '' }}</td>
-                    <td>{{ isset($employee->current['paymentmode']) ? $employee->current['paymentmode']['displayName'] : '' }}</td>
-                    <td>{{ isset($employee->current['ratebasis']) ? $employee->current['ratebasis'] : '' }}</td>
-                    <td>{{ isset($employee->current['allowance']) ? $employee->current['allowance'] : '' }}</td>
+                    <td>{{ isset($employee->current['paymentmode']) ? $employee->payTable['paymentmode']['displayName'] : '' }}</td>
+                    <td>{{ isset($employee->current['ratebasis']) ? $employee->payTable['ratebasis'] : '' }}</td>
+                    <td>{{ isset($employee->current['allowance']) ? $employee->payTable['allowance'] : '' }}</td>
                     <td>{{ $employee->current != null && isset($employee->timeTable['timein']) ? date_format(date_create($employee->timeTable['timein']), 'h:i A') : '' }}</td>
                     <td>{{ $employee->current != null && isset($employee->timeTable['timeout']) ? date_format(date_create($employee->timeTable['timeout']), 'h:i A') : '' }}</td>
                     <td>{{ $employee->current != null && isset($employee->timeTable['break']) && $employee->timeTable['break']*1 > 0 ? $employee->timeTable['break'] : '' }}</td>
