@@ -613,7 +613,9 @@ class EmployeeService extends EntityService implements IEmployeeService
 
                 //$det = $this->fillDetailArray($detail, $tempArr);
                 $detail = $detail;
-            } else {
+            }
+            // Normal single valued keys
+            else {
                 $detail[$model->key] = [
                     'key' => $model->key,
                     'value' => $model->value,

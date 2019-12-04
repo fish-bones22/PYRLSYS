@@ -40,6 +40,7 @@ Route::post('employee/deleteall', 'EmployeeController@deleteAll')->name('employe
 Route::get('employee/view/{id}', 'EmployeeController@view');
 Route::get('employee/get/{id}', 'EmployeeController@getEmployeeJson');
 Route::get('employee/download/{filename}', 'EmployeeController@downloadFile');
+Route::get('employee/downloadall/{employeeId}', 'EmployeeController@downloadAllFiles');
 Route::get('employee/{id}', 'EmployeeController@show');
 Route::post('employee/{id}', 'EmployeeController@update');
 Route::post('employee/delete/{id}', 'EmployeeController@destroy')->name('employee.delete');

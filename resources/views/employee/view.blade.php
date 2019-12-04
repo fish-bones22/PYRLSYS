@@ -440,7 +440,7 @@
                         </div>
                     </div>
                 </div>
-
+{{--
                 <div class="row">
                     <div class="col-md-6 form-paper">
                         <div class="row">
@@ -462,7 +462,37 @@
                             <div class="form-paper-display">{{ key_exists('file', $employee->details ) ? $employee->details['file']['displayName'] : 'NA' }}</div>
                         </div>
                     </div>
+                </div> --}}
+
+                @if (key_exists('file', $employee->details))
+                <div class="row">
+                    <div class="col-12 form-paper section-title">Files</div>
+                    <div class="col-12 form-paper section-divider"></div>
                 </div>
+                @for ($i = 0; $i < $limit; $i++)
+                <div class="row file-{{$i}}">
+                    <div class="col-md-6 form-paper">
+                        <div class="form-group">
+                            <label class="form-paper-label">File Name:</label>
+                            <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '#') }}">{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-paper">
+                        <div class="form-group">
+                            <label class="form-paper-label">File Details:</label>
+                            <div class="form-paper-display">{{ key_exists('file', $employee->details) && isset($employee->details['file'][$i]['details']) ? $employee->details['file'][$i]['details']['value'] : '' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 form-paper section-divider"></div>
+                </div>
+                @endfor
+                <div class="row">
+                    <div class="col-12 form-paper">
+                        <a class="btn btn-link" href="{{ action('EmployeeController@downloadAllFiles', $employee->employeeId)}}">Download All</a>
+                    </div>
+                    <div class="col-12 form-paper section-divider"></div>
+                </div>
+                @endif
 
                 <div class="m-4">&nbsp;</div>
 

@@ -2,7 +2,12 @@ function createNewRow(self, rowName) {
 
     var currentIndex = $("#" + rowName + "-index").val()*1;
 
-    var protoRow = $("." + rowName + "-0").clone();
+    var protoRow;
+    if ($('.' + rowName +'-default').length > 0) {
+        protoRow = $('.' + rowName +'-default').clone();
+    } else {
+        protoRow = $("." + rowName + "-0").clone();
+    }
 
     protoRow = makeIndexFromObject(protoRow, 'select', 'id', 0, currentIndex);
     protoRow = makeIndexFromObject(protoRow, 'select', 'name', 0, currentIndex);

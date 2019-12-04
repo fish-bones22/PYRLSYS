@@ -118,27 +118,30 @@ class EmployeeController extends Controller
             return redirect()->action('EmployeeController@show', $id)->with('error', 'Time card required');
         }
 
-        if($request->hasFile('file_new'))
-        {
-            $newFileNamesForDb = "";
+        // Save file
+        if ($request->file_new != null) {
+
+            $req['file_new_name'] = array();
 
             foreach ($request->file('file_new') as $file) {
-                //
-                //$details = isset($req['file_details']) ? strtolower(str_replace(' ', '', $req['file_details'])) : 'file';
+
+                if($file === null)
+                {
+                   continue;
+                }
+
+                $newFileNamesForDb = "";
+
                 // creating a filename
-                $filename = $employee->employeeId . '-' . $file->getClientOriginalName();// . '.' . $file->getClientOriginalExtension();
+                $filename = $employee->employeeId . '-' . $file->getClientOriginalName();
                 // Store file to storage
-
-                print_r($filename);
-                printf($filename);
-
                 Storage::putFileAs('public/files/', $file, $filename, 'public');
 
-                $newFileNamesForDb = $newFileNamesForDb . "\n" . $filename;
+                $newFileNamesForDb = $filename;
+
+                $req['file_new_name'][] = $newFileNamesForDb;
+
             }
-
-            $req['file_new_name'] = $newFileNamesForDb;
-
         }
 
         $employee->details = $this->detailsToEntity($req);
@@ -293,7 +296,18 @@ class EmployeeController extends Controller
 
     public function downloadFile($filename)
     {
-        return Storage::download('public/' . $filename);
+        return Storage::download('public/files/' . $filename);
+    }
+
+    public function downloadAllFiles($employeeId)
+    {
+        $zipFileName = storage_path("app/public/". $employeeId . '-files.zip');
+        $zip = \Zipper::make($zipFileName);
+
+        $files = storage_path('app/public/files/'. $employeeId .'*');
+        $zip->add(glob($files));
+        $zip->close();
+        return response()->download($zipFileName);
     }
 
     public function getEmployeeJson($id)
@@ -383,15 +397,6 @@ class EmployeeController extends Controller
         // Date End
         $entity['datetransfered'] = $history['date_transfered'];
 
-        // // Rate
-        // $entity['rate'] = $history['rate'];
-
-        // // Allowance
-        // $entity['allowance'] = $history['allowance'];
-
-        // // Rate Basis
-        // $entity['ratebasis'] = isset($history['rate_basis']) ? $history['rate_basis'] : 'monthly';
-
         // Department
         $entity['department'] = [
             'key' => 'department',
@@ -415,12 +420,6 @@ class EmployeeController extends Controller
             'key' => 'paymenttype',
             'value' => $history['payment_type']
         ];
-
-        // // Payment Type
-        // $entity['paymentmode'] = [
-        //     'key' => 'paymenttype',
-        //     'value' => $history['payment_mode']
-        // ];
 
         return $entity;
     }
@@ -552,20 +551,52 @@ class EmployeeController extends Controller
         ];
 
         // File
+        $entity['file'] = array();
+        // Save new files
         if (isset($details['file_new_name'])) {
-            $entity['file'] = [
-                'key' => 'file',
-                'value' => $details['file_new_name'],
-                'displayName' => $details['file_details']
-            ];
-        } else {
-            if (isset($details['file_old']) && $details['file_old'] != null) {
-                $entity['file'] = [
-                    'key' => 'file',
-                    'value' => $details['file_old'],
-                    'displayName' => $details['file_details']
+            for ($i = 0; $i < sizeof($details['file_new_name']); $i++) {
+
+                if ($details['file_new_name'][$i] == null)
+                    continue;
+
+                $entity['file'][] = [
+                    'filename' => [
+                        'key' => 'filename',
+                        'grouping' => $i,
+                        'value' => $details['file_new_name'][$i],
+                        'displayName' => 'File Name'
+                    ],
+                    'details' => [
+                        'key' => 'details',
+                        'grouping' => $i,
+                        'value' => $details['file_new_details'][$i],
+                        'displayName' => 'File Details'
+                    ]
                 ];
             }
+
+        }
+        $curSize = sizeof($entity['file']);
+        // Update old files
+        for ($i = 0; $i < sizeof($details['file_old']); $i++) {
+
+            if ($details['file_old'][$i] == null)
+                continue;
+
+            $entity['file'][] = [
+                'filename' => [
+                    'key' => 'filename',
+                    'grouping' =>  $curSize + $i,
+                    'value' => $details['file_old'][$i],
+                    'displayName' => 'File Name'
+                ],
+                'details' => [
+                    'key' => 'details',
+                    'grouping' => $i,
+                    'value' => $details['file_details'][$i],
+                    'displayName' => 'File Details'
+                ]
+            ];
         }
 
         // Number of Memo

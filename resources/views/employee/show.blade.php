@@ -536,33 +536,72 @@
                 </div>
             </div>
 
+            <?php
+
+            // To ensure empty Dependent fields appear,
+            // iterate at least one row even if $details['file'] is empty
+
+            $limit = 1; // Store the number of file or use 1 if there are none.
+            // If there is/are file/s on the array, use its size instead of the default 1.
+            if (key_exists('file', $employee->details) && is_array($employee->details['file']) && sizeof($employee->details['file']) > 0) {
+                $limit = sizeof($employee->details['file']);
+            }
+
+            ?>
+
+            <input type="hidden" id="file-index" value="{{ $limit }}" />
 
             <div class="row">
+                    <div class="col-12 form-paper section-title">Files</div>
+                    <div class="col-12 form-paper section-divider"></div>
+                </div>
+
+            @for ($i = 0; $i < $limit; $i++)
+            <div class="row file-{{$i}}">
+                <div class="col-12">
+                    <div class="form-paper section-delete">
+                        <button type="button" class="close text-muted" data-index="{{$i}}" onclick="deleteRow(this, 'file')" tabindex="-1">&times;</button>
+                    </div>
+                </div>
                 <div class="col-md-6 form-paper">
-                    <div class="row">
-                        @if (key_exists('file', $employee->details))
-                        <div  class="col-6">
-                            <div class="form-group">
-                                <label class="form-paper-label">File</label>
-                                <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file']['value'] : '' }}</a>
-                                <input type="hidden" name="file_old" value="{{ key_exists('files', $employee->details) ? $employee->details['files']['value'] : '' }}" />
-                            </div>
-                        </div>
-                        @endif
-                        <div  class="col">
-                            <div class="form-group">
-                                <label for="file" class="form-paper-label">New File</label>
-                                <input id="file" type="file" name="file_new[]" class="form-control-file " multiple />
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-paper-label">File Name</label>
+                        <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}</a>
+                        <input type="hidden" name="file_old[{{$i}}]" value="{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="fileDetails" class="form-paper-label">File Details</label>
-                        <input id="fileDetails" type="text" name="file_details" class="form-control" value="{{ key_exists('file', $employee->details ) ? $employee->details['file']['displayName'] : '' }}" />
+                        <input id="fileDetails" type="text" name="file_details[{{$i}}]" class="form-control" multiple='' value="{{ key_exists('file', $employee->details ) ? $employee->details['file'][$i]['details']['value'] : '' }}" />
                     </div>
                 </div>
+            </div>
+            @endfor
+            <div class="row file-default">
+                <div class="col-12">
+                    <div class="form-paper section-delete">
+                        <button type="button" class="close text-muted" data-index="{{$i}}" onclick="deleteRow(this, 'file')" tabindex="-1">&times;</button>
+                    </div>
+                </div>
+                <div class="col-6 form-paper">
+                    <div class="form-group">
+                        <label for="file" class="form-paper-label">New File</label>
+                        <input id="file" type="file" name="file_new[0]" class="form-control-file " multiple />
+                    </div>
+                </div>
+                <div class="col-md-6 form-paper">
+                    <div class="form-group">
+                        <label for="fileDetails" class="form-paper-label">File Details</label>
+                        <input id="fileDetails" type="text" name="file_new_details[0]" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="row addContainer">
+                <div class="col-12 form-paper">
+                    <button class="btn btn-link" type="button" onclick="createNewRow(this, 'file')">Add File</button>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
             </div>
 
             <div class="m-4">&nbsp;</div>
