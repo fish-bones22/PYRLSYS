@@ -9,6 +9,7 @@ use App\Models\EmployeeDetail;
 use App\Models\EmployeeHistory;
 use App\Models\EmployeePicture;
 use App\Models\EmployeeTimeTable;
+use App\Models\EmployeePayTable;
 use App\Models\EmploymentDetail;
 use App\Entities\EmployeeEntity;
 use AuthUtility;
@@ -261,11 +262,10 @@ class EmployeeService extends EntityService implements IEmployeeService
 
         // Details
         $entity->details = $this->getDetails($model->details);
-        //$entity->employmentDetails = $this->getEmploymentDetails($model->employmentDetails);
+        // Deductibles
         $entity->deductibles = $this->getDeductibles($model->deductibles);
 
         // History
-        //$entity->current = $this->getHistoryDetails($model->history->where('current', true)->first());
         $curr =  $this->getHistoryDetails($model->history->where('current', true)->first());
         $entity->current = $curr;
         foreach ($model->history as $history) {
@@ -276,7 +276,10 @@ class EmployeeService extends EntityService implements IEmployeeService
         $entity->timeTable = $this->getCurrentTimeTable($model->timeTable, $curr['timein'], $curr['timeout'], $curr['break']);
         // Time Table History
         $entity->timeTableHistory = $this->getTimeTableHistory($model->timeTable);
-
+        // Pay table
+        $entity->payTable = $this->getCurrentPayTable($model->payTable, $curr['rate'], $curr['ratebasis'], $curr['allowance'], $curr['paymentmode']);
+        // Pay table history
+        $entity->payTableHistory = $this->getPayTableHistory($model->payTable);
         return $entity;
     }
 
@@ -302,9 +305,6 @@ class EmployeeService extends EntityService implements IEmployeeService
                 continue;
             }
 
-            // $start = strtotime($history->dateStarted);
-            // $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
-            // $date_ = strtotime($date);
             $startStr = $history->dateStarted;
             $start = strtotime($startStr);
             $end = $history->dateTransfered != null ? strtotime($history->dateTransfered) : null;
@@ -371,6 +371,9 @@ class EmployeeService extends EntityService implements IEmployeeService
         return true;
     }
 
+    /**
+     * Create new employee record and all related properties
+     */
     public function addEmployee(EmployeeEntity $entity)
     {
 
@@ -414,6 +417,9 @@ class EmployeeService extends EntityService implements IEmployeeService
                 return $res;
             // Employee schedules
             $res = $this->addEmployeeTimeTable($id, $entity->timeTable);
+            if (!$res['result'])
+                return $res;
+            $res = $this->addEmployeePayTable($id, $entity->payTable);
             if (!$res['result'])
                 return $res;
         }
@@ -469,6 +475,10 @@ class EmployeeService extends EntityService implements IEmployeeService
         }
 
         $res = $this->addEmployeeTimeTable($id, $entity->timeTable);
+        if (!$res['result'])
+            return $res;
+
+        $res = $this->addEmployeePayTable($id, $entity->payTable);
         if (!$res['result'])
             return $res;
 
@@ -698,11 +708,11 @@ class EmployeeService extends EntityService implements IEmployeeService
         $current->dateTransfered = $history['datetransfered'];
         $current->employmenttype = $history['employmenttype']['value'];
         $current->status = $history['contractstatus']['value'];
-        $current->paymenttype = $history['paymenttype']['value'];
-        $current->paymentmode = $history['paymentmode']['value'];
-        $current->rate = $history['rate'];
-        $current->rateBasis = isset($history['ratebasis']) ? $history['ratebasis'] : null;
-        $current->allowance = isset($history['allowance']) ? $history['allowance'] : null;
+        // $current->paymenttype = $history['paymenttype']['value'];
+        // $current->paymentmode = $history['paymentmode']['value'];
+        // $current->rate = $history['rate'];
+        // $current->rateBasis = isset($history['ratebasis']) ? $history['ratebasis'] : null;
+        // $current->allowance = isset($history['allowance']) ? $history['allowance'] : null;
         // $current->timein = $history['timein'];
         // $current->timeout = $history['timeout'];
         // $current->break = $history['break'];
@@ -802,7 +812,16 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $history;
     }
 
-    public function addEmployeeTimeTable($id, $timeTable)
+
+
+    /**
+     ***************** Time table operations ********************
+     */
+
+     /**
+      * Create time table record for employee
+      */
+     public function addEmployeeTimeTable($id, $timeTable)
     {
 
         if (!isset($timeTable['startdate']) || $timeTable['startdate'] == null) {
@@ -847,7 +866,9 @@ class EmployeeService extends EntityService implements IEmployeeService
             'result' => true
         ];
     }
-
+    /**
+     * Get all timetable records given the model
+     */
     private function getTimeTableHistory($timeTableHistory)
     {
 
@@ -868,77 +889,177 @@ class EmployeeService extends EntityService implements IEmployeeService
         return $history;
     }
 
+    /**
+     * Get time table using timetable model
+     */
     private function getTimeTableOnDate($timeTableHistory, $date, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak)
     {
+        $modelCollection = $this->getTimeTableHistory($timeTableHistory);
 
-        $timeTable = null;
-        $possibleFallback = null;
+        $finalFallback = [
+            'timein' => $fallBackTimeIn,
+            'timeout' => $fallBackTimeout,
+            'break' => $fallBackBreak
+        ];
 
-        foreach ($timeTableHistory as $model) {
-
-            if (date_create($model->startDate) > date_create($date)) {
-                continue;
-            }
-
-            // Store first level fallback;
-            if ($model->endDate == null && $possibleFallback == null) {
-                $possibleFallback = $model;
-                continue;
-            }
-
-            if ($model->endDate != null && date_create($model->endDate) < date_create($date)) {
-                continue;
-            }
-
-            $timeTable = array();
-            $timeTable['id'] = $model->id;
-            $timeTable['timein'] = $model->timeIn;
-            $timeTable['timeout'] = $model->timeOut;
-            $timeTable['startdate'] = $model->startDate;
-            $timeTable['enddate'] = $model->endDate;
-            $timeTable['break'] = $model->break;
-            break;
-        }
-
-        // If no record found for the date
-        // get from latest record with null endDate
-        if ($timeTable == null) {
-
-            $timeTable = array();
-            if ($possibleFallback != null) {
-                $timeTable['id'] = $possibleFallback->id;
-                $timeTable['timein'] = $possibleFallback->timeIn;
-                $timeTable['timeout'] = $possibleFallback->timeOut;
-                $timeTable['startdate'] = $possibleFallback->startDate;
-                $timeTable['enddate'] = $possibleFallback->endDate;
-                $timeTable['break'] = $possibleFallback->break;
-            } else {
-                $timeTable['timein'] = $fallBackTimeIn;
-                $timeTable['timeout'] = $fallBackTimeout;
-                $timeTable['break'] = $fallBackBreak;
-            }
-        }
-
-        return $timeTable;
+        return $this->genericTableGetData(null, $date, $modelCollection, $finalFallback, 'timetable');
     }
 
+    /**
+     * Get current time table from
+     */
     private function getCurrentTimeTable($timeTableHistory, $fallBackTimeIn, $fallBackTimeout, $fallBackBreak)
     {
         return $this->getTimeTableOnDate($timeTableHistory, NOW(), $fallBackTimeIn, $fallBackTimeout, $fallBackBreak);
     }
 
+    /**
+     * Get employees's current time table
+     */
     public function getEmployeeTimeTable($employeeId, $date)
     {
-
         $employee = $this->getEmployeeByIdWithStateOnDate($employeeId, $date);
 
         if ($employee == null)
             return null;
 
-        $timeTable = null;
+        $finalFallback = $employee->timeTableHistory !== null && sizeof($employee->timeTableHistory) > 0 ? $employee->timeTableHistory[0] : null;
+
+        return $this->genericTableGetData($employee, $date, $employee->timeTableHistory, $finalFallback, 'timetable');
+    }
+    /**
+     * End employee time table operations
+     */
+
+
+    /**
+     *************** Employee pay table operations *******************
+    */
+
+    /**
+      * Create pay table record for employee
+      */
+      public function addEmployeePayTable($id, $payTable)
+      {
+
+          if (!isset($payTable['startdate']) || $payTable['startdate'] == null) {
+              return [
+                  'result' => true
+              ];
+          }
+
+          if (!isset($payTable['rate']) || $payTable['rate'] == null) {
+              return [
+                  'result' => false,
+                  'message' => 'No Rate provided'
+              ];
+          }
+
+          // Get most compatible record
+          $date = date_create($payTable["startdate"]);
+          $payTableRecord =  EmployeePayTable::where('employee_id', $id)->where('startDate', $date)->orderBy('id', 'DESC')->first();
+
+          if ($payTableRecord == null) {
+              $payTableRecord = new EmployeePayTable();
+              $payTableRecord->employee_id = $id;
+          }
+
+
+          $payTableRecord->rate = $payTable['rate'];
+          $payTableRecord->rateBasis = $payTable['ratebasis'];
+          $payTableRecord->allowance = $payTable["allowance"];
+          $payTableRecord->paymentmode = $payTable["paymentmode"];
+          $payTableRecord->startDate = $payTable["startdate"];
+          $payTableRecord->endDate = $payTable["enddate"];
+
+          try {
+              $payTableRecord->save();
+          } catch (\Exception $e) {
+              return [
+                  'result' => false,
+                  'message' => $e->getMessage()
+              ];
+          }
+
+          return [
+              'result' => true
+          ];
+      }
+    /**
+     * Map pay table history model
+     */
+    private function getPayTableHistory($payTableHistory)
+    {
+        $history = array();
+
+        foreach ($payTableHistory as $model) {
+            $timeTable = array();
+            $timeTable['id'] = $model->id;
+            $timeTable['rate'] = $model->rate;
+            $timeTable['ratebasis'] = $model->rateBasis;
+            $timeTable['startdate'] = $model->startDate;
+            $timeTable['enddate'] = $model->endDate;
+            $timeTable['allowance'] = $model->allowance;
+            $timeTable['paymentmode'] = [
+                'value' =>  $model->paymentmode,
+                'displayName' => $model->paymentMode->value
+            ];
+
+            $history[] = $timeTable;
+        }
+
+        return $history;
+    }
+
+    /**
+     * Get pay table given model from eloquent framework and date
+     */
+    private function getPayTableOnDate($payTableHistory, $date, $fallBackRate, $fallBackRateBasis, $fallBackAllowance, $fallBackPaymentMode)
+    {
+        $modelCollection = $this->getPayTableHistory($payTableHistory);
+
+        $finalFallback = [
+            'rate' => $fallBackRate,
+            'allowance' => $fallBackAllowance,
+            'ratebasis' => $fallBackRateBasis,
+            'paymentmode' => $fallBackPaymentMode
+        ];
+
+        return $this->genericTableGetData(null, $date, $modelCollection, $finalFallback, 'paytable');
+    }
+
+    /**
+     * Get pay table record most appropriate for today
+     */
+    private function getCurrentPayTable($payTableHistory, $fallBackRate, $fallBackRateBasis, $fallBackAllowance, $fallBackPaymentMode)
+    {
+        return $this->getPayTableOnDate($payTableHistory, NOW(), $fallBackRate, $fallBackRateBasis, $fallBackAllowance, $fallBackPaymentMode);
+    }
+
+    /**
+     * Get pay table record most appropriate given the date
+     */
+    public function getEmployeePayTable($employeeId, $date)
+    {
+        $employee = $this->getEmployeeByIdWithStateOnDate($employeeId, $date);
+
+        if ($employee == null)
+            return null;
+
+        $finalFallback = $employee->payTableHistory !== null && sizeof($employee->payTableHistory) > 0 ? $employee->payTableHistory[0] : null;
+
+        return $this->genericTableGetData($employee, $date, $employee->payTableHistory, $finalFallback, 'paytable');
+    }
+
+    /**
+     * Get table data and map it to business application ready format
+     */
+    private function genericTableGetData($employee, $date, $modelCollection, $finalFallback, $operation)
+    {
+        $table = null;
         $possibleFallback = null;
 
-        foreach ($employee->timeTableHistory as $model) {
+        foreach ($modelCollection as $model) {
 
             // Start date sooner than expected date, skip
             if (date_create($model['startdate']) > $date) {
@@ -957,40 +1078,49 @@ class EmployeeService extends EntityService implements IEmployeeService
             }
 
             // Check for better suited record
-            if ($timeTable != null && $model['enddate'] != null && $timeTable['enddate'] != null) {
+            if ($table != null && $model['enddate'] != null && $table['enddate'] != null) {
                 // Better suited record when end date is much sooner than current end date
-                $timeTableEndDate_ =  date_create($timeTable['enddate']);
+                $tableEndDate_ =  date_create($table['enddate']);
                 $modelEndDate_ = date_create($model['enddate']);
-                if ($modelEndDate_ <= $timeTableEndDate_) {
-                    $timeTable = $model;
+                if ($modelEndDate_ <= $tableEndDate_) {
+                    $table = $model;
                 }
             } else {
                 // Otherwise, no skip criteria met, use this record
-                $timeTable = $model;
+                $table = $model;
             }
         }
 
         // If no record found with above operation
         // get fall back set earlier
-        if ($timeTable === null) {
+        if ($table === null) {
 
             if ($possibleFallback !== null) {
-                $timeTable = $possibleFallback;
+                $table = $possibleFallback;
             // If no fallback, use employee history table
-            } else {
-                $timeTable = array();
-                $timeTable['timein'] = $employee->current['timein'];
-                $timeTable['timeout'] = $employee->current['timeout'];
-                $timeTable['break'] = $employee->current['break'];
+            } else if ($employee !== null) {
+                $table = array();
+                if ($operation === 'timetable') {
+                    $table['timein'] = $employee->current['timein'];
+                    $table['timeout'] = $employee->current['timeout'];
+                    $table['break'] = $employee->current['break'];
+                } else if ($operation === 'paytable') {
+                    $table['allowance'] = $employee->current['allowance'];
+                    $table['rate'] = $employee->current['rate'];
+                    $table['ratebasis'] = $employee->current['ratebasis'];
+                    $table['paymentmode'] = $employee->current['paymentmode'];
+                }
             }
         }
 
         // Final fallback, get first record of employee time table
-        if ($timeTable === null || $timeTable['timein'] === null) {
-            $timeTable = $employee->timeTableHistory !== null && sizeof($employee->timeTableHistory) > 0 ? $employee->timeTableHistory[0] : null;
+        if ($table === null
+        || ($operation === 'timetable' && $table['timein'] === null)
+        || ($operation === 'paytable' && $table['rate'] === null)) {
+            $table = $finalFallback;
         }
 
-        return $timeTable;
+        return $table;
     }
 
     private function saveDeductibles($id, $deductibles)
@@ -1084,7 +1214,6 @@ class EmployeeService extends EntityService implements IEmployeeService
 
     public function addEmployeeImage($id, $location, $filename)
     {
-
         $this->unsetCurrentEmployeeImage($id);
 
         // Save data to DB
@@ -1102,7 +1231,6 @@ class EmployeeService extends EntityService implements IEmployeeService
                 'message' => $e->getMessage()
             ];
         }
-
 
         return [
             'result' => true

@@ -95,47 +95,6 @@ class EmployeeController extends Controller
         return view('employee.show', ['employee' => $employee, 'categories' => $categories]);
     }
 
-    public function printEmployeeDetailsPdf($id)
-    {
-//        Log::info('information to be log here, please read this');
-
-        //$data = $request->htmlValue; // This will get all the request data.
-        //$id = $request->id;
-
-        //  return response()->json(array('msg'=> $data), 200);
-
-//        $pdf = new Dompdf(); // \App::make('dompdf.wrapper');
-//        $pdf->loadHTML($data);
-//        $pdf->render();
-//        return $pdf->stream('samplePDF');
-
-//        $pdf = PDF::loadView('employee.view-pdf');
-//        return $pdf->download('invoice.pdf');
-
-
-        if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
-
-        $categories = array();
-
-        $categories['department'] = $this->categoryService->getCategories('department');
-        $categories['employmenttype'] = $this->categoryService->getCategories('employmenttype');
-        $categories['contractstatus'] = $this->categoryService->getCategories('contractstatus');
-        $categories['paymenttype'] = $this->categoryService->getCategories('paymenttype');
-        $categories['paymentmode'] = $this->categoryService->getCategories('paymentmode');
-
-        $employee = $this->employeeService->getEmployeeById($id);
-
-        //print_r($employee); die();
-
-//        $pdf = PDF::loadView('employee.view-pdf', ['employee' => $employee, 'categories' => $categories]);
-//        return $pdf->stream('sampleDownloadPDF.pdf');
-
-        $pdf = PDF::loadView('employee.view-pdf', ['employee' => $employee, 'categories' => $categories]);
-        return $pdf->download('sampleDownloadPDF.pdf');
-
-    }
-
-
     /*
      * This method is for updating or adding an employee
      * @var $request
@@ -185,6 +144,7 @@ class EmployeeController extends Controller
         $employee->details = $this->detailsToEntity($req);
         $employee->current = $this->historyToEntity($req);
         $employee->timeTable = $this->timeTableToEntity($req);
+        $employee->payTable = $this->payTableToEntity($req);
 
         $employee->deductibles = $this->deductiblesToEntity($req);
         $action = 'updated';
@@ -377,6 +337,21 @@ class EmployeeController extends Controller
         return $image;
     }
 
+    private function payTableToEntity($payTable) {
+        $entity= array();
+
+        $entity = array();
+        $entity['id'] = isset($payTable['schedule_id']) ? $payTable['schedule_id'] : null;
+        $entity['rate'] = isset($payTable['rate']) ? $payTable['rate'] : null;
+        $entity['ratebasis'] = isset($payTable['rate_basis']) ? $payTable['rate_basis'] : null;
+        $entity['allowance'] = isset($payTable['allowance']) ? $payTable['allowance'] : null;
+        $entity['startdate'] = isset($payTable['effective_date_start_pay']) ? $payTable['effective_date_start_pay'] : null;
+        $entity['enddate'] = isset($payTable['effective_date_end_pay']) ? $payTable['effective_date_end_pay'] : null;
+        $entity['paymentmode'] = isset($payTable['payment_mode']) ? $payTable['payment_mode'] : null;
+
+        return $entity;
+    }
+
     private function timeTableToEntity($history)
     {
 
@@ -408,14 +383,14 @@ class EmployeeController extends Controller
         // Date End
         $entity['datetransfered'] = $history['date_transfered'];
 
-        // Rate
-        $entity['rate'] = $history['rate'];
+        // // Rate
+        // $entity['rate'] = $history['rate'];
 
-        // Allowance
-        $entity['allowance'] = $history['allowance'];
+        // // Allowance
+        // $entity['allowance'] = $history['allowance'];
 
-        // Rate Basis
-        $entity['ratebasis'] = isset($history['rate_basis']) ? $history['rate_basis'] : 'monthly';
+        // // Rate Basis
+        // $entity['ratebasis'] = isset($history['rate_basis']) ? $history['rate_basis'] : 'monthly';
 
         // Department
         $entity['department'] = [
@@ -441,11 +416,11 @@ class EmployeeController extends Controller
             'value' => $history['payment_type']
         ];
 
-        // Payment Type
-        $entity['paymentmode'] = [
-            'key' => 'paymenttype',
-            'value' => $history['payment_mode']
-        ];
+        // // Payment Type
+        // $entity['paymentmode'] = [
+        //     'key' => 'paymenttype',
+        //     'value' => $history['payment_mode']
+        // ];
 
         return $entity;
     }

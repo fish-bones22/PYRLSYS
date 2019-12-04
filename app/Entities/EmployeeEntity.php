@@ -26,5 +26,7 @@ class EmployeeEntity extends Entity {
     public $current = array();
     public $timeTable = array();
     public $timeTableHistory = array();
+    public $payTable = array();
+    public $payTableHistory = array();
 
 }

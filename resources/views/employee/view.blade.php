@@ -263,54 +263,78 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-4 form-paper">
+                    <div class="col-md-3 col-6 form-paper">
                         <div class="form-group">
                             <label for="dateHired" class="form-paper-label">Employment Start Date</label>
                             <div class="form-paper-display">{{ $employee->current != null && key_exists('datestarted', $employee->current) && $employee->current['datestarted'] != null ? date_format(date_create($employee->current['datestarted']), 'M d, Y'): 'None' }}</div>
                         </div>
                     </div>
-                    <div class="col-4 form-paper">
+                    <div class="col-md-3 col-6 form-paper">
                         <div class="form-group">
                             <label for="dateEnded" class="form-paper-label">Unemployment Date</label>
                             <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['datetransfered']) ? date_format(date_create($employee->current['datetransfered']), 'M d, Y'): 'None' }}</div>
                         </div>
                     </div>
-                    <div class="col-4 form-paper">
+                    <div class="col-md-3 col-6 form-paper">
                         <div class="form-group">
                             <label for="status" class="form-paper-label">Status</label>
                             <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['contractstatus']['displayName']) ? $employee->current['contractstatus']['displayName'] : 'None' }}</div>
                         </div>
                     </div>
-                    <div class="col-md-3 form-paper">
+                    <div class="col-md-3 col-6 form-paper">
                         <div class="form-group">
                             <label for="typeOfPayment" class="form-paper-label">Type of payment</label>
                             <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['paymenttype']['displayName']) ? $employee->current['paymenttype']['displayName'] : 'None' }}</div>
                         </div>
                     </div>
-                    <div class="col-md-3 form-paper">
-                        <div class="form-group">
-                            <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
-                            <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['paymentmode']['displayName']) ? $employee->current['paymentmode']['displayName'] : 'None' }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 form-paper">
-                        <div class="row" id="rateAndAllowanceDivId">
-                            <div class="col-4">
+                </div>
+                <div class="row">
+                    <div class="col form-paper">
+                        <div class="row">
+                            <div class="col-12 section-label">Rate</div>
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="rateBasis" class="form-paper-label">Rate Basis</label>
-                                    <div class="form-paper-display">{{ isset($employee->current['ratebasis']) ? $employee->current['ratebasis'] : 'Not set' }}</div>
+                                    <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
+                                    <div class="form-paper-display">{{ $employee->payTable != null && isset($employee->payTable['paymentmode']['displayName']) ? $employee->payTable['paymentmode']['displayName'] : 'None' }}</div>
                                 </div>
                             </div>
-                            <div class="col-4" id="rateDivId">
-                                <div class="form-group">
-                                    <label for="ratePerHour" class="form-paper-label">Rate</label>
-                                    <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['rate']) ? $employee->current['rate'] : 'None' }}</div>
+                            <div class="col-md-9">
+                                <div class="row" id="rateAndAllowanceDivId">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label for="rateBasis" class="form-paper-label">Rate Basis</label>
+                                            <div class="form-paper-display">{{ isset($employee->payTable['ratebasis']) ? $employee->payTable['ratebasis'] : 'Not set' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4" id="rateDivId">
+                                        <div class="form-group">
+                                            <label for="ratePerHour" class="form-paper-label">Rate</label>
+                                            <div class="form-paper-display">{{ $employee->payTable != null && isset($employee->payTable['rate']) ? $employee->payTable['rate'] : 'None' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4" id="allowanceDivId">
+                                        <div class="form-group">
+                                            <label for="allowance" class="form-paper-label">Allowance</label>
+                                            <div class="form-paper-display">{{ $employee->payTable != null && isset($employee->payTable['allowance']) ? $employee->payTable['allowance'] : 'None' }}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-4" id="allowanceDivId">
+                            <div class="col-sm-3 col-6">
                                 <div class="form-group">
-                                    <label for="allowance" class="form-paper-label">Allowance</label>
-                                    <div class="form-paper-display">{{ $employee->current != null && isset($employee->current['allowance']) ? $employee->current['allowance'] : 'None' }}</div>
+                                    <label class="form-paper-label">Change Rate Schedule</label>
+                                    <div class="form-paper-display">{{ $employee->payTable != null && isset($employee->payTable['startdate']) ? date_format(date_create($employee->payTable['startdate']), 'M d, Y') : 'None' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
+                                <div class="form-group">
+                                    <label class="form-paper-label">Until</label>
+                                    <div class="form-paper-display">{{ $employee->payTable != null && isset($employee->payTable['enddate']) ? date_format(date_create($employee->payTable['enddate']), 'M d, Y') : 'None' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-12" id="viewScheduleHistoryDivId">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-link" data-toggle="modal" data-target="#rateChangesHistoryModal">View Change Rate History</button>
                                 </div>
                             </div>
                         </div>
@@ -579,7 +603,55 @@
         </div>
     </div>
 </div>
+{{-- Rate History --}}
+<div class="modal fade" role="dialog" id="rateChangesHistoryModal" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-12 form-paper section-title"><span id="title">{{ $employee->fullName }} - History of Schedules</span>
+                    <button type="button" class="close" data-dismiss='modal'>&times;</button>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
+            </div>
+            <div class="row">
 
+
+                <div class="col-12 form-paper">
+                    <table class="table table-sm" id="transferHistoryTable">
+                        <thead>
+                            <tr>
+                                <th>Rate Basis</th>
+                                <th>Rate</th>
+                                <th>Allowance</th>
+                                <th>Mode of Payment</th>
+                                <th>Date Effective</th>
+                                <th>Until </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($employee->payTableHistory != null && sizeof($employee->payTableHistory) > 0)
+                            @for ($i = 0; $i < sizeof($employee->payTableHistory); $i++)
+                            <tr {!! $employee->payTable != null && isset($employee->payTable['id']) && $employee->payTableHistory[$i]['id'] == $employee->payTable['id'] ? 'class=highlighted' : '' !!}>
+                                <td>{{ isset($employee->payTableHistory[$i]['ratebasis']) ? $employee->payTableHistory[$i]['ratebasis'] : '' }}</td>
+                                <td>{{ $employee->payTableHistory[$i]['rate'] }}</td>
+                                <td>{{ $employee->payTableHistory[$i]['allowance'] }}</td>
+                                <td>{{ $employee->payTableHistory[$i]['paymentmode']['displayName'] }}</td>
+                                <td>{{ isset($employee->payTableHistory[$i]['startdate']) ? date_format(date_create($employee->payTableHistory[$i]['startdate']), 'M d, Y') : ''  }}</td>
+                                <td>{{ isset($employee->payTableHistory[$i]['enddate']) ? date_format(date_create($employee->payTableHistory[$i]['enddate']), 'M d, Y') : '' }}</td>
+                            </tr>
+                            @endfor
+                            @else
+                            <tr>
+                                <td colspan="5"><em class="text-muted">No history</em></td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('script')

@@ -305,19 +305,19 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-4 col-6 form-paper">
+                <div class="col-sm-3 col-6 form-paper">
                     <div class="form-group">
                         <label for="dateHired" class="form-paper-label">Employment Start Date</label>
                         <input id="dateHired" type="date" name="date_started" class="form-control" value="{{  $employee->current != null && key_exists('datestarted', $employee->current) ? $employee->current['datestarted']: '' }}" />
                     </div>
                 </div>
-                <div class="col-sm-4 col-6 form-paper">
+                <div class="col-sm-3 col-6 form-paper">
                     <div class="form-group">
                         <label for="dateEnded" class="form-paper-label">Unemployment Date</label>
                         <input id="dateEnded" type="date" name="date_transfered" class="form-control" value="{{  $employee->current != null && key_exists('datetransfered', $employee->current) ? $employee->current['datetransfered'] : '' }}" />
                     </div>
                 </div>
-                <div class="col-sm-4 col-12 form-paper">
+                <div class="col-sm-3 col-6 form-paper">
                     <div class="form-group">
                         <label for="status" class="form-paper-label">Status</label>
                         <select id="status" name="contract_status" class="form-control" value="{{  $employee->current != null && key_exists('contractstatus', $employee->current) ? $employee->current['contractstatus']['value'] : '' }}" >
@@ -337,51 +337,67 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-2 col-6 form-paper">
-                    <div class="form-group">
-                        <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
-                        <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{  $employee->current != null && key_exists('paymentmode', $employee->current) ? $employee->current['paymentmode']['value'] : '' }}" >
-                            @foreach($categories['paymentmode'] as $category)
-                            <option value="{{ $category->id }}" {{  $employee->current != null && key_exists('paymentmode', $employee->current) && $employee->current['paymentmode']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-7 form-paper">
+            </div>
+            <div class="row">
+                <div class="col-12 form-paper">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-12 section-label">Rate</div>
+                        <div class="col-md-3 col-6">
                             <div class="form-group">
-                                <label for="rateBasis" class="form-paper-label">Rate Basis</label>
-                                <div class="form-check">
-                                    <input id="dailyBasis" type="radio" name="rate_basis" class="form-check-input" value="daily" {{ $employee->current != null && isset($employee->current['ratebasis'])  && $employee->current['ratebasis'] == 'daily' ? 'checked' : '' }} />
-                                    <label for="dailyBasis" class="form-paper-label">Daily</label>
+                                <label for="modeOfPayment" class="form-paper-label">Mode of payment</label>
+                                <select id="modeOfPayment" name="payment_mode" class="form-control" value="{{  $employee->payTable != null && key_exists('paymentmode', $employee->payTable) ? $employee->payTable['paymentmode']['value'] : '' }}" >
+                                    @foreach($categories['paymentmode'] as $category)
+                                    <option value="{{ $category->id }}" {{  $employee->payTable != null && key_exists('paymentmode', $employee->payTable) && $employee->payTable['paymentmode']['value'] == $category->id ? 'selected' : '' }} >{{ $category->value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label for="rateBasis" class="form-paper-label">Rate Basis</label>
+                                        <select id="rateBasis" name="rate_basis" class="form-control">
+                                            <option value="daily" {{ $employee->payTable != null && isset($employee->payTable['ratebasis'])  && $employee->payTable['ratebasis'] == 'daily' ? 'selected' : '' }}>Daily</option>
+                                            <option value="monthly" {{ $employee->id == 0 || ($employee->payTable != null && isset($employee->payTable['ratebasis']) && $employee->payTable['ratebasis'] == 'monthly') ? 'selected' : '' }}>Monthly</option>
+                                            <option value="fixed" {{ $employee->payTable != null && isset($employee->payTable['ratebasis'])  && $employee->payTable['ratebasis'] == 'fixed' ? 'selected' : '' }}>Fixed</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input id="monthlyBasis" type="radio" name="rate_basis" class="form-check-input" value="monthly" {{ $employee->id == 0 ? 'checked' : '' }} {{ $employee->current != null && isset($employee->current['ratebasis'])  && $employee->current['ratebasis'] == 'monthly' ? 'checked' : '' }} />
-                                    <label for="monthlyBasis" class="form-paper-label">Monthly</label>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <label for="rate" class="form-paper-label">Rate</label>
+                                        <input id="rate" type="number" name="rate" step="0.05" class="form-control" value="{{ $employee->payTable != null &&  key_exists('rate', $employee->payTable) ? $employee->payTable['rate'] : '' }}" required />
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input id="fixedBasis" type="radio" name="rate_basis" class="form-check-input" value="fixed" {{ $employee->current != null && isset($employee->current['ratebasis'])  && $employee->current['ratebasis'] == 'fixed' ? 'checked' : '' }} />
-                                    <label for="fixedBasis" class="form-paper-label">Fixed</label>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="allowance" class="form-paper-label">Allowance</label>
+                                        <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{  $employee->payTable != null && key_exists('allowance', $employee->payTable) ? $employee->payTable['allowance'] : '' }}" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-5">
+                        <div class="col-sm-4 col-6">
                             <div class="form-group">
-                                <label for="rate" class="form-paper-label">Rate</label>
-                                <input id="rate" type="number" name="rate" step="0.05" class="form-control" value="{{ $employee->current != null &&  key_exists('rate', $employee->current) ? $employee->current['rate'] : '' }}" required />
+                                <label for="effectiveDateStartPay" class="form-paper-label">Change Rate Schedule</label>
+                                <input id="effectiveDateStartPay" type="date" name="effective_date_start_pay" class="form-control"  value="{{ $employee->payTable != null && key_exists('startdate', $employee->payTable) ? $employee->payTable['startdate'] : date_format(NOW(), 'Y-m-d') }}" />
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-4 col-6">
                             <div class="form-group">
-                                <label for="allowance" class="form-paper-label">Allowance</label>
-                                <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{  $employee->current != null && key_exists('allowance', $employee->current) ? $employee->current['allowance'] : '' }}" />
+                                <label for="effectiveDateEnd" class="form-paper-label">Until</label>
+                                <input id="effectiveDateEnd" type="date" name="effective_date_end_pay" class="form-control"  value="{{ $employee->payTable != null && key_exists('enddate', $employee->payTable) ? $employee->payTable['enddate'] : '' }}" />
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#rateChangesHistoryModal">View Rate Changes History</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-12 form-paper">
                     <div class="row">
@@ -930,7 +946,55 @@
         </div>
     </div>
 </div>
+{{-- Rate History --}}
+<div class="modal fade" role="dialog" id="rateChangesHistoryModal" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-12 form-paper section-title"><span id="title">{{ $employee->fullName }} - History of Schedules</span>
+                    <button type="button" class="close" data-dismiss='modal'>&times;</button>
+                </div>
+                <div class="col-12 form-paper section-divider"></div>
+            </div>
+            <div class="row">
 
+
+                <div class="col-12 form-paper">
+                    <table class="table table-sm" id="transferHistoryTable">
+                        <thead>
+                            <tr>
+                                <th>Rate Basis</th>
+                                <th>Rate</th>
+                                <th>Allowance</th>
+                                <th>Mode of Payment</th>
+                                <th>Date Effective</th>
+                                <th>Until </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($employee->payTableHistory != null && sizeof($employee->payTableHistory) > 0)
+                            @for ($i = 0; $i < sizeof($employee->payTableHistory); $i++)
+                            <tr {!! $employee->payTable != null && isset($employee->payTable['id']) && $employee->payTableHistory[$i]['id'] == $employee->payTable['id'] ? 'class=highlighted' : '' !!}>
+                                <td>{{ isset($employee->payTableHistory[$i]['ratebasis']) ? $employee->payTableHistory[$i]['ratebasis'] : '' }}</td>
+                                <td>{{ $employee->payTableHistory[$i]['rate'] }}</td>
+                                <td>{{ $employee->payTableHistory[$i]['allowance'] }}</td>
+                                <td>{{ $employee->payTableHistory[$i]['paymentmode']['displayName'] }}</td>
+                                <td>{{ isset($employee->payTableHistory[$i]['startdate']) ? date_format(date_create($employee->payTableHistory[$i]['startdate']), 'M d, Y') : ''  }}</td>
+                                <td>{{ isset($employee->payTableHistory[$i]['enddate']) ? date_format(date_create($employee->payTableHistory[$i]['enddate']), 'M d, Y') : '' }}</td>
+                            </tr>
+                            @endfor
+                            @else
+                            <tr>
+                                <td colspan="5"><em class="text-muted">No history</em></td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('script')

@@ -120,7 +120,7 @@ function setCountedHours() {
         employeeBreak = 0;
     }
     else {
-        employeeBreak = $('#employee_break').val();
+        employeeBreak = $('#employee-break').val()*1;
     }
     hours -= employeeBreak;
 

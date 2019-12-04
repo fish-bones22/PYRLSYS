@@ -401,7 +401,7 @@ class ManhourService extends EntityService implements IManhourService
 
     public function getHoliday($date)
     {
-        $holiday = Holiday::where('holidayDate', date_create($date))->first();
+        $holiday = Holiday::where('holidayDate', $date)->first();
         if ($holiday == null) return null;
 
         return [
