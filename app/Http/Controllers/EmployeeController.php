@@ -578,7 +578,7 @@ class EmployeeController extends Controller
                     'details' => [
                         'key' => 'details',
                         'grouping' => $i,
-                        'value' => $details['file_new_details'][$i],
+                        'value' => isset($details['file_new_details']) ? $details['file_new_details'][$i] : '',
                         'displayName' => 'File Details'
                     ]
                 ];
@@ -587,25 +587,27 @@ class EmployeeController extends Controller
         }
         $curSize = sizeof($entity['file']);
         // Update old files
-        for ($i = 0; $i < sizeof($details['file_old']); $i++) {
+        if (isset($details['file_old'])) {
+            for ($i = 0; $i < sizeof($details['file_old']); $i++) {
 
-            if ($details['file_old'][$i] == null)
-                continue;
+                if ($details['file_old'][$i] == null)
+                    continue;
 
-            $entity['file'][] = [
-                'filename' => [
-                    'key' => 'filename',
-                    'grouping' =>  $curSize + $i,
-                    'value' => $details['file_old'][$i],
-                    'displayName' => 'File Name'
-                ],
-                'details' => [
-                    'key' => 'details',
-                    'grouping' => $i,
-                    'value' => $details['file_details'][$i],
-                    'displayName' => 'File Details'
-                ]
-            ];
+                $entity['file'][] = [
+                    'filename' => [
+                        'key' => 'filename',
+                        'grouping' =>  $curSize + $i,
+                        'value' => $details['file_old'][$i],
+                        'displayName' => 'File Name'
+                    ],
+                    'details' => [
+                        'key' => 'details',
+                        'grouping' => $i,
+                        'value' => $details['file_details'][$i],
+                        'displayName' => 'File Details'
+                    ]
+                ];
+            }
         }
 
         // Number of Memo

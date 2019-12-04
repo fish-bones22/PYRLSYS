@@ -541,7 +541,7 @@
             // To ensure empty Dependent fields appear,
             // iterate at least one row even if $details['file'] is empty
 
-            $limit = 1; // Store the number of file or use 1 if there are none.
+            $limit = 0; // Store the number of file or use 1 if there are none.
             // If there is/are file/s on the array, use its size instead of the default 1.
             if (key_exists('file', $employee->details) && is_array($employee->details['file']) && sizeof($employee->details['file']) > 0) {
                 $limit = sizeof($employee->details['file']);
@@ -565,7 +565,7 @@
                 </div>
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">File Name</label>
+                        <label class="form-paper-label">File Name</label><br/>
                         <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}</a>
                         <input type="hidden" name="file_old[{{$i}}]" value="{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}" />
                     </div>

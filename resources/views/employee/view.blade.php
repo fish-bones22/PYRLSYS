@@ -473,7 +473,7 @@
                 <div class="row file-{{$i}}">
                     <div class="col-md-6 form-paper">
                         <div class="form-group">
-                            <label class="form-paper-label">File Name:</label>
+                            <label class="form-paper-label">File Name:</label><br/>
                             <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '#') }}">{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}</a>
                         </div>
                     </div>
