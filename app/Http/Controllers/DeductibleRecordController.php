@@ -537,7 +537,17 @@ class DeductibleRecordController extends Controller
             return view('deductibles.item.meal', ['name' => $name, 'records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }
         if ($key != 'all') {
-            return view('deductibles.item.sss', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
+            $payrollRecord1 = array();
+            $payrollRecord2 = array();
+            if ($key === 'sss') {
+                foreach ($records as $record) {
+                    $payrollRecord1[$record->employee['id']] = $this->payrollService->getPayroll($record->employee['id'], date_create($date));
+                }
+                foreach ($records2 as $record) {
+                    $payrollRecord2[$record->employee['id']] = $this->payrollService->getPayroll($record->employee['id'],  date_create($date2));
+                }
+            }
+            return view('deductibles.item.sss', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments, 'payrollRecord1' => $payrollRecord1, 'payrollRecord2' => $payrollRecord2]);
         }
 
         return redirect()->action('DeductibleRecordController@getAll', $date);

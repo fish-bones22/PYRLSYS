@@ -158,6 +158,7 @@ Employee Record
                                         ?>
 
                                         <td>{{ $trot != 0 ? $trot : '' }}</td>
+                                        <td>{{ $txot != 0 ? $txot : '' }}</td>
                                         <td>{{ $tsot != 0 ? $tsot : ''  }}</td>
                                         <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
                                         <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>

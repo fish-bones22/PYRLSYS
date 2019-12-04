@@ -402,25 +402,25 @@
                 <div class="col-12 form-paper">
                     <div class="row">
                         <div class="col-12 section-label">Schedule</div>
-                        <div class="col-sm-5 col-6">
+                        <div class="col-sm-6 col-6">
                             <div class="form-group">
                                 <label for="timeIn" class="form-paper-label">Time In</label>
                                 <input type="hidden" name="schedule_id" value="{{  $employee->timeTable != null && key_exists('id', $employee->timeTable) ? $employee->timeTable['id'] : '' }}" />
                                 <input id="timeIn" type="time" name="time_in" class="form-control"  value="{{  $employee->timeTable != null && key_exists('timein', $employee->timeTable) ? date_format(date_create($employee->timeTable['timein']), 'H:i') : '' }}" required />
                             </div>
                         </div>
-                        <div class="col-sm-5 col-6">
+                        <div class="col-sm-6 col-6">
                             <div class="form-group">
                                 <label for="timeOut" class="form-paper-label">Time Out</label>
                                 <input id="timeOut" type="time" name="time_out" class="form-control"  value="{{ $employee->timeTable != null && key_exists('timeout', $employee->timeTable) ? date_format(date_create($employee->timeTable['timeout']), 'H:i') : '' }}" required />
+                                <input id="break" type="hidden" name="break" value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '1' }}" />
                             </div>
                         </div>
-                       <div class="col-sm-2 col-12">
-                           <div class="form-group">
-                               <label for="break" class="form-paper-label">Break</label>
-                               <input id="break" type="number" name="break" class="form-control"  value="{{ $employee->timeTable != null && key_exists('break', $employee->timeTable) ? $employee->timeTable['break'] : '' }}" />
-                           </div>
-                        </div>
+                       {{-- <div class="col-sm-2 col-12"> --}}
+                           {{-- <div class="form-group"> --}}
+                               {{-- <label for="break" class="form-paper-label">Break</label> --}}
+                           {{-- </div> --}}
+                        {{-- </div> --}}
                         <div class="col-sm-4 col-6">
                             <div class="form-group">
                                 <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
@@ -821,28 +821,6 @@
                     </div>
                 </div>
 
-                {{-- <div class="row">
-                    <div class="col-sm-5 form-paper">
-                        <div class="form-group">
-                            <label for="timeInModal" class="form-paper-label">Time In</label>
-                            <input id="timeInModal" type="time" name="time_in" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-md-5 form-paper">
-                        <div class="form-group">
-                            <label for="timeOutModal" class="form-paper-label">Time Out</label>
-                            <input id="timeOutModal" type="time" name="time_out" class="form-control"  required />
-                        </div>
-                    </div>
-                    <div class="col-md-2 form-paper">
-                        <div class="form-group">
-                            <label for="breakModal" class="form-paper-label">Break (hrs)</label>
-                            <input id="breakModal" type="number" name="break" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-12 form-paper section-divider"></div>
-                </div> --}}
-
                 <div class="row">
                     <div class="col-12 form-paper">
                         <div class="form-group">
@@ -957,7 +935,7 @@
                             <tr>
                                 <th>Time In</th>
                                 <th>Time out</th>
-                                <th>Break</th>
+                                {{-- <th>Break</th> --}}
                                 <th>Date Effective</th>
                                 <th>Until </th>
                             </tr>
@@ -968,7 +946,7 @@
                             <tr {!! $employee->timeTable != null && isset($employee->timeTable['id']) && $employee->timeTableHistory[$i]['id'] == $employee->timeTable['id'] ? 'class=highlighted' : '' !!}>
                                 <td>{{ isset($employee->timeTableHistory[$i]['timein']) ? date_format(date_create($employee->timeTableHistory[$i]['timein']), 'H:i') : '' }}</td>
                                 <td>{{ isset($employee->timeTableHistory[$i]['timeout']) ? date_format(date_create($employee->timeTableHistory[$i]['timeout']), 'H:i') : '' }}</td>
-                                <td>{{ $employee->timeTableHistory[$i]['break'] }}</td>
+                                {{-- <td>{{ $employee->timeTableHistory[$i]['break'] }}</td> --}}
                                 <td>{{ isset($employee->timeTableHistory[$i]['startdate']) ? date_format(date_create($employee->timeTableHistory[$i]['startdate']), 'M d, Y') : ''  }}</td>
                                 <td>{{ isset($employee->timeTableHistory[$i]['enddate']) ? date_format(date_create($employee->timeTableHistory[$i]['enddate']), 'M d, Y') : '' }}</td>
                             </tr>

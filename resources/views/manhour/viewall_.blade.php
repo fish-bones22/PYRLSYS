@@ -131,7 +131,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                         <th colspan="2">Regular Time</th>
                         <th rowspan="2">Undertime</th>
                         <th rowspan="2">Total <br />Regular <br />Hours</th>
-                        <th colspan="5">Overtime</th>
+                        <th colspan="6">Overtime</th>
                         <th rowspan="2">ND</th>
                         <th rowspan="2">Remarks/Comments</th>
                     </tr>

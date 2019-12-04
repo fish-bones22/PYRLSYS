@@ -345,24 +345,24 @@
                     <div class="col-12 form-paper">
                         <div class="row mt-1" id="scheduleDivId">
                             <div class="col-12 section-label">Schedule</div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-6 col-6">
                                 <div class="form-group">
                                     <label for="timeIn" class="form-paper-label">Time In</label>
                                     <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['timein']) ? date_format(date_create($employee->timeTable['timein']), 'H:i') : 'None' }}</div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-6 col-6">
                                 <div class="form-group">
                                     <label for="timeOut" class="form-paper-label">Time Out</label>
                                     <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['timeout']) ? date_format(date_create($employee->timeTable['timeout']), 'H:i') : 'None' }}</div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-12">
+                            {{-- <div class="col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="break" class="form-paper-label">Break</label>
                                     <div class="form-paper-display">{{ $employee->timeTable != null && isset($employee->timeTable['break']) && $employee->timeTable['break']*1 > 0 ? $employee->timeTable['break'] : 'None' }}</div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-sm-3 col-6">
                                 <div class="form-group">
                                     <label for="effectiveDateStart" class="form-paper-label">Change Shift Schedule</label>
@@ -605,7 +605,7 @@
                             <tr>
                                 <th>Time In</th>
                                 <th>Time out</th>
-                                <th>Break</th>
+                                {{-- <th>Break</th> --}}
                                 <th>Change Shift Schedule</th>
                                 <th>Until </th>
                             </tr>
@@ -616,7 +616,7 @@
                             <tr {!! $employee->timeTable != null && isset($employee->timeTable['id']) && $employee->timeTableHistory[$i]['id'] == $employee->timeTable['id'] ? 'class=highlighted' : '' !!}>
                                 <td>{{ isset($employee->timeTableHistory[$i]['timein']) ? date_format(date_create($employee->timeTableHistory[$i]['timein']), 'H:i') : '' }}</td>
                                 <td>{{ isset($employee->timeTableHistory[$i]['timeout']) ? date_format(date_create($employee->timeTableHistory[$i]['timeout']), 'H:i') : '' }}</td>
-                                <td>{{ $employee->timeTableHistory[$i]['break'] }}</td>
+                                {{-- <td>{{ $employee->timeTableHistory[$i]['break'] }}</td> --}}
                                 <td>{{ isset($employee->timeTableHistory[$i]['startdate']) ? date_format(date_create($employee->timeTableHistory[$i]['startdate']), 'M d, Y') : ''  }}</td>
                                 <td>{{ isset($employee->timeTableHistory[$i]['enddate']) ? date_format(date_create($employee->timeTableHistory[$i]['enddate']), 'M d, Y') : '' }}</td>
                             </tr>
