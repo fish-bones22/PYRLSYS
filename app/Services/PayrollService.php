@@ -153,7 +153,7 @@ class PayrollService implements IPayrollService {
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, $date);
             $holiday = $this->manhourService->getHoliday($monthYear.'-'.$i);
 
-            if ($prevId !== $payRecord['id']) {
+            if (isset($payRecord['id']) && $prevId !== $payRecord['id']) {
                 $payroll->details[] = $payRecord;
                 $prevId = $payRecord['id'];
             }
@@ -384,6 +384,13 @@ class PayrollService implements IPayrollService {
             ];
         }
 
+        if ($manhour->xot != '') {
+            return [
+                'multiplier' => 1.25,
+                'value' => $manhour->xot
+            ];
+        }
+
         if ($manhour->sot != ''){
             return [
                 'multiplier' => 1.3,
@@ -429,6 +436,8 @@ class PayrollService implements IPayrollService {
         // Hours
         if (!isset($details['rot']))
             $details['rot'] = 0;
+        if (!isset($details['xot']))
+            $details['xot'] = 0;
         if (!isset($details['sot']))
             $details['sot'] = 0;
         if (!isset($details['xsot']))
@@ -442,6 +451,8 @@ class PayrollService implements IPayrollService {
         // Amount
         if (!isset($details['rotrate']))
             $details['rotrate'] = 0;
+        if (!isset($details['xotrate']))
+            $details['xotrate'] = 0;
         if (!isset($details['sotrate']))
             $details['sotrate'] = 0;
         if (!isset($details['xsotrate']))
@@ -454,6 +465,7 @@ class PayrollService implements IPayrollService {
             $details['ndrate'] = 0;
 
         $details['rot']  += ($model->rot != null ? $model->rot : 0);
+        $details['xot']  += ($model->xot != null ? $model->xot : 0);
         $details['sot']  += ($model->sot != null ? $model->sot : 0);
         $details['xsot']  += ($model->xsot != null ? $model->xsot : 0);
         $details['lhot'] += ($model->lhot != null ? $model->lhot : 0);
@@ -461,6 +473,7 @@ class PayrollService implements IPayrollService {
         $details['nd'] += ($model->nd != null ? $model->nd : 0);
 
         $details['rotrate']  += ($model->rot != null ? round($model->rot*$rate*1.25, 2) : 0);
+        $details['xotrate']  += ($model->xot != null ? round($model->xot*$rate*1.25, 2) : 0);
         $details['sotrate']  += ($model->sot != null ? round($model->sot*$rate*1.3, 2) : 0);
         $details['xsotrate']  += ($model->xsot != null ? round($model->xsot*$rate*1.69, 2) : 0);
         $details['lhotrate'] += ($model->lhot != null ? round($model->lhot*$rate*2, 2) : 0);

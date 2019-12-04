@@ -115,6 +115,7 @@ Manhour Records
                                         <th rowspan="2">Department</th>
                                         <th colspan="{{ $details['endday'] - $details['startday'] + 2 }}">Regular Hours</th>
                                         <th rowspan="2">ROT</th>
+                                        <th rowspan="2">XOT</th>
                                         <th rowspan="2">SSHOT</th>
                                         <th rowspan="2">XSSHOT</th>
                                         <th rowspan="2">LHOT</th>
@@ -191,6 +192,7 @@ Manhour Records
 
                                         <?php
                                             $trot = 0;
+                                            $txot = 0;
                                             $tsot = 0;
                                             $txsot = 0;
                                             $tlhot = 0;
@@ -200,6 +202,7 @@ Manhour Records
                                                 if ($record === null || $record->timeCard != $currentTimecard)
                                                     continue;
                                                 $trot += $record->rot != '' ? $record->rot : 0;
+                                                $txot += $record->xot != '' ? $record->xot : 0;
                                                 $tsot += $record->sot != '' ? $record->sot : 0;
                                                 $txsot += $record->xsot != '' ? $record->xsot : 0;
                                                 $tlhot += $record->lhot != '' ? $record->lhot : 0;
@@ -209,6 +212,7 @@ Manhour Records
                                         ?>
 
                                         <td>{{ $trot != 0 ? $trot : '' }}</td>
+                                        <td>{{ $txot != 0 ? $txot : ''  }}</td>
                                         <td>{{ $tsot != 0 ? $tsot : ''  }}</td>
                                         <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
                                         <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>

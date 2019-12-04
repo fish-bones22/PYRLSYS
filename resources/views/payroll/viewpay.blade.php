@@ -90,6 +90,12 @@
                             <td>{{ isset($payroll->otDetails['rotrate']) ? $payroll->otDetails['rotrate'] : 0  }}</td>
                         </tr>
                         <tr>
+                            <td><i>&emsp;XOT</i></td>
+                            <td>1.25</td>
+                            <td>{{ isset($payroll->otDetails['xot']) ? $payroll->otDetails['xot'] : 0 }} hrs</td>
+                            <td>{{ isset($payroll->otDetails['xotrate']) ? $payroll->otDetails['xotrate'] : 0  }}</td>
+                        </tr>
+                        <tr>
                             <td><i>&emsp;SOT/SPH</i></td>
                             <td>1.3</td>
                             <td>{{ isset($payroll->otDetails['sot']) ? $payroll->otDetails['sot'] : 0  }} hrs</td>

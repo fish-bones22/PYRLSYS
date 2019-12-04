@@ -18,6 +18,7 @@ class ManhourSummaryEntity extends Entity {
     public $totalPayableHours;
 
     public $rot;
+    public $xot;
     public $sot;
     public $xsot;
     public $lhot;

@@ -78,6 +78,7 @@ $title = 'View Attendance';
                         <th>In</th>
                         <th>Out</th>
                         <th>ROT</th>
+                        <th>XOT</th>
                         <th>SOT</th>
                         <th>XSOT</th>
                         <th>LHOT</th>
@@ -99,6 +100,7 @@ $title = 'View Attendance';
                         <td>{{ $record->undertime != null ? date_format(date_create($record->undertime), 'h:i A') : '' }}</td>
                         <td>{{ $record->regularHours }}</td>
                         <td>{{ $record->rot }}</td>
+                        <td>{{ $record->xot }}</td>
                         <td>{{ $record->sot }}</td>
                         <td>{{ $record->xsot }}</td>
                         <td>{{ $record->lhot }}</td>

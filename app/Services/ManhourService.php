@@ -20,6 +20,7 @@ class ManhourService extends EntityService implements IManhourService
 
     private $deptName_15minRule = ["admin", "administration", "administrator"];
     private $deptName_12hoursExtensionRule = ["security"];
+    private $deptName_SundayCountedRule = ["security", "sorrento"];
 
     private $otRequestService;
     private $employeeService;
@@ -755,7 +756,7 @@ class ManhourService extends EntityService implements IManhourService
         }
 
         // If sunday
-        if (date('N', strtotime($record->date)) > 6) {
+        if ($this->isSunday($record->date) && !in_array(strtolower($summary->departmentName), $this->deptName_SundayCountedRule)) {
             $properHours = 0;
         }
 
@@ -767,6 +768,7 @@ class ManhourService extends EntityService implements IManhourService
         $summary->nd = $ndHours;
 
         $summary->rot = '';
+        $summary->xot = '';
         $summary->sot = '';
         $summary->xsot = '';
         $summary->lhot = '';
@@ -774,6 +776,8 @@ class ManhourService extends EntityService implements IManhourService
         if ($otRequest != null && $overtimeCounted) {
             if ($otRequest[0]->otType == 'rot') {
                 $summary->rot = $otHours;
+            } else if ($otRequest[0]->otType == 'xot') {
+                $summary->xot = $otHours;
             } else if ($otRequest[0]->otType == 'sot') {
                 $summary->sot = $otHours;
             } else if ($otRequest[0]->otType == 'xsot') {

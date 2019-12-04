@@ -247,6 +247,11 @@ function printText(doc, result, copy) {
     doc.text(result.otDetails != null && 'rot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
     doc.text(result.otDetails != null &&'rotrate' in result.otDetails ? addCommas(result.otDetails.rotrate) + '' : '0', col3Margin, i);
 
+    doc.text('RXT', subEntryMargin, i = spacer(i));
+    doc.text('1.25', col2Margin, i);
+    doc.text(result.otDetails != null && 'xot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null &&'xotrate' in result.otDetails ? addCommas(result.otDetails.rotrate) + '' : '0', col3Margin, i);
+
     doc.text('SOT/SPH', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
     doc.text(result.otDetails != null && 'sot' in result.otDetails ? result.otDetails.sot + ' hrs' : '0', 1.05 + slider, i);
