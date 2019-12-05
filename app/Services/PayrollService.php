@@ -75,6 +75,9 @@ class PayrollService implements IPayrollService {
 
         // Net
         $payroll->netPay = $payroll->grossPay - $payroll->exemption;
+        if ($payroll->fixed) {
+            $payroll->adjFixed = $payroll->netPay;
+        }
 
         // Take home
         $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->allowance, 2);
@@ -129,6 +132,11 @@ class PayrollService implements IPayrollService {
         $basicPay = 0;
         $otPay = 0;
         $rotPay = 0;
+        $xotPay = 0;
+        $sotPay = 0;
+        $xsotPay = 0;
+        $lhotPay = 0;
+        $xlhotPay = 0;
         $ndPay = 0;
         $totalAllowance = 0;
         $regularHours = 0;
@@ -209,8 +217,26 @@ class PayrollService implements IPayrollService {
             $otMultiplier = $this->getOtMultiplier($manhour);
             $otDetails = $this->getOtDetails($manhour, $otDetails, $hourlyRate);
 
-            if ($otMultiplier['multiplier'] === 1.25) {
+            if ($otMultiplier['key'] === 'rot') {
                 $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            }
+            else if ($otMultiplier['key'] === 'rot') {
+                $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            }
+            else if ($otMultiplier['key'] === 'xot') {
+                $xotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            }
+            else if ($otMultiplier['key'] === 'sot') {
+                $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            }
+            else if ($otMultiplier['key'] === 'xsot') {
+                $xsotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            }
+            else if ($otMultiplier['key'] === 'lhot') {
+                $lhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            }
+            else if ($otMultiplier['key'] === 'xlhot') {
+                $xlhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
             }
             if ($otMultiplier['multiplier'] === 0.1) {
                 $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
@@ -228,7 +254,7 @@ class PayrollService implements IPayrollService {
 
         $monRate = $this->getComputedMonthlyRate($employeeId, $date)/2;
         $basicPay = $basicPay > $monRate ? $monRate : $basicPay;
-        $payroll->basicPayBase = $basicPay;
+        $payroll->basicPayBase = round($basicPay, 2);
         $basicPay += $basicAdj;
 
         $payroll->otherAdjustments = $summary['_OTHER_ADJUSTMENTS'];
@@ -238,14 +264,21 @@ class PayrollService implements IPayrollService {
         $payroll->basicPay = round($basicPay, 2);
         $payroll->otPay = round($otPay, 2);
         $payroll->rotPay = round($rotPay, 2);
+        $payroll->xotPay = round($xotPay, 2);
+        $payroll->sotPay = round($sotPay, 2);
+        $payroll->xsotPay = round($xsotPay, 2);
+        $payroll->lhotPay = round($lhotPay, 2);
+        $payroll->xlhotPay = round($xlhotPay, 2);
         $payroll->ndPay = round($ndPay, 2);
         $payroll->otDetails = $otDetails;
         $payroll->allowance = round($totalAllowance, 2);
 
+        $payroll->fixed = $hasFixed;
         // Exception of Fixed rate basis
         if ($hasFixed) {
             $pay = $fixedRate / 2;
             $payroll->basicPayBase = round($pay, 2);
+            $payroll->basicPayFixed = $basicPay;
             $basicPay = $pay + $basicAdj;
             $totalAllowance = $fixedAllowance;
             $payroll->hourlyRate = 0;
@@ -379,6 +412,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->rot != '') {
             return [
+                'key' => 'rot',
                 'multiplier' => 1.25,
                 'value' => $manhour->rot
             ];
@@ -386,6 +420,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->xot != '') {
             return [
+                'key' => 'xot',
                 'multiplier' => 1.25,
                 'value' => $manhour->xot
             ];
@@ -393,6 +428,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->sot != ''){
             return [
+                'key' => 'sot',
                 'multiplier' => 1.3,
                 'value' => $manhour->sot
             ];
@@ -400,6 +436,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->xsot != ''){
             return [
+                'key' => 'xsot',
                 'multiplier' => 1.69,
                 'value' => $manhour->xsot
             ];
@@ -407,6 +444,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->lhot != ''){
             return [
+                'key' => 'lhot',
                 'multiplier' => 2,
                 'value' => $manhour->lhot
             ];
@@ -414,6 +452,7 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->xlhot != ''){
             return [
+                'key' => 'xlhot',
                 'multiplier' => 2.69,
                 'value' => $manhour->xlhot
             ];
@@ -421,12 +460,14 @@ class PayrollService implements IPayrollService {
 
         if ($manhour->nd != ''){
             return [
+                'key' => 'nd',
                 'multiplier' => 0.1,
                 'value' => $manhour->nd
             ];
         }
 
         return [
+            'key' => 'no',
             'multiplier' => 1,
             'value' => 0
         ];

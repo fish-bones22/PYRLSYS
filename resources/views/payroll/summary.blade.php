@@ -73,65 +73,87 @@ Payroll Summary
                     <table class="table table-sm" id="payrollMasterTable" style="font-size:11px;">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th rowspan="2">ID NO.</th>
+                                <th colspan="3">NAME</th>
+                                <th rowspan="2">BASIC SALARY</th>
+                                <th colspan="7">OVERTIME</th>
+                                <th rowspan="2">TOTAL OVERTIME</th>
+                                <th rowspan="2">Allowances</th>
+                                <th rowspan="2">Special Adjustment</th>
+                                <th rowspan="2">Misc. Adjustment</th>
+                                <th rowspan="2">GROSS PAY</th>
+                                <th colspan="7">DEDUCTIONS</th>
+                                <th rowspan="2">NET PAY</th>
+                                <th colspan="3">OTHER DEDUCTIONS</th>
+                                <th rowspan="2">TAKE HOME PAY</th>
+                                <th rowspan="2">MEAL DEDUCTIONS</th>
+                                <th rowspan="2">CASH ADVANCE</th>
+                                <th rowspan="2">TAKE HOME PAY</th>
+                            </tr>
+                            <tr>
                                 <th>Last Name</th>
-                                <th>First Name</th>
+                                <th>Given Name</th>
                                 <th>Middle Name</th>
-                                <th>Department</th>
-                                <th>Basic Pay</th>
-                                <th>Adjustments</th>
-                                <th>Reg. OT</th>
-                                <th>Adj. OT</th>
-                                <th>ND</th>
-                                <th>Gross Pay</th>
-                                <th>SSS Premium</th>
-                                <th>PhilHealth Premium</th>
-                                <th>PAGIBIG Premium</th>
+                                <th>ROT</th>
+                                <th>XOT</th>
+                                <th>SOT</th>
+                                <th>XSOT</th>
+                                <th>LHOT</th>
+                                <th>XLHOT</th>
+                                <th>OTHERS</th>
                                 <th>W/Tax</th>
+                                <th>SSS</th>
+                                <th>PhilHealth</th>
+                                <th>PAGIBIG</th>
                                 <th>SSS Loan</th>
                                 <th>PAGIBIG Loan</th>
-                                <th>CO. CA</th>
-                                <th>Adjustments</th>
-                                <th>Net Pay</th>
-                                <th>Monthly Allowance</th>
-                                <th>Meal Allowance</th>
-                                <th>Differential</th>
-                                <th>Gross Net Pay</th>
-                                <th>Meal Ded.</th>
-                                <th>Other Ded.</th>
-                                <th>Take Home Pay</th>
+                                <th>Others</th>
+                                <th>Meal</th>
+                                <th>Co. Loan</th>
+                                <th>Others</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($employees as $employee)
+                            <?php
+                                $otherAdj =
+                                    isset($summary[$employee->id]->adjustmentsDetails['overtimeadjustment']) ? $summary[$employee->id]->adjustmentsDetails['overtimeadjustment'] : 0
+                                    + isset($summary[$employee->id]->adjustmentsDetails['basicadjustment']) ? $summary[$employee->id]->adjustmentsDetails['basicadjustment'] : 0
+                                    + isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : 0
+                                    + isset($summary[$employee->id]->adjustmentsDetails['mealallowance']) ? $summary[$employee->id]->adjustmentsDetails['mealallowance'] : '0';
+                            ?>
                             <tr>
                                 <td>{{ $employee->employeeId }}</td>
                                 <td>{{ $employee->lastName }}</td>
                                 <td>{{ $employee->firstName }}</td>
                                 <td>{{ $employee->middleName }}</td>
-                                <td>{{ $employee->current['department']['displayName'] }}</td>
-                                <td>{{ $summary[$employee->id]->basicPayBase }}</td>
-                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['basicadjustment']) ? $summary[$employee->id]->adjustmentsDetails['basicadjustment'] : '0' }}</td>
+                                <td>{{ $summary[$employee->id]->fixed ? $summary[$employee->id]->basicPayFixed : $summary[$employee->id]->basicPayBase }}</td>
                                 <td>{{ $summary[$employee->id]->rotPay }}</td>
-                                <td>{{ $summary[$employee->id]->otPay - $summary[$employee->id]->rotPay }}</td>
-                                <td>{{ isset($summary[$employee->id]->otDetails['ndrate']) ? $summary[$employee->id]->otDetails['ndrate'] : '' }}</td>
+                                <td>{{ $summary[$employee->id]->xotPay }}</td>
+                                <td>{{ $summary[$employee->id]->sotPay }}</td>
+                                <td>{{ $summary[$employee->id]->xsotPay }}</td>
+                                <td>{{ $summary[$employee->id]->lhotPay }}</td>
+                                <td>{{ $summary[$employee->id]->xlhotPay }}</td>
+                                <td>{{ $summary[$employee->id]->ndPay }}</td>
+                                <td>{{ $summary[$employee->id]->otPay }}</td>
+                                <td>{{ isset($summary[$employee->id]->allowance) ? $summary[$employee->id]->allowance : '0' }}</td>
+                                <td>{{ $summary[$employee->id]->adjFixed }}</td>
+                                <td>{{ $otherAdj }}</td>
                                 <td>{{ $summary[$employee->id]->grossPay }}</td>
+                                <td>{{ isset($summary[$employee->id]->exemptionDetails['Withholding Tax']) ? $summary[$employee->id]->exemptionDetails['Withholding Tax'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['SSS']) ? $summary[$employee->id]->exemptionDetails['SSS'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['PhilHealth']) ? $summary[$employee->id]->exemptionDetails['PhilHealth'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['PAGIBIG']) ? $summary[$employee->id]->exemptionDetails['PAGIBIG'] : '0' }}</td>
-                                <td>{{ isset($summary[$employee->id]->exemptionDetails['Withholding Tax']) ? $summary[$employee->id]->exemptionDetails['Withholding Tax'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['SSS Loan']) ? $summary[$employee->id]->exemptionDetails['SSS Loan'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['PAGIBIG Loan']) ? $summary[$employee->id]->exemptionDetails['PAGIBIG Loan'] : '0' }}</td>
+                                <td></td>
+                                <td>{{ $summary[$employee->id]->netPay }}
+                                <td>{{ isset($summary[$employee->id]->exemptionDetails['Meal Deduction']) ? $summary[$employee->id]->exemptionDetails['Meal Deduction'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
-                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['overtimeadjustment']) ? $summary[$employee->id]->adjustmentsDetails['overtimeadjustment'] : '' }}</td>
-                                <td>{{ $summary[$employee->id]->netPay }}</td>
-                                <td>{{ isset($summary[$employee->id]->allowance) ? $summary[$employee->id]->allowance : '0' }}</td>
-                                {{-- <td>{{ isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : '0' }}</td> --}}
-                                <td>{{ isset($summary[$employee->id]->adjustmentsDetails['mealallowance']) ? $summary[$employee->id]->adjustmentsDetails['mealallowance'] : '0' }}</td>
-                                <td>0</td>
+                                <td>{{ isset($summary[$employee->id]->exemptionDetails['Other Deduction']) ? $summary[$employee->id]->exemptionDetails['Other Deduction'] : '0' }}</td>
                                 <td>{{ $summary[$employee->id]->takeHomePay }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Meal Deduction']) ? $summary[$employee->id]->exemptionDetails['Meal Deduction'] : '0' }}</td>
-                                <td>{{ isset($summary[$employee->id]->exemptionDetails['Other Deduction']) ? $summary[$employee->id]->exemptionDetails['Other Deduction'] : '0' }}</td>
+                                <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
                                 <td>{{ $summary[$employee->id]->takeHomePay }}</td>
                             </tr>
                             @endforeach

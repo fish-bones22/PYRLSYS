@@ -27,12 +27,21 @@ class PayrollEntity extends Entity {
     public $basicPayAdjusted;
     public $otPay;
     public $rotPay;
+    public $xotPay;
+    public $sotPay;
+    public $xsotPay;
+    public $lhotPay;
+    public $xlhotPay;
     public $ndPay;
     public $allowance;
     public $grossPay;
     public $netPay;
     public $beforeTaxPay;
     public $takeHomePay;
+
+    public $fixed;
+    public $basicPayFixed;
+    public $adjFixed;
 
     public $otDetails;
 
