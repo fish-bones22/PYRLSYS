@@ -372,7 +372,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="form-group">
-                                        <label for="allowance" class="form-paper-label">Allowance</label>
+                                        <label for="allowance" class="form-paper-label">Adj. Allowance</label>
                                         <input id="allowance" type="number" name="allowance" step="0.05" class="form-control" value="{{  $employee->payTable != null && key_exists('allowance', $employee->payTable) ? $employee->payTable['allowance'] : '' }}" />
                                     </div>
                                 </div>
@@ -813,7 +813,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
-                                    <label for="newAllowance" class="form-paper-label">Allowance</label>
+                                    <label for="newAllowance" class="form-paper-label">Adj. Allowance</label>
                                     <input id="newAllowance" type="number" name="allowance" step="0.05" class="form-control" value="{{  $employee->current != null && key_exists('allowance', $employee->current) ? $employee->current['allowance'] : '' }}" />
                                 </div>
                             </div>

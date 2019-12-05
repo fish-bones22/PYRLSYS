@@ -314,7 +314,7 @@
                                     </div>
                                     <div class="col-4" id="allowanceDivId">
                                         <div class="form-group">
-                                            <label for="allowance" class="form-paper-label">Allowance</label>
+                                            <label for="allowance" class="form-paper-label">Adj. Allowance</label>
                                             <div class="form-paper-display">{{ $employee->payTable != null && isset($employee->payTable['allowance']) ? $employee->payTable['allowance'] : 'None' }}</div>
                                         </div>
                                     </div>
@@ -652,7 +652,7 @@
                             <tr>
                                 <th>Rate Basis</th>
                                 <th>Rate</th>
-                                <th>Allowance</th>
+                                <th>Adj. Allowance</th>
                                 <th>Mode of Payment</th>
                                 <th>Date Effective</th>
                                 <th>Until </th>

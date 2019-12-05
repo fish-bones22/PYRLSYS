@@ -20,7 +20,7 @@ Employees
         </span>
     </div>
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
-    <div class="col-lg-4 offset-lg-2 col-md-5 offset-md-1 col-sm-6 form-paper">
+    <div class="col-lg-3 offset-lg-2 col-md-4 offset-md-1 col-sm-4 form-paper">
         <div class="form-group">
             <label for="department" class="form-paper-label">Department</label>
             <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
@@ -31,10 +31,20 @@ Employees
             </select>
         </div>
     </div>
-    <div class="col-lg-4 col-md-5 col-sm-6 form-paper">
+    <div class="col-lg-3 col-md-3 col-sm-4 form-paper">
         <div class="form-group">
             <label for="searchBox" class="form-paper-label">Search</label>
             <input id="searchBox" class="form-control form-control-sm" type="search" onkeyup="filterEmployees()" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-3 col-sm-4 form-paper">
+        <div class="form-group">
+            <label for="tinFilter" class="form-paper-label">TIN Filter</label>
+            <select id="tinFilter" class="form-control form-control-sm" onchange="filterTIN()">
+                <option value="all">All</option>
+                <option value="tin">With TIN</option>
+                <option value="notin">Without TIN</option>
+            </select>
         </div>
     </div>
     <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 form-paper section-divider"></div>
@@ -47,6 +57,7 @@ Employees
                         <th>Name</th>
                         <th>Department</th>
                         <th style="display:none">Status</th>
+                        <th style="display:none">TIN</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -57,6 +68,7 @@ Employees
                         <td>{{ $emp->fullName }}</td>
                         <td>{{ $emp->current['department']['displayName'] }}</td>
                         <td style="display:none">{{ $emp->inactive ? 'Inactive' : 'Active' }}</td>
+                        <td style="display:none">{{ isset($emp->deductibles['tin']) ? $emp->deductibles['tin']['value'] : '' }}</td>
                         <td>
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-light" href="{{ action('EmployeeController@view', ['id' => $emp->id ]) }}">View</a>

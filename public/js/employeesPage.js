@@ -67,6 +67,23 @@ function filterInactive() {
     table2.column(21).draw();
 }
 
+
+function filterTIN() {
+    var option = $('#tinFilter').val();
+    if (option === 'all') {
+        table.column(4).search('');
+        table2.column(23).search('');
+    } else if (option === 'tin') {
+        table.column(4).search('^[0-9 \-]+$', true, false, true);
+        table2.column(23).search('^[0-9 \-]+$', true, false, true);
+    } else if (option === 'notin') {
+        table.column(4).search('^$', true, false, true);
+        table2.column(23).search('^$', true, false, true);
+    }
+    table.column(4).draw();
+    table2.column(23).draw();
+}
+
 function getFileName() {
     return $("#title").text().replaceAll(" ", "-").replaceAll("---", "-").toLowerCase() + "-" + Date.now();
 }

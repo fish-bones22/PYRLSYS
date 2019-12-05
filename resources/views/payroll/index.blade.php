@@ -54,6 +54,7 @@ Payroll Masterlist
                         </thead>
                         <tbody>
                             @foreach ($employees as $employee)
+                            <?php if ($employee->inactive) continue; ?>
                             <tr>
                                 <td style="max-width:200px;">{{ $employee->fullName }}</td>
                                 <td>{{ $employee->current['department']['displayName'] }}</td>
