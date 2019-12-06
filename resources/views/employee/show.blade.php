@@ -566,8 +566,8 @@
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label class="form-paper-label">File Name</label><br/>
-                        <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '') }}">{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}</a>
-                        <input type="hidden" name="file_old[{{$i}}]" value="{{ key_exists('file', $employee->details) ? $employee->details['file'][$i]['filename']['value'] : '' }}" />
+                        <a class="btn btn-link" target="_blank" href="{{ action('EmployeeController@downloadFile', key_exists('file', $employee->details)  && isset($employee->details['file'][$i]['filename']) ? $employee->details['file'][$i]['filename']['value'] : '') }}">{{ key_exists('file', $employee->details)  && isset($employee->details['file'][$i]['filename'])  ? $employee->details['file'][$i]['filename']['value'] : '' }}</a>
+                        <input type="hidden" name="file_old[{{$i}}]" value="{{ key_exists('file', $employee->details) && isset($employee->details['file'][$i]['filename']) ? $employee->details['file'][$i]['filename']['value'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-md-6 form-paper">
