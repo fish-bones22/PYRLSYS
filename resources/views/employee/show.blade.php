@@ -573,7 +573,7 @@
                 <div class="col-md-6 form-paper">
                     <div class="form-group">
                         <label for="fileDetails" class="form-paper-label">File Details</label>
-                        <input id="fileDetails" type="text" name="file_details[{{$i}}]" class="form-control" multiple='' value="{{ key_exists('file', $employee->details ) ? $employee->details['file'][$i]['details']['value'] : '' }}" />
+                        <input id="fileDetails" type="text" name="file_details[{{$i}}]" class="form-control" multiple='' value="{{ key_exists('file', $employee->details ) && isset($employee->details['file'][$i]) && key_exists('details', $employee->details['file'][$i]) ? $employee->details['file'][$i]['details']['value'] : '' }}" />
                     </div>
                 </div>
             </div>
