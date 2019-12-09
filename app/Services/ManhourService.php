@@ -408,7 +408,7 @@ class ManhourService extends EntityService implements IManhourService
         return [
             'name' => $holiday->name,
             'description' => $holiday->description,
-            'date' => date_format($date, 'Y-m-d'),
+            'date' => date_format(date_create($date), 'Y-m-d'),
             'type' => $holiday->type
         ];
     }
@@ -562,7 +562,7 @@ class ManhourService extends EntityService implements IManhourService
             // department with names defined in $deptName_15minRule
             $minPassed = $timeIn_->diff($scheduledTimeIn_);
             if (in_array(strtolower($summary->departmentName), $this->deptName_15minRule)) {
-                if ($this->getTotalHoursNotFloored($minPassed) > 0.25) {
+                if ($this->getTotalHoursNotFloored($minPassed) > 0.1667) {
                     $isLate = true;
                 }
             }

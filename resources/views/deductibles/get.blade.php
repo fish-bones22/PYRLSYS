@@ -72,8 +72,10 @@
                 <div class="col-12 form-paper section-divider"></div>
                 <div class="col-4 form-paper">
                     <div class="form-group">
-                        <label class="form-paper-label">Rate ({{ $details['basis'] }})</label>
-                        <div class="form-paper-display">{{ $details['rate'] }}</div>
+                        <label class="form-paper-label">Rate</label>
+                        @foreach ($details['paydetails'] as $payDetail)
+                        <div class="form-paper-display">{{ date_format(date_create($payDetail['startdate']), 'M d, Y').': '.$payDetail['rate'].' '.$payDetail['ratebasis'] }}</div>
+                        @endforeach
                     </div>
                 </div>
                 <div class="col-4 form-paper">

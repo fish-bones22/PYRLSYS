@@ -453,9 +453,7 @@ class ManhourController extends Controller
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
         if ($date == null)
-            $date = now();
-        else
-            $date = date_create($date);
+            $date = date_format(now(), 'Y-m-d');
 
         $departments = $this->categoryService->getCategories('department');
         $records = array();//$this->manhourService->getSummaryOfRecordsByDateRange($date, $date);
@@ -471,7 +469,7 @@ class ManhourController extends Controller
         // if ($records == null || sizeof($records) == 0 || $records[0] == null)
         //     return redirect()->action('ManhourController@index');
 
-        $details['date'] = date_format($date, 'Y-m-d');
+        $details['date'] = $date;
 
         return view('manhour.inputall', ['records' => $records, 'departments' => $departments, 'details' => $details, 'outliers' => $outliers, 'employees' => $employees ]);
     }

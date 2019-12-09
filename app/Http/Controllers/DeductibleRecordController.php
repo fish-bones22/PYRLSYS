@@ -138,7 +138,7 @@ class DeductibleRecordController extends Controller
         $details['basic'] = $payroll->basicPay;
         $details['rate'] = $payroll->rate;
         $details['gross'] = $payroll->grossPay;
-        $details['basis'] = $payroll->rateBasis;
+        $details['paydetails'] = $payroll->details;
 
         $models = array();
         $otherModels = array();

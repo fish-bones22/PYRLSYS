@@ -148,6 +148,9 @@ class PayrollService implements IPayrollService {
         $hasFixed = false;
         $fixedAllowance = 0;
         $fixedRate = 0;
+
+        $payTable = array();
+
         for ($i = $day; $i <= $endDate; $i++) {
             // Create new date
             $datestr = $monthYear.'-'.$i;
@@ -162,6 +165,9 @@ class PayrollService implements IPayrollService {
             $holiday = $this->manhourService->getHoliday($monthYear.'-'.$i);
 
             if (isset($payRecord['id']) && $prevId !== $payRecord['id']) {
+                if (sizeof($payroll->details) <= 0) {
+                    $payRecord['startdate'] = $monthYear.'-'.$i;
+                }
                 $payroll->details[] = $payRecord;
                 $prevId = $payRecord['id'];
             }
@@ -209,7 +215,7 @@ class PayrollService implements IPayrollService {
             $regularHours += $hours;
             $basicPay += $hours * $hourlyRate;
 
-            $totalAllowance += $hourlyAllowance * $actualHours;
+            $totalAllowance += $hourlyAllowance * $hours;
 
             $workingDays++;
 
