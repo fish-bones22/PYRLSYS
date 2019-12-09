@@ -202,10 +202,13 @@ class PayrollService implements IPayrollService {
                 $hasFixed = true;
             }
 
-            if ($holiday != null && $holiday['type'] == 'legal') {
-                $hourlyRate *= 2;
-            } else if ($holiday != null && $holiday['type'] == 'special') {
-                $hourlyRate *= 1.3;
+            // Is holiday and has manhour record
+            if ($manhour->regularHours != null && $manhour->regularHours > 0) {
+                if ($holiday != null && $holiday['type'] == 'legal') {
+                    $hourlyRate *= 2;
+                } else if ($holiday != null && $holiday['type'] == 'special') {
+                    $hourlyRate *= 1.3;
+                }
             }
 
             // Actual hours accounts for the total hours the employee actually logged

@@ -108,22 +108,22 @@ Manhour Input
                         </div>
                         <div class="col-sm-7">
                             <label for="timeIn" class="form-paper-label">Time In</label>
-                            <input type="time" id="timeIn" name="time_in" class="{{--timepicker--}} form-control" onchange="setHour()" value="{{ old('time_in') }}" />
+                            <input type="time" id="timeIn" name="time_in" class="{{--timepicker--}} form-control" onchange="setHour()" value="{{ old('time_in') }}" tabindex="1" />
                         </div>
                         <div class="col-sm-5">
                             <label for="timeIn" class="form-paper-label">Scheduled In</label>
                             <input type="hidden" id="scheduledTimeInHidden" name="scheduled_timein" value="{{ $scheduledTimeInUnformatted }}" />
-                            <input type="time" class="form-control" id="scheduledTimeInInput" name="scheduled_timein_input" onchange="setHour()" value="{{ $scheduledTimeInUnformatted }}" />
+                            <input type="time" class="form-control" id="scheduledTimeInInput" name="scheduled_timein_input" onchange="setHour()" value="{{ $scheduledTimeInUnformatted }}" tabindex="3" />
                             {{-- <div id="scheduledTimeIn" class="form-paper-display">{{ $scheduledTimeInUnformatted }}</div> --}}
                         </div>
                         <div class="col-sm-7">
                             <label for="timeOut" class="form-paper-label">Time Out</label>
-                            <input type="time" id="timeOut" name="time_out" class="{{--timepicker--}} form-control" onchange="setHour()" value="{{ old('time_out') }}"d />
+                            <input type="time" id="timeOut" name="time_out" class="{{--timepicker--}} form-control" onchange="setHour()" value="{{ old('time_out') }}" tabindex="2" />
                         </div>
                         <div class="col-sm-5">
                             <label for="timeOut" class="form-paper-label">Scheduled Out</label>
                             <input type="hidden" id="scheduledTimeOutHidden" name="scheduled_timeout" value="{{ $scheduledTimeOutUnformatted }}" />
-                            <input type="time" class="form-control" id="scheduledTimeOutInput" name="scheduled_timeout_input" onchange="setHour()" value="{{ $scheduledTimeOutUnformatted }}" />
+                            <input type="time" class="form-control" id="scheduledTimeOutInput" name="scheduled_timeout_input" onchange="setHour()" value="{{ $scheduledTimeOutUnformatted }}" tabindex="4" />
                             {{-- <div id="scheduledTimeOut" class="form-paper-display">{{ $scheduledTimeOutUnformatted }}</div> --}}
                         </div>
                         <div class="col-6">
