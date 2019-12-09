@@ -203,7 +203,9 @@ class EmployeeController extends Controller
 
     public function deleteAll()
     {
-        $this->employeeService->deleteAllEmployee();
+        $result = $this->employeeService->deleteAllEmployee();
+        if (!$result['result'])
+            return redirect()->action('EmployeeController@index')->with('error', $result['message']);
         return redirect()->action('EmployeeController@index')->with('success', 'Deleted all successful');
     }
 

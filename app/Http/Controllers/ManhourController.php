@@ -397,12 +397,12 @@ class ManhourController extends Controller
         if ($req['date'] == '')
             return redirect()->back()->withInputs($req)->with('error', 'Select a date on the calendar');
 
-        if (!isset($req['outlier']) || $req['outlier'] == '') {
-            if ($req['time_in'] == '')
-                return redirect()->back()->withInputs($req)->with('error', 'Provide time in data');
-            if ($req['time_out'] == '')
-                return redirect()->back()->withInputs($req)->with('error', 'Provide time out data');
-        }
+        // if (!isset($req['outlier']) || $req['outlier'] == '') {
+        //     if ($req['time_in'] == '')
+        //         return redirect()->back()->withInputs($req)->with('error', 'Provide time in data');
+        //     if ($req['time_out'] == '')
+        //         return redirect()->back()->withInputs($req)->with('error', 'Provide time out data');
+        // }
 
         // If scheduled time is different with original, create a new employee timetable
         if ($req['scheduled_timeout'] != $req['scheduled_timeout_input']

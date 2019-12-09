@@ -185,7 +185,7 @@ function printText(doc, result, copy) {
     doc.text(result.employeeId, col1, i = spacer(i));
     doc.text(result.sex === 'm' ? 'Male' : 'Female', col4, i);
     doc.text(result.details.civilstatus.value, col7, i);
-    doc.text(result.details.birthday.value, col10, i);
+    doc.text(result.details.hasOwnProperty('birthday') ? result.details.birthday.value : '', col10, i);
 
     // Name
     doc.setFontSize(labelSize);

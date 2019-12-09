@@ -13,6 +13,7 @@ use App\Models\EmployeePayTable;
 use App\Models\EmploymentDetail;
 use App\Entities\EmployeeEntity;
 use AuthUtility;
+use League\Flysystem\Exception;
 
 class EmployeeService extends EntityService implements IEmployeeService
 {
@@ -1286,15 +1287,27 @@ class EmployeeService extends EntityService implements IEmployeeService
 
     public function deleteAllEmployee()
     {
-        $employee = Employee::whereNotNull('employeeId', null);
+        $employee = Employee::whereNotNull('employeeId', null)->get();
         foreach ($employee as $emp) {
-            $emp->delete();
+
+            try {
+                $emp->delete();
+            } catch (\Exception $ex) {
+                return [
+                    'result' => false,
+                    'message' => $ex->getMessage()
+                ];
+            }
         }
+
+        return [
+            'result' => true
+        ];
     }
 
     public function deleteAllApplicant()
     {
-        $employee = Employee::whereNull('employeeId', null);
+        $employee = Employee::whereNull('employeeId', null)->get();
         foreach ($employee as $emp) {
             $emp->delete();
         }

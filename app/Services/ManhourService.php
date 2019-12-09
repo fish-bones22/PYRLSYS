@@ -408,7 +408,7 @@ class ManhourService extends EntityService implements IManhourService
         return [
             'name' => $holiday->name,
             'description' => $holiday->description,
-            'date' => date_format(date_create($date), 'Y-m-d'),
+            'date' => date_format($date, 'Y-m-d'),
             'type' => $holiday->type
         ];
     }

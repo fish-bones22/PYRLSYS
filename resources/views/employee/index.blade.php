@@ -150,7 +150,7 @@ Employees
                         $dependents = '';
                         if (isset($employee->details['dependent'])) {
                             foreach ($employee->details['dependent'] as $value) {
-                                $dependents .= $value['firstname']['value'].' '.$value['middlename']['value'].' '.$value['lastname']['value'].' - '.$value['relationship']['value'].', ';
+                                $dependents .= $value['firstname']['value'].' '.(isset($value['middlename']['value']) ? $value['middlename']['value'] : '').' '.$value['lastname']['value'].' - '.$value['relationship']['value'].', ';
                             }
                             $dependents = strlen($dependents) > 2 ? substr($dependents, 0, strlen($dependents) - 2) : '';
                         }
