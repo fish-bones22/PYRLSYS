@@ -120,7 +120,8 @@ Payroll Summary
                                     isset($summary[$employee->id]->adjustmentsDetails['overtimeadjustment']) ? $summary[$employee->id]->adjustmentsDetails['overtimeadjustment'] : 0
                                     + isset($summary[$employee->id]->adjustmentsDetails['basicadjustment']) ? $summary[$employee->id]->adjustmentsDetails['basicadjustment'] : 0
                                     + isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : 0
-                                    + isset($summary[$employee->id]->adjustmentsDetails['mealallowance']) ? $summary[$employee->id]->adjustmentsDetails['mealallowance'] : '0';
+                                    + isset($summary[$employee->id]->adjustmentsDetails['mealallowance']) ? $summary[$employee->id]->adjustmentsDetails['mealallowance'] : 0
+                                    + isset($summary[$employee->id]->adjustmentsDetails['miscallowance']) ? $summary[$employee->id]->adjustmentsDetails['miscallowance'] : 0;
                             ?>
                             <tr>
                                 <td>{{ $employee->employeeId }}</td>
