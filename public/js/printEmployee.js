@@ -316,7 +316,7 @@ function printText(doc, result, copy) {
     doc.text(result.payTable.paymentmode != undefined ? result.payTable.paymentmode.displayName : 'Not set', col4, i);
     doc.text(result.payTable.ratebasis != undefined ? result.payTable.ratebasis : 'Not set', col7, i);
     //doc.text(result.current.rate != undefined ? result.current.rate : 'Not set', col9, i);
-    doc.text(result.payTable.allowance != undefined ? result.payTable.allowance : 'Not set', col10, i);
+    doc.text(result.payTable.allowance != undefined ? result.payTable.allowance + '' : 'Not set', col10, i);
 
     // Row 4
     doc.setFontSize(labelSize);
