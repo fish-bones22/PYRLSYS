@@ -313,10 +313,10 @@ function printText(doc, result, copy) {
 
     doc.setFontSize(mainSize);
     doc.text(result.current.paymenttype != undefined ? result.current.paymenttype.displayName : 'Not set', col1, i = spacer(i));
-    doc.text(result.current.paymentmode != undefined ? result.current.paymentmode.displayName : 'Not set', col4, i);
-    doc.text(result.current.ratebasis != undefined ? result.current.ratebasis : 'Not set', col7, i);
+    doc.text(result.payTable.paymentmode != undefined ? result.payTable.paymentmode.displayName : 'Not set', col4, i);
+    doc.text(result.payTable.ratebasis != undefined ? result.payTable.ratebasis : 'Not set', col7, i);
     //doc.text(result.current.rate != undefined ? result.current.rate : 'Not set', col9, i);
-    doc.text(result.current.allowance != undefined ? result.current.allowance : 'Not set', col10, i);
+    doc.text(result.payTable.allowance != undefined ? result.payTable.allowance + '' : 'Not set', col10, i);
 
     // Row 4
     doc.setFontSize(labelSize);
