@@ -167,6 +167,14 @@ class DeductibleRecordController extends Controller
             $model['remarks'] = $record->remarks;
 
             $models[$record->key] = $model;
+            if ($record->key !== 'sss'
+            && $record->key !== 'philhealth'
+            && $record->key !== 'pagibig'
+            && $record->key !== 'tin'
+            && $record->key !== 'sssloan'
+            && $record->key !== 'pagibigloan') {
+                $otherModels[] = $model;
+            }
         }
 
         $rem = $this->payrollService->getRemittanceDeductible($id, $date);

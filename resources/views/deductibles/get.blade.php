@@ -255,6 +255,12 @@
 
             @for ($i = 0; $i < $actualSize; $i++)
 
+            <?php
+           // if ($i > 0
+            //&& isset($otherModels[$i]['details'])
+            //&& ($otherModels[$i]['details'] === 'tin' ))
+            ?>
+
             <div class="row loan-{{$i}}">
                 <div class="col-12 form-paper section-delete">
                     <button type="button" class="close" data-index="{{$i}}" onclick="deleteRow(this, 'loan')">&times;</button>
@@ -264,11 +270,6 @@
                     <div class="form-group">
                         <label class="form-paper-label">Deduction Type</label>
                         <select class="form-control" name="other_models[{{$i}}][details]">
-                            <?php
-                            $options = [
-                                'Company Loan/Cash Advance', 'Medical Deduction'
-                            ]
-                            ?>
                             @foreach ($categories as $cat)
                             <option value="{{ $cat->value }}" {{ (isset($otherModels[$i]['details']) && $otherModels[$i]['details'] === $cat->value) ? 'selected' : '' }}>{{ $cat->value }}</option>
                             @endforeach

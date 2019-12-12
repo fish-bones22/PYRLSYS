@@ -303,7 +303,8 @@ function printText(doc, result, copy) {
     for (var key in result.exemptionDetails){
         if (result.exemptionDetails.hasOwnProperty(key)) {
             if (key === '_TOTAL' || key === '_TOTAL_BEFORE_TAX'
-            || 'Withholding Tax' || 'SSS' || 'PhilHealth' || 'PAGIBIG' || 'SSS Loan' || 'PAGIBIIG Loan')
+            ||  key === 'Withholding Tax' ||  key === 'SSS' ||  key === 'PhilHealth'
+            ||  key === 'PAGIBIG' ||  key === 'SSS Loan' ||  key === 'PAGIBIIG Loan')
                 continue;
             doc.text(key, subEntryMargin, i = spacer(i));
             doc.text(addCommas(result.exemptionDetails[key]) + "", col3Margin, i);
@@ -335,7 +336,7 @@ function printText(doc, result, copy) {
     underline(doc, col3Margin, i, 7);
     underline(doc, col3Margin, i+0.025, 7);
 
-    i = 6;
+    i = 6.25;
     underline(doc, col3Margin-0.4, i+0.05, 15);
 
     doc.text(new Date(($("#payslipDate").length != 0 && $("#payslipDate").val() != '' ? $("#payslipDate").val() : Date.now())).toDateString(), mainMargin, i = spacer(i));

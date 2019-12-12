@@ -122,6 +122,27 @@ Payroll Summary
                                     + isset($summary[$employee->id]->adjustmentsDetails['Monthly Allowance']) ? $summary[$employee->id]->adjustmentsDetails['Monthly Allowance'] : 0
                                     + isset($summary[$employee->id]->adjustmentsDetails['mealallowance']) ? $summary[$employee->id]->adjustmentsDetails['mealallowance'] : 0
                                     + isset($summary[$employee->id]->adjustmentsDetails['miscallowance']) ? $summary[$employee->id]->adjustmentsDetails['miscallowance'] : 0;
+
+                                $otherDed = 0;
+                                if (isset($summary[$employee->id]->exemptionDetails)) {
+                                    foreach ($summary[$employee->id]->exemptionDetails as $key => $deductible) {
+                                        if (
+                                        $key === 'Withholding Tax'
+                                        || $key === 'SSS'
+                                        || $key === 'PhilHealth'
+                                        || $key === 'PAGIBIG'
+                                        || $key === 'SSS Loan'
+                                        || $key === 'PAGIBIG Loan'
+                                        || $key === 'Meal Deduction'
+                                        || $key === 'Company Loan'
+                                        || $key === 'Other Deduction'
+                                        || $key === '_TOTAL_BEFORE_TAX'
+                                        || $key === '_TOTAL'
+                                        )
+                                        continue;
+                                        $otherDed += $deductible;
+                                    }
+                                }
                             ?>
                             <tr>
                                 <td>{{ $employee->employeeId }}</td>
@@ -147,7 +168,7 @@ Payroll Summary
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['PAGIBIG']) ? $summary[$employee->id]->exemptionDetails['PAGIBIG'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['SSS Loan']) ? $summary[$employee->id]->exemptionDetails['SSS Loan'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['PAGIBIG Loan']) ? $summary[$employee->id]->exemptionDetails['PAGIBIG Loan'] : '0' }}</td>
-                                <td></td>
+                                <td>{{ $otherDed }}</td>
                                 <td>{{ $summary[$employee->id]->netPay }}
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Meal Deduction']) ? $summary[$employee->id]->exemptionDetails['Meal Deduction'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
