@@ -47,7 +47,7 @@
                 <div class="col-md-3 form-paper">
                     <div class="form-group">
                         <label for="employeeId" class="form-paper-label">Employee ID:</label>
-                        <input id="employeeId" name="employee_id" type="text" class="form-control" maxlength="6" value="{{ $employee->employeeId }}" required/>
+                        <input id="employeeId" name="employee_id" type="text" class="form-control" maxlength="8" value="{{ $employee->employeeId }}" required/>
                     </div>
                 </div>
                 <div class="col-md-3 col-6 form-paper">

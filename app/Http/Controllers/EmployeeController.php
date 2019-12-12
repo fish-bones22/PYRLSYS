@@ -118,6 +118,10 @@ class EmployeeController extends Controller
             return redirect()->action('EmployeeController@show', $id)->with('error', 'Time card required');
         }
 
+        if (isset($req['employee_id']) && strlen($req['employee_id']) > 8) {
+            return redirect()->action('EmployeeController@show', $id)->with('error', 'Employee ID should not exceed 8 characters');
+        }
+
         // Save file
         if ($request->file_new != null) {
 
