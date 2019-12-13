@@ -287,6 +287,9 @@ class DeductibleRecordController extends Controller
         $employees = $this->employeeService->getAllEmployees();
 
         foreach ($employees as $employee) {
+            // Skip inactive
+            if ($employee->inactive) continue;
+
             $id = $employee->id;
             $rem = $this->payrollService->getRemittanceDeductible($id, $date);
             $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($id, $date);
