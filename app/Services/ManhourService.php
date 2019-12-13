@@ -83,8 +83,8 @@ class ManhourService extends EntityService implements IManhourService
             $record->employee_id = $entity->employee_id;
         }
 
-        $record->timeIn = $entity->timeIn;
-        $record->timeOut = $entity->timeOut;
+        $record->timeIn = $entity->date.' '.$entity->timeIn;
+        $record->timeOut = $entity->date.' '.$entity->timeOut;
         $record->break = $entity->break;
 
         $record->employeeName = $entity->employeeName;
@@ -479,18 +479,24 @@ class ManhourService extends EntityService implements IManhourService
             // Get employee schedule
             $scheduledTimeIn = isset($timeTable['timein']) ? $timeTable['timein'] : null;
             $scheduledTimeOut = isset($timeTable['timeout']) ? $timeTable['timeout'] : null;
-            $formattedDateTime = null;
 
+            // Format to datetime
+            $formattedDateTime = $this->appendDateToTime($record->date, $scheduledTimeIn, $scheduledTimeOut);
+            $scheduledTimeIn = $formattedDateTime[0];
+            $scheduledTimeOut = $formattedDateTime[1];
+
+            $formattedDateTime = $this->appendDateToTime($record->date, $record->timeIn, $record->timeOut);
+            $timeIn_ = $formattedDateTime[0];
+            $timeOut_ = $formattedDateTime[1];
 
             // Special case wherein schedule is 12:00 MN onwards, but employee
             // logged 11:59 or earlier
-            if (
-                strtotime($record->timeIn) > strtotime($record->timeOut)
+            if (strtotime($record->timeOut) < strtotime($record->timeIn)
                 && strtotime($scheduledTimeIn) < strtotime($scheduledTimeOut)
                 // Schedule is earlier than actual time in
                 // and scheduled time out is earlier than actual time out
-                && strtotime($scheduledTimeIn) < strtotime($record->timeIn)
-                && strtotime($scheduledTimeOut) <= strtotime($record->timeOut)
+                && strtotime($scheduledTimeIn) < strtotime($timeIn_)
+                && strtotime($scheduledTimeOut) <= strtotime($timeOut_)
             ) {
                 $formattedDateTime = $this->appendDateToTime(Carbon::parse($record->date)->addDay()->format('Y-m-d'), $scheduledTimeIn, $scheduledTimeOut);
             }
@@ -504,11 +510,6 @@ class ManhourService extends EntityService implements IManhourService
             // Get scheduled time in/out in Time object
             $scheduledTimeIn_ = $scheduledTimeIn != null ? date_create($scheduledTimeIn) : null;
             $scheduledTimeOut_ = $scheduledTimeOut != null ? date_create($scheduledTimeOut) : null;
-
-            // Format to datetime
-            $formattedDateTime = $this->appendDateToTime($record->date, $record->timeIn, $record->timeOut);
-            $timeIn_ = $formattedDateTime[0];
-            $timeOut_ = $formattedDateTime[1];
 
             // Get time in/out in Time object
             $timeIn_ = date_create($timeIn_);
@@ -779,11 +780,21 @@ class ManhourService extends EntityService implements IManhourService
             } else if ($otRequest[0]->otType == 'xot') {
                 $summary->xot = $otHours;
             } else if ($otRequest[0]->otType == 'sot') {
-                $summary->sot = $otHours;
+                if ($otHours <= 9) {
+                    $summary->sot = $otHours;
+                } else {
+                    $summary->sot = 9;
+                    $summary->xsot = $otHours - 9;
+                }
             } else if ($otRequest[0]->otType == 'xsot') {
                 $summary->xsot = $otHours;
             } else if ($otRequest[0]->otType == 'lhot') {
-                $summary->lhot = $otHours;
+                if ($otHours <= 9) {
+                    $summary->lhot = $otHours;
+                } else {
+                    $summary->lhot = 9;
+                    $summary->xlhot = $otHours - 9;
+                }
             } else if ($otRequest[0]->otType == 'xlhot') {
                 $summary->xlhot = $otHours;
             }
