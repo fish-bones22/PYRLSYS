@@ -81,6 +81,8 @@ class PayrollService implements IPayrollService {
 
         // Take home
         $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->allowance, 2);
+        // No negative result
+        $payroll->takeHomePay = $payroll->takeHomePay > 0 ? $payroll->takeHomePay : 0;
 
         return $payroll;
 
@@ -223,32 +225,36 @@ class PayrollService implements IPayrollService {
             $workingDays++;
 
             // OT
-            $otMultiplier = $this->getOtMultiplier($manhour);
+            $otMultipliers = $this->getOtMultiplier($manhour);
             $otDetails = $this->getOtDetails($manhour, $otDetails, $hourlyRate);
 
-            if ($otMultiplier['key'] === 'rot') {
-                $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            else if ($otMultiplier['key'] === 'rot') {
-                $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            else if ($otMultiplier['key'] === 'xot') {
-                $xotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            else if ($otMultiplier['key'] === 'sot') {
-                $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            else if ($otMultiplier['key'] === 'xsot') {
-                $xsotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            else if ($otMultiplier['key'] === 'lhot') {
-                $lhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            else if ($otMultiplier['key'] === 'xlhot') {
-                $xlhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-            }
-            if ($otMultiplier['multiplier'] === 0.1) {
-                $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            foreach ($otMultipliers as $key => $otMultiplier) {
+                if ($key === 'rot') {
+                    $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
+                else if ($key === 'rot') {
+                    $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
+                else if ($key === 'xot') {
+                    $xotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
+                else if ($key === 'sot') {
+                    $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    // Add allowance for SOT
+                    $totalAllowance += $hourlyAllowance * $otMultiplier['value'];
+                }
+                else if ($key === 'xsot') {
+                    $xsotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
+                else if ($key === 'lhot') {
+                    $lhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
+                else if ($key === 'xlhot') {
+                    $xlhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
+                if ($key === 'nd') {
+                    $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                }
             }
 
             $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
@@ -420,7 +426,7 @@ class PayrollService implements IPayrollService {
         $otDetails = array();
 
         if ($manhour->rot != '') {
-            return [
+            $otDetails['rot'] = [
                 'key' => 'rot',
                 'multiplier' => 1.25,
                 'value' => $manhour->rot
@@ -428,7 +434,7 @@ class PayrollService implements IPayrollService {
         }
 
         if ($manhour->xot != '') {
-            return [
+            $otDetails['xot'] =  [
                 'key' => 'xot',
                 'multiplier' => 1.25,
                 'value' => $manhour->xot
@@ -436,7 +442,7 @@ class PayrollService implements IPayrollService {
         }
 
         if ($manhour->sot != ''){
-            return [
+            $otDetails['sot'] = [
                 'key' => 'sot',
                 'multiplier' => 1.3,
                 'value' => $manhour->sot
@@ -444,7 +450,7 @@ class PayrollService implements IPayrollService {
         }
 
         if ($manhour->xsot != ''){
-            return [
+            $otDetails['xsot'] = [
                 'key' => 'xsot',
                 'multiplier' => 1.69,
                 'value' => $manhour->xsot
@@ -452,7 +458,7 @@ class PayrollService implements IPayrollService {
         }
 
         if ($manhour->lhot != ''){
-            return [
+            $otDetails['lhot'] = [
                 'key' => 'lhot',
                 'multiplier' => 2,
                 'value' => $manhour->lhot
@@ -460,7 +466,7 @@ class PayrollService implements IPayrollService {
         }
 
         if ($manhour->xlhot != ''){
-            return [
+            $otDetails['xlhot'] = [
                 'key' => 'xlhot',
                 'multiplier' => 2.69,
                 'value' => $manhour->xlhot
@@ -468,18 +474,21 @@ class PayrollService implements IPayrollService {
         }
 
         if ($manhour->nd != ''){
-            return [
+            $otDetails['nd'] = [
                 'key' => 'nd',
                 'multiplier' => 0.1,
                 'value' => $manhour->nd
             ];
         }
 
-        return [
-            'key' => 'no',
-            'multiplier' => 1,
-            'value' => 0
-        ];
+        if (sizeof($otDetails) > 0)
+            return $otDetails;
+
+         return ['no' => [
+                'key' => 'no',
+                'multiplier' => 1,
+                'value' => 0
+            ]];
     }
 
     private function getOtDetails($model, $details, $rate) {

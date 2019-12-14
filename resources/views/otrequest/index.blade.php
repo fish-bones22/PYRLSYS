@@ -66,7 +66,7 @@ OT Requests
 <div class="row">
     <div class="col-lg-10 offset-lg-1 form-paper section-divider"></div>
     <div class="col-lg-10 offset-lg-1 form-paper">
-        <div style="overflow-x:auto">
+        <div style="overflow-x:auto" class="mb-2">
             <form action="{{ route('otrequest.batchapprove') }}" method="POST" id="batchApprovalForm">
                 @csrf
                 @method('post')
