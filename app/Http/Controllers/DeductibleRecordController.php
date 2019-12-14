@@ -30,81 +30,85 @@ class DeductibleRecordController extends Controller
 
         $req = $request->all();
 
-        foreach ($req['models'] as $model) {
+        // Iterate input on remittances
+        if (isset($req['models'])) {
+            foreach ($req['models'] as $model) {
 
-            // if (!isset($model['amount']) )//|| $model['amount'] == '')
-            //     continue;
-            if (!isset($model['identifier'])) //|| $model['amount'] == '')
-                continue;
+                // if (!isset($model['amount']) )//|| $model['amount'] == '')
+                //     continue;
+                if (!isset($model['identifier'])) //|| $model['amount'] == '')
+                    continue;
 
-            $entity = $this->mapToEntity($id, $req['record_date'], $req['employee_name'], $model);
+                $entity = $this->mapToEntity($id, $req['record_date'], $req['employee_name'], $model);
 
-            // If entry has loan field create separate model entry
-            if (isset($model['loan'])) {
+                // If entry has loan field create separate model entry
+                if (isset($model['loan'])) {
 
-                $lnEntity = new DeductibleRecordEntity();
-                $lnEntity->employee = array();
-                $lnEntity->employee['id'] =  $id;
-                $lnEntity->employee['name'] = $req['employee_name'];
+                    $lnEntity = new DeductibleRecordEntity();
+                    $lnEntity->employee = array();
+                    $lnEntity->employee['id'] =  $id;
+                    $lnEntity->employee['name'] = $req['employee_name'];
 
-                $lnEntity->identifier = array();
-                $lnEntity->identifier['value'] = $model['identifier'];
-                $lnEntity->identifier['details'] = $model['identifier_details'];
+                    $lnEntity->identifier = array();
+                    $lnEntity->identifier['value'] = $model['identifier'];
+                    $lnEntity->identifier['details'] = $model['identifier_details'];
 
-                $lnEntity->deductible = array();
-                $lnEntity->id = isset($req['models'][$model['key'] . 'loan']['id']) ? $req['models'][$model['key'] . 'loan']['id'] : 0;
-                $lnEntity->id = isset($req['models'][$model['key'] . 'loan']['id']) ? $req['models'][$model['key'] . 'loan']['id'] : 0;
-                $lnEntity->key = $model['key'] . 'loan';
-                $lnEntity->details = $model['details'] . ' Loan';
-                $lnEntity->recordDate = $req['record_date'];
+                    $lnEntity->deductible = array();
+                    $lnEntity->id = isset($req['models'][$model['key'] . 'loan']['id']) ? $req['models'][$model['key'] . 'loan']['id'] : 0;
+                    $lnEntity->id = isset($req['models'][$model['key'] . 'loan']['id']) ? $req['models'][$model['key'] . 'loan']['id'] : 0;
+                    $lnEntity->key = $model['key'] . 'loan';
+                    $lnEntity->details = $model['details'] . ' Loan';
+                    $lnEntity->recordDate = $req['record_date'];
 
-                $lnEntity->amount = $model['loan'];
-                $result = $this->deductibleRecordService->addRecord($lnEntity);
+                    $lnEntity->amount = $model['loan'];
+                    $result = $this->deductibleRecordService->addRecord($lnEntity);
+
+                    if (!$result['result'])
+                        return redirect()->back()->withInputs($req)->with('error', $result['message']);
+                }
+
+                $result = $this->deductibleRecordService->addRecord($entity);
 
                 if (!$result['result'])
                     return redirect()->back()->withInputs($req)->with('error', $result['message']);
             }
-
-            $result = $this->deductibleRecordService->addRecord($entity);
-
-            if (!$result['result'])
-                return redirect()->back()->withInputs($req)->with('error', $result['message']);
         }
 
         // Other models
-        // Delete all first to avoid stale data retention
-        $this->deductibleRecordService->deleteAllOtherDeductible($id, $req['record_date']);
+        // Iterate input on other deductibles
+        if (isset($req['other_models'])) {
+            // Delete all first to avoid stale data retention
+            $this->deductibleRecordService->deleteAllOtherDeductible($id, $req['record_date']);
+            foreach ($req['other_models'] as $model) {
 
-        foreach ($req['other_models'] as $model) {
+                if (!isset($model['details']) || $model['details'] == '')
+                    continue;
 
-            if (!isset($model['details']) || $model['details'] == '')
-                continue;
+                if (!isset($model['amount']) || $model['amount'] == '')
+                    continue;
 
-            if (!isset($model['amount']) || $model['amount'] == '')
-                continue;
+                $lnEntity = new DeductibleRecordEntity();
 
-            $lnEntity = new DeductibleRecordEntity();
+                $lnEntity->id = isset($model['id']) ? $model['id'] : 0;
 
-            $lnEntity->id = isset($model['id']) ? $model['id'] : 0;
+                $lnEntity->employee = array();
+                $lnEntity->employee['id'] =  $id;
+                $lnEntity->employee['name'] = $req['employee_name'];
 
-            $lnEntity->employee = array();
-            $lnEntity->employee['id'] =  $id;
-            $lnEntity->employee['name'] = $req['employee_name'];
+                $lnEntity->deductible = array();
+                $lnEntity->details = $model['details'];
+                $lnEntity->key = $model['details'] != null ? strtolower(str_replace(' ', '', $model['details'])) : null;
+                $lnEntity->recordDate = $req['record_date'];
 
-            $lnEntity->deductible = array();
-            $lnEntity->details = $model['details'];
-            $lnEntity->key = $model['details'] != null ? strtolower(str_replace(' ', '', $model['details'])) : null;
-            $lnEntity->recordDate = $req['record_date'];
+                $lnEntity->amount = $model['amount'];
+                $lnEntity->remarks = $model['remarks'];
 
-            $lnEntity->amount = $model['amount'];
-            $lnEntity->remarks = $model['remarks'];
+                $result = $this->deductibleRecordService->addRecord($lnEntity);
 
-            $result = $this->deductibleRecordService->addRecord($lnEntity);
-
-            if (!$result['result'])
-                return redirect()->back()->withInputs($req)->with('error', $result['message'] . 'Test');
+                if (!$result['result'])
+                    return redirect()->back()->withInputs($req)->with('error', $result['message'] . 'Test');
+            }
         }
-
         return redirect()->back()->with('success', 'Deductible added successfuly');
     }
 
