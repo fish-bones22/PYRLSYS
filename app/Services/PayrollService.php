@@ -224,40 +224,39 @@ class PayrollService implements IPayrollService {
 
             $workingDays++;
 
+
             // OT
+            $otRate = $hourlyRate + $hourlyAllowance;
             $otMultipliers = $this->getOtMultiplier($manhour);
-            $otDetails = $this->getOtDetails($manhour, $otDetails, $hourlyRate);
+            $otDetails = $this->getOtDetails($manhour, $otDetails, $otRate);
 
             foreach ($otMultipliers as $key => $otMultiplier) {
                 if ($key === 'rot') {
-                    $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
-                }
-                else if ($key === 'rot') {
-                    $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $rotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
                 else if ($key === 'xot') {
-                    $xotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $xotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
                 else if ($key === 'sot') {
-                    $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                     // Add allowance for SOT
                     $totalAllowance += $hourlyAllowance * $otMultiplier['value'];
                 }
                 else if ($key === 'xsot') {
-                    $xsotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $xsotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
                 else if ($key === 'lhot') {
-                    $lhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $lhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
                 else if ($key === 'xlhot') {
-                    $xlhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $xlhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
                 if ($key === 'nd') {
-                    $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                    $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
             }
 
-            $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+            $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
             $totalOtHours += $otMultiplier['value'];
 
         }

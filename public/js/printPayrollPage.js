@@ -245,32 +245,37 @@ function printText(doc, result, copy) {
     doc.text('ROT', subEntryMargin, i = spacer(i));
     doc.text('1.25', col2Margin, i);
     doc.text(result.otDetails != null && 'rot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null &&'rotrate' in result.otDetails ? addCommas(result.otDetails.rotrate) + '' : '0', col3Margin, i);
+    doc.text('rotPay' in result ? addCommas(result.rotPay) + '' : '0', col3Margin, i);
 
-    doc.text('RXT', subEntryMargin, i = spacer(i));
+    doc.text('XOT', subEntryMargin, i = spacer(i));
     doc.text('1.25', col2Margin, i);
-    doc.text(result.otDetails != null && 'xot' in result.otDetails ? result.otDetails.rot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null &&'xotrate' in result.otDetails ? addCommas(result.otDetails.rotrate) + '' : '0', col3Margin, i);
+    doc.text(result.otDetails != null && 'xot' in result.otDetails ? result.otDetails.xot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text('xotPay' in result ? addCommas(result.xotPay) + '' : '0', col3Margin, i);
 
     doc.text('SOT/SPH', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
     doc.text(result.otDetails != null && 'sot' in result.otDetails ? result.otDetails.sot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'sotrate' in result.otDetails ? addCommas(result.otDetails.sotrate) + '' : '0', col3Margin, i);
+    doc.text('sotPay' in result ? addCommas(result.sotPay) + '' : '0', col3Margin, i);
 
     doc.text('XSOT', subEntryMargin, i = spacer(i));
-    doc.text('1.3', col2Margin, i);
+    doc.text('1.69', col2Margin, i);
     doc.text(result.otDetails != null && 'xsot' in result.otDetails ? result.otDetails.xsot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'xsotrate' in result.otDetails ? addCommas(result.otDetails.xsotrate) + '' : '0', col3Margin, i);
+    doc.text('xsotPay' in result ? addCommas(result.xsotPay) + '' : '0', col3Margin, i);
 
     doc.text('LHOT', subEntryMargin, i = spacer(i));
-    doc.text('1.3', col2Margin, i);
+    doc.text('2', col2Margin, i);
     doc.text(result.otDetails != null && 'lhot' in result.otDetails ? result.otDetails.lhot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'lhotrate' in result.otDetails ? addCommas(result.otDetails.lhotrate) + '' : '0', col3Margin, i);
+    doc.text('lhotPay' in result ? addCommas(result.lhotPay) + '' : '0', col3Margin, i);
 
     doc.text('XLHOT', subEntryMargin, i = spacer(i));
-    doc.text('1.3', col2Margin, i);
+    doc.text('2.69', col2Margin, i);
     doc.text(result.otDetails != null && 'xlhot' in result.otDetails ? result.otDetails.xlhot + ' hrs' : '0', 1.05 + slider, i);
-    doc.text(result.otDetails != null && 'xlhotrate' in result.otDetails ? addCommas(result.otDetails.xlhotrate) + '' : '0', col3Margin, i);
+    doc.text('xlhotPay' in result ? addCommas(result.xlhotPay) + '' : '0', col3Margin, i);
+
+    doc.text('ND', subEntryMargin, i = spacer(i));
+    doc.text('0.1', col2Margin, i);
+    doc.text(result.otDetails != null && 'nd' in result.otDetails ? result.otDetails.nd + ' hrs' : '0', 1.05 + slider, i);
+    doc.text('ndPay' in result ? addCommas(result.ndPay) + '' : '0', col3Margin, i);
     underline(doc, col3Margin, i, 7);
 
     doc.text('Overtime Adj:', mainMargin, i = spacer(i));

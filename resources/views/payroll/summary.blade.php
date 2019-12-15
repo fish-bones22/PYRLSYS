@@ -116,6 +116,9 @@ Payroll Summary
                         <tbody>
                             @foreach ($employees as $employee)
                             <?php
+
+                                if ($employee->inactive) continue;
+
                                 $otherAdj = 0;
                                 if (isset($summary[$employee->id]->adjustmentsDetails)) {
                                     foreach ($summary[$employee->id]->adjustmentsDetails as $key => $adj) {

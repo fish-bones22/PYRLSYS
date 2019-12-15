@@ -223,6 +223,7 @@ class OtRequestController extends Controller
 
         $empJson = array();
         foreach ($employees as $emp) {
+            if ($emp->inactive) continue;
             $empJson[] = [
                 'id' => $emp->id,
                 'name' => $emp->fullName,

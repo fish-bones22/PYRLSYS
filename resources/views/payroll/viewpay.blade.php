@@ -99,43 +99,43 @@
                             <td><i>&emsp;ROT</i></td>
                             <td>1.25</td>
                             <td>{{ isset($payroll->otDetails['rot']) ? $payroll->otDetails['rot'] : 0 }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['rotrate']) ? $payroll->otDetails['rotrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->rotPay) ? $payroll->rotPay : 0  }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;XOT</i></td>
                             <td>1.25</td>
                             <td>{{ isset($payroll->otDetails['xot']) ? $payroll->otDetails['xot'] : 0 }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['xotrate']) ? $payroll->otDetails['xotrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->xotPay) ? $payroll->xotPay : 0  }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;SOT/SPH</i></td>
                             <td>1.3</td>
                             <td>{{ isset($payroll->otDetails['sot']) ? $payroll->otDetails['sot'] : 0  }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['sotrate']) ? $payroll->otDetails['sotrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->sotPay) ? $payroll->sotPay : 0  }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;XSOT</i></td>
                             <td>1.69</td>
                             <td>{{ isset($payroll->otDetails['xsot']) ? $payroll->otDetails['xsot'] : 0  }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['xsotrate']) ? $payroll->otDetails['xsotrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->xsotPay) ? $payroll->xsotPay : 0  }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;LHOT</i></td>
                             <td>2</td>
                             <td>{{ isset($payroll->otDetails['lhot']) ? $payroll->otDetails['lhot'] : 0  }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['lhotrate']) ? $payroll->otDetails['lhotrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->lhotPay) ? $payroll->lhotPay : 0  }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;XLHOT</i></td>
                             <td>2.69</td>
                             <td>{{ isset($payroll->otDetails['xlhot']) ? $payroll->otDetails['xlhot'] : 0  }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['xlhotrate']) ? $payroll->otDetails['xlhotrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->xlhotPay) ? $payroll->xlhotPay : 0  }}</td>
                         </tr>
                         <tr>
                             <td><i>&emsp;ND</i></td>
                             <td>0.1</td>
                             <td>{{ isset($payroll->otDetails['nd']) ? $payroll->otDetails['nd'] : 0  }} hrs</td>
-                            <td>{{ isset($payroll->otDetails['ndrate']) ? $payroll->otDetails['ndrate'] : 0  }}</td>
+                            <td>{{ isset($payroll->ndPay) ? $payroll->ndPay : 0  }}</td>
                         </tr>
                         @if (isset($payroll->adjustmentsDetails['overtimeadjustment']))
                         <tr>
