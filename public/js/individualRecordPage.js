@@ -15,7 +15,8 @@ $(function() {
                 filename: getFileName,
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
-                pageSize: 'LETTER'
+                pageSize: 'FOLIO',
+                //customize : function(doc) {doc.pageMargins = [10, 10, 10,10 ]; }
             }
         ]
     });

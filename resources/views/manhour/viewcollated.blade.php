@@ -184,8 +184,14 @@ Manhour Records
                                         @else
                                         <?php
                                         $total = isset($empRecord[$date_]) ? $total + $empRecord[$date_]->regularHours : $total;
+                                        $bgCol = '';
+                                        if ($empRecord[$date_]->isHoliday) {
+                                            $bgCol = 'background-color:#ddeeff';
+                                        } else if ($empRecord[$date_]->isExcused) {
+                                            $bgCol = 'background-color:#eeffaa';
+                                        }
                                         ?>
-                                        <td width="25px" style="border-right:1px solid lightgray;">{{ isset($empRecord[$date_]) && $empRecord[$date_]->regularHours != 0 ? $empRecord[$date_]->regularHours : '' }}</td>
+                                        <td width="25px" style="border-right:1px solid lightgray;{!! $bgCol !!}">{{ isset($empRecord[$date_]) && $empRecord[$date_]->regularHours != 0 ? $empRecord[$date_]->regularHours : '' }}</td>
                                         @endif
                                         @endforeach
                                         <td>{{ $total }}</td>
@@ -229,6 +235,10 @@ Manhour Records
                     </div>
                     <div class="col-12 form-paper section-divider"></div>
 
+                </div>
+                <div class="row">
+                    <div class="col-12 form-paper"><span style="border: 1px solid grey;display:inline-flex;margin-top:5px;height:15px;width:20px;background-color:#ddeeff">&nbsp;</span><span class="small"> Holiday</span></div>
+                    <div class="col-12 form-paper section-divider"></div>
                 </div>
             </div>
             <div class="col-12 mode-view" style="display:none">

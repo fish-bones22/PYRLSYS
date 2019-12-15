@@ -173,6 +173,7 @@ Employee Record
                         </div>
                         <div class="col-12 form-paper section-divider"></div>
                     </div>
+                    <div class="col-12 form-paper"><span style="border: 1px solid grey;display:inline-flex;margin-top:8px;height:15px;width:20px;background-color:#ddeeff">&nbsp;</span><span class="small"> Holiday</span></div>
                 </div>
             </div>
             <div class="col-12 mode-view" style="display:none">
