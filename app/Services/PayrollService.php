@@ -80,7 +80,7 @@ class PayrollService implements IPayrollService {
         }
 
         // Take home
-        $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->allowance, 2);
+        $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->otherAdjustments + $payroll->allowance, 2);
         // No negative result
         $payroll->takeHomePay = $payroll->takeHomePay > 0 ? $payroll->takeHomePay : 0;
 
@@ -566,7 +566,7 @@ class PayrollService implements IPayrollService {
         $total = 0;
         $otherAdjustments = 0;
         foreach ($records as $key => $record) {
-            $summary[$key] = $record->amount;
+            $summary[$record->details] = $record->amount;
             $total += $record->amount;
 
             if ($key == 'basicadjustment' || $key == 'overtimeadjustment') {

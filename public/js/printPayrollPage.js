@@ -141,7 +141,7 @@ function print(result, doc, mode, copy, filename) {
 }
 
 function spacer(i) {
-    return i + 0.15;
+    return i + 0.14;
 }
 
 function underline(doc, x, y, length) {

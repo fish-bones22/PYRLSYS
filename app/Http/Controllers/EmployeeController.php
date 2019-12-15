@@ -13,10 +13,7 @@ use App\Contracts\IEmployeeService;
 //use App\Models\EmployeeHistory;
 //use App\Models\EmployeePicture;
 use App\Entities\EmployeeEntity;
-
-use PDF;
-
-use Dompdf\Dompdf;
+use Chumper\Zipper\Zipper;
 
 class EmployeeController extends Controller
 {
@@ -317,7 +314,7 @@ class EmployeeController extends Controller
     public function downloadAllFiles($employeeId)
     {
         $zipFileName = storage_path("app/public/". $employeeId . '-files.zip');
-        $zip = \Zipper::make($zipFileName);
+        $zip = Zipper::make($zipFileName);
 
         $files = storage_path('app/public/files/'. $employeeId .'*');
         $zip->add(glob($files));
