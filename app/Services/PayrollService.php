@@ -319,13 +319,9 @@ class PayrollService implements IPayrollService {
 
     public function getComputedMonthlyRate($employeeId, $date) {
 
-
-        $history = $this->employeeService->getEmployeeHistoryOnDate($employeeId, $date);
         $payRecord = $this->employeeService->getEmployeePayTable($employeeId, $date);
-        $workDays = 26;
+        $workDays = $this->workDays * 2;
 
-        if ($history == null)
-            return 0;
         if ($payRecord == null)
             return 0;
 

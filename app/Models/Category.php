@@ -18,4 +18,8 @@ class Category extends Model
     public function timeTable() {
         return $this->hasMany('App\Models\DepartmentTimeTable', 'department_id', 'id');
     }
+
+    public function miscPayables() {
+        return $this->hasMany('App\Models\MiscPayable', 'department_id', 'id');
+    }
 }

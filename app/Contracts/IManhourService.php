@@ -12,5 +12,6 @@ interface IManhourService {
     public function getAllRecordsByDateRange($datefrom, $dateto);
     public function getSummaryOfRecord($employeeId, $date);
     public function getSummaryOfRecordsByDateRange($datefrom, $dateto);
+    public function getHoliday($date);
 
 }

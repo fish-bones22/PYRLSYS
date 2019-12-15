@@ -56,6 +56,10 @@ class Employee extends Model
         return $this->hasMany('App\Models\EmployeeHistory')->where('current', true);
     }
 
+    public function miscPayables() {
+        return $this->miscPayments('App\Models\MiscPayables');
+    }
+
     public function hasDeductible($key) {
         $res = DB::select('SELECT emp.id FROM employees AS emp INNER JOIN employee_deductibles as ded ON emp.id = ded.employee_id WHERE ded.key = \''.$key.'\'');
         return sizeof($res) > 0;

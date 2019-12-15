@@ -23,4 +23,10 @@ interface IEmployeeService {
     public function addEmployeeImage($id, $location, $filename);
     public function setEmployeeImage($id, $location, $filename);
     public function unsetCurrentEmployeeImage ($id);
+
+    public function getEmployeeHistoryOnDate($employeeId, $date);
+    public function getEmployeeTimeTable($employeeId, $date);
+    public function getCurrentEmployeeHistory($employeeId);
+    public function getEmployeeByIdWithStateOnDate($employeeId, $date);
+    public function getEmployeePayTable($employeeId, $date);
 }

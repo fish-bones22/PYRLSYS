@@ -63,5 +63,9 @@ class AppServiceProvider extends ServiceProvider
             'App\Contracts\IAdjustmentsRecordService',
             'App\Services\AdjustmentsRecordService'
         );
+        $this->app->bind(
+            'App\Contracts\IMiscPayableService',
+            'App\Services\MiscPayableService'
+        );
     }
 }

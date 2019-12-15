@@ -600,8 +600,8 @@ class ManhourService extends EntityService implements IManhourService
                 }
             }
 
-            $otStartTime_;
-            $otEndTime_;
+            $otStartTime_ = null;
+            $otEndTime_ = null;
             $overtimeCounted = false;
 
             // Check if OT is counted

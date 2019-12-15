@@ -172,7 +172,7 @@ class OtRequestService extends EntityService implements IOtRequestService {
         catch (\Exception $e) {
             return [
                 'result' => false,
-                'message' => $e->message()
+                'message' => $e->getMessage()
             ];
         }
 
