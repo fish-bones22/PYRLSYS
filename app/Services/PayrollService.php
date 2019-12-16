@@ -27,6 +27,8 @@ class PayrollService implements IPayrollService {
     private $hoursPerDay = 8;
     private $workDays = 13;
 
+    private $deptName_otWithAllowanceRule = ["adhoc"];
+
     public function __construct (IEmployeeService $employeeService, IManhourService $manhourService, IDeductibleRecordService $deductibleRecordService, IAdjustmentsRecordService $adjustmentsRecordService ) {
         $this->employeeService = $employeeService;
         $this->manhourService = $manhourService;
@@ -226,7 +228,11 @@ class PayrollService implements IPayrollService {
 
 
             // OT
-            $otRate = $hourlyRate + $hourlyAllowance;
+            $otRate = $hourlyRate;
+            if (in_array(strtolower($payroll->employeeDepartment), $this->deptName_otWithAllowanceRule)) {
+                $otRate = $hourlyRate + $hourlyAllowance;
+            }
+
             $otMultipliers = $this->getOtMultiplier($manhour);
             $otDetails = $this->getOtDetails($manhour, $otDetails, $otRate);
 
