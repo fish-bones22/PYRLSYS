@@ -109,9 +109,6 @@ class PayrollController extends Controller
         $employees = $this->employeeService->getAllEmployees('lastname');
         $summary = array();
         foreach ($employees as $emp) {
-
-            if ($emp->inactive) continue;
-
             $payroll = $this->payrollService->getPayroll($emp->id, date_create($date));
             $summary[$emp->id] = $payroll;
         }

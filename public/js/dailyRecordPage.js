@@ -18,6 +18,8 @@ $(function() {
             }
         ]
     });
+    filterStatus();
+    $('#statusToggler').change(filterStatus);
 });
 
 function filterDepartment() {
@@ -38,6 +40,14 @@ function filterRecords() {
 
     table.search(term);
     table.columns().draw();
+}
+
+function filterStatus() {
+    if ($('#statusToggler').prop('checked')) {
+        table.column(16).search('Inactive').draw();
+    } else {
+        table.column(16).search('Active').draw();
+    }
 }
 
 function toggleMode() {

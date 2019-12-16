@@ -63,6 +63,11 @@ Payroll Summary
                             <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="searchTable()" />
                         </div>
                     </div>
+                    <div class="col-12 mb-lg-2">
+                        <div class="form-check">
+                            <label for="statusToggler" class="form-check-label"><input type="checkbox" class="form-check-input" id="statusToggler" onkeyup="filterStatus()" /> Show inactive employees</label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,6 +94,7 @@ Payroll Summary
                                 <th rowspan="2">MEAL DEDUCTIONS</th>
                                 <th rowspan="2">CASH ADVANCE</th>
                                 <th rowspan="2">TAKE HOME PAY</th>
+                                <th rowspan="2">Status</th>
                             </tr>
                             <tr>
                                 <th>Last Name</th>
@@ -181,6 +187,7 @@ Payroll Summary
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Meal Deduction']) ? $summary[$employee->id]->exemptionDetails['Meal Deduction'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
                                 <td>{{ $summary[$employee->id]->takeHomePay }}</td>
+                                <td>{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
                             </tr>
                             @endforeach
                         </tbody>

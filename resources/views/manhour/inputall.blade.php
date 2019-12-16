@@ -93,9 +93,6 @@ $title = 'Manhour Input - '.(date_format(date_create($details['date']), 'F Y'));
                             $index = 0;
                         ?>
                         @foreach ($records as $record)
-                        <?php
-                            //if ($record === null)
-                        ?>
                         <tr {{ $record != null && $record->regularHours != null ? "class=\"highlighted\"" : ''}} >
                             <td>
                                 {{ $record != null ? $record->timecard : '' }}

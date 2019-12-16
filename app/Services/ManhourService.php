@@ -260,6 +260,7 @@ class ManhourService extends EntityService implements IManhourService
             $summary->employeeName = $employee->fullName;
             $summary->departmentId = $employee->current['department']['value'];
             $summary->departmentName = $employee->current['department']['displayName'];
+            $summary->inactive = $employee->inactive;
 
             // Check for holiday
             if ($this->getHoliday($date) == null) {
@@ -279,13 +280,7 @@ class ManhourService extends EntityService implements IManhourService
             $summary->departmentId = $history['department']['value'];
             $summary->break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
 
-            $properHours = 0;
-            $recordHours = 0;
             $scheduledHour = 0;
-            $otHours = 0;
-            $ndHours = 0;
-            $isLate = false;
-            $overtimeCounted = false;
 
             // Get employee schedule
             $scheduledTimeIn = isset($timeTable['timein']) ? $timeTable['timein'] : null;
@@ -454,6 +449,7 @@ class ManhourService extends EntityService implements IManhourService
         if ($employee == null)
             return;
         $summary->employeeId = $employee->employeeId;
+        $summary->inactive = $employee->inactive;
 
         $summary->date = date_format($date, 'M d Y');
 
@@ -820,9 +816,6 @@ class ManhourService extends EntityService implements IManhourService
 
         if ($date === null)
             return [null, null];
-
-        $returnDateTime1 = '';
-        $returnDateTime2 = '';
 
         $dateFormatted->addDay();
         $dateTomorrow = $dateFormatted->format('Y-m-d');

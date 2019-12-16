@@ -37,4 +37,6 @@ class ManhourSummaryEntity extends Entity {
     public $authorized;
     public $remarks;
 
+    public $inactive = false;
+
 }

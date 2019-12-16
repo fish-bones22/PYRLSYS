@@ -229,6 +229,7 @@ class ManhourController extends Controller
             $emp['firstname'] = $employee->firstName;
             $emp['middlename'] = $employee->middleName;
             $emp['name'] = $employee->fullName;
+            $emp['inactive'] = $employee->inactive;
             $details['employees'][$employee->id] = $emp;
 
             $employeeRecord = array();
@@ -321,6 +322,9 @@ class ManhourController extends Controller
             if ($employees[$i]->id != $id)
                 continue;
 
+            if ($employees[$i]->inactive)
+                continue;
+
             if ($i == sizeof($employees) - 1)
                 break;
 
@@ -347,6 +351,9 @@ class ManhourController extends Controller
         for ($i = sizeof($employees)-1; $i >= 0; $i--) {
 
             if ($employees[$i]->id != $id)
+                continue;
+
+            if ($employees[$i]->inactive)
                 continue;
 
             if ($i == 0)
@@ -462,6 +469,7 @@ class ManhourController extends Controller
 
         if ($employees != null && sizeof($employees) > 0) {
             foreach ($employees as $employee) {
+                if ($employee->inactive) continue;
                 $records[] = $this->manhourService->getSummaryOfRecord($employee->id, $date, $employee);
             }
         }

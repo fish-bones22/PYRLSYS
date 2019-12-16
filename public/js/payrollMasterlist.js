@@ -21,6 +21,8 @@ $(function() {
             }
         ]
     });
+    filterStatus();
+    $('#statusToggler').change(filterStatus);
 });
 
 function searchTable() {
@@ -46,4 +48,13 @@ function saveAsPDF() {
 
 function getFileName() {
     return $("#title").text().replaceAll(" ", "-").replaceAll("---", "-").toLowerCase() + "-" + Date.now();
+}
+
+function filterStatus() {
+    var colInd = table.columns().header().length - 1;
+    if ($('#statusToggler').prop('checked')) {
+        table.column(colInd).search('Inactive').draw();
+    } else {
+        table.column(colInd).search('Active').draw();
+    }
 }

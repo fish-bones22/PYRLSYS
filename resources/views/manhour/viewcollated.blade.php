@@ -14,21 +14,30 @@ Manhour Records
             <div class="col-12 form-paper section-divider"></div>
         </div>
         <div class="row">
-            <div class="col-lg-2 col-sm-6 order-lg-10 form-paper">
-                <div class="form-group">
-                    <label for="department" class="form-paper-label">Department</label>
-                    <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
-                        <option value="">All</option>
-                        @foreach ($departments as $dept)
-                            <option value="{{ $dept->value }}">{{ $dept->value }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-6 order-lg-8 form-paper">
-                <div class="form-group">
-                    <label for="searchBox" class="form-paper-label">Search</label>
-                    <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterTables()" />
+            <div class="col-lg-4 col-12 order-lg-10 form-paper">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="department" class="form-paper-label">Department</label>
+                            <select class="form-control form-control-sm" id="department" onchange="filterDepartment()">
+                                <option value="">All</option>
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept->value }}">{{ $dept->value }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="searchBox" class="form-paper-label">Search</label>
+                            <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterTables()" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <label for="statusToggler" class="form-check-label"><input type="checkbox" class="form-check-input" id="statusToggler" onkeyup="filterStatus()" /> Show inactive employees</label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -121,6 +130,7 @@ Manhour Records
                                         <th rowspan="2">LHOT</th>
                                         <th rowspan="2">XLHOT</th>
                                         <th rowspan="2">ND</th>
+                                        <th rowspan="2" style="display:none">Status</th>
                                     </tr>
                                     <tr>
                                         <?php
@@ -224,6 +234,7 @@ Manhour Records
                                         <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>
                                         <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>
                                         <td>{{ $nd != 0 ? $nd : ''  }}</td>
+                                        <td style="display:none">{{ $details['employees'][$record->employee_id]['inactive'] ? 'Inactive' : 'Active' }}</td>
                                     </tr>
 
                                     @endforeach
@@ -259,6 +270,7 @@ Manhour Records
                                     <th>Type</th>
                                     <th>Authorized</th>
                                     <th>Reason</th>
+                                    <th style="display:none">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -276,6 +288,7 @@ Manhour Records
                                     <td>{{ $record->outlier }}</td>
                                     <td>{{ $record->authorized == true ? 'Yes' : 'No' }}</td>
                                     <td>{{ $record->remarks }}</td>
+                                    <td style="display:none">{{ $details['employees'][$record->employee_id]['inactive'] ? 'Inactive' : 'Active' }}</td>
                                 </tr>
                                 @endforeach
                                 @endforeach

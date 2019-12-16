@@ -37,6 +37,8 @@ $(function() {
             }
         ]
     });
+    filterStatus();
+    $('#statusToggler').change(filterStatus);
 });
 
 function filterDepartment() {
@@ -77,4 +79,16 @@ function saveAsPDF() {
 
 function getFileName() {
     return $("#currentOutlier").val() + "-" + $("#title").text().replaceAll(" ", "-").replaceAll("---", "-").toLowerCase() + "-" + Date.now();
+}
+
+function filterStatus() {
+    var colInd = table1.columns().header().length - 1;
+    var colInd2 = table2.columns().header().length - 1;
+    if ($('#statusToggler').prop('checked')) {
+        table1.column(colInd).search('Inactive').draw();
+        table2.column(colInd2).search('Inactive').draw();
+    } else {
+        table1.column(colInd).search('Active').draw();
+        table2.column(colInd2).search('Active').draw();
+    }
 }

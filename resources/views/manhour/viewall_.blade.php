@@ -15,7 +15,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
     <div class="col-12 form-paper section-divider"></div>
 </div>
 <div class="row">
-    <div class="col-2 form-paper">
+    <div class="col-md-2 col-12 form-paper">
         <div class="form-group">
             <label class="form-check-label">
                 <input form="filterForm" type="radio" class="form-radio" value="daily" name="mode" onchange="toggleMode()" {{ isset($date['mode']) && $date['mode'] == 'daily' ? 'checked' : '' }}> Daily Record
@@ -95,7 +95,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
             </div>
         </div>
     </div>
-    <div class="col-4 form-paper">
+    <div class="col-md-4 col-12 form-paper">
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -112,6 +112,11 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                 <div class="form-group float-right">
                     <label for="searchBox" class="form-paper-label">Search</label>
                     <input type="search" class="form-control form-control-sm" id="searchBox" onkeyup="filterRecords()" />
+                </div>
+            </div>
+            <div class="col-12 mb-lg-2">
+                <div class="form-check">
+                    <label for="statusToggler" class="form-check-label"><input type="checkbox" class="form-check-input" id="statusToggler" onkeyup="filterStatus()" /> Show inactive employees</label>
                 </div>
             </div>
         </div>
@@ -134,6 +139,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                         <th colspan="6">Overtime</th>
                         <th rowspan="2">ND</th>
                         <th rowspan="2">Remarks/Comments</th>
+                        <th rowspan="2" style="display:none">Status</th>
                     </tr>
                     <tr>
                         <th>In</th>
@@ -169,6 +175,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                         <td>{{ $record->xlhot }}</td>
                         <td>{{ $record->nd }}</td>
                         <td>{{ $record->remarks }}</td>
+                        <td style="display:none">{{ $record->inactive ? 'Inactive' : 'Active' }}</td>
                     </tr>
                     @endforeach
                 </tbody>
