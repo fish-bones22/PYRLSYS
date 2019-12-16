@@ -257,13 +257,14 @@ class PayrollService implements IPayrollService {
                 else if ($key === 'xlhot') {
                     $xlhotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
+
                 if ($key === 'nd') {
-                    $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
+                    $ndPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $hourlyRate);
+                } else {
+                    $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
+                    $totalOtHours += $otMultiplier['value'];
                 }
             }
-
-            $otPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
-            $totalOtHours += $otMultiplier['value'];
 
         }
 
