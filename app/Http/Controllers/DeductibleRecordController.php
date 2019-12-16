@@ -34,9 +34,7 @@ class DeductibleRecordController extends Controller
         if (isset($req['models'])) {
             foreach ($req['models'] as $model) {
 
-                // if (!isset($model['amount']) )//|| $model['amount'] == '')
-                //     continue;
-                if (!isset($model['identifier'])) //|| $model['amount'] == '')
+                if (!isset($model['identifier']))
                     continue;
 
                 $entity = $this->mapToEntity($id, $req['record_date'], $req['employee_name'], $model);

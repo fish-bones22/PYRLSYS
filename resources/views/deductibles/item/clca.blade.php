@@ -20,7 +20,8 @@ foreach ($records as $record) {
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
             'basicsalary' => $record->employee['basicsalary'],
-            'department' => $record->employee['department']
+            'department' => $record->employee['department'],
+            'inactive' => $record->employee['inactive']
         ];
     }
 
@@ -44,7 +45,8 @@ foreach ($records2 as $record) {
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
             'basicsalary' => $record->employee['basicsalary'],
-            'department' => $record->employee['department']
+            'department' => $record->employee['department'],
+            'inactive' => $record->employee['inactive']
         ];
     }
 
@@ -101,6 +103,11 @@ foreach ($records2 as $record) {
                                 <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="filterEmployees()" />
                             </div>
                         </div>
+                        <div class="col-12 mb-2">
+                            <div class="form-check float-right">
+                                <label for="statusToggler" class="form-check-label"><input type="checkbox" class="form-check-input" id="statusToggler" onkeyup="filterStatus()" /> Show inactive employees</label>
+                            </div>
+                        </div>
                     </div>
                 </form>
 
@@ -120,6 +127,7 @@ foreach ($records2 as $record) {
                             <th>Department</th>
                             <th>Loan Amount</th>
                             <th>Remarks</th>
+                            <th style="display:none">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,6 +152,7 @@ foreach ($records2 as $record) {
                                 <td>{{ $record['department'] }}</td>
                                 <td>{{ $loanAmount1 + $loanAmount2 }}</td>
                                 <td>{{ $remarks }}</td>
+                                <td style="display:none">{{ $record['inactive'] ? 'Inactive' : 'Active' }}</td>
                             </tr>
                         @endforeach
                         @if (sizeof($rcd) > 0 || sizeof($rcd2) > 0 && $totalLoanAmount > 0)
@@ -155,6 +164,7 @@ foreach ($records2 as $record) {
                             <td></td>
                             <td>{{ $totalLoanAmount }}</td>
                             <td></td>
+                            <td style="display:none"></td>
                         </tr>
                         @endif
                     </tbody>

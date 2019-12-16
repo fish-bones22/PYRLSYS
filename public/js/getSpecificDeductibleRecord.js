@@ -18,6 +18,10 @@ $(function() {
             }
         ]
     });
+    if ( $('#statusToggler').length > 0) {
+        filterStatus();
+        $('#statusToggler').change(filterStatus);
+    }
 });
 
 function filterDepartment() {
@@ -31,6 +35,15 @@ function filterEmployees() {
     var term = $("#searchBox").val();
     table.search(term);
     table.draw();
+}
+
+function filterStatus() {
+    var colInd = table.columns().header().length - 1;
+    if ($('#statusToggler').prop('checked')) {
+        table.column(colInd).search('Inactive').draw();
+    } else {
+        table.column(colInd).search('Active').draw();
+    }
 }
 
 function saveAsExcel() {

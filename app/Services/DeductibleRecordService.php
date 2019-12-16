@@ -12,8 +12,7 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
 
     public function addRecord($entity)
     {
-
-        $model;
+        $model = null;
         if ($entity->id == 0) {
             if (($entity->amount === null || $entity->amount === '')
                 && ($entity->subamount === null || $entity->subamount === '')
@@ -102,7 +101,7 @@ class DeductibleRecordService extends EntityService implements IDeductibleRecord
         $entity->employee['basicsalary'] = $model->employee->current[0]->rate != null ? $model->employee->current[0]->rate : 0;
         $entity->employee['basis'] = $model->employee->current[0]->rateBasis != null ? $model->employee->current[0]->rateBasis : '';
         $entity->employee['department'] = $model->employee->current[0]->departmentDetails->value;
-
+        $entity->employee['inactive'] = $model->employee->isInactive();
         $entity->identifier = array();
         $entity->identifier['value'] = $model->identifier;
         $entity->identifier['details'] = $model->identifierDetails;

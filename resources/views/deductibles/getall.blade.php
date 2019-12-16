@@ -12,7 +12,8 @@ foreach ($records as $record) {
     if (!isset($rcd[$record->employee['id']])) {
         $rcd[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
-            'name' => $record->employee['name']
+            'name' => $record->employee['name'],
+            'inactive' => $record->employee['inactive']
         ];
     }
 
@@ -74,6 +75,11 @@ foreach ($records as $record) {
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12 mb-2">
+                                    <div class="form-check float-right">
+                                        <label for="statusToggler" class="form-check-label"><input type="checkbox" class="form-check-input" id="statusToggler" onkeyup="filterStatus()" /> Show inactive employees</label>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -96,6 +102,7 @@ foreach ($records as $record) {
                             <th>PAGIBIG Emp</th>
                             <th>PAGIBIG Emr</th>
                             <th>Withholding Tax</th>
+                            <th style="display:none">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,6 +135,7 @@ foreach ($records as $record) {
                                 <td>{{ isset($record['pagibig']) ? $record['pagibig']['employee'] : '' }}</td>
                                 <td>{{ isset($record['pagibig']) ? $record['pagibig']['employer'] : '' }}</td>
                                 <td>{{ isset($record['tin']) ? $record['tin']['employee'] : 0 }}</td>
+                                <td style="display: none">{{ $record['inactive'] ? 'Inactive' : 'Active' }}</td>
                             </tr>
                         @endforeach
                         @if ($sssEmp + $sssEmr + $philhealthEmp + $philhealthEmr + $pagibigEmp + $pagibigEmr + $tax > 0)
@@ -141,6 +149,7 @@ foreach ($records as $record) {
                             <td>{{ $pagibigEmp }}</td>
                             <td>{{ $pagibigEmr }}</td>
                             <td>{{ $tax }}</td>
+                            <td style="display: none"></td>
                         </tr>
                         @endif
                     </tbody>

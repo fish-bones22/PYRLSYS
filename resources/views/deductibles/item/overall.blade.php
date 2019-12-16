@@ -24,7 +24,8 @@ foreach ($records as $record) {
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
             'basicsalary' => $record->employee['basicsalary'],
-            'department' => $record->employee['department']
+            'department' => $record->employee['department'],
+            'inactive' => $record->employee['inactive']
         ];
     }
 
@@ -48,7 +49,8 @@ foreach ($records2 as $record) {
             'firstName' => $record->employee['firstname'],
             'middleName' => $record->employee['middlename'],
             'basicsalary' => $record->employee['basicsalary'],
-            'department' => $record->employee['department']
+            'department' => $record->employee['department'],
+            'inactive' => $record->employee['inactive']
         ];
     }
 
@@ -105,6 +107,11 @@ foreach ($records2 as $record) {
                                 <input id="searchBox" type="search" class="form-control form-control-sm" onkeyup="filterEmployees()" />
                             </div>
                         </div>
+                        <div class="col-12 mb-2">
+                            <div class="form-check float-right">
+                                <label for="statusToggler" class="form-check-label"><input type="checkbox" class="form-check-input" id="statusToggler" onkeyup="filterStatus()" /> Show inactive employees</label>
+                            </div>
+                        </div>
                     </div>
                 </form>
 
@@ -114,128 +121,133 @@ foreach ($records2 as $record) {
 
         <div class="row">
             <div class="col-12 form-paper">
-                <table class="table table-sm" id="deductiblesTable" style="font-size:11px;">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
-                            <th>Department</th>
-                            <th>SSS Emp</th>
-                            <th>SSS Emr</th>
-                            <th>SSS Emc</th>
-                            <th>SSS Total</th>
-                            <th>PhilHealth Emp</th>
-                            <th>PhilHealth Emr</th>
-                            <th>PhilHealth Total</th>
-                            <th>PAGIBIG Emp</th>
-                            <th>PAGIBIG Emr</th>
-                            <th>PAGIBIG Total</th>
-                            <th>Withholding Tax</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $sssEmp = 0;
-                        $sssEmr = 0;
-                        $sssEmc = 0;
-                        $sss = 0;
-
-                        $philhealthEmp = 0;
-                        $philhealthEmr = 0;
-                        $philhealth = 0;
-
-                        $pagibigEmp = 0;
-                        $pagibigEmr = 0;
-                        $pagibig = 0;
-
-                        $tax = 0;
-                        ?>
-                        @foreach ($rcd as $key => $record)
-                        <?php
-                        $sssEmp1 = isset($record[$_keySS]['employee']) ? $record[$_keySS]['employee']  : '0';
-                        $sssEmp2 = isset($rcd2[$key][$_keySS]['employee']) ? $rcd2[$key][$_keySS]['employee']  : '0';
-                        $sssEmr1 = isset($record[$_keySS]['employer']) ? $record[$_keySS]['employer']  : '0';
-                        $sssEmr2 = isset($rcd2[$key][$_keySS]['employer']) ? $rcd2[$key][$_keySS]['employer']  : '0';
-                        $sssEmc1 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
-                        $sssEmc2 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
-
-                        $sssEmp += $sssEmp1 + $sssEmp2;
-                        $sssEmr += $sssEmr1 + $sssEmr2;
-                        $sssEmc += $sssEmc1 + $sssEmc2;
-
-                        $sss += $sssEmp + $sssEmr + $sssEmc;
-
-                        $philhealthEmp1 = isset($record[$_keyPH]['employee']) ? $record[$_keyPH]['employee']  : '0';
-                        $philhealthEmp2 = isset($rcd2[$key][$_keyPH]['employee']) ? $rcd2[$key][$_keyPH]['employee']  : '0';
-
-                        $philhealthEmr1 = isset($record[$_keyPH]['employer']) ? $record[$_keyPH]['employer']  : '0';
-                        $philhealthEmr2 = isset($rcd2[$key][$_keyPH]['employer']) ? $rcd2[$key][$_keyPH]['employer']  : '0';
-
-                        $philhealthEmp += $philhealthEmp1 + $philhealthEmp2;
-                        $philhealthEmr += $philhealthEmr1 + $philhealthEmr2;
-
-                        $philhealth += $philhealthEmp + $philhealthEmr;
-
-                        $pagibigEmp1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
-                        $pagibigEmp2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
-
-                        $pagibigEmr1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
-                        $pagibigEmr2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
-
-                        $pagibigEmp += $pagibigEmp1 + $pagibigEmp2;
-                        $pagibigEmr += $pagibigEmr1 + $pagibigEmr2;
-                        $pagibig += $pagibigEmp + $pagibigEmr;
-
-                        $tax1 = isset($record[$_keyWT]['employee']) ? $record[$_keyWT]['employee']  : '0';
-                        $tax2 = isset($rcd2[$key][$_keyWT]['employee']) ? $rcd2[$key][$_keyWT]['employee']  : '0';
-
-
-                        $tax += $tax1 + $tax2;
-
-                        ?>
+                <div style="overflow-x:scroll" class="mb-3">
+                    <table class="table table-sm" id="deductiblesTable" style="font-size:11px;">
+                        <thead>
                             <tr>
-                                <td>{{ $record['employeeId'] }}</td>
-                                <td>{{ $record['lastName'] }}</td>
-                                <td>{{ $record['firstName'] }}</td>
-                                <td>{{ $record['middleName'] }}</td>
-                                <td>{{ $record['department'] }}</td>
-                                <td>{{ $sssEmp1 + $sssEmp2 }}</td>
-                                <td>{{ $sssEmr1 + $sssEmr2 }}</td>
-                                <td>{{ $sssEmc1 + $sssEmc2 }}</td>
-                                <td>{{ $sssEmp1 + $sssEmp2 + $sssEmr1 + $sssEmr2 + $sssEmc1 + $sssEmc2 }}</td>
-                                <td>{{ $philhealthEmp1 + $philhealthEmp2 }}</td>
-                                <td>{{ $philhealthEmr1 + $philhealthEmr2 }}</td>
-                                <td>{{ $philhealthEmp1 + $philhealthEmr1 + $philhealthEmp2 + $philhealthEmr2 }}</td>
-                                <td>{{ $pagibigEmp1 + $pagibigEmp2 }}</td>
-                                <td>{{ $pagibigEmr1 + $pagibigEmr2 }}</td>
-                                <td>{{ $pagibigEmp1 + $pagibigEmp2 + $pagibigEmr1 + $pagibigEmr2  }}</td>
-                                <td>{{ $tax1 + $tax2 }}</td>
+                                <th>ID</th>
+                                <th>Last Name</th>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Department</th>
+                                <th>SSS Emp</th>
+                                <th>SSS Emr</th>
+                                <th>SSS Emc</th>
+                                <th>SSS Total</th>
+                                <th>PhilHealth Emp</th>
+                                <th>PhilHealth Emr</th>
+                                <th>PhilHealth Total</th>
+                                <th>PAGIBIG Emp</th>
+                                <th>PAGIBIG Emr</th>
+                                <th>PAGIBIG Total</th>
+                                <th>Withholding Tax</th>
+                                <th style="display:none">Status</th>
                             </tr>
-                        @endforeach
-                        @if (sizeof($rcd) > 0 || sizeof($rcd2) > 0 && $sss > 0)
-                        <tr>
-                            <td>TOTAL</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ $sssEmp }}</td>
-                            <td>{{ $sssEmr }}</td>
-                            <td>{{ $sssEmc }}</td>
-                            <td>{{ $sss }}</td>
-                            <td>{{ $philhealthEmp }}</td>
-                            <td>{{ $philhealthEmr }}</td>
-                            <td>{{ $philhealth }}</td>
-                            <td>{{ $pagibigEmp }}</td>
-                            <td>{{ $pagibigEmr }}</td>
-                            <td>{{ $pagibig }}</td>
-                            <td>{{ $tax }}</td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sssEmp = 0;
+                            $sssEmr = 0;
+                            $sssEmc = 0;
+                            $sss = 0;
+
+                            $philhealthEmp = 0;
+                            $philhealthEmr = 0;
+                            $philhealth = 0;
+
+                            $pagibigEmp = 0;
+                            $pagibigEmr = 0;
+                            $pagibig = 0;
+
+                            $tax = 0;
+                            ?>
+                            @foreach ($rcd as $key => $record)
+                            <?php
+                            $sssEmp1 = isset($record[$_keySS]['employee']) ? $record[$_keySS]['employee']  : '0';
+                            $sssEmp2 = isset($rcd2[$key][$_keySS]['employee']) ? $rcd2[$key][$_keySS]['employee']  : '0';
+                            $sssEmr1 = isset($record[$_keySS]['employer']) ? $record[$_keySS]['employer']  : '0';
+                            $sssEmr2 = isset($rcd2[$key][$_keySS]['employer']) ? $rcd2[$key][$_keySS]['employer']  : '0';
+                            $sssEmc1 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
+                            $sssEmc2 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
+
+                            $sssEmp += $sssEmp1 + $sssEmp2;
+                            $sssEmr += $sssEmr1 + $sssEmr2;
+                            $sssEmc += $sssEmc1 + $sssEmc2;
+
+                            $sss += $sssEmp + $sssEmr + $sssEmc;
+
+                            $philhealthEmp1 = isset($record[$_keyPH]['employee']) ? $record[$_keyPH]['employee']  : '0';
+                            $philhealthEmp2 = isset($rcd2[$key][$_keyPH]['employee']) ? $rcd2[$key][$_keyPH]['employee']  : '0';
+
+                            $philhealthEmr1 = isset($record[$_keyPH]['employer']) ? $record[$_keyPH]['employer']  : '0';
+                            $philhealthEmr2 = isset($rcd2[$key][$_keyPH]['employer']) ? $rcd2[$key][$_keyPH]['employer']  : '0';
+
+                            $philhealthEmp += $philhealthEmp1 + $philhealthEmp2;
+                            $philhealthEmr += $philhealthEmr1 + $philhealthEmr2;
+
+                            $philhealth += $philhealthEmp + $philhealthEmr;
+
+                            $pagibigEmp1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
+                            $pagibigEmp2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
+
+                            $pagibigEmr1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
+                            $pagibigEmr2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
+
+                            $pagibigEmp += $pagibigEmp1 + $pagibigEmp2;
+                            $pagibigEmr += $pagibigEmr1 + $pagibigEmr2;
+                            $pagibig += $pagibigEmp + $pagibigEmr;
+
+                            $tax1 = isset($record[$_keyWT]['employee']) ? $record[$_keyWT]['employee']  : '0';
+                            $tax2 = isset($rcd2[$key][$_keyWT]['employee']) ? $rcd2[$key][$_keyWT]['employee']  : '0';
+
+
+                            $tax += $tax1 + $tax2;
+
+                            ?>
+                                <tr>
+                                    <td>{{ $record['employeeId'] }}</td>
+                                    <td>{{ $record['lastName'] }}</td>
+                                    <td>{{ $record['firstName'] }}</td>
+                                    <td>{{ $record['middleName'] }}</td>
+                                    <td>{{ $record['department'] }}</td>
+                                    <td>{{ $sssEmp1 + $sssEmp2 }}</td>
+                                    <td>{{ $sssEmr1 + $sssEmr2 }}</td>
+                                    <td>{{ $sssEmc1 + $sssEmc2 }}</td>
+                                    <td>{{ $sssEmp1 + $sssEmp2 + $sssEmr1 + $sssEmr2 + $sssEmc1 + $sssEmc2 }}</td>
+                                    <td>{{ $philhealthEmp1 + $philhealthEmp2 }}</td>
+                                    <td>{{ $philhealthEmr1 + $philhealthEmr2 }}</td>
+                                    <td>{{ $philhealthEmp1 + $philhealthEmr1 + $philhealthEmp2 + $philhealthEmr2 }}</td>
+                                    <td>{{ $pagibigEmp1 + $pagibigEmp2 }}</td>
+                                    <td>{{ $pagibigEmr1 + $pagibigEmr2 }}</td>
+                                    <td>{{ $pagibigEmp1 + $pagibigEmp2 + $pagibigEmr1 + $pagibigEmr2  }}</td>
+                                    <td>{{ $tax1 + $tax2 }}</td>
+                                    <td style="display:none">{{ $record['inactive'] ? 'Inactive' : 'Active' }}</td>
+                                </tr>
+                            @endforeach
+                            @if (sizeof($rcd) > 0 || sizeof($rcd2) > 0 && $sss > 0)
+                            <tr>
+                                <td>TOTAL</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ $sssEmp }}</td>
+                                <td>{{ $sssEmr }}</td>
+                                <td>{{ $sssEmc }}</td>
+                                <td>{{ $sss }}</td>
+                                <td>{{ $philhealthEmp }}</td>
+                                <td>{{ $philhealthEmr }}</td>
+                                <td>{{ $philhealth }}</td>
+                                <td>{{ $pagibigEmp }}</td>
+                                <td>{{ $pagibigEmr }}</td>
+                                <td>{{ $pagibig }}</td>
+                                <td>{{ $tax }}</td>
+                                <td style="display:none"></td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
