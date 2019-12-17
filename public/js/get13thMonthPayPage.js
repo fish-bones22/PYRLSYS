@@ -1,4 +1,7 @@
 var table;
+var idsToCheck = [];
+var processInterval;
+var procLock = false;
 $(function() {
     table = $("#payrollMasterTable").DataTable({
         "info": false,
@@ -37,9 +40,9 @@ function filterEmployees() {
 function filterStatus() {
     var colInd = table.columns().header().length - 1;
     if ($('#statusToggler').prop('checked')) {
-        table.column(colInd).search('Inactive').draw();
+        table.column(colInd).search('^Inactive$', true, false, true).draw();
     } else {
-        table.column(colInd).search('Active').draw();
+        table.column(colInd).search('^Active$', true, false, true).draw();
     }
 }
 
@@ -49,4 +52,76 @@ function toggleSelectAll() {
     } else {
         $('.employee-check').each(function() { $(this).prop('checked', false); });
     }
+}
+
+function generate() {
+    // Get checked rows
+    $('.employee-check:checked').each(function() {
+        idsToCheck.push($(this).data('employee-id'));
+    });
+
+    if (idsToCheck.length <= 0) {
+        return;
+    }
+    // Start process
+    $('#btnGenerate').text('Please wait...');
+    $('#btnGenerate').attr('disabled', '');
+    processInterval = window.setInterval(function() {
+        if (procLock) return;
+
+        procLock = true;
+
+        if (idsToCheck.length <= 0) {
+            window.clearInterval(processInterval);
+            $('#btnGenerate').text('Generate');
+            $('#btnGenerate').removeAttr('disabled');
+            $('#btnSave').show();
+        }
+
+        var id = idsToCheck.pop();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url: '/payroll/ajax_getamount',
+            type: 'POST',
+            data: {
+                id: id,
+                from: '2019-01-01',
+                to: '2019-12-01'
+            },
+            success: function(res) {
+                $('#amount-display-'+ id).text(res.total);
+                $('#amount-'+ id).val(res.total);
+                procLock = false;
+            }
+        });
+
+    }, 500);
+}
+
+function getAmount(id) {
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: '/payroll/ajax_getamount',
+        type: 'POST',
+        data: {
+            id: id,
+            from: '2019-01-01',
+            to: '2019-12-01'
+        },
+        success: function(res) {
+            console.log(res);
+        }
+    });
 }

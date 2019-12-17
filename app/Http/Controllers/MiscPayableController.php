@@ -30,16 +30,20 @@ class MiscPayableController extends Controller
      * GET 13th month pay page
      */
     public function view13thMonthPay() {
+
         $departments = $this->categoryService->getCategories('department');
         $employees = $this->employeeService->getAllEmployees();
         return response()->view('payroll.13thmonth', ['departments' => $departments, 'employees' => $employees]);
     }
 
     /**
-     * POST 13th month pay page
+     * POST Save 13th month pay records
      */
-    public function set13thMonthPay() {
+    public function set13thMonthPay(Request $request) {
 
+        $departments = $this->categoryService->getCategories('department');
+        $employees = $this->employeeService->getAllEmployees();
+        return response()->view('payroll.13thmonth', ['departments' => $departments, 'employees' => $employees]);
     }
 
     /**

@@ -44,9 +44,9 @@ function filterRecords() {
 
 function filterStatus() {
     if ($('#statusToggler').prop('checked')) {
-        table.column(16).search('Inactive').draw();
+        table.column(16).search('^Inactive$', true, false, true).draw();
     } else {
-        table.column(16).search('Active').draw();
+        table.column(16).search('^Active$', true, false, true).draw();
     }
 }
 

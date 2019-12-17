@@ -22,8 +22,8 @@
                             <div class="form-group">
                                 <label class="form-paper-label">From</label>
                                 <div class="input-group">
-                                    @include('layout.monthselect', ['form' => 'setDateForm', 'monthSelected' => ( date_format(now()->modify('11 months ago'), 'm') ), 'name' => 'month' ])
-                                    <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ date_format(now()->modify('11 months ago'), 'Y') }}" />
+                                    @include('layout.monthselect', ['id' => 'monthFrom', 'form' => 'setDateForm', 'monthSelected' => ( date_format(now()->modify('11 months ago'), 'm') ), 'name' => 'month' ])
+                                    <input type="number" min="1991" max="2100" id="yearFromSelect" class="form-control form-control-sm" name="year" value="{{ date_format(now()->modify('11 months ago'), 'Y') }}" />
                                 </div>
                             </div>
                         </div>
@@ -31,14 +31,15 @@
                             <div class="form-group">
                                 <label class="form-paper-label">Until</label>
                                 <div class="input-group">
-                                    @include('layout.monthselect', ['form' => 'setDateForm', 'monthSelected' => ( date_format(now(), 'm') ), 'name' => 'month' ])
-                                    <input type="number" min="1991" max="2100" id="yearSelect" class="form-control form-control-sm" name="year" value="{{ date_format(now(), 'Y') }}" readonly />
+                                    @include('layout.monthselect', ['id' => 'monthTo', 'form' => 'setDateForm', 'monthSelected' => ( date_format(now(), 'm') ), 'name' => 'month' ])
+                                    <input type="number" min="1991" max="2100" id="yearToSelect" class="form-control form-control-sm" name="year" value="{{ date_format(now(), 'Y') }}" readonly />
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-grou mb-2 float-right">
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="generate()">Generate</button>
+                                <button id="btnGenerate" type="button" class="btn btn-secondary btn-sm" onclick="generate()">Generate</button>
+                                <button form="payForm" id="btnSave" data-confirm="save" type="submit" class="btn btn-primary btn-sm" style="display: none">Save</button>
                             </div>
                         </div>
                     </div>
@@ -74,42 +75,53 @@
         <div class="row">
             <div class="col-12 form-paper section-divider"></div>
             <div class="col-12 form-paper">
-                <div style="overflow-x:scroll" class="mb-3">
-                    <table class="table table-sm" id="payrollMasterTable">
-                        <thead>
-                            <tr>
-                                <th style="max-width:50px"><label for="selectAll" class="form-check-label"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()" /> All</label></th>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Amount</th>
-                                <th style="display: none">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $ind = 0;
-                            ?>
-                            @foreach ($employees as $employee)
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="included['{{$employee->id}}']" class="employee-check" />
-                                </td>
-                                <td>{{ $employee->employeeId }}</td>
-                                <td>{{ $employee->fullName }}</td>
-                                <td>{{ $employee->current['department']['displayName'] }}</td>
-                                <td>
-                                    <input type="hidden" name="amount['{{$employee->id}}']" value="{{ $employee->id }}" />
-                                 </td>
-                                <td style="display: none">{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
-                            </tr>
-                            <?php
-                            $ind++;
-                            ?>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <form id="payForm" action="{{ action('MiscPayableController@set13thMonthPay') }}" method="POST">
+                    @csrf
+                    <div style="overflow-x:scroll" class="mb-3">
+                        <table class="table table-sm" id="payrollMasterTable">
+                            <thead>
+                                <tr>
+                                    <th style="max-width:50px"><label for="selectAll" class="form-check-label"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()" /> All</label></th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Amount</th>
+                                    <th style="display: none">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $ind = 0;
+                                ?>
+                                @foreach ($employees as $employee)
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="included['{{$employee->id}}']" data-employee-id="{{$employee->id}}" class="employee-check" />
+                                    </td>
+                                    <td>{{ $employee->employeeId }}</td>
+                                    <td>
+                                        {{ $employee->fullName }}
+                                        <input type="hidden" name="name['{{$employee->id}}']" value="{{ $employee->fullName}}" />
+                                    </td>
+                                    <td>
+                                        {{ $employee->current['department']['displayName'] }}
+                                        <input type="hidden" name="department['{{$employee->id}}']" value="{{ $employee->current['department']['value'] }}" />
+                                        <input type="hidden" name="departmentName['{{$employee->id}}']" value="{{ $employee->current['department']['displayName'] }}" />
+                                    </td>
+                                    <td>
+                                        <input type="hidden" id="amount-{{$employee->id}}" name="amount['{{$employee->id}}']" value="{{ $employee->id }}" />
+                                        <span id="amount-display-{{$employee->id}}"></span>
+                                    </td>
+                                    <td style="display: none">{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
+                                </tr>
+                                <?php
+                                $ind++;
+                                ?>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

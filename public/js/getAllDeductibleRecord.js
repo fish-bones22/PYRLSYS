@@ -37,9 +37,9 @@ function filterEmployees() {
 function filterStatus() {
     var colInd = table.columns().header().length - 1;
     if ($('#statusToggler').prop('checked')) {
-        table.column(colInd).search('Inactive').draw();
+        table.column(colInd).search('^Inactive$', true, false, true).draw();
     } else {
-        table.column(colInd).search('Active').draw();
+        table.column(colInd).search('^Active$', true, false, true).draw();
     }
 }
 
