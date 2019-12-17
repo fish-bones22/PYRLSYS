@@ -9,18 +9,21 @@ use App\Contracts\IPayrollService;
 use DateInterval;
 use DatePeriod;
 use Illuminate\Http\Request;
+use App\Contracts\IEmployeeService;
 
 class MiscPayableController extends Controller
 {
     private $payableService;
     private $payrollService;
     private $categoryService;
+    private $employeeService;
 
-    public function __construct(IMiscPayableService $payableService, IPayrollService $payrollService, ICategoryService $categoryService)
+    public function __construct(IMiscPayableService $payableService, IPayrollService $payrollService, ICategoryService $categoryService, IEmployeeService $employeeService)
     {
         $this->payableService = $payableService;
         $this->payrollService = $payrollService;
         $this->categoryService = $categoryService;
+        $this->employeeService = $employeeService;
     }
 
     /**
@@ -28,7 +31,8 @@ class MiscPayableController extends Controller
      */
     public function view13thMonthPay() {
         $departments = $this->categoryService->getCategories('department');
-        return response()->view('payroll.13thmonth', ['departments' => $departments]);
+        $employees = $this->employeeService->getAllEmployees();
+        return response()->view('payroll.13thmonth', ['departments' => $departments, 'employees' => $employees]);
     }
 
     /**
