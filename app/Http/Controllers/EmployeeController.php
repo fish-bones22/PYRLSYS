@@ -9,11 +9,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 use App\Contracts\ICategoryService;
 use App\Contracts\IEmployeeService;
-//use App\Models\Employee;
-//use App\Models\EmployeeHistory;
-//use App\Models\EmployeePicture;
 use App\Entities\EmployeeEntity;
-use Chumper\Zipper\Zipper;
 
 class EmployeeController extends Controller
 {
