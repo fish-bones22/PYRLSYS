@@ -37,8 +37,10 @@ $(function() {
             }
         ]
     });
-    filterStatus();
-    $('#statusToggler').change(filterStatus);
+    if ($('#statusToggler').length > 0) {
+        filterStatus();
+        $('#statusToggler').change(filterStatus);
+    }
 });
 
 function filterDepartment() {
