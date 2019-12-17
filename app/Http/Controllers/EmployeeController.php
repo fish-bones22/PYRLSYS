@@ -310,7 +310,7 @@ class EmployeeController extends Controller
     public function downloadAllFiles($employeeId)
     {
         $zipFileName = storage_path("app/public/". $employeeId . '-files.zip');
-        $zip = Zipper::make($zipFileName);
+        $zip = \Zipper::make($zipFileName);
 
         $files = storage_path('app/public/files/'. $employeeId .'*');
         $zip->add(glob($files));
