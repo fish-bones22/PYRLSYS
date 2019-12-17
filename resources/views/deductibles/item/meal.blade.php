@@ -38,7 +38,7 @@ foreach ($records as $record) {
 }
 $rcd2 = array();
 foreach ($records2 as $record) {
-    if (!isset($rcd[$record->employee['id']])) {
+    if (!isset($rcd2[$record->employee['id']])) {
         $rcd2[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
             'lastName' => $record->employee['lastname'],
@@ -57,8 +57,6 @@ foreach ($records2 as $record) {
         'identifier' => isset($record->identifier['value']) ? $record->identifier['value'] : '',
         'remarks' => $record->remarks
     ];
-
-
 }
 ?>
 
@@ -133,13 +131,18 @@ foreach ($records2 as $record) {
                     <tbody>
                         <?php
                         $totalLoanAmount = 0;
+                        $rcdToUse = $rcd;
+                        // Set array to iterate
+                        if (!array_filter($rcd)) {
+                            $rcdToUse = $rcd2;
+                        }
                         ?>
-                        @foreach ($rcd as $key => $record)
+                        @foreach ($rcdToUse as $key => $record)
                         <?php
-                        $loanAmount1 = isset($record[$_key]['employee']) ? $record[$_key]['employee']  : '0';
+                        $loanAmount1 = isset($rcd[$key][$_key]['employee']) ? $rcd[$key][$_key]['employee']  : '0';
                         $loanAmount2 = isset($rcd2[$key][$_key]['employee']) ? $rcd2[$key][$_key]['employee']  : '0';
                         $totalLoanAmount += $loanAmount1 + $loanAmount2;
-                        $remarks = (isset($record[$_key]['remarks']) ? $record[$_key]['remarks'] : '').' '.(isset($rcd2[$key][$_key]['remarks']) ? $rcd2[$key][$_key]['remarks'] : '');
+                        $remarks = (isset($rcd[$key][$_key]['remarks']) ? $rcd[$key][$_key]['remarks'] : '').' '.(isset($rcd2[$key][$_key]['remarks']) ? $rcd2[$key][$_key]['remarks'] : '');
 
                         if ($loanAmount1 + $loanAmount2 === 0)
                             continue;

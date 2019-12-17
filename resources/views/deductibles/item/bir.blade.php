@@ -38,7 +38,7 @@ foreach ($records as $record) {
 }
 $rcd2 = array();
 foreach ($records2 as $record) {
-    if (!isset($rcd[$record->employee['id']])) {
+    if (!isset($rcd2[$record->employee['id']])) {
         $rcd2[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
             'lastName' => $record->employee['lastname'],
@@ -140,8 +140,13 @@ foreach ($records2 as $record) {
                     <tbody>
                         <?php
                         $taxDueTotal = 0;
+                        $rcdToUse = $rcd;
+                        // Set array to iterate
+                        if (!array_filter($rcd)) {
+                            $rcdToUse = $rcd2;
+                        }
                         ?>
-                        @foreach ($rcd as $key => $record)
+                        @foreach ($rcdToUse as $key => $record)
                         <?php
 
 
@@ -153,7 +158,7 @@ foreach ($records2 as $record) {
                         $al2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->allowance : 0;
                         $tp1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->takeHomePay : 0;
                         $tp2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->takeHomePay : 0;
-                        $td1 = isset($record[$_key]['employee']) ? $record[$_key]['employee'] : 0;
+                        $td1 = isset($rcd[$key][$_key]['employee']) ? $rcd[$key][$_key]['employee'] : 0;
                         $td2 = isset($rcd2[$key]) && isset($rcd2[$key][$_key]) ?  $rcd2[$key][$_key]['employee'] : 0;
                         $pbt1 = isset($payrollRecord1[$key]) ?  $payrollRecord1[$key]->beforeTaxPay : 0;
                         $pbt2 = isset($payrollRecord2[$key]) ?  $payrollRecord2[$key]->beforeTaxPay : 0;

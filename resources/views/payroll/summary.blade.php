@@ -94,7 +94,7 @@ Payroll Summary
                                 <th rowspan="2">MEAL DEDUCTIONS</th>
                                 <th rowspan="2">CASH ADVANCE</th>
                                 <th rowspan="2">TAKE HOME PAY</th>
-                                <th rowspan="2">Status</th>
+                                <th style="display:none" rowspan="2">Status</th>
                             </tr>
                             <tr>
                                 <th>Last Name</th>
@@ -187,7 +187,7 @@ Payroll Summary
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Meal Deduction']) ? $summary[$employee->id]->exemptionDetails['Meal Deduction'] : '0' }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Company Loan']) ? $summary[$employee->id]->exemptionDetails['Company Loan'] : '0' }}</td>
                                 <td>{{ $summary[$employee->id]->takeHomePay }}</td>
-                                <td>{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
+                                <td style="display:none">{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
                             </tr>
                             @endforeach
                         </tbody>

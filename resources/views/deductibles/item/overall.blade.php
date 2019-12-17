@@ -42,7 +42,7 @@ foreach ($records as $record) {
 }
 $rcd2 = array();
 foreach ($records2 as $record) {
-    if (!isset($rcd[$record->employee['id']])) {
+    if (!isset($rcd2[$record->employee['id']])) {
         $rcd2[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
             'lastName' => $record->employee['lastname'],

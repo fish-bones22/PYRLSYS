@@ -38,7 +38,7 @@ foreach ($records as $record) {
 }
 $rcd2 = array();
 foreach ($records2 as $record) {
-    if (!isset($rcd[$record->employee['id']])) {
+    if (!isset($rcd2[$record->employee['id']])) {
         $rcd2[$record->employee['id']] = [
             'employeeId' => $record->employee['employeeId'],
             'lastName' => $record->employee['lastname'],
@@ -151,16 +151,21 @@ foreach ($records2 as $record) {
                             $emrTotal = 0;
                             $emcTotal = 0;
                             $grandTotal = 0;
+                            $rcdToUse = $rcd;
+                            // Set array to iterate
+                            if (!array_filter($rcd)) {
+                                $rcdToUse = $rcd2;
+                            }
                             ?>
-                            @foreach ($rcd as $key => $record)
+                            @foreach ($rcdToUse as $key => $record)
                             <?php
-                            $emp1 = (isset($record[$_key]) ? $record[$_key]['employee'] : 0);
-                            $emr1 = (isset($record[$_key]) ? $record[$_key]['employer'] : 0);
+                            $emp1 = (isset($rcd[$key][$_key]) ? $rcd[$key][$_key]['employee'] : 0);
+                            $emr1 = (isset($rcd[$key][$_key]) ? $rcd[$key][$_key]['employer'] : 0);
                             $emp2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employee'] : 0);
                             $emr2 = (isset($rcd2[$key][$_key]) ? $rcd2[$key][$_key]['employer'] : 0);
                             $emp = $emp1 + $emp2;
                             $emr = $emr1 + $emr2;
-                            $emc = (isset($record[$_key]) ? $record[$_key]['subamount2'] : '0') + (isset($rcd2[$key][$_key]['subamount2']) ? $rcd2[$key][$_key]['subamount2'] : '0');
+                            $emc = (isset($rcd[$key][$_key]) ? $rcd[$key][$_key]['subamount2'] : '0') + (isset($rcd2[$key][$_key]['subamount2']) ? $rcd2[$key][$_key]['subamount2'] : '0');
                             $total = $emp + $emc + $emr;
                             $empTotal1 += $emp1;
                             $empTotal2 += $emp2;

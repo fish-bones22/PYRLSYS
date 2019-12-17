@@ -270,8 +270,8 @@ class PayrollService implements IPayrollService {
 
         // Basic adjustments
         $summary = $this->getAdjustments($employeeId, $date);
-        $basicAdj = isset($summary['basicadjustment']) ? $summary['basicadjustment'] : 0;
-        $otAdj = isset($summary['overtimeadjustment']) ? $summary['overtimeadjustment'] : 0;
+        $basicAdj = isset($summary['Basic Adjustment']) ? $summary['Basic Adjustment'] : 0;
+        $otAdj = isset($summary['Overtime Adjustment']) ? $summary['Overtime Adjustment'] : 0;
 
         $monRate = $this->getComputedMonthlyRate($employeeId, $date)/2;
         $basicPay = $basicPay > $monRate ? $monRate : $basicPay;

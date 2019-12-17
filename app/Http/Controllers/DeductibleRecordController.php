@@ -540,6 +540,7 @@ class DeductibleRecordController extends Controller
             return view('deductibles.item.clca', ['records' => $records, 'records2' => $records2, 'details' => $details, 'departments' => $departments]);
         }
         if ($key == 'mealdeduction' || $key == 'medicaldeduction') {
+
             $name = 'Deduction';
             if ($key == 'mealdeduction') {
                 $name = "Meal Deduction";
