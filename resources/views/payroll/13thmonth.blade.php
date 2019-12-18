@@ -6,6 +6,13 @@
 
 @section('content')
 
+@if (session('error') != null)
+<div class="alert alert-danger">{{ session('error') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+@if (session('success') != null)
+<div class="alert alert-success">{{ session('success') }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+@endif
+
 <div class="row">
     <div class="col-md-12">
         <div class="row">
@@ -14,7 +21,7 @@
         </div>
         <div class="row">
             <div class="col-7 form-paper">
-                <form action="{{ route('payroll.gotodatesummary') }}" method="POST" id="setDateForm">
+                <form action="{{ route('payroll.set13thmonthpaydate') }}" method="POST" id="setDateForm">
                     @csrf
                     @method('post')
                     <div class="row">
@@ -22,8 +29,8 @@
                             <div class="form-group">
                                 <label class="form-paper-label">From</label>
                                 <div class="input-group">
-                                    @include('layout.monthselect', ['id' => 'monthFrom', 'form' => 'setDateForm', 'monthSelected' => ( date_format(now()->modify('11 months ago'), 'm') ), 'name' => 'month' ])
-                                    <input type="number" min="1991" max="2100" id="yearFromSelect" class="form-control form-control-sm" name="year" value="{{ date_format(now()->modify('11 months ago'), 'Y') }}" />
+                                    @include('layout.monthselect', ['id' => 'monthFrom', 'form' => 'setDateForm', 'monthSelected' => (isset($details['monthfrom']) ? $details['monthfrom'] : date_format(now()->modify('11 months ago'), 'm') ), 'name' => 'monthfrom' ])
+                                    <input type="number" min="1991" max="2100" id="yearFrom" class="form-control form-control-sm" name="yearfrom" value="{{ isset($details['yearfrom']) ? $details['yearfrom'] :  date_format(now()->modify('11 months ago'), 'Y') }}" />
                                 </div>
                             </div>
                         </div>
@@ -31,8 +38,9 @@
                             <div class="form-group">
                                 <label class="form-paper-label">Until</label>
                                 <div class="input-group">
-                                    @include('layout.monthselect', ['id' => 'monthTo', 'form' => 'setDateForm', 'monthSelected' => ( date_format(now(), 'm') ), 'name' => 'month' ])
-                                    <input type="number" min="1991" max="2100" id="yearToSelect" class="form-control form-control-sm" name="year" value="{{ date_format(now(), 'Y') }}" readonly />
+                                    @include('layout.monthselect', ['id' => 'monthTo', 'form' => 'setDateForm', 'monthSelected' => (isset($details['monthto']) ? $details['monthto'] : date_format(now(), 'm')), 'name' => 'monthto' ])
+                                    <input type="number" min="1991" max="2100" id="yearTo" class="form-control form-control-sm" name="yearto" value="{{ isset($details['yearto']) ? $details['yearto'] : date_format(now(), 'Y') }}" readonly />
+                                    <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-right"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -77,6 +85,8 @@
             <div class="col-12 form-paper">
                 <form id="payForm" action="{{ action('MiscPayableController@set13thMonthPay') }}" method="POST">
                     @csrf
+                    <input type="hidden" value="{{ isset($details['startdate']) ? $details['startdate'] : '' }}" id="startDate" name="startdate" />
+                    <input type="hidden" value="{{ isset($details['enddate']) ? $details['enddate'] : '' }}" id="endDate" name="enddate" />
                     <div style="overflow-x:scroll" class="mb-3">
                         <table class="table table-sm" id="payrollMasterTable">
                             <thead>
@@ -96,21 +106,21 @@
                                 @foreach ($employees as $employee)
                                 <tr>
                                     <td>
-                                        <input type="checkbox" name="included['{{$employee->id}}']" data-employee-id="{{$employee->id}}" class="employee-check" />
+                                        <input type="checkbox" name="included[{{$employee->id}}]" data-employee-id="{{$employee->id}}" class="employee-check" />
                                     </td>
                                     <td>{{ $employee->employeeId }}</td>
                                     <td>
                                         {{ $employee->fullName }}
-                                        <input type="hidden" name="name['{{$employee->id}}']" value="{{ $employee->fullName}}" />
+                                        <input type="hidden" name="name[{{$employee->id}}]" value="{{ $employee->fullName}}" />
                                     </td>
                                     <td>
                                         {{ $employee->current['department']['displayName'] }}
-                                        <input type="hidden" name="department['{{$employee->id}}']" value="{{ $employee->current['department']['value'] }}" />
-                                        <input type="hidden" name="departmentName['{{$employee->id}}']" value="{{ $employee->current['department']['displayName'] }}" />
+                                        <input type="hidden" name="department[{{$employee->id}}]" value="{{ $employee->current['department']['value'] }}" />
+                                        <input type="hidden" name="departmentName[{{$employee->id}}]" value="{{ $employee->current['department']['displayName'] }}" />
                                     </td>
                                     <td>
-                                        <input type="hidden" id="amount-{{$employee->id}}" name="amount['{{$employee->id}}']" value="{{ $employee->id }}" />
-                                        <span id="amount-display-{{$employee->id}}"></span>
+                                        <input type="hidden" id="amount-{{$employee->id}}" name="amount[{{$employee->id}}]" value="{{ isset($details['records'][$employee->id]) ? $details['records'][$employee->id]->amount : '' }}" />
+                                        <span id="amount-display-{{$employee->id}}">{{ isset($details['records'][$employee->id]) ? $details['records'][$employee->id]->amount : '' }}</span>
                                     </td>
                                     <td style="display: none">{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
                                 </tr>

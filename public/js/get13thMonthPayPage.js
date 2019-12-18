@@ -11,6 +11,7 @@ $(function() {
             "targets":0,
             "orderable": false
         }],
+        "order": [[1,'asc']],
         "dom": "<t<'float-left'l><'float-right'p>>"
     });
     if ( $('#statusToggler').length > 0) {
@@ -23,6 +24,14 @@ $(function() {
             $('#selectAll').prop('checked', false);
         }
     });
+
+    // Set start and end date on ready
+    if ($('#startDate').val () === '' || $('#endDate').val () === '' ) {
+        getDateRange();
+    }
+    $('#monthFrom, #yearFrom').on('change', autoSetDateRange);
+    $('#monthFrom, #monthTo, #yearFrom, #yearTo').on('change', getDateRange);
+
 });
 
 function filterDepartment() {
@@ -96,6 +105,7 @@ function generate() {
             },
             success: function(res) {
                 $('#amount-display-'+ id).text(res.total);
+                $('#amount-display-'+ id).closest('td').css('background-color', '#fff8d1');
                 $('#amount-'+ id).val(res.total);
                 procLock = false;
             }
@@ -105,6 +115,11 @@ function generate() {
 }
 
 function getAmount(id) {
+
+    var monthFrom = $('#monthFrom').val();
+    var monthTo = $('#monthTo').val();
+    var yearFrom = $('#yearFrom').val();
+    var yearTo = $('#yearTo').val();
 
     $.ajaxSetup({
         headers: {
@@ -117,11 +132,37 @@ function getAmount(id) {
         type: 'POST',
         data: {
             id: id,
-            from: '2019-01-01',
-            to: '2019-12-01'
+            from: yearFrom + '-01-' + monthFrom,
+            to: yearTo + '-01-' + monthTo
         },
         success: function(res) {
             console.log(res);
         }
     });
+}
+
+function getDateRange() {
+    var monthFrom = $('#monthFrom').val();
+    var monthTo = $('#monthTo').val();
+    var yearFrom = $('#yearFrom').val();
+    var yearTo = $('#yearTo').val();
+    $('#startDate').val(yearFrom + monthFrom + '-01');
+    $('#endDate').val(yearTo + monthTo + '-01');
+}
+
+
+function autoSetDateRange() {
+
+    var monthFrom = $('#monthFrom').val();
+    var yearFrom = $('#yearFrom').val();
+    if (monthFrom === '') return;
+    if (yearFrom === '') return;
+
+    var dateStart = yearFrom + '-' + monthFrom + '-01';
+    var objDateStart = new Date(dateStart);
+
+    var objDateEnd = new Date(objDateStart.setMonth(objDateStart.getMonth() + 11));
+    var month = objDateEnd.getMonth() + 1;
+    $('#monthTo').val(month <= 9 ? '0' + month : month + '');
+    $('#yearTo').val(objDateEnd.getFullYear());
 }

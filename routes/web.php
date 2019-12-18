@@ -112,6 +112,7 @@ Route::post('otrequest/batchapprove', 'OtRequestController@batchApprove')->name(
 // Payroll
 Route::get('payroll', 'PayrollController@index');
 Route::get('payroll/view13thmonthpay', 'MiscPayableController@view13thMonthPay');
+Route::post('payroll/set13thmonthpaydate', 'MiscPayableController@set13thMonthPayDate')->name('payroll.set13thmonthpaydate');
 Route::post('payroll/ajax_getamount', 'MiscPayableController@ajax_getPayrollFromMonthRange');
 Route::post('payroll/save13thmonthpay', 'MiscPayableController@set13thMonthPay');
 Route::get('payroll/summary/{date}', 'PayrollController@summary');

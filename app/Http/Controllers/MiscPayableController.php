@@ -17,6 +17,7 @@ class MiscPayableController extends Controller
     private $payrollService;
     private $categoryService;
     private $employeeService;
+    private $key = "13thmonthpay";
 
     public function __construct(IMiscPayableService $payableService, IPayrollService $payrollService, ICategoryService $categoryService, IEmployeeService $employeeService)
     {
@@ -29,11 +30,28 @@ class MiscPayableController extends Controller
     /**
      * GET 13th month pay page
      */
-    public function view13thMonthPay() {
+    public function view13thMonthPay(Request $request) {
 
+        $details = array();
+        if ($request->from !== null) {
+            $date = date_create($request->from);
+            $details['monthfrom'] = $date->format('m');
+            $details['yearfrom'] = $date->format('Y');
+            $details['startdate'] = $date->format('Y-m-d');
+            $records = $this->payableService->getRecord($date, $this->key);
+            if (!isset($records['result'])) {
+                $details['records'] = $records;
+            }
+        }
+        if ($request->to !== null) {
+            $date = date_create($request->to);
+            $details['monthto'] = $date->format('m');
+            $details['yearto'] = $date->format('Y');
+            $details['enddate'] = $date->format('Y-m-d');
+        }
         $departments = $this->categoryService->getCategories('department');
         $employees = $this->employeeService->getAllEmployees();
-        return response()->view('payroll.13thmonth', ['departments' => $departments, 'employees' => $employees]);
+        return response()->view('payroll.13thmonth', ['details' => $details, 'departments' => $departments, 'employees' => $employees]);
     }
 
     /**
@@ -41,9 +59,43 @@ class MiscPayableController extends Controller
      */
     public function set13thMonthPay(Request $request) {
 
-        $departments = $this->categoryService->getCategories('department');
-        $employees = $this->employeeService->getAllEmployees();
-        return response()->view('payroll.13thmonth', ['departments' => $departments, 'employees' => $employees]);
+        if ($request->startdate === null) {
+            return redirect()->back()->with('error', 'No start date');
+        }
+
+        if ($request->included !== null) {
+            foreach ($request->included as $key => $val) {
+                if ($val !== 'on') continue;
+                if ($request->amount[$key] === 0) continue;
+
+                // Map form fields to entity
+                $entity = new MiscPayableEntity();
+
+                var_dump($key);
+                $entity->employee_id = (int)$key;
+                $entity->employeeName = $request->name[$key];
+                $entity->amount = $request->amount[$key];
+                $entity->department = $request->department[$key];
+                $entity->key = $this->key;
+                $entity->displayName = '13th Month Pay';
+                $entity->recordDate = $request->startdate;
+                // Save or update record
+                $result = $this->payableService->add($entity);
+
+                if (!$result['result']) {
+                    return redirect()->back()->with('error', $result['message']);
+                }
+            }
+        }
+        return redirect()->back()->with('success', 'Successfully saved records');
+    }
+
+    public function set13thMonthPayDate(Request $request) {
+        $monthFrom = $request->monthfrom !== null ? $request->monthfrom : '01';
+        $monthTo = $request->monthto !== null ? $request->monthto : '12';
+        $yearFrom = $request->yearfrom !== null ? $request->yearfrom : now()->format('Y');
+        $yearTo = $request->yearto !== null ? $request->yearto : now()->format('Y');
+        return redirect()->action('MiscPayableController@view13thMonthPay', ['from' => $yearFrom.'-'.$monthFrom.'-01', 'to' => $yearTo.'-'.$monthTo.'-01']);
     }
 
     /**
