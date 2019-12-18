@@ -14,7 +14,7 @@ $(function() {
                 filename: getFileName,
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
-                pageSize: 'LETTER'
+                pageSize: 'FOLIO'
             }
         ]
     });
