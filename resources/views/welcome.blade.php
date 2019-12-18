@@ -228,6 +228,7 @@ $userName = Auth::user() != null ? Auth::user()->fullName : 'Guest';
                             <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'philhealth', 'date' => date_format(now(), 'Y-m-d')]) }}">Philhealth Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                             <tr><td><a href="{{ action('DeductibleRecordController@view', ['key' => 'sss', 'date' => date_format(now(), 'Y-m-d')]) }}">SSS Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
                             <tr><td><a href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Witholding Tax Remittances Summary</a></td><td><i class="text-muted small">Payroll</i></td></tr>
+                            <tr><td><a href="{{ action('MiscPayableController@view13thMonthPay', ['from' => now()->format('Y').'-01-01', 'to' => now()->format('Y').'-12-01']) }}">13<sup>th</sup> Month Pay</a><td><i class="text-muted small">Payroll</i></td></tr>
                         @endif
                     </tbody>
                 </table>

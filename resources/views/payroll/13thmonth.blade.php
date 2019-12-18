@@ -87,11 +87,19 @@
                     @csrf
                     <input type="hidden" value="{{ isset($details['startdate']) ? $details['startdate'] : '' }}" id="startDate" name="startdate" />
                     <input type="hidden" value="{{ isset($details['enddate']) ? $details['enddate'] : '' }}" id="endDate" name="enddate" />
+                    {{-- Complete row unaffected by datatables --}}
+                    @foreach ($employees as $employee)
+                        <input type="hidden" name="included[{{$employee->id}}]" data-employee-id="{{$employee->id}}" class="employee-check" id="include-{{$employee->id}}" />
+                        <input type="hidden" name="department[{{$employee->id}}]" value="{{ $employee->current['department']['value'] }}" />
+                        <input type="hidden" name="departmentName[{{$employee->id}}]" value="{{ $employee->current['department']['displayName'] }}" />
+                        <input type="hidden" name="name[{{$employee->id}}]" value="{{ $employee->fullName}}" />
+                        <input type="hidden" id="amount-{{$employee->id}}" class="amount-input" name="amount[{{$employee->id}}]" value="{{ isset($details['records'][$employee->id]) ? $details['records'][$employee->id]->amount : '' }}" />
+                    @endforeach
                     <div style="overflow-x:scroll" class="mb-3">
                         <table class="table table-sm" id="payrollMasterTable">
                             <thead>
                                 <tr>
-                                    <th style="max-width:50px"><label for="selectAll" class="form-check-label"><input type="checkbox" id="selectAll" onchange="toggleSelectAll()" /> All</label></th>
+                                    <th><button type="button" id="selectAll" data-checked="true" class="btn btn-secondary btn-sm" style="padding:1px 4px;border:none;box-shadow:none!important"><i class="fa fa-check"></i></button></th>
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Department</th>
@@ -104,24 +112,12 @@
                                 $ind = 0;
                                 ?>
                                 @foreach ($employees as $employee)
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="included[{{$employee->id}}]" data-employee-id="{{$employee->id}}" class="employee-check" />
-                                    </td>
+                                <tr class="row-{{$ind}}" data-employee-id="{{$employee->id}}">
+                                    <td><input type="checkbox" /></td>
                                     <td>{{ $employee->employeeId }}</td>
-                                    <td>
-                                        {{ $employee->fullName }}
-                                        <input type="hidden" name="name[{{$employee->id}}]" value="{{ $employee->fullName}}" />
-                                    </td>
-                                    <td>
-                                        {{ $employee->current['department']['displayName'] }}
-                                        <input type="hidden" name="department[{{$employee->id}}]" value="{{ $employee->current['department']['value'] }}" />
-                                        <input type="hidden" name="departmentName[{{$employee->id}}]" value="{{ $employee->current['department']['displayName'] }}" />
-                                    </td>
-                                    <td>
-                                        <input type="hidden" id="amount-{{$employee->id}}" name="amount[{{$employee->id}}]" value="{{ isset($details['records'][$employee->id]) ? $details['records'][$employee->id]->amount : '' }}" />
-                                        <span id="amount-display-{{$employee->id}}">{{ isset($details['records'][$employee->id]) ? $details['records'][$employee->id]->amount : '' }}</span>
-                                    </td>
+                                    <td>{{ $employee->fullName }}</td>
+                                    <td>{{ $employee->current['department']['displayName'] }}</td>
+                                    <td><span class="amount-display" id="amount-display-{{$employee->id}}">{{ isset($details['records'][$employee->id]) ? $details['records'][$employee->id]->amount : '' }}</span></td>
                                     <td style="display: none">{{ $employee->inactive ? 'Inactive' : 'Active' }}</td>
                                 </tr>
                                 <?php

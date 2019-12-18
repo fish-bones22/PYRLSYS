@@ -187,3 +187,10 @@ tr.warning {
     color: darkgoldenrod;
     text-decoration: underline;
 }
+table.dataTable tbody>tr.selected {
+    background-color: unset !important;
+    color: inherit !important;
+}
+table.dataTable tr.selected td.select-checkbox:after {
+    text-shadow: none !important;
+}

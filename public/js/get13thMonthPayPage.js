@@ -2,6 +2,7 @@ var table;
 var idsToCheck = [];
 var processInterval;
 var procLock = false;
+var nextInd = 0;
 $(function() {
     table = $("#payrollMasterTable").DataTable({
         "info": false,
@@ -12,18 +13,43 @@ $(function() {
             "orderable": false
         }],
         "order": [[1,'asc']],
+        "select": {
+            "style":    'multi',
+            "selector": 'td:first-child'
+        },
         "dom": "<t<'float-left'l><'float-right'p>>"
+    })
+    // Row is selected
+    .on('select', function(e, dt, type, indexes) {
+        toggleCheck(indexes, true);
+    })
+    // Row is deselected
+    .on('deselect', function(e, dt, type, indexes) {
+        toggleCheck(indexes, false);
+    })
+    .on('draw', function() {
+        $('.employee-check[value="on"]').each(function() {
+            var empId = $(this).data('employee-id');
+            if ($('#amount-' + empId + '[data-new="true"]').length <= 0) return;
+            $('#amount-display-' + empId).text($('#amount-' + empId).val());
+            $('#amount-display-' + empId).closest('td').css('background-color', '#fff8d1');
+        });
     });
+
+    $('#selectAll').click(function () {
+        var checked = $(this).data('checked');
+        if (checked) {
+            table.rows().select();
+        } else {
+            table.rows().deselect();
+        }
+        $(this).data('checked', !checked);
+    });
+
     if ( $('#statusToggler').length > 0) {
         filterStatus();
         $('#statusToggler').change(filterStatus);
     }
-
-    $('.employee-check').change(function() {
-        if (!$(this).prop('checked')) {
-            $('#selectAll').prop('checked', false);
-        }
-    });
 
     // Set start and end date on ready
     if ($('#startDate').val () === '' || $('#endDate').val () === '' ) {
@@ -55,18 +81,30 @@ function filterStatus() {
     }
 }
 
-function toggleSelectAll() {
-    if ($('#selectAll').prop('checked')) {
-        $('.employee-check').each(function() { $(this).prop('checked', true); });
-    } else {
-        $('.employee-check').each(function() { $(this).prop('checked', false); });
+function toggleCheck(indexes, on) {
+    if (Array.isArray(indexes)) {
+        for (var i = 0; i < indexes.length; i++) {
+            var rowDom = $('.row-' + indexes[i]);
+            var employeeId = rowDom.data('employee-id');
+            rowDom.find('input[type="checkbox"]').prop('checked', on);
+            $('#include-' + employeeId).val(on ? 'on' : '');
+        }
+    }
+    else {
+        $('.row-' + indexes).find('input[type="checkbox"]').prop('checked', on);
+        var rowDom = $('.row-' + indexes);
+        var employeeId = rowDom.data('employee-id');
+        rowDom.find('input[type="checkbox"]').prop('checked', on);
+        $('#include-' + employeeId).val(on ? 'on' : '');
     }
 }
 
 function generate() {
     // Get checked rows
-    $('.employee-check:checked').each(function() {
-        idsToCheck.push($(this).data('employee-id'));
+    $('.employee-check[value="on"]').each(function() {
+        var id = $(this).data('employee-id');
+        if (idsToCheck.indexOf(id) >= 0) return true;
+        idsToCheck.push(id);
     });
 
     if (idsToCheck.length <= 0) {
@@ -75,19 +113,27 @@ function generate() {
     // Start process
     $('#btnGenerate').text('Please wait...');
     $('#btnGenerate').attr('disabled', '');
+    $('.amount-display[data-new="true"]').text('');
+    $('.amount-display[data-new="true"]').closest('td').css('background-color', 'unset');
+    $('.amount-input[data-new="true"]').each(function() {
+        var oldVal = $(this).data('old');
+        $(this).val(oldVal);
+    })
+    procLock = false;
+    nextInd = 0;
     processInterval = window.setInterval(function() {
         if (procLock) return;
 
         procLock = true;
 
-        if (idsToCheck.length <= 0) {
+        if (idsToCheck.length <= nextInd) {
             window.clearInterval(processInterval);
             $('#btnGenerate').text('Generate');
             $('#btnGenerate').removeAttr('disabled');
             $('#btnSave').show();
         }
 
-        var id = idsToCheck.pop();
+        var id = idsToCheck[nextInd];
 
         $.ajaxSetup({
             headers: {
@@ -106,7 +152,11 @@ function generate() {
             success: function(res) {
                 $('#amount-display-'+ id).text(res.total);
                 $('#amount-display-'+ id).closest('td').css('background-color', '#fff8d1');
+                $('#amount-display-'+ id).attr('data-new', 'true');
+                $('#amount-'+ id).attr('data-old', $('#amount-'+ id).val());
                 $('#amount-'+ id).val(res.total);
+                $('#amount-'+ id).attr('data-new', 'true');
+                nextInd++;
                 procLock = false;
             }
         });
@@ -146,8 +196,8 @@ function getDateRange() {
     var monthTo = $('#monthTo').val();
     var yearFrom = $('#yearFrom').val();
     var yearTo = $('#yearTo').val();
-    $('#startDate').val(yearFrom + monthFrom + '-01');
-    $('#endDate').val(yearTo + monthTo + '-01');
+    $('#startDate').val(yearFrom + '-' + monthFrom + '-01');
+    $('#endDate').val(yearTo + '-' + monthTo + '-01');
 }
 
 

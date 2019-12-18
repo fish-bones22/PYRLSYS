@@ -59,6 +59,7 @@
                         <a class="dropdown-item" href="{{ action('PayrollController@index') }}">Masterlist</a>
                         <a class="dropdown-item" href="{{ action('PayrollController@summary', date_format(now(), 'Y-m-d')) }}">Payroll Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@getAll', date_format(now(), 'Y-m-d')) }}">Benefits Records</a>
+                        <a class="dropdown-item" href="{{ action('MiscPayableController@view13thMonthPay', ['from' => now()->format('Y').'-01-01', 'to' => now()->format('Y').'-12-01']) }}">13<sup>th</sup> Month Pay</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'companyloan', 'date' => date_format(now(), 'Y-m-d')]) }}">Company Loan Summary</a>
                         <a class="dropdown-item" href="{{ action('DeductibleRecordController@view', ['key' => 'medicaldeduction', 'date' => date_format(now(), 'Y-m-d')]) }}">Medical Deductions Summary</a>
