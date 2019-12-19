@@ -78,8 +78,7 @@ class PayrollService implements IPayrollService {
         $payroll->beforeTaxPay = $payroll->grossPay;
 
         // Get 13th month
-        $date13thMonth = $year.'-'.$month.'-01';
-        $miscPay = $this->payableService->getRecordByEmployee($employeeId, date_create($date13thMonth)->modify('11 months ago'));
+        $miscPay = $this->payableService->getRecordByEmployee($employeeId, date_create($monthYear.'-'.$day)->modify('11 months ago'));
         $payroll->miscPay = array();
         $miscPayAmount = 0;
         if ($miscPay !== null) {
