@@ -112,7 +112,7 @@
                                 $ind = 0;
                                 ?>
                                 @foreach ($employees as $employee)
-                                <tr class="row-{{$ind}}" data-employee-id="{{$employee->id}}">
+                                <tr class="row-{{$ind}} {{( isset($details['records'][$employee->id]) ? 'include-report' : '' )}}" data-employee-id="{{$employee->id}}">
                                     <td><input type="checkbox" /></td>
                                     <td>{{ $employee->employeeId }}</td>
                                     <td>{{ $employee->fullName }}</td>
@@ -138,7 +138,7 @@
     <div class="float-right">
         <div class="btn-group">
             <a class="btn btn-light" href="{{ action('PayrollController@index') }}">Back to List</a>
-            {{-- <button type="button" class="btn btn-primary" onclick="saveAsPDF()">Save as PDF</button> --}}
+            <button type="button" class="btn btn-primary" onclick="saveAsPDF()">Save as PDF</button>
             <button type="button" class="btn btn-primary" onclick="saveAsExcel()">Save as Excel</button>
         </div>
     </div>

@@ -17,6 +17,24 @@ $(function() {
             "style":    'multi',
             "selector": 'td:first-child'
         },
+        "buttons": [
+            {
+                filename: getFileName,
+                extend: 'excelHtml5',
+                exportOptions: {
+                    rows: 'tr.include-report'
+                }
+            },
+            {
+                filename: getFileName,
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                pageSize: 'LETTER',
+                exportOptions: {
+                    rows: 'tr.include-report'
+                }
+            }
+        ],
         "dom": "<t<'float-left'l><'float-right'p>>"
     })
     // Row is selected
@@ -79,6 +97,12 @@ function filterStatus() {
     } else {
         table.column(colInd).search('^Active$', true, false, true).draw();
     }
+}
+function saveAsExcel() {
+    table.button(0).trigger();
+}
+function saveAsPDF() {
+    table.button(1).trigger();
 }
 
 function toggleCheck(indexes, on) {
@@ -215,4 +239,8 @@ function autoSetDateRange() {
     var month = objDateEnd.getMonth() + 1;
     $('#monthTo').val(month <= 9 ? '0' + month : month + '');
     $('#yearTo').val(objDateEnd.getFullYear());
+}
+
+function getFileName() {
+    return $("#title").text().replaceAll(" ", "-").replaceAll("---", "-").toLowerCase() + "-" + Date.now();
 }
