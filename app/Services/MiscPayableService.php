@@ -122,6 +122,30 @@ class MiscPayableService extends EntityService implements IMiscPayableService {
     }
 
 
+    public function getRecordByEmployee($id, $recordDate) {
+
+        if ($recordDate === null)
+            return [
+                'result' => false,
+                'message' => 'No record date provided'
+            ];
+
+
+        $records = MiscPayable::where('employee_id', $id)->where('recordDate', $recordDate)->get();
+        $entities = array();
+        // Iterate through records in DB and map them to model
+        foreach ($records as $record) {
+            // Skip departments where current user has no access to
+            if (!AuthUtility::hasDepartmentAccess($record->department_id))
+                continue;
+            $entity = $this->mapToEntity($record, new MiscPayableEntity());
+            $entities[$record->employee_id] = $entity;
+        }
+
+        return $entities;
+    }
+
+
     protected function mapToEntity($model, $entity) {
 
         $entity = parent::mapToEntity($model, $entity);

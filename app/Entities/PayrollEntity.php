@@ -59,4 +59,6 @@ class PayrollEntity extends Entity {
     public $taxDueDate;
     public $remarks;
 
+    public $miscPay;
+
 }

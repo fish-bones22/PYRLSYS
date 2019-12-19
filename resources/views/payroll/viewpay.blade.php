@@ -195,6 +195,18 @@
                             <td>{{ number_format($ex, 2) }}</td>
                         </tr>
                         @endforeach
+                        {{-- Misc pay --}}
+                        @if ($payroll->miscPay !== null)
+                        @foreach ($payroll->miscPay as $key => $ex)
+                        <tr>
+                            <td>&emsp;{{ $ex['details'] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ number_format($ex['amount'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                        @endif
+
                         <tr style="background-color:whitesmoke;">
                             <td><strong>Take Home Pay</strong></td>
                             <td></td>

@@ -127,6 +127,7 @@ class MiscPayableController extends Controller
 
         $total = 0;
         $basicPays = array();
+        $ind = 0;
         foreach ($dateRange as $date) {
 
             // Get second period pay
@@ -146,10 +147,11 @@ class MiscPayableController extends Controller
                 'date' => $basicPay,
                 'amount' => $date->format('Y-m-d')
             ];
+            $ind++;
         }
 
         return response()->json([
-            'total' => round($total, 2),
+            'total' => round($total / ($ind === 0 ? 1 : $ind), 2),
             'breakdown' => $basicPays
         ]);
 

@@ -7,7 +7,7 @@ use App\Contracts\IManhourService;
 use App\Contracts\IPayrollService;
 use App\Contracts\IDeductibleRecordService;
 use App\Contracts\IAdjustmentsRecordService;
-
+use App\Contracts\IMiscPayableService;
 use App\Entities\ManhourSummaryEntity;
 use App\Entities\PayrollEntity;
 
@@ -23,17 +23,19 @@ class PayrollService implements IPayrollService {
     public $manhourService;
     public $deductibleRecordService;
     public $adjustmentsRecordService;
+    private $payableService;
 
     private $hoursPerDay = 8;
     private $workDays = 13;
 
     private $deptName_otWithAllowanceRule = ["adhoc"];
 
-    public function __construct (IEmployeeService $employeeService, IManhourService $manhourService, IDeductibleRecordService $deductibleRecordService, IAdjustmentsRecordService $adjustmentsRecordService ) {
+    public function __construct (IEmployeeService $employeeService, IMiscPayableService $payableService, IManhourService $manhourService, IDeductibleRecordService $deductibleRecordService, IAdjustmentsRecordService $adjustmentsRecordService ) {
         $this->employeeService = $employeeService;
         $this->manhourService = $manhourService;
         $this->deductibleRecordService = $deductibleRecordService;
         $this->adjustmentsRecordService = $adjustmentsRecordService;
+        $this->payableService = $payableService;
     }
 
 
@@ -75,6 +77,21 @@ class PayrollService implements IPayrollService {
         // Net before tax
         $payroll->beforeTaxPay = $payroll->grossPay;
 
+        // Get 13th month
+        $date13thMonth = $year.'-'.$month.'-01';
+        $miscPay = $this->payableService->getRecordByEmployee($employeeId, date_create($date13thMonth)->modify('11 months ago'));
+        $payroll->miscPay = array();
+        $miscPayAmount = 0;
+        if ($miscPay !== null) {
+            foreach ($miscPay as $pay) {
+                $payroll->miscPay[$pay->key] = [
+                    'details' => $pay->displayName,
+                    'amount' => $pay->amount
+                ];
+                $miscPayAmount += $pay->amount;
+            }
+        }
+
         // Net
         $payroll->netPay = $payroll->grossPay - $payroll->exemption;
         if ($payroll->fixed) {
@@ -82,7 +99,7 @@ class PayrollService implements IPayrollService {
         }
 
         // Take home
-        $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->otherAdjustments + $payroll->allowance, 2);
+        $payroll->takeHomePay = round($payroll->netPay + $payroll->adjustments + $payroll->otherAdjustments + $payroll->allowance + $miscPayAmount, 2);
         // No negative result
         $payroll->takeHomePay = $payroll->takeHomePay > 0 ? $payroll->takeHomePay : 0;
 
