@@ -102,7 +102,7 @@ function newDoc() {
     doc = new jsPDF({
         orientation: 'landscape',
         unit: 'in',
-        format: [8.5, 11]
+        format: 'letter'
     });
 
     return doc;
@@ -346,6 +346,7 @@ function printText(doc, result, copy) {
 
     doc.text(new Date(($("#payslipDate").length != 0 && $("#payslipDate").val() != '' ? $("#payslipDate").val() : Date.now())).toDateString(), mainMargin, i = spacer(i));
     doc.text("Signature", col3Margin-0.2, i);
+
 }
 
 
