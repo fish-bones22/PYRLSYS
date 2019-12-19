@@ -133,6 +133,12 @@ Payroll Summary
                                     }
                                 }
 
+                                if (isset($summary[$employee->id]->miscPay)) {
+                                    foreach ($summary[$employee->id]->miscPay as $key => $adj) {
+                                        $otherAdj += $adj['amount'];
+                                    }
+                                }
+
                                 $otherDed = 0;
                                 if (isset($summary[$employee->id]->exemptionDetails)) {
                                     foreach ($summary[$employee->id]->exemptionDetails as $key => $deductible) {
