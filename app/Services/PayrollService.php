@@ -223,11 +223,12 @@ class PayrollService implements IPayrollService {
             }
 
             // Is holiday and has manhour record
+            $dayMultiplier = 1;
             if ($manhour->regularHours != null && $manhour->regularHours > 0) {
                 if ($holiday != null && $holiday['type'] == 'legal') {
-                    $hourlyRate *= 2;
+                    $dayMultiplier = 2;
                 } else if ($holiday != null && $holiday['type'] == 'special') {
-                    $hourlyRate *= 1.3;
+                    $dayMultiplier = 1.3;
                 }
             }
 
@@ -236,7 +237,7 @@ class PayrollService implements IPayrollService {
             // Hours account for all payable hours the employee have
             $hours = $manhour->totalPayableHours != null ? $manhour->totalPayableHours : 0;
             $regularHours += $hours;
-            $basicPay += $hours * $hourlyRate;
+            $basicPay += $hours * $hourlyRate * $dayMultiplier;
 
             $totalAllowance += $hourlyAllowance * $hours;
 
