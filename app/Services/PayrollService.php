@@ -238,7 +238,7 @@ class PayrollService implements IPayrollService {
             $regularHours += $hours;
             $basicPay += $hours * $hourlyRate;
 
-            $totalAllowance += $hourlyAllowance * $hours;
+            $totalAllowance += $hourlyAllowance * $actualHours;
 
             $workingDays++;
 
