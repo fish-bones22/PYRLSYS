@@ -115,7 +115,7 @@ function newDoc() {
     doc = new jsPDF({
         orientation: 'portrait',
         unit: 'in',
-        format: [8.5, 11]
+        format: 'letter'
     });
 
     return doc;
