@@ -29,6 +29,7 @@ class PayrollEntity extends Entity {
     public $rotPay;
     public $xotPay;
     public $sotPay;
+    public $shotPay;
     public $xsotPay;
     public $lhotPay;
     public $xlhotPay;

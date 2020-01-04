@@ -101,7 +101,7 @@ $title = 'View Attendance';
                         <td>{{ $record->regularHours }}</td>
                         <td>{{ $record->rot }}</td>
                         <td>{{ $record->xot }}</td>
-                        <td>{{ $record->sot }}</td>
+                        <td>{{ $record->sot + $record->shot }}</td>
                         <td>{{ $record->xsot }}</td>
                         <td>{{ $record->lhot }}</td>
                         <td>{{ $record->xlhot }}</td>

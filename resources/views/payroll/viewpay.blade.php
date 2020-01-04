@@ -110,7 +110,7 @@
                         <tr>
                             <td><i>&emsp;SOT/SPH</i></td>
                             <td>1.3</td>
-                            <td>{{ isset($payroll->otDetails['sot']) ? $payroll->otDetails['sot'] : 0  }} hrs</td>
+                            <td>{{ (isset($payroll->otDetails['sot']) ? $payroll->otDetails['sot'] : 0) + (isset($payroll->otDetails['shot']) ? $payroll->otDetails['shot'] : 0)  }} hrs</td>
                             <td>{{ isset($payroll->sotPay) ? $payroll->sotPay : 0  }}</td>
                         </tr>
                         <tr>

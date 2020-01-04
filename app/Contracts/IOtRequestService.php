@@ -14,5 +14,7 @@ interface IOtRequestService {
     public function getOtRequestOfEmployee($employeeId, $date);
     public function approveOtRequest($id);
     public function declineOtRequest($id);
+    public function getApprovedOtRequestsByDateRange($dateFrom, $dateTo);
+    public function getDeniedOtRequestsByDateRange($dateFrom, $dateTo);
 
 }

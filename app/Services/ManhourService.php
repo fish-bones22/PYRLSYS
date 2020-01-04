@@ -767,6 +767,7 @@ class ManhourService extends EntityService implements IManhourService
         $summary->rot = '';
         $summary->xot = '';
         $summary->sot = '';
+        $summary->shot = '';
         $summary->xsot = '';
         $summary->lhot = '';
         $summary->xlhot = '';
@@ -776,12 +777,15 @@ class ManhourService extends EntityService implements IManhourService
             } else if ($otRequest[0]->otType == 'xot') {
                 $summary->xot = $otHours;
             } else if ($otRequest[0]->otType == 'sot') {
+                // Guard for excess 9hrs
                 if ($otHours <= 9) {
                     $summary->sot = $otHours;
                 } else {
                     $summary->sot = 9;
                     $summary->xsot = $otHours - 9;
                 }
+            } else if ($otRequest[0]->otType == 'shot') {
+                $summary->shot = $otHours;
             } else if ($otRequest[0]->otType == 'xsot') {
                 $summary->xsot = $otHours;
             } else if ($otRequest[0]->otType == 'lhot') {

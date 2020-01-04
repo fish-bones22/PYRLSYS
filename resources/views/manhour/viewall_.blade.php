@@ -169,7 +169,7 @@ $title = 'Daily Working Hours - '.(isset($date['mode']) && !$date['mode'] ? date
                         <td>{{ $record->regularHours }}</td>
                         <td>{{ $record->rot }}</td>
                         <td>{{ $record->xot }}</td>
-                        <td>{{ $record->sot }}</td>
+                        <td>{{ ($record->sot != '' ? $record->sot*1  : 0) + ($record->shot != '' ? $record->shot*1 : 0) }}</td>
                         <td>{{ $record->xsot }}</td>
                         <td>{{ $record->lhot }}</td>
                         <td>{{ $record->xlhot }}</td>

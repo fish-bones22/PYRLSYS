@@ -210,6 +210,7 @@ Manhour Records
                                             $trot = 0;
                                             $txot = 0;
                                             $tsot = 0;
+                                            $tshot = 0;
                                             $txsot = 0;
                                             $tlhot = 0;
                                             $txlhot = 0;
@@ -220,6 +221,7 @@ Manhour Records
                                                 $trot += $record->rot != '' ? $record->rot : 0;
                                                 $txot += $record->xot != '' ? $record->xot : 0;
                                                 $tsot += $record->sot != '' ? $record->sot : 0;
+                                                $tshot += $record->shot != '' ? $record->shot : 0;
                                                 $txsot += $record->xsot != '' ? $record->xsot : 0;
                                                 $tlhot += $record->lhot != '' ? $record->lhot : 0;
                                                 $txlhot += $record->xlhot != '' ? $record->xlhot : 0;
@@ -229,7 +231,7 @@ Manhour Records
 
                                         <td>{{ $trot != 0 ? $trot : '' }}</td>
                                         <td>{{ $txot != 0 ? $txot : ''  }}</td>
-                                        <td>{{ $tsot != 0 ? $tsot : ''  }}</td>
+                                        <td>{{ $tsot + $tshot != 0 ? $tsot + $tshot : ''  }}</td>
                                         <td>{{ $txsot != 0 ? $txsot : ''  }}</td>
                                         <td>{{ $tlhot != 0 ? $tlhot : ''  }}</td>
                                         <td>{{ $txlhot != 0 ? $txlhot : ''  }}</td>

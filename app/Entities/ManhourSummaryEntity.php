@@ -20,6 +20,7 @@ class ManhourSummaryEntity extends Entity {
     public $rot;
     public $xot;
     public $sot;
+    public $shot;
     public $xsot;
     public $lhot;
     public $xlhot;

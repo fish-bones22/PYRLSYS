@@ -254,7 +254,7 @@ function printText(doc, result, copy) {
 
     doc.text('SOT/SPH', subEntryMargin, i = spacer(i));
     doc.text('1.3', col2Margin, i);
-    doc.text(result.otDetails != null && 'sot' in result.otDetails ? result.otDetails.sot + ' hrs' : '0', 1.05 + slider, i);
+    doc.text(result.otDetails != null ? (('sot' in result.otDetails ? result.otDetails.sot : 0) + ('shot' in result.otDetails ? result.otDetails.shot : 0)) + ' hrs' : '0', 1.05 + slider, i);
     doc.text('sotPay' in result ? addCommas(result.sotPay) + '' : '0', col3Margin, i);
 
     doc.text('XSOT', subEntryMargin, i = spacer(i));

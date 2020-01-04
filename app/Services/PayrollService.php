@@ -265,6 +265,9 @@ class PayrollService implements IPayrollService {
                     // Add allowance for SOT
                     $totalAllowance += $hourlyAllowance * $otMultiplier['value'];
                 }
+                else if ($key === 'shot') {
+                    $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
+                }
                 else if ($key === 'xsot') {
                     $xsotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                 }
@@ -468,6 +471,14 @@ class PayrollService implements IPayrollService {
             ];
         }
 
+        if ($manhour->shot != ''){
+            $otDetails['shot'] = [
+                'key' => 'shot',
+                'multiplier' => 1.3,
+                'value' => $manhour->shot
+            ];
+        }
+
         if ($manhour->xsot != ''){
             $otDetails['xsot'] = [
                 'key' => 'xsot',
@@ -518,6 +529,8 @@ class PayrollService implements IPayrollService {
             $details['xot'] = 0;
         if (!isset($details['sot']))
             $details['sot'] = 0;
+        if (!isset($details['shot']))
+            $details['shot'] = 0;
         if (!isset($details['xsot']))
             $details['xsot'] = 0;
         if (!isset($details['lhot']))
@@ -533,6 +546,8 @@ class PayrollService implements IPayrollService {
             $details['xotrate'] = 0;
         if (!isset($details['sotrate']))
             $details['sotrate'] = 0;
+        if (!isset($details['shotrate']))
+            $details['shotrate'] = 0;
         if (!isset($details['xsotrate']))
             $details['xsotrate'] = 0;
         if (!isset($details['lhotrate']))
@@ -545,6 +560,7 @@ class PayrollService implements IPayrollService {
         $details['rot']  += ($model->rot != null ? $model->rot : 0);
         $details['xot']  += ($model->xot != null ? $model->xot : 0);
         $details['sot']  += ($model->sot != null ? $model->sot : 0);
+        $details['shot']  += ($model->shot != null ? $model->shot : 0);
         $details['xsot']  += ($model->xsot != null ? $model->xsot : 0);
         $details['lhot'] += ($model->lhot != null ? $model->lhot : 0);
         $details['xlhot'] += ($model->xlhot != null ? $model->xlhot : 0);
@@ -553,6 +569,7 @@ class PayrollService implements IPayrollService {
         $details['rotrate']  += ($model->rot != null ? round($model->rot*$rate*1.25, 2) : 0);
         $details['xotrate']  += ($model->xot != null ? round($model->xot*$rate*1.25, 2) : 0);
         $details['sotrate']  += ($model->sot != null ? round($model->sot*$rate*1.3, 2) : 0);
+        $details['shotrate']  += ($model->shot != null ? round($model->shot*$rate*1.3, 2) : 0);
         $details['xsotrate']  += ($model->xsot != null ? round($model->xsot*$rate*1.69, 2) : 0);
         $details['lhotrate'] += ($model->lhot != null ? round($model->lhot*$rate*2, 2) : 0);
         $details['xlhotrate'] += ($model->xlhot != null ? round($model->xlhot*$rate*2.69, 2) : 0);

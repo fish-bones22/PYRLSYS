@@ -126,7 +126,12 @@ New OT Request
                         </div>
                         <div class="col">
                             <label class="form-paper-label">
-                                <input type="radio" name="ot_type_[0]" value="xsot" onchange="setRegularOtValue(this)"> Excess SOT
+                                <input type="radio" name="ot_type_[0]" value="shot" onchange="setRegularOtValue(this)"> Special Holiday OT
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="form-paper-label">
+                                <input type="radio" name="ot_type_[0]" value="xsot" onchange="setRegularOtValue(this)"> Excess S/SHOT
                             </label>
                         </div>
                         <div class="col">
