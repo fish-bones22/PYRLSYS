@@ -132,7 +132,7 @@ class MiscPayableController extends Controller
 
             // Get second period pay
             $payroll = $this->payrollService->getBasicPay($employeeId, $date);
-            $basicPay = $payroll->basicPay;
+            $basicPay = $payroll->basicPayBase;
             $total += $basicPay;
             $basicPays[] = [
                 'date' => $basicPay,
@@ -141,7 +141,7 @@ class MiscPayableController extends Controller
 
             // Get first period pay
             $payroll = $this->payrollService->getBasicPay($employeeId, $date->modify('15 days'));
-            $basicPay = $payroll->basicPay;
+            $basicPay = $payroll->basicPayBase;
             $total += $basicPay;
             $basicPays[] = [
                 'date' => $basicPay,

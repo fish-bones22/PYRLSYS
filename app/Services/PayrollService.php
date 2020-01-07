@@ -263,7 +263,7 @@ class PayrollService implements IPayrollService {
                 else if ($key === 'sot') {
                     $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
                     // Add allowance for SOT
-                    $totalAllowance += $hourlyAllowance * $otMultiplier['value'];
+                    $totalAllowance += $hourlyAllowance * ($otMultiplier['value'] <= 8 ? $otMultiplier['value'] : 8);
                 }
                 else if ($key === 'shot') {
                     $sotPay += ($otMultiplier['multiplier'] * $otMultiplier['value'] * $otRate);
