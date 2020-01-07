@@ -121,7 +121,7 @@ class MiscPayableController extends Controller
 
         // Initialize dates
         $objDateFrom = date_create($dateFrom);
-        $objDateTo = date_create($dateTo);
+        $objDateTo = date_create($dateTo)->modify('1 month');
         $interval = DateInterval::createFromDateString('1 month');
         $dateRange = new DatePeriod($objDateFrom, $interval, $objDateTo);
 
@@ -135,8 +135,8 @@ class MiscPayableController extends Controller
             $basicPay = $payroll->basicPayBase;
             $total += $basicPay;
             $basicPays[] = [
-                'date' => $basicPay,
-                'amount' => $date->format('Y-m-d')
+                'amount' => $basicPay,
+                'date' => $date->format('Y-m-d')
             ];
 
             // Get first period pay
@@ -144,8 +144,8 @@ class MiscPayableController extends Controller
             $basicPay = $payroll->basicPayBase;
             $total += $basicPay;
             $basicPays[] = [
-                'date' => $basicPay,
-                'amount' => $date->format('Y-m-d')
+                'amount' => $basicPay,
+                'date' => $date->format('Y-m-d')
             ];
             $ind++;
         }

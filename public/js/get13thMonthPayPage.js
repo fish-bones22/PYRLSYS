@@ -124,6 +124,12 @@ function toggleCheck(indexes, on) {
 }
 
 function generate() {
+
+    var monthFrom = $('#monthFrom').val();
+    var monthTo = $('#monthTo').val();
+    var yearFrom = $('#yearFrom').val();
+    var yearTo = $('#yearTo').val();
+
     // Get checked rows
     $('.employee-check[value="on"]').each(function() {
         var id = $(this).data('employee-id');
@@ -170,11 +176,10 @@ function generate() {
             type: 'POST',
             data: {
                 id: id,
-                from: '2019-01-01',
-                to: '2019-12-01'
+                from: yearFrom + '-' + monthFrom + '-01',
+                to: yearTo + '-' + monthTo + '-01'
             },
             success: function(res) {
-                console.log(res);
                 $('#amount-display-'+ id).text(res.total);
                 $('#amount-display-'+ id).closest('td').css('background-color', '#fff8d1');
                 $('#amount-display-'+ id).attr('data-new', 'true');
