@@ -785,7 +785,13 @@ class ManhourService extends EntityService implements IManhourService
                     $summary->xsot = $otHours - 9;
                 }
             } else if ($otRequest[0]->otType == 'shot') {
-                $summary->shot = $otHours;
+                // Guard for excess 9hrs
+                if ($otHours <= 9) {
+                    $summary->shot = $otHours;
+                } else {
+                    $summary->shot = 9;
+                    $summary->xsot = $otHours - 9;
+                }
             } else if ($otRequest[0]->otType == 'xsot') {
                 $summary->xsot = $otHours;
             } else if ($otRequest[0]->otType == 'lhot') {
