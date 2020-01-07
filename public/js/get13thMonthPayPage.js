@@ -174,6 +174,7 @@ function generate() {
                 to: '2019-12-01'
             },
             success: function(res) {
+                console.log(res);
                 $('#amount-display-'+ id).text(res.total);
                 $('#amount-display-'+ id).closest('td').css('background-color', '#fff8d1');
                 $('#amount-display-'+ id).attr('data-new', 'true');
