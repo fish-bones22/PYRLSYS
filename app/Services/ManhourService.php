@@ -744,7 +744,7 @@ class ManhourService extends EntityService implements IManhourService
         $empBreak = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
         // Get record for break while supporting legacy code.
         // Legacy support: Checks if $record->break is null (since it is a new column (added 2019-11-28))
-        // If true, use timetable->break
+        // If false, use timetable->break
         $break = $record->break != null ? $record->break : $empBreak;
         // Legacy support: If work hours is less than or half the required work hours,
         // Do not count breaks
@@ -777,12 +777,14 @@ class ManhourService extends EntityService implements IManhourService
             } else if ($otRequest[0]->otType == 'xot') {
                 $summary->xot = $otHours;
             } else if ($otRequest[0]->otType == 'sot') {
+                // Remove break hr from SOT
+                $otHours -= $break;
                 // Guard for excess 9hrs
-                if ($otHours <= 9) {
+                if ($otHours <= 8) {
                     $summary->sot = $otHours;
                 } else {
-                    $summary->sot = 9;
-                    $summary->xsot = $otHours - 9;
+                    $summary->sot = 8;
+                    $summary->xsot = $otHours - 8;
                 }
             } else if ($otRequest[0]->otType == 'shot') {
                 // Guard for excess 9hrs

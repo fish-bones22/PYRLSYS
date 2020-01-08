@@ -13,6 +13,9 @@ interface IEmployeeService {
     public function getAllEmployees($order = null);
     public function getEmployeeById($id);
     public function getEmployeesByDepartment($dept);
+    public function getEmployeeByName($name);
+    public function getEmployeeByEmployeeId($employeeId);
+    public function getIdByEmployeeId($id);
 
     public function updateDetail($id, $key, $value);
     public function removeDetail($id, $key);
@@ -24,6 +27,7 @@ interface IEmployeeService {
     public function setEmployeeImage($id, $location, $filename);
     public function unsetCurrentEmployeeImage ($id);
     public function transferEmployee($id, $employmentDetails);
+    public function addEmployeeTimeTable($id, $timeTable);
 
     public function getEmployeeHistoryOnDate($employeeId, $date);
     public function getEmployeeTimeTable($employeeId, $date);

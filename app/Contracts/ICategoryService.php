@@ -16,5 +16,6 @@ interface ICategoryService {
     public function createNewCategory($key, $displayName, $description);
     public function updateCategoryTitle($key, $displayName);
     public function updateCategoryDescription($key, $description);
+    public function getCategoryByValueAndKey($outlierValue, $key);
 
 }

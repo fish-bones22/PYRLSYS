@@ -156,14 +156,10 @@ class ManhourController extends Controller
 
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();
 
-        $startDay;
-        $endDay;
+        $startDay = '1';
+        $endDay = 15;
 
-        if ($day <= 15) {
-            $startDay = '1';
-            $endDay = 15;
-        }
-        else {
+        if ($day > 15) {
             $startDay = 16;
             $endDay = date_format(date_create($year.'-'.$month.'-'.$startDay), 't'); // End of month
         }
