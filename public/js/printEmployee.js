@@ -308,15 +308,15 @@ function printText(doc, result, copy) {
     doc.text("Type of Payment: ", col1, i = spacer(i));
     doc.text("Mode of Payment: ", col4, i);
     doc.text("Rate Basis: ", col7, i);
-    //doc.text("Rate: ", col9, i);
-    // doc.text("Allowance: ", col10, i);
+    doc.text("Rate: ", col9, i);
+    doc.text("Allowance: ", col10, i);
 
     doc.setFontSize(mainSize);
     doc.text(result.current.paymenttype != undefined ? result.current.paymenttype.displayName : 'Not set', col1, i = spacer(i));
     doc.text(result.payTable.paymentmode != undefined ? result.payTable.paymentmode.displayName : 'Not set', col4, i);
     doc.text(result.payTable.ratebasis != undefined ? result.payTable.ratebasis : 'Not set', col7, i);
-    //doc.text(result.current.rate != undefined ? result.current.rate : 'Not set', col9, i);
-    // doc.text(result.payTable.allowance != undefined ? result.payTable.allowance + '' : 'Not set', col10, i);
+    doc.text(result.payTable.rate != undefined ? result.payTable.rate + '' : 'Not set', col9, i);
+    doc.text(result.payTable.allowance != undefined ? result.payTable.allowance + '' : 'Not set', col10, i);
 
     // Row 4
     doc.setFontSize(labelSize);
