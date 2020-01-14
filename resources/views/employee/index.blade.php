@@ -124,7 +124,8 @@ Employees
                     <th>Type of Payment</th>
                     <th>Mode of Payment</th>
                     <th>Rate Basis</th>
-                    {{-- <th>Allowance</th> --}}
+                    <th>Rate</th>
+                    <th>Allowance</th>
                     <th>Time In</th>
                     <th>Time Out</th>
                     <th>Break</th>
