@@ -175,7 +175,8 @@ Employees
                     <td>{{ isset($employee->current['paymenttype']) ? $employee->current['paymenttype']['displayName'] : '' }}</td>
                     <td>{{ isset($employee->payTable['paymentmode']) ? $employee->payTable['paymentmode']['displayName'] : '' }}</td>
                     <td>{{ isset($employee->payTable['ratebasis']) ? $employee->payTable['ratebasis'] : '' }}</td>
-                    {{-- <td>{{ isset($employee->payTable['allowance']) ? $employee->payTable['allowance'] : '' }}</td> --}}
+                    <td>{{ isset($employee->payTable['rate']) ? $employee->payTable['rate'] : '' }}</td>
+                    <td>{{ isset($employee->payTable['allowance']) ? $employee->payTable['allowance'] : '' }}</td>
                     <td>{{ $employee->timeTable != null && isset($employee->timeTable['timein']) ? date_format(date_create($employee->timeTable['timein']), 'h:i A') : '' }}</td>
                     <td>{{ $employee->timeTable != null && isset($employee->timeTable['timeout']) ? date_format(date_create($employee->timeTable['timeout']), 'h:i A') : '' }}</td>
                     <td>{{ $employee->timeTable != null && isset($employee->timeTable['break']) && $employee->timeTable['break']*1 > 0 ? $employee->timeTable['break'] : '' }}</td>
