@@ -426,7 +426,7 @@ class PayrollService implements IPayrollService {
             $taxablePay -= $sssRemmittance[0];
         }
         if (isset($currentBasicPay->employeeRemittances['philhealth'])) {
-            $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis);
+            $philhealthRemittance = PhilhealthRule::getAmount($rate, $previousRate, $isFirstPeriod, $basis, $date);
             $value['philhealth'] = $philhealthRemittance;
             $taxablePay -= $philhealthRemittance[0];
         }
