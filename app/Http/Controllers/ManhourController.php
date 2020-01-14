@@ -293,15 +293,17 @@ class ManhourController extends Controller
 
     public function search(Request $request, $id) {
         $req = $request->all();
+        $employees = [];
 
         if (isset($req["search"]) && $req["search"] != '') {
-            $employees = $this->employeeService->getEmployeeByName($req["search"]);
-            if ($employees != null) {
-                $id = $employees->id;
+            $employees = $this->employeeService->searchEmployeeByName($req["search"]);
+            if ($employees != null && sizeof($employees) === 1) {
+                $id = $employees[0]->id;
+                return redirect()->action('ManhourController@input', ['id' => $id]);
             }
         }
 
-        return redirect()->action('ManhourController@input', ['id' => $id]);
+        return view('manhour.searchresults', ['employees' => $employees]);
     }
 
     public function getNext($id) {

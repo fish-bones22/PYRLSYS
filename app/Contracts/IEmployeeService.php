@@ -13,6 +13,7 @@ interface IEmployeeService {
     public function getAllEmployees($order = null);
     public function getEmployeeById($id);
     public function getEmployeesByDepartment($dept);
+    public function searchEmployeeByName($name);
     public function getEmployeeByName($name);
     public function getEmployeeByEmployeeId($employeeId);
     public function getIdByEmployeeId($id);
