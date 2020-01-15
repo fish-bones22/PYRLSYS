@@ -191,7 +191,7 @@ foreach ($records2 as $record) {
                                     <td>{{ $record['department'] }}</td>
                                     <td>{{ isset($record[$_key]) ? $record[$_key]['identifier'] : '' }}</td>
                                     <td>{{ isset($details['date']) ? date_format(date_create($details['date']), 'M Y')  : '' }}</td>
-                                    {{-- Basic Salary --}}<td>{{ isset($record['basicsalary']) ? $record['basicsalary'].' '.$record['basis'] : '' }}</td>
+                                    {{-- Basic Salary --}}<td>{{ isset($record['basicsalary']) ? $record['basicsalary'].(isset($record['basis']) ? ' '.$record['basis'] : '') : '' }}</td>
                                     @if ($_key === 'sss')
                                     <td>{{ $gp1 + $gp2 }}</td>
                                     @endif
