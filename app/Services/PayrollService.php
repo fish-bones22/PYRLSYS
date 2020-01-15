@@ -331,7 +331,7 @@ class PayrollService implements IPayrollService {
             $payroll->allowance = round($totalAllowance, 2);
         }
 
-        $payroll->grossPay = round($basicPay + $otPay + $otAdj, 2);
+        $payroll->grossPay = round($basicPay + $otPay + $otAdj + $ndPay, 2);
 
         $payroll->regularHours = $regularHours;
         $payroll->otHours = $totalOtHours;
