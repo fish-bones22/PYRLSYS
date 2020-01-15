@@ -218,5 +218,5 @@ Payroll Summary
 @stop
 
 @section('script')
-<script src="{{ asset('js/payrollMasterlist.js') }}"></script>
+<script src="{{ asset('js/payrollSummary.js') }}"></script>
 @stop
