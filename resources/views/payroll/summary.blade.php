@@ -80,6 +80,7 @@ Payroll Summary
                             <tr>
                                 <th rowspan="2">ID NO.</th>
                                 <th colspan="3">NAME</th>
+                                <th rowspan="2" style="display: none;">DEPARTMENT</th>
                                 <th rowspan="2">BASIC SALARY</th>
                                 <th colspan="7">OVERTIME</th>
                                 <th rowspan="2">TOTAL OVERTIME</th>
@@ -165,6 +166,7 @@ Payroll Summary
                                 <td>{{ $employee->lastName }}</td>
                                 <td>{{ $employee->firstName }}</td>
                                 <td>{{ $employee->middleName }}</td>
+                                <td style="display:none">{{ $employee->current['department']['displayName'] }}</td>
                                 <td>{{ $summary[$employee->id]->fixed ? $summary[$employee->id]->basicPayFixed : $summary[$employee->id]->basicPayBase }}</td>
                                 <td>{{ $summary[$employee->id]->rotPay }}</td>
                                 <td>{{ $summary[$employee->id]->xotPay }}</td>
