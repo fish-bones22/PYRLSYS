@@ -160,12 +160,18 @@ foreach ($records2 as $record) {
                             $pagibig = 0;
 
                             $tax = 0;
+
+                            $rcdToUse = $rcd;
+                            // Set array to iterate
+                            if (!array_filter($rcd)) {
+                                $rcdToUse = $rcd2;
+                            }
                             ?>
-                            @foreach ($rcd as $key => $record)
+                            @foreach ($rcdToUse as $key => $record)
                             <?php
-                            $sssEmp1 = isset($record[$_keySS]['employee']) ? $record[$_keySS]['employee']  : '0';
+                            $sssEmp1 = isset($rcd[$key][$_keySS]['employee']) ? $rcd[$key][$_keySS]['employee']  : '0';
                             $sssEmp2 = isset($rcd2[$key][$_keySS]['employee']) ? $rcd2[$key][$_keySS]['employee']  : '0';
-                            $sssEmr1 = isset($record[$_keySS]['employer']) ? $record[$_keySS]['employer']  : '0';
+                            $sssEmr1 = isset($rcd[$key][$_keySS]['employer']) ? $rcd[$key][$_keySS]['employer']  : '0';
                             $sssEmr2 = isset($rcd2[$key][$_keySS]['employer']) ? $rcd2[$key][$_keySS]['employer']  : '0';
                             $sssEmc1 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
                             $sssEmc2 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
@@ -176,10 +182,10 @@ foreach ($records2 as $record) {
 
                             $sss += $sssEmp + $sssEmr + $sssEmc;
 
-                            $philhealthEmp1 = isset($record[$_keyPH]['employee']) ? $record[$_keyPH]['employee']  : '0';
+                            $philhealthEmp1 = isset($rcd[$key][$_keyPH]['employee']) ? $rcd[$key][$_keyPH]['employee']  : '0';
                             $philhealthEmp2 = isset($rcd2[$key][$_keyPH]['employee']) ? $rcd2[$key][$_keyPH]['employee']  : '0';
 
-                            $philhealthEmr1 = isset($record[$_keyPH]['employer']) ? $record[$_keyPH]['employer']  : '0';
+                            $philhealthEmr1 = isset($rcd[$key][$_keyPH]['employer']) ? $rcd[$key][$_keyPH]['employer']  : '0';
                             $philhealthEmr2 = isset($rcd2[$key][$_keyPH]['employer']) ? $rcd2[$key][$_keyPH]['employer']  : '0';
 
                             $philhealthEmp += $philhealthEmp1 + $philhealthEmp2;
@@ -187,17 +193,17 @@ foreach ($records2 as $record) {
 
                             $philhealth += $philhealthEmp + $philhealthEmr;
 
-                            $pagibigEmp1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
+                            $pagibigEmp1 = isset($rcd[$key][$_keyPI]['employee']) ? $rcd[$key][$_keyPI]['employee']  : '0';
                             $pagibigEmp2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
 
-                            $pagibigEmr1 = isset($record[$_keyPI]['employee']) ? $record[$_keyPI]['employee']  : '0';
+                            $pagibigEmr1 = isset($rcd[$key][$_keyPI]['employee']) ? $rcd[$key][$_keyPI]['employee']  : '0';
                             $pagibigEmr2 = isset($rcd2[$key][$_keyPI]['employee']) ? $rcd2[$key][$_keyPI]['employee']  : '0';
 
                             $pagibigEmp += $pagibigEmp1 + $pagibigEmp2;
                             $pagibigEmr += $pagibigEmr1 + $pagibigEmr2;
                             $pagibig += $pagibigEmp + $pagibigEmr;
 
-                            $tax1 = isset($record[$_keyWT]['employee']) ? $record[$_keyWT]['employee']  : '0';
+                            $tax1 = isset($rcd[$key][$_keyWT]['employee']) ? $rcd[$key][$_keyWT]['employee']  : '0';
                             $tax2 = isset($rcd2[$key][$_keyWT]['employee']) ? $rcd2[$key][$_keyWT]['employee']  : '0';
 
 

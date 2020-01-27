@@ -11,10 +11,10 @@ class PhilhealthRule implements IRule {
 
         if ($baseAmount == null)
             return [0, 0];
-
-        // if (!$isFirstPeriod && $previousAmount != null && $previousAmount != 0) {
-        //     return [0, 0];
-        // }
+        // If second period, return 0
+        if (!$isFirstPeriod && $previousAmount != null && $previousAmount != 0) {
+            return [0, 0];
+        }
 
         return PhilhealthRule::_getAmount($baseAmount, $basis, $date);
 
@@ -32,27 +32,27 @@ class PhilhealthRule implements IRule {
         if ($date !== null) {
             $year = date_create($date)->format('Y')*1;
 
-            if ($year === 2020) {
+            // if ($year === 2020) {
                 $minimumAmount = 10000;
                 $maximumAmount = 60000;
                 $factor = 0.03;
-            } else if ($year === 2021) {
-                $minimumAmount = 10000;
-                $maximumAmount = 70000;
-                $factor = 0.035;
-            } else if ($year === 2022) {
-                $minimumAmount = 10000;
-                $maximumAmount = 80000;
-                $factor = 0.04;
-            } else if ($year === 2023) {
-                $minimumAmount = 10000;
-                $maximumAmount = 90000;
-                $factor = 0.045;
-            } else if ($year >= 2024) {
-                $minimumAmount = 10000;
-                $maximumAmount = 100000;
-                $factor = 0.05;
-            }
+            // } else if ($year === 2021) {
+            //     $minimumAmount = 10000;
+            //     $maximumAmount = 70000;
+            //     $factor = 0.035;
+            // } else if ($year === 2022) {
+            //     $minimumAmount = 10000;
+            //     $maximumAmount = 80000;
+            //     $factor = 0.04;
+            // } else if ($year === 2023) {
+            //     $minimumAmount = 10000;
+            //     $maximumAmount = 90000;
+            //     $factor = 0.045;
+            // } else if ($year >= 2024) {
+            //     $minimumAmount = 10000;
+            //     $maximumAmount = 100000;
+            //     $factor = 0.05;
+            // }
         }
 
         if ($baseAmount <= $minimumAmount) {
@@ -64,7 +64,7 @@ class PhilhealthRule implements IRule {
         }
 
         $amount = round($baseAmount * $factor, 2)/2;
-        return [round($amount/2, 2), round($amount/2, 2)];
+        return [round($amount, 2), round($amount, 2)];
     }
 
 
