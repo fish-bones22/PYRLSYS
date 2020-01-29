@@ -176,9 +176,6 @@ class PayrollService implements IPayrollService {
             $datestr = $monthYear.'-'.$i;
             $date = date_create($monthYear.'-'.$i);
             $manhour = $this->manhourService->getSummaryOfRecord($employeeId, $datestr, $employee);
-            if ($manhour == null || $manhour->date == null) {
-                continue;
-            }
 
             $payRecord = $this->employeeService->getEmployeePayTable($employeeId, $date);
             $timeTable = $this->employeeService->getEmployeeTimeTable($employeeId, $date);
@@ -198,11 +195,16 @@ class PayrollService implements IPayrollService {
             $hourlyAllowance = 0;
             $break = isset($timeTable['break']) && $timeTable['break'] != null ? $timeTable['break'] : 0;
 
-            if ($payRecord['rate'] != null)
-                $rate = $payRecord['rate'];
-
+            // Get rate basis (ie. monthly, daily, fixed)
             if ($payRecord['ratebasis'] != null)
                 $rateBasis = $payRecord['ratebasis'];
+            // Skip if no manhour record for non-fixed basis
+            if ($rateBasis !== 'fixed' && ($manhour == null || $manhour->date == null)) {
+                continue;
+            }
+
+            if ($payRecord['rate'] != null)
+                $rate = $payRecord['rate'];
 
             if (isset($payRecord['allowance']) && $payRecord['allowance'] != null)
                 $allowance = $payRecord['allowance'];
@@ -224,7 +226,7 @@ class PayrollService implements IPayrollService {
 
             // Is holiday and has manhour record
             $dayMultiplier = 1;
-            if ($manhour->regularHours != null && $manhour->regularHours > 0) {
+            if ($manhour !== null && $manhour->regularHours != null && $manhour->regularHours > 0) {
                 if ($holiday != null && $holiday['type'] == 'legal') {
                     $dayMultiplier = 2;
                 } else if ($holiday != null && $holiday['type'] == 'special') {
@@ -233,9 +235,9 @@ class PayrollService implements IPayrollService {
             }
 
             // Actual hours accounts for the total hours the employee actually logged
-            $actualHours = $manhour->regularHours != null ? $manhour->regularHours : 0;
+            $actualHours = $manhour !== null && $manhour->regularHours != null ? $manhour->regularHours : 0;
             // Hours account for all payable hours the employee have
-            $hours = $manhour->totalPayableHours != null ? $manhour->totalPayableHours : 0;
+            $hours = $manhour !== null && $manhour->totalPayableHours != null ? $manhour->totalPayableHours : 0;
             $regularHours += $hours;
             $basicPay += $hours * $hourlyRate * $dayMultiplier;
 
@@ -447,6 +449,8 @@ class PayrollService implements IPayrollService {
 
         $otDetails = array();
 
+        if ($manhour === null) return $otDetails;
+
         if ($manhour->rot != '') {
             $otDetails['rot'] = [
                 'key' => 'rot',
@@ -557,23 +561,23 @@ class PayrollService implements IPayrollService {
         if (!isset($details['ndrate']))
             $details['ndrate'] = 0;
 
-        $details['rot']  += ($model->rot != null ? $model->rot : 0);
-        $details['xot']  += ($model->xot != null ? $model->xot : 0);
-        $details['sot']  += ($model->sot != null ? $model->sot : 0);
-        $details['shot']  += ($model->shot != null ? $model->shot : 0);
-        $details['xsot']  += ($model->xsot != null ? $model->xsot : 0);
-        $details['lhot'] += ($model->lhot != null ? $model->lhot : 0);
-        $details['xlhot'] += ($model->xlhot != null ? $model->xlhot : 0);
-        $details['nd'] += ($model->nd != null ? $model->nd : 0);
+        $details['rot']  += ($model !== null && $model->rot != null ? $model->rot : 0);
+        $details['xot']  += ($model !== null && $model->xot != null ? $model->xot : 0);
+        $details['sot']  += ($model !== null && $model->sot != null ? $model->sot : 0);
+        $details['shot']  += ($model !== null && $model->shot != null ? $model->shot : 0);
+        $details['xsot']  += ($model !== null && $model->xsot != null ? $model->xsot : 0);
+        $details['lhot'] += ($model !== null && $model->lhot != null ? $model->lhot : 0);
+        $details['xlhot'] += ($model !== null && $model->xlhot != null ? $model->xlhot : 0);
+        $details['nd'] += ($model !== null && $model->nd != null ? $model->nd : 0);
 
-        $details['rotrate']  += ($model->rot != null ? round($model->rot*$rate*1.25, 2) : 0);
-        $details['xotrate']  += ($model->xot != null ? round($model->xot*$rate*1.25, 2) : 0);
-        $details['sotrate']  += ($model->sot != null ? round($model->sot*$rate*1.3, 2) : 0);
-        $details['shotrate']  += ($model->shot != null ? round($model->shot*$rate*1.3, 2) : 0);
-        $details['xsotrate']  += ($model->xsot != null ? round($model->xsot*$rate*1.69, 2) : 0);
-        $details['lhotrate'] += ($model->lhot != null ? round($model->lhot*$rate*2, 2) : 0);
-        $details['xlhotrate'] += ($model->xlhot != null ? round($model->xlhot*$rate*2.69, 2) : 0);
-        $details['ndrate'] += ($model->nd != null ? round($model->nd*$rate*0.1, 2) : 0);
+        $details['rotrate']  += ($model !== null && $model->rot != null ? round($model->rot*$rate*1.25, 2) : 0);
+        $details['xotrate']  += ($model !== null && $model->xot != null ? round($model->xot*$rate*1.25, 2) : 0);
+        $details['sotrate']  += ($model !== null && $model->sot != null ? round($model->sot*$rate*1.3, 2) : 0);
+        $details['shotrate']  += ($model !== null && $model->shot != null ? round($model->shot*$rate*1.3, 2) : 0);
+        $details['xsotrate']  += ($model !== null && $model->xsot != null ? round($model->xsot*$rate*1.69, 2) : 0);
+        $details['lhotrate'] += ($model !== null && $model->lhot != null ? round($model->lhot*$rate*2, 2) : 0);
+        $details['xlhotrate'] += ($model !== null && $model->xlhot != null ? round($model->xlhot*$rate*2.69, 2) : 0);
+        $details['ndrate'] += ($model !== null && $model->nd != null ? round($model->nd*$rate*0.1, 2) : 0);
         return $details;
     }
 
