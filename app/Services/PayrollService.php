@@ -220,7 +220,7 @@ class PayrollService implements IPayrollService {
             }
             else if ($rateBasis == 'fixed') {
                 $fixedRate = $rate;
-                $fixedAllowance = $allowance;
+                $fixedAllowance = $allowance/2;
                 $hasFixed = true;
             }
 
