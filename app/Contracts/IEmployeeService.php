@@ -11,6 +11,7 @@ interface IEmployeeService {
     public function checkApplicant($firstName, $middleName, $lastName, $position);
 
     public function getAllEmployees($order = null);
+    public function getAllEmployeeIds();
     public function getEmployeeById($id);
     public function getEmployeesByDepartment($dept);
     public function searchEmployeeByName($name);

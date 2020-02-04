@@ -132,6 +132,8 @@ Route::get('deductibles/viewtodate', 'DeductibleRecordController@goToDateView');
 Route::get('deductibles/view/{key}/{date}', 'DeductibleRecordController@view');
 Route::get('deductibles/{id}/{date}', 'DeductibleRecordController@get')->name('deductible.get');
 Route::post('deductibles/autogenerate/{date}', 'DeductibleRecordController@autogenerate')->name('deductible.autogenerate');
+Route::get('deductibles/autogenerate_ajax', 'DeductibleRecordController@autogenerate_ajax')->name('deductible.autogenerate_ajax');
+Route::get('deductibles/getallemployees_ajax', 'DeductibleRecordController@getAllEmployees_ajax');
 Route::post('deductibles/{id}', 'DeductibleRecordController@add');
 
 // Adjustments Record

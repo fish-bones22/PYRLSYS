@@ -445,6 +445,181 @@ class DeductibleRecordController extends Controller
         return redirect()->action('DeductibleRecordController@getAll', ['date' => $date]);
     }
 
+    public function getAllEmployees_ajax() {
+        return json_encode($this->employeeService->getAllEmployeeIds());
+    }
+
+    public function autogenerate_ajax(Request $request)
+    {
+        if (!isset($request->date) || !isset($request->id)) {
+            return json_encode(false);
+        }
+
+        $year = date_format(date_create($request->date), 'Y');
+        $month = date_format(date_create($request->date), 'm');
+        $day = date_format(date_create($request->date), 'd');
+
+        $day = (((int) $day) < 16) ? '1' : '16';
+        $date = $year . '-' . $month . '-' . $day;
+        $override = isset($request->override) && $request->override === 'true';
+
+        $employee = $this->employeeService->getEmployeeById($request->id);
+
+        // Skip inactive
+        if ($employee->inactive) return json_encode(false);;
+
+        $id = $employee->id;
+        $rem = $this->payrollService->getRemittanceDeductible($id, $date);
+        $records = $this->deductibleRecordService->getEmployeeDeductiblesOnDate($id, $date);
+
+        $hasSSS = false;
+        $hasPagibig = false;
+        $hasPhilhealth = false;
+        $hasTax = false;
+
+        foreach ($records as $record) {
+
+            if (
+                $record->key != 'sss'
+                && $record->key != 'pagibig'
+                && $record->key != 'philhealth'
+                && $record->key != 'tin'
+            ) {
+                continue;
+            }
+
+            $entity = new DeductibleRecordEntity();
+
+            $entity->id = $record->id;
+
+            $entity->employee = array();
+            $entity->employee['id'] = $record->employee['id'];
+            $entity->employee['name'] = $record->employee['name'];
+
+            $entity->identifier = array();
+            $entity->identifier['value'] = $record->identifier['details'];
+            $entity->identifier['details'] = $record->identifier['value'];
+
+            $entity->recordDate = $date;
+            $entity->dueDate = $record->dueDate;
+
+            $entity->deductible = array();
+            $entity->details = $record->details;
+            $entity->key = $record->key;
+
+            $entity->amount = $record->amount;
+            $entity->subamount = $record->subamount;
+            $entity->subamount2 = $record->subamount2;
+            $entity->remarks = $record->remarks;
+
+            // SSS
+            if ($record->key == 'sss') {
+                if ($override) {
+                    $entity->amount = isset($rem['sss']) ? $rem['sss'][0] : 0;
+                    $entity->subamount = isset($rem['sss']) ? $rem['sss'][1] : 0;
+                    $entity->subamount2 = isset($rem['sss']) ? $rem['sss'][2] : 0;
+                }
+                $hasSSS = true;
+            }
+            // Philhealth
+            else if ($record->key == 'philhealth') {
+                if ($override) {
+                    $entity->amount = isset($rem['philhealth']) ? $rem['philhealth'][0] : 0;
+                    $entity->subamount = isset($rem['philhealth']) ? $rem['philhealth'][1] : 0;
+                }
+                $hasPhilhealth = true;
+            }
+            // Pagibig
+            else if ($record->key == 'pagibig') {
+                if ($override) {
+                    $entity->amount = isset($rem['pagibig']) ? $rem['pagibig'][0] : 0;
+                    $entity->subamount = isset($rem['pagibig']) ? $rem['pagibig'][1] : 0;
+                }
+                $hasPagibig = true;
+            }
+            // Tax
+            else if ($record->key == 'tin') {
+                if ($override) {
+                    $entity->amount = isset($rem['tin']) ? $rem['tin'][0] : 0;
+                }
+                $hasTax = true;
+            }
+            $result = $this->deductibleRecordService->addRecord($entity);
+        }
+        // Set records if not existing yet
+        // SSS
+        if (isset($employee->deductibles['sss']) && $employee->deductibles['sss']['isset'] && !$hasSSS) {
+            $entity = new DeductibleRecordEntity();
+            $entity->employee = array();
+            $entity->employee['id'] = $employee->id;
+            $entity->employee['name'] = $employee->fullName;;
+            $entity->identifier = array();
+            $entity->identifier['value'] = $employee->deductibles['sss']['value'];
+            $entity->identifier['details'] = 'SS Number';
+            $entity->recordDate = $date;
+            $entity->deductible = array();
+            $entity->details = 'SSS';
+            $entity->key = 'sss';
+            $entity->amount = isset($rem['sss']) ? $rem['sss'][0] : 0;
+            $entity->subamount = isset($rem['sss']) ? $rem['sss'][1] : 0;
+            $entity->subamount2 = isset($rem['sss']) ? $rem['sss'][2] : 0;
+            $result = $this->deductibleRecordService->addRecord($entity);
+        }
+        // Philhealth
+        if (isset($employee->deductibles['philhealth']) && $employee->deductibles['philhealth']['isset'] && !$hasPhilhealth) {
+            $entity = new DeductibleRecordEntity();
+            $entity->employee = array();
+            $entity->employee['id'] = $employee->id;
+            $entity->employee['name'] = $employee->fullName;;
+            $entity->identifier = array();
+            $entity->identifier['value'] = $employee->deductibles['philhealth']['value'];
+            $entity->identifier['details'] = 'PhilHealth Number';
+            $entity->recordDate = $date;
+            $entity->deductible = array();
+            $entity->details = 'PhilHealth';
+            $entity->key = 'philhealth';
+            $entity->amount = isset($rem['philhealth']) ? $rem['philhealth'][0] : 0;
+            $entity->subamount = isset($rem['philhealth']) ? $rem['philhealth'][1] : 0;
+            $result = $this->deductibleRecordService->addRecord($entity);
+        }
+        // PAGIBIG
+        if (isset($employee->deductibles['pagibig']) && $employee->deductibles['pagibig']['isset'] && !$hasPagibig) {
+            $entity = new DeductibleRecordEntity();
+            $entity->employee = array();
+            $entity->employee['id'] = $employee->id;
+            $entity->employee['name'] = $employee->fullName;;
+            $entity->identifier = array();
+            $entity->identifier['value'] = $employee->deductibles['pagibig']['value'];
+            $entity->identifier['details'] = 'PAGIBIG Number';
+            $entity->recordDate = $date;
+            $entity->deductible = array();
+            $entity->details = 'PAGIBIG';
+            $entity->key = 'pagibig';
+            $entity->amount = isset($rem['pagibig']) ? $rem['pagibig'][0] : 0;
+            $entity->subamount = isset($rem['pagibig']) ? $rem['pagibig'][1] : 0;
+            $result = $this->deductibleRecordService->addRecord($entity);
+        }
+        // Tax
+        if (isset($employee->deductibles['tin']) && $employee->deductibles['tin']['isset'] && !$hasTax) {
+            $entity = new DeductibleRecordEntity();
+            $entity->employee = array();
+            $entity->employee['id'] = $employee->id;
+            $entity->employee['name'] = $employee->fullName;;
+            $entity->identifier = array();
+            $entity->identifier['value'] = $employee->deductibles['tin']['value'];
+            $entity->identifier['details'] = 'TIN';
+            $entity->recordDate = $date;
+            $entity->deductible = array();
+            $entity->details = 'Withholding Tax';
+            $entity->key = 'tin';
+            $entity->amount = isset($rem['tin']) ? $rem['tin'][0] : 0;
+            $entity->subamount = isset($rem['tin']) ? $rem['tin'][1] : 0;
+            $result = $this->deductibleRecordService->addRecord($entity);
+        }
+
+        return json_encode(true);
+    }
+
     public function getAll($date)
     {
         if (AuthUtility::checkAuth($this->pageKey)) return AuthUtility::redirect();

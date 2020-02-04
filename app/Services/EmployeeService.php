@@ -35,6 +35,7 @@ class EmployeeService extends EntityService implements IEmployeeService
             if ($current == null) {
                 continue;
             }
+            // If current user has no access to the department
             if (!AuthUtility::hasDepartmentAccess($current->first()['department']))
                 continue;
 
@@ -47,6 +48,33 @@ class EmployeeService extends EntityService implements IEmployeeService
         }
 
         return $employeeEntities;
+    }
+
+    public function getAllEmployeeIds() {
+
+        $employees = Employee::all();
+
+        $employeeIds = array();
+
+        foreach ($employees as $emp) {
+
+            $current = $emp->current;
+            if ($current == null) {
+                continue;
+            }
+            // If current user has no access to the department, skip
+            if (!AuthUtility::hasDepartmentAccess($current->first()['department']))
+                continue;
+
+            $detail = $emp->details;
+
+            if ($detail->where('key', 'applicant')->first() != null)
+                continue;
+
+            $employeeIds[] = $emp->id;
+        }
+
+        return $employeeIds;
     }
 
     public function getAllApplicants()
