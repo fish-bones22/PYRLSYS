@@ -66,7 +66,7 @@ class Employee extends Model
     }
 
     public function isInactive() {
-        $res = DB::select('SELECT emp.id FROM employees AS emp INNER JOIN employment_histories AS his ON emp.id = his.employee_id INNER JOIN categories AS cat ON his.status = cat.id WHERE cat.Value = \'Inactive\' AND emp.id = '.$this->id);
+        $res = DB::select('SELECT emp.id FROM employees AS emp INNER JOIN employment_histories AS his ON emp.id = his.employee_id INNER JOIN categories AS cat ON his.status = cat.id WHERE his.current = "1" AND cat.Value = \'Inactive\' AND emp.id = '.$this->id);
         return sizeof($res) > 0;
     }
 
