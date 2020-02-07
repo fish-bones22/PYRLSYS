@@ -167,7 +167,7 @@ Payroll Summary
                                 <td>{{ $employee->firstName }}</td>
                                 <td>{{ $employee->middleName }}</td>
                                 <td style="display:none">{{ $employee->current['department']['displayName'] }}</td>
-                                <td>{{ $summary[$employee->id]->fixed ? $summary[$employee->id]->basicPayFixed : $summary[$employee->id]->basicPayBase }}</td>
+                                <td>{{ $summary[$employee->id]->basicPayBase }}</td>
                                 <td>{{ $summary[$employee->id]->rotPay }}</td>
                                 <td>{{ $summary[$employee->id]->xotPay }}</td>
                                 <td>{{ $summary[$employee->id]->sotPay }}</td>
@@ -177,7 +177,7 @@ Payroll Summary
                                 <td>{{ $summary[$employee->id]->ndPay }}</td>
                                 <td>{{ $summary[$employee->id]->otPay }}</td>
                                 <td>{{ isset($summary[$employee->id]->allowance) ? $summary[$employee->id]->allowance : '0' }}</td>
-                                <td>{{ $summary[$employee->id]->adjFixed }}</td>
+                                <td></td>
                                 <td>{{ $otherAdj }}</td>
                                 <td>{{ $summary[$employee->id]->grossPay }}</td>
                                 <td>{{ isset($summary[$employee->id]->exemptionDetails['Withholding Tax']) ? $summary[$employee->id]->exemptionDetails['Withholding Tax'] : '0' }}</td>

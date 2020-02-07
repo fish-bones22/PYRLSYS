@@ -67,20 +67,16 @@
                             <td><strong>Basic Pay</strong></td>
                             <td></td>
                             <td>{{ isset($payroll->regularHours) ? number_format($payroll->regularHours, 2) .' hrs' : '0' }}</td>
-                            @if ($payroll->fixed)
-                                <td>{{ isset($payroll->basicPayFixed) ? number_format($payroll->basicPayFixed, 2) : '0' }}</td>
-                            @else
-                                <td>{{ isset($payroll->basicPayBase) ? number_format($payroll->basicPayBase, 2) : '0' }}</td>
-                            @endif
+                            <td>{{ isset($payroll->basicPayBase) ? number_format($payroll->basicPayBase, 2) : '0' }}</td>
                         </tr>
-                        @if ($payroll->fixed)
+                        {{-- @if ($payroll->fixed)
                         <tr>
                             <td><strong>Adjustment</strong></td>
                             <td></td>
                             <td></td>
                             <td>{{ number_format($payroll->adjFixed, 2) }}</td>
                         </tr>
-                        @endif
+                        @endif --}}
                         @if (isset($payroll->adjustmentsDetails['basicadjustment']))
                         <tr>
                             <td><strong>Basic Adjustment</strong></td>

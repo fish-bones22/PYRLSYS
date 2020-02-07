@@ -102,18 +102,13 @@ class OtRequestService extends EntityService implements IOtRequestService {
 
     public function addOtRequest(OtRequestEntity $entity) {
 
-        //$otRequest = OtRequest::where('otDate', $entity->otDate)->where('employee_id', $entity->employeeId)->first();
+        $otRequest = OtRequest::where('otDate', $entity->otDate)->where('employee_id', $entity->employeeId)->first();
 
-//        if ($otRequest == null) {
-//            $otRequest = new OtRequest();
-//            $otRequest->otDate = $entity->otDate;
-//            $otRequest->employee_id = $entity->employeeId;
-//        }
-
-        //
-        $otRequest = new OtRequest();
-        $otRequest->otDate = $entity->otDate;
-        $otRequest->employee_id = $entity->employeeId;
+       if ($otRequest == null) {
+           $otRequest = new OtRequest();
+           $otRequest->otDate = $entity->otDate;
+           $otRequest->employee_id = $entity->employeeId;
+       }
 
         $otRequest->employeeName = $entity->employeeName;
         $otRequest->department = $entity->department;
