@@ -241,7 +241,7 @@ function autoSetDateRange() {
     var dateStart = yearFrom + '-' + monthFrom + '-01';
     var objDateStart = new Date(dateStart);
 
-    var objDateEnd = new Date(objDateStart.setMonth(objDateStart.getMonth() + 11));
+    var objDateEnd = new Date(objDateStart.setMonth(objDateStart.getMonth() + 10));
     var month = objDateEnd.getMonth() + 1;
     $('#monthTo').val(month <= 9 ? '0' + month : month + '');
     $('#yearTo').val(objDateEnd.getFullYear());

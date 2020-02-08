@@ -152,7 +152,7 @@ class MiscPayableController extends Controller
 
         return response()->json([
             'index' => $ind,
-            'total' => round($total / ($ind === 0 ? 1 : $ind), 2),
+            'total' => round($total / ($ind === 0 ? 1 : $ind+1), 2),
             'breakdown' => $basicPays
         ]);
 
