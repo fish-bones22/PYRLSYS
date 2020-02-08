@@ -27,16 +27,17 @@ class PagibigRule implements IRule {
         $percentage1 = 0.01;
         $percentage2 = 0.02;
         $maxAmount = 100;
+        return [$maxAmount, $maxAmount];
 
-        if ($baseAmount > 1500) {
-            $percentage1 = 0.01;
-        }
+        // if ($baseAmount > 1500) {
+        //     $percentage1 = 0.01;
+        // }
 
-        if ($baseAmount > 5000) {
-            return [$maxAmount, $maxAmount];
-        }
+        // if ($baseAmount > 5000) {
+        //     return [$maxAmount, $maxAmount];
+        // }
 
-        return [round($baseAmount * $percentage2, 2), round($baseAmount * $percentage1, 2)];
+        // return [round($baseAmount * $percentage2, 2), round($baseAmount * $percentage1, 2)];
 
     }
 
