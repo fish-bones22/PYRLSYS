@@ -173,7 +173,7 @@ foreach ($records2 as $record) {
                             $sssEmp2 = isset($rcd2[$key][$_keySS]['employee']) ? $rcd2[$key][$_keySS]['employee']  : '0';
                             $sssEmr1 = isset($rcd[$key][$_keySS]['employer']) ? $rcd[$key][$_keySS]['employer']  : '0';
                             $sssEmr2 = isset($rcd2[$key][$_keySS]['employer']) ? $rcd2[$key][$_keySS]['employer']  : '0';
-                            $sssEmc1 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
+                            $sssEmc1 = isset($rcd[$key][$_keySS]['subamount']) ? $rcd[$key][$_keySS]['subamount']  : '0';
                             $sssEmc2 = isset($rcd2[$key][$_keySS]['subamount2']) ? $rcd2[$key][$_keySS]['subamount2']  : '0';
 
                             $sssEmp += $sssEmp1 + $sssEmp2;

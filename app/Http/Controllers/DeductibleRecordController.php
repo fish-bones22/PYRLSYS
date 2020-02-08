@@ -674,8 +674,8 @@ class DeductibleRecordController extends Controller
         } else {
             $day = '16';
             $day2 = '01';
-            $month = $month > 1 ? $month - 1 : '12';
-            $year = $month > 1 ? $year : $year - 1;
+            $month = $month2 > 1 ? $month2 - 1 : '12';
+            $year = $month2 > 1 ? $year : $year - 1;
         }
 
         $date = $year . '-' . $month . '-' . $day;
