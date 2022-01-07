@@ -16,7 +16,7 @@
         "h4cc/wkhtmltopdf-i386": "*",
         "intervention/image": "^2.4",
         "laravel/dusk": "^3.0",
-        "laravel/framework": "5.6.*",
+        "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "lucasromanojf/laravel5-pdf": "1.0.*",
         "niklasravnsborg/laravel-pdf": "^3.1"
